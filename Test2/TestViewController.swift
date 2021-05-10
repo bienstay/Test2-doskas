@@ -23,6 +23,14 @@ class TestTableViewCell2: UITableViewCell {
     @IBOutlet weak var minusButton: UIButton!
     @IBOutlet weak var plusButton: UIButton!
 
+    var buttonTappedClosure : ((UITableViewCell, Bool) -> Void)?
+    @IBAction func minusPressed(_ sender: UIButton) {
+        buttonTappedClosure?(self, false)
+    }
+    @IBAction func plusPressed(_ sender: UIButton) {
+        buttonTappedClosure?(self, true)
+    }
+
     override func awakeFromNib() {
         super.awakeFromNib()
         //backgroundColor = .offWhite
@@ -51,7 +59,11 @@ class TestTableViewController: UIViewController, UITableViewDataSource, UITableV
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var headerLabel: UILabel!
-
+    @IBAction func minusPressed(_ sender: UIButton) {
+    }
+    @IBAction func plusPressed(_ sender: UIButton) {
+    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         //return 3
         return menus[menuIndex].sections.count
@@ -76,8 +88,15 @@ class TestTableViewController: UIViewController, UITableViewDataSource, UITableV
             cell.descriptionLabel.text = menuItem.description
             cell.cuisineLabel.text = menuItem.attributes.joined(separator: " ")
             cell.icon.isHidden = dd[indexPath.section][indexPath.row].expanded
+            if cell.icon.image == nil { cell.icon.isHidden = true }
             cell.enlargedStackView.isHidden = !dd[indexPath.section][indexPath.row].expanded
             cell.titleLabel.textColor = .black
+            cell.countLabel.text = String(dd[indexPath.section][indexPath.row].nrOrdered)
+            cell.buttonTappedClosure = { (cell, add: Bool) in
+                let i = add ? 1 : -1
+                self.dd[indexPath.section][indexPath.row].nrOrdered += i
+                self.tableView.reloadData()
+            }
             return cell;
         } else {
             cell.titleLabel.text = menuItem.title
