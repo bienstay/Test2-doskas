@@ -25,7 +25,7 @@ class TestTableViewCell2: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        backgroundColor = .offWhite
+        //backgroundColor = .offWhite
         contentView.backgroundColor = .offWhite
         icon.layer.cornerRadius = icon.bounds.height/2
     }
@@ -39,13 +39,14 @@ class TestTableViewCell2: UITableViewCell {
 class TestTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     lazy var menus = (hotel.facilities[.Restaurant]!["Masala Hut"] as! Restaurant).menus
+    let menuIndex = 3
 
     struct DisplayData {
         var expanded: Bool = false
         var nrOrdered: Int = 0
     }
 
-    lazy var dd = Array(repeating: Array(repeating: DisplayData(), count: 100), count: menus[3].sections.count)
+    lazy var dd = Array(repeating: Array(repeating: DisplayData(), count: 100), count: menus[menuIndex].sections.count)
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var headerView: UIView!
@@ -53,12 +54,12 @@ class TestTableViewController: UIViewController, UITableViewDataSource, UITableV
 
     func numberOfSections(in tableView: UITableView) -> Int {
         //return 3
-        return menus[3].sections.count
+        return menus[menuIndex].sections.count
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         //return source.count
-        return menus[3].sections[section].items.count
+        return menus[menuIndex].sections[section].items.count
     }
 
 
@@ -68,7 +69,7 @@ class TestTableViewController: UIViewController, UITableViewDataSource, UITableV
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell2", for: indexPath) as! TestTableViewCell2
 
-        let menuItem = menus[3].sections[indexPath.section].items[indexPath.row]
+        let menuItem = menus[menuIndex].sections[indexPath.section].items[indexPath.row]
         if menuItem.itemType == MenuItem.FOODITEM {
             cell.titleLabel.text = menuItem.title
             cell.priceLabel.text = "$\(menuItem.price)"
@@ -123,7 +124,7 @@ class TestTableViewController: UIViewController, UITableViewDataSource, UITableV
         tableView.separatorInset = UIEdgeInsets.zero
 
         title = "Masala Hut Lunch"
-        headerLabel.text = menus[3].title
+        headerLabel.text = menus[menuIndex].title
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.backgroundColor = .clear
         
@@ -164,8 +165,8 @@ class TestSectionHeaderView: UITableViewHeaderFooterView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        backgroundColor = .offWhite
-        contentView.backgroundColor = .offWhite
+        //backgroundColor = .offWhite
+        //contentView.backgroundColor = .offWhite
         sectionHeaderLabel.textColor = .gray
     }
 
@@ -175,7 +176,7 @@ extension TestTableViewController {
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "HeaderTableView") as! TestSectionHeaderView
-        view.sectionHeaderLabel.text = menus[3].sections[section].title
+        view.sectionHeaderLabel.text = menus[menuIndex].sections[section].title
         return view
     }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
