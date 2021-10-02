@@ -31,12 +31,13 @@
 		0632D44B266AC3A3001F7036 /* OrdersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0632D44A266AC3A3001F7036 /* OrdersViewController.swift */; };
 		0632D450266ACB22001F7036 /* Orders.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0632D44F266ACB22001F7036 /* Orders.storyboard */; };
 		0632D452266ADF66001F7036 /* OrderDetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0632D451266ADF66001F7036 /* OrderDetailsCell.swift */; };
+		0638E79D2709053700EACFC1 /* WaterSports.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0638E79C2709053700EACFC1 /* WaterSports.storyboard */; };
+		0638E79F2709055B00EACFC1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0638E79E2709055B00EACFC1 /* LaunchScreen.storyboard */; };
 		064352A326385A3900A54BFC /* extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 064352A226385A3900A54BFC /* extensions.swift */; };
 		064352A526385F8400A54BFC /* Restaurant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 064352A426385F8400A54BFC /* Restaurant.swift */; };
 		065F032A2635D47F00A5CDEF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065F03292635D47F00A5CDEF /* AppDelegate.swift */; };
 		065F032C2635D47F00A5CDEF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065F032B2635D47F00A5CDEF /* SceneDelegate.swift */; };
 		065F03362635D48000A5CDEF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 065F03352635D48000A5CDEF /* Assets.xcassets */; };
-		065F03392635D48000A5CDEF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 065F03372635D48000A5CDEF /* LaunchScreen.storyboard */; };
 		065F034B2635EB5500A5CDEF /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 065F03492635EB5500A5CDEF /* Home.storyboard */; };
 		065F035C2635FD0B00A5CDEF /* Map.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 065F035B2635FD0B00A5CDEF /* Map.storyboard */; };
 		065F0367263621F200A5CDEF /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065F0366263621F200A5CDEF /* Menu.swift */; };
@@ -54,7 +55,6 @@
 		0683A1F026516FF50000D122 /* MenuPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0683A1EF26516FF50000D122 /* MenuPageViewController.swift */; };
 		0683A1F2265172070000D122 /* MenuMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0683A1F1265172070000D122 /* MenuMainViewController.swift */; };
 		0683A1F42651C80C0000D122 /* RoomSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0683A1F32651C80C0000D122 /* RoomSectionHeaderView.xib */; };
-		0683A1F82651D7160000D122 /* WaterSports.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0683A1F62651D7160000D122 /* WaterSports.storyboard */; };
 		069DB355263AED0E00C91468 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 069DB354263AED0E00C91468 /* Main.storyboard */; };
 		069DB35A263B0FB800C91468 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069DB356263B0FB800C91468 /* ReviewViewController.swift */; };
 		069DB35B263B0FB800C91468 /* RestaurantDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069DB357263B0FB800C91468 /* RestaurantDetailViewController.swift */; };
@@ -120,13 +120,14 @@
 		0632D44A266AC3A3001F7036 /* OrdersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersViewController.swift; sourceTree = "<group>"; };
 		0632D44F266ACB22001F7036 /* Orders.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Orders.storyboard; sourceTree = "<group>"; };
 		0632D451266ADF66001F7036 /* OrderDetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetailsCell.swift; sourceTree = "<group>"; };
+		0638E79C2709053700EACFC1 /* WaterSports.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = WaterSports.storyboard; sourceTree = "<group>"; };
+		0638E79E2709055B00EACFC1 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		064352A226385A3900A54BFC /* extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = extensions.swift; sourceTree = "<group>"; };
 		064352A426385F8400A54BFC /* Restaurant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restaurant.swift; sourceTree = "<group>"; };
 		065F03262635D47F00A5CDEF /* Test2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Test2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		065F03292635D47F00A5CDEF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		065F032B2635D47F00A5CDEF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		065F03352635D48000A5CDEF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		065F03382635D48000A5CDEF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		065F033A2635D48000A5CDEF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		065F034A2635EB5500A5CDEF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Bibzzy/Base.lproj/Home.storyboard; sourceTree = "<group>"; };
 		065F035B2635FD0B00A5CDEF /* Map.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Map.storyboard; sourceTree = "<group>"; };
@@ -145,7 +146,6 @@
 		0683A1EF26516FF50000D122 /* MenuPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuPageViewController.swift; sourceTree = "<group>"; };
 		0683A1F1265172070000D122 /* MenuMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuMainViewController.swift; sourceTree = "<group>"; };
 		0683A1F32651C80C0000D122 /* RoomSectionHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RoomSectionHeaderView.xib; sourceTree = "<group>"; };
-		0683A1F72651D7160000D122 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Test2/RoomOld/Bibzzy/Base.lproj/WaterSports.storyboard; sourceTree = "<group>"; };
 		069DB354263AED0E00C91468 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		069DB356263B0FB800C91468 /* ReviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
 		069DB357263B0FB800C91468 /* RestaurantDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestaurantDetailViewController.swift; sourceTree = "<group>"; };
@@ -251,8 +251,8 @@
 				065F03292635D47F00A5CDEF /* AppDelegate.swift */,
 				065F032B2635D47F00A5CDEF /* SceneDelegate.swift */,
 				065F03352635D48000A5CDEF /* Assets.xcassets */,
-				065F03372635D48000A5CDEF /* LaunchScreen.storyboard */,
 				069DB354263AED0E00C91468 /* Main.storyboard */,
+				0638E79E2709055B00EACFC1 /* LaunchScreen.storyboard */,
 				065F033A2635D48000A5CDEF /* Info.plist */,
 				0632D44426683C9C001F7036 /* GoogleService-Info.plist */,
 				061DC83E26554AD900C4C794 /* SplashViewController.swift */,
@@ -365,7 +365,7 @@
 		0683A1F52651D5EE0000D122 /* Watersports */ = {
 			isa = PBXGroup;
 			children = (
-				0683A1F62651D7160000D122 /* WaterSports.storyboard */,
+				0638E79C2709053700EACFC1 /* WaterSports.storyboard */,
 				061DC838265469E700C4C794 /* WatersportsViewController.swift */,
 			);
 			path = Watersports;
@@ -529,16 +529,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0683A1F82651D7160000D122 /* WaterSports.storyboard in Resources */,
 				0683A1E4264EE1560000D122 /* OrderSummary.storyboard in Resources */,
 				069FD3C6268CB4350076C6FC /* News.storyboard in Resources */,
 				0632D450266ACB22001F7036 /* Orders.storyboard in Resources */,
 				061DC82B2654244700C4C794 /* RestaurantSectionHeaderView.xib in Resources */,
-				065F03392635D48000A5CDEF /* LaunchScreen.storyboard in Resources */,
 				061DC8322654334D00C4C794 /* DestinationDiningPrivateEvents.jpg in Resources */,
 				061DC8362654334D00C4C794 /* DestinationDiningBubblesUnderTheStars.jpg in Resources */,
 				065F035C2635FD0B00A5CDEF /* Map.storyboard in Resources */,
 				0683A1F42651C80C0000D122 /* RoomSectionHeaderView.xib in Resources */,
+				0638E79F2709055B00EACFC1 /* LaunchScreen.storyboard in Resources */,
 				061DC8332654334D00C4C794 /* DestinationDiningSandbankPicnic.jpg in Resources */,
 				069DB355263AED0E00C91468 /* Main.storyboard in Resources */,
 				069FDBA4269E34CE004F543F /* Chat.storyboard in Resources */,
@@ -557,6 +556,7 @@
 				061DC8372654334D00C4C794 /* DestinationDiningLagoonLunch.jpg in Resources */,
 				062038722641E81B00B87708 /* Menu.storyboard in Resources */,
 				06F772772676B3DD00E64D54 /* adoptacoral2.jpg in Resources */,
+				0638E79D2709053700EACFC1 /* WaterSports.storyboard in Resources */,
 				069DB36B263B14A300C91468 /* Restaurants.storyboard in Resources */,
 				069FDBAC26AEF0A6004F543F /* roomItems.json in Resources */,
 				065F034B2635EB5500A5CDEF /* Home.storyboard in Resources */,
@@ -672,14 +672,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		065F03372635D48000A5CDEF /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				065F03382635D48000A5CDEF /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
 		065F03492635EB5500A5CDEF /* Home.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -702,14 +694,6 @@
 				0683A1E7264F33C90000D122 /* Base */,
 			);
 			name = Room.storyboard;
-			sourceTree = "<group>";
-		};
-		0683A1F62651D7160000D122 /* WaterSports.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0683A1F72651D7160000D122 /* Base */,
-			);
-			name = WaterSports.storyboard;
 			sourceTree = "<group>";
 		};
 		069FD3C8268CB4E20076C6FC /* Info.storyboard */ = {
