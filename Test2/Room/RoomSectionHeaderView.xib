@@ -10,7 +10,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="TestSectionHeaderView" customModule="Test2" customModuleProvider="target">
+        <view contentMode="scaleToFill" id="iN0-l3-epB" userLabel="Room Section Header View" customClass="RoomSectionHeaderView" customModule="Test2" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
@@ -39,7 +39,7 @@
                 <constraint firstItem="1kd-Bo-gdJ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="16" id="tRa-2a-M9w"/>
             </constraints>
             <connections>
-                <outlet property="sectionHeaderLabel" destination="t0P-ej-bhN" id="cag-de-4zk"/>
+                <outlet property="sectionHeaderLabel" destination="t0P-ej-bhN" id="ow0-yw-hxL"/>
             </connections>
             <point key="canvasLocation" x="12" y="66"/>
         </view>
