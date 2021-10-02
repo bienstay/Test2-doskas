@@ -1,0 +1,213 @@
+[
+  "BathAmenities",
+  [
+    {
+      "picture" : "BathTowel",
+      "color": "F3BA91",
+      "name" : "Bath towel",
+      "category" : "BathAmenities",
+      "maxQuantity" : 4
+    },
+    {
+      "picture" : "HandTowel",
+      "color": "5BB993",
+      "name" : "Hand towel",
+      "category" : "BathAmenities",
+      "maxQuantity" : 4
+    },
+    {
+      "picture" : "FloorTowel",
+      "color": "F3AC37",
+      "name" : "Floor towel",
+      "category" : "BathAmenities",
+      "maxQuantity" : 4
+    },
+    {
+      "picture" : "BeachTowel",
+      "color": "FF0000",
+      "name" : "Beach towel",
+      "category" : "BathAmenities",
+      "maxQuantity" : 4
+    }
+  ],
+  "RoomAmenities",
+  [
+    {
+      "picture" : "Slippers",
+      "color": "F3BA91",
+      "name" : "Slippers",
+      "category" : "RoomAmenities",
+      "maxQuantity" : 2
+    },
+    {
+      "picture" : "Bathrobe",
+      "color": "5BB993",
+      "name" : "Bathrobe",
+      "category" : "RoomAmenities",
+      "maxQuantity" : 2
+    },
+    {
+      "picture" : "FeatherPillow",
+      "color": "F3AC37",
+      "name" : "Feather pillow",
+      "category" : "RoomAmenities",
+      "maxQuantity" : 2
+    },
+    {
+      "picture" : "FoamPillow",
+      "color": "FF0000",
+      "name" : "Foam pillow",
+      "category" : "RoomAmenities",
+      "maxQuantity" : 2
+    },
+    {
+      "picture" : "Blanket",
+      "color": "0000FF",
+      "name" : "Blanket",
+      "category" : "RoomAmenities",
+      "maxQuantity" : 2
+    }
+  ],
+  "Toiletries",
+  [
+    {
+      "picture" : "Soap",
+      "color": "F3BA91",
+      "name" : "Soap",
+      "category" : "Toiletries",
+      "maxQuantity" : 3
+    },
+    {
+      "picture" : "Shampoo",
+      "color": "5BB993",
+      "name" : "Shampoo",
+      "category" : "Toiletries",
+      "maxQuantity" : 3
+    },
+    {
+      "picture" : "Conditioner",
+      "color": "F3AC37",
+      "name" : "Conditioner",
+      "category" : "Toiletries",
+      "maxQuantity" : 3
+    },
+    {
+      "picture" : "ShowerGel",
+      "color": "FF0000",
+      "name" : "Shower Gel",
+      "category" : "Toiletries",
+      "maxQuantity" : 3
+    },
+    {
+      "picture" : "BodyLotion",
+      "color": "0000FF",
+      "name" : "Body Lotion",
+      "category" : "Toiletries",
+      "maxQuantity" : 3
+    },
+    {
+      "picture" : "DentalKit",
+      "color": "F3BA91",
+      "name" : "Dental Kit",
+      "category" : "Toiletries",
+      "maxQuantity" : 3
+    },
+    {
+      "picture" : "ShavingKit",
+      "color": "5BB993",
+      "name" : "Shaving Kit",
+      "category" : "Toiletries",
+      "maxQuantity" : 3
+    },
+    {
+      "picture" : "ShowerCap",
+      "color": "F3AC37",
+      "name" : "Shower Cap",
+      "category" : "Toiletries",
+      "maxQuantity" : 3
+    },
+    {
+      "picture" : "Comb",
+      "color": "FF0000",
+      "name" : "Comb",
+      "category" : "Toiletries",
+      "maxQuantity" : 3
+    },
+    {
+      "picture" : "ToiletPaper",
+      "color": "0000FF",
+      "name" : "Toilet Paper",
+      "category" : "Toiletries",
+      "maxQuantity" : 3
+    },
+    {
+      "picture" : "CottonBuds",
+      "color": "F3BA91",
+      "name" : "Cotton Buds",
+      "category" : "Toiletries",
+      "maxQuantity" : 3
+    }
+  ],
+  "RoomConsumables",
+  [
+    {
+      "picture" : "Ice",
+      "color": "F3BA91",
+      "name" : "Ice",
+      "category" : "RoomConsumables",
+      "maxQuantity" : 0
+    },
+    {
+      "picture" : "Tea",
+      "color": "5BB993",
+      "name" : "Tea",
+      "category" : "RoomConsumables",
+      "maxQuantity" : 5
+    },
+    {
+      "picture" : "Coffee",
+      "color": "F3AC37",
+      "name" : "Coffee",
+      "category" : "RoomConsumables",
+      "maxQuantity" : 5
+    },
+    {
+      "picture" : "Sugar",
+      "color": "FF0000",
+      "name" : "Sugar",
+      "category" : "RoomConsumables",
+      "maxQuantity" : 5
+    },
+    {
+      "picture" : "Milk",
+      "color": "0000FF",
+      "name" : "Milk",
+      "category" : "RoomConsumables",
+      "maxQuantity" : 3
+    }
+  ],
+  "Service",
+  [
+    {
+      "picture" : "ExtraCleaningService",
+      "color": "F3BA91",
+      "name" : "Extra Cleaning Service",
+      "category" : "Service",
+      "maxQuantity" : 1
+    },
+    {
+      "picture" : "LuggageAssistance",
+      "color": "5BB993",
+      "name" : "Luggage Assistance",
+      "category" : "Service",
+      "maxQuantity" : 1
+    },
+    {
+      "picture" : "Buggy",
+      "color": "F3AC37",
+      "name" : "Buggy",
+      "category" : "Service",
+      "maxQuantity" : 1
+    }
+  ]
+]
