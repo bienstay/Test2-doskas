@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="JIG-YW-Bsc">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Watersports-->
+        <scene sceneID="8q2-aJ-RG0">
+            <objects>
+                <viewController storyboardIdentifier="ScrollViewTest2" id="xCC-ys-Cjv" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="WZW-5j-U5m">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ken-s5-ngu">
+                                <rect key="frame" x="0.0" y="44" width="414" height="769"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Extreme-Watersports-Sheraton-AP2021" translatesAutoresizingMaskIntoConstraints="NO" id="3Gu-SX-EKu">
+                                        <rect key="frame" x="0.0" y="0.0" width="842" height="596"/>
+                                    </imageView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="3Gu-SX-EKu" secondAttribute="trailing" id="1Va-9h-RnY"/>
+                                    <constraint firstAttribute="bottom" secondItem="3Gu-SX-EKu" secondAttribute="bottom" id="SEi-AQ-bxJ"/>
+                                    <constraint firstItem="3Gu-SX-EKu" firstAttribute="leading" secondItem="Ken-s5-ngu" secondAttribute="leading" id="cc2-ML-r9p"/>
+                                    <constraint firstItem="3Gu-SX-EKu" firstAttribute="top" secondItem="Ken-s5-ngu" secondAttribute="top" id="l5L-Bb-aqZ"/>
+                                </constraints>
+                                <viewLayoutGuide key="contentLayoutGuide" id="eNW-qh-yNb"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="0t9-Ek-wKt"/>
+                            </scrollView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="NcH-Hi-yVM"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="NcH-Hi-yVM" firstAttribute="bottom" secondItem="Ken-s5-ngu" secondAttribute="bottom" id="4GZ-gg-ptP"/>
+                            <constraint firstItem="Ken-s5-ngu" firstAttribute="leading" secondItem="NcH-Hi-yVM" secondAttribute="leading" id="CxJ-mT-82E"/>
+                            <constraint firstItem="Ken-s5-ngu" firstAttribute="top" secondItem="NcH-Hi-yVM" secondAttribute="top" id="UWQ-Bk-pDn"/>
+                            <constraint firstItem="NcH-Hi-yVM" firstAttribute="trailing" secondItem="Ken-s5-ngu" secondAttribute="trailing" id="yuB-8S-jyF"/>
+                        </constraints>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Watersports" id="9uS-bf-bZz"/>
+                    <navigationItem key="navigationItem" id="HfT-LY-N9v"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="82w-Fk-4ug" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4058" y="174"/>
+        </scene>
+        <!--Water activities-->
+        <scene sceneID="uDv-ms-drg">
+            <objects>
+                <viewController storyboardIdentifier="WaterSports" title="Water activities" id="JIG-YW-Bsc" customClass="WatersportsViewController" customModule="Test2" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="sIC-nE-Wz7">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y7c-eH-iCw" customClass="PDFView">
+                                <rect key="frame" x="0.0" y="44" width="414" height="769"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Czt-MG-hrL"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Y7c-eH-iCw" firstAttribute="top" secondItem="Czt-MG-hrL" secondAttribute="top" id="6kZ-M2-uUe"/>
+                            <constraint firstItem="Czt-MG-hrL" firstAttribute="bottom" secondItem="Y7c-eH-iCw" secondAttribute="bottom" id="KW0-kJ-lJz"/>
+                            <constraint firstItem="Y7c-eH-iCw" firstAttribute="leading" secondItem="Czt-MG-hrL" secondAttribute="leading" id="k12-x8-mz2"/>
+                            <constraint firstItem="Czt-MG-hrL" firstAttribute="trailing" secondItem="Y7c-eH-iCw" secondAttribute="trailing" id="s05-HZ-uWS"/>
+                        </constraints>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="" image="Info@75x-8" id="pil-Ib-CBN"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="pdfView" destination="Y7c-eH-iCw" id="oMc-mv-bd8"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yVU-SL-qoa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5688" y="173"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="Extreme-Watersports-Sheraton-AP2021" width="842" height="596"/>
+        <image name="Info@75x-8" width="37.5" height="32.5"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
