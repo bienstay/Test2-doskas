@@ -38,7 +38,7 @@ class NewsCell: UITableViewCell {
         newsImageView.image = nil
         if let url = URL(string: post.imageFileURL) {
             newsImageView.isHidden = false
-            newsImageView.kf.setImage(with: url, placeholder: UIImage(named: "Lukasz"), options: [.transition(.fade(1))]) {
+            newsImageView.kf.setImage(with: url, placeholder: UIImage(named: "JaNaPlaya"), options: [.transition(.fade(1))]) {
                 result in
                 switch result {
                 case .success(_):
@@ -46,7 +46,7 @@ class NewsCell: UITableViewCell {
                 //    print("KF Task done for: \(value.source.url?.absoluteString ?? "")")
                     break;
                 case .failure(let error):
-                    print("KF setImage Job failed: \(error.localizedDescription)")
+                    Log.log("KF setImage Job failed: \(error.localizedDescription)")
                 }
             }
         }

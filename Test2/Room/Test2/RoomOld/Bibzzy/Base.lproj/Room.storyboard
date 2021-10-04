@@ -18,26 +18,26 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="4" sectionFooterHeight="4" translatesAutoresizingMaskIntoConstraints="NO" id="c7H-rN-zaJ">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="763"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="733"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="RoomHeaderCell" id="PAd-Qc-fjQ" userLabel="RoomHeaderCell" customClass="RoomHeaderCell" customModule="Test2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="49.5" width="414" height="132"/>
+                                        <rect key="frame" x="0.0" y="49.5" width="414" height="130"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="PAd-Qc-fjQ" id="mq6-De-Kdu">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="132"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="130"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MGd-mq-rvs" customClass="GlossyView" customModule="Test2" customModuleProvider="target">
-                                                    <rect key="frame" x="16" y="16" width="382" height="108"/>
+                                                    <rect key="frame" x="16" y="16" width="382" height="106"/>
                                                     <subviews>
                                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="0wE-0V-A9X">
-                                                            <rect key="frame" x="0.0" y="4" width="378" height="100"/>
+                                                            <rect key="frame" x="0.0" y="4" width="378" height="98"/>
                                                             <subviews>
                                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="roomService" translatesAutoresizingMaskIntoConstraints="NO" id="tQ2-iU-XRC">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="100" height="98"/>
                                                                     <constraints>
-                                                                        <constraint firstAttribute="height" constant="100" id="Ntq-S2-wrS"/>
+                                                                        <constraint firstAttribute="height" constant="98" id="Ntq-S2-wrS"/>
                                                                         <constraint firstAttribute="width" constant="100" id="ytD-bA-7uX"/>
                                                                     </constraints>
                                                                 </imageView>
@@ -86,20 +86,20 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="RoomItemsHeaderCell" id="Myb-Lj-EU8" customClass="RoomItemsHeaderCell" customModule="Test2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="181.5" width="414" height="116"/>
+                                        <rect key="frame" x="0.0" y="179.5" width="414" height="113"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Myb-Lj-EU8" id="McX-6x-WKz">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="116"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="113"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="r80-Mq-UgO">
-                                                    <rect key="frame" x="16" y="16" width="382" height="100"/>
+                                                    <rect key="frame" x="16" y="16" width="382" height="97"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="036-toiletries" translatesAutoresizingMaskIntoConstraints="NO" id="Mc0-RV-oV4">
-                                                            <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="100" height="97"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="100" id="Jeu-6x-vdu"/>
-                                                                <constraint firstAttribute="height" constant="100" id="P1c-rN-bMB"/>
+                                                                <constraint firstAttribute="height" constant="97" id="P1c-rN-bMB"/>
                                                             </constraints>
                                                         </imageView>
                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="SUl-VN-9PD">
@@ -133,7 +133,7 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="RoomItemCell" id="JBf-9D-fMD" customClass="RoomItemCell" customModule="Test2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="297.5" width="414" height="104"/>
+                                        <rect key="frame" x="0.0" y="292.5" width="414" height="104"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="JBf-9D-fMD" id="xKr-Ue-E3B">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="104"/>
@@ -228,25 +228,29 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="687-Fm-KdU" customClass="OrderShortSummaryView" customModule="Test2" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="763" width="414" height="50"/>
-                                <viewLayoutGuide key="safeArea" id="ytg-gU-9y8"/>
-                                <color key="backgroundColor" systemColor="systemOrangeColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="4sl-i7-JBq"/>
-                                </constraints>
-                            </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Lk5-Y7-vkH">
+                                <rect key="frame" x="16" y="733" width="382" height="80"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="687-Fm-KdU" customClass="OrderShortSummaryView" customModule="Test2" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="382" height="80"/>
+                                        <viewLayoutGuide key="safeArea" id="ytg-gU-9y8"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="80" id="4sl-i7-JBq"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="j6N-5v-3F1"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="c7H-rN-zaJ" firstAttribute="trailing" secondItem="j6N-5v-3F1" secondAttribute="trailing" id="1Tk-Tl-h5j"/>
-                            <constraint firstItem="687-Fm-KdU" firstAttribute="top" secondItem="c7H-rN-zaJ" secondAttribute="bottom" id="GgS-hE-cy4"/>
-                            <constraint firstItem="j6N-5v-3F1" firstAttribute="bottom" secondItem="687-Fm-KdU" secondAttribute="bottom" id="Pzt-Mt-AWP"/>
-                            <constraint firstItem="687-Fm-KdU" firstAttribute="leading" secondItem="6UX-RU-Ihf" secondAttribute="leading" id="Vtz-fM-HIl"/>
+                            <constraint firstItem="Lk5-Y7-vkH" firstAttribute="top" secondItem="c7H-rN-zaJ" secondAttribute="bottom" id="5WB-Nc-hg0"/>
+                            <constraint firstAttribute="trailing" secondItem="Lk5-Y7-vkH" secondAttribute="trailing" constant="16" id="D2S-Su-4Wh"/>
+                            <constraint firstItem="Lk5-Y7-vkH" firstAttribute="leading" secondItem="6UX-RU-Ihf" secondAttribute="leading" constant="16" id="JFy-B4-q7G"/>
                             <constraint firstItem="c7H-rN-zaJ" firstAttribute="leading" secondItem="j6N-5v-3F1" secondAttribute="leading" id="Zmd-Jf-oyy"/>
+                            <constraint firstItem="j6N-5v-3F1" firstAttribute="bottom" secondItem="Lk5-Y7-vkH" secondAttribute="bottom" id="h7l-Wo-M33"/>
                             <constraint firstItem="c7H-rN-zaJ" firstAttribute="top" secondItem="6UX-RU-Ihf" secondAttribute="top" id="iVg-OT-EAy"/>
-                            <constraint firstItem="j6N-5v-3F1" firstAttribute="trailing" secondItem="687-Fm-KdU" secondAttribute="trailing" id="yi6-Fv-CNU"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Room" id="Ab8-CV-nLW"/>

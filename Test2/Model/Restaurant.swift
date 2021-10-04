@@ -49,25 +49,25 @@ func loadRestaurants(fromServerURL: String, completionClosure: @escaping ()->())
     req.cachePolicy = .useProtocolCachePolicy
 
     let downloadTask = URLSession.shared.downloadTask(with: req) { localURL, urlResponse, error in
-        guard let localURL = localURL else { print("localURL == nil"); return }
-        guard let urlResponse = urlResponse else { print("urlResponse == nil"); return }
+        guard let localURL = localURL else { Log.log(level: .INFO, "localURL == nil"); return }
+        guard let urlResponse = urlResponse else { Log.log(level: .INFO, "urlResponse == nil"); return }
 
         // decode the response and put it in the hotel data
         if let jsonString = try? String(contentsOf: localURL) {
             let restaurants = try! JSONDecoder().decode([Restaurant].self, from: jsonString.data(using: .utf8)!)
             hotel.facilities[.Restaurant] = Dictionary(uniqueKeysWithValues: restaurants.map{ ($0.name, $0) })
-            print("Loaded \(restaurants.count) restaurants")
+            Log.log(level: .INFO, "Loaded \(restaurants.count) restaurants")
             completionClosure()
         }
 
         // put the response in the cache
         if (URLCache.shared.cachedResponse(for: req) == nil) {
-            print("Restaurants - writing to the cache")
+            Log.log(level: .INFO, "Restaurants - writing to the cache")
             if let data = try? Data(contentsOf: localURL) {
                 URLCache.shared.storeCachedResponse(CachedURLResponse(response: urlResponse, data: data), for: req)
             }
         }
-        else { print("Restaurants - already in the cache") }
+        else { Log.log(level: .INFO, "Restaurants - already in the cache") }
     }
     downloadTask.resume()
 }
@@ -80,7 +80,7 @@ func loadRestaurantsImagesFromBundle() {
                 try r.value.image = Data(contentsOf: URL(fileURLWithPath: bundlePath))
             }
             catch {
-                print(error)
+                Log.log(error)
             }
         }
     }

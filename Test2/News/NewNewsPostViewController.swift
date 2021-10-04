@@ -93,12 +93,12 @@ class NewNewsPostViewController: UITableViewController {
             FireB.shared.uploadImage(image: photoImageView.image!, forLocation: .NEWS, imageName: post.postId) { photoURL in
                 post.imageFileURL = photoURL
                 let errStr = FireB.shared.addRecord(key: post.postId, record: post) { post in self.closeMe(post) }
-                if let s = errStr { print(s) }
+                if let s = errStr { Log.log(s) }
             }
         } else {
             post.imageFileURL = postToEdit!.imageFileURL
             let errStr = FireB.shared.addRecord(key: post.postId, record: post) { post in self.closeMe(post) }   // update only
-            if let s = errStr { print(s) }
+            if let s = errStr { Log.log(s) }
         }
 
     }

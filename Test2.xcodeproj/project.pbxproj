@@ -234,20 +234,21 @@
 		065F03282635D47F00A5CDEF /* Test2 */ = {
 			isa = PBXGroup;
 			children = (
-				069FDBA0269E17A8004F543F /* Chat */,
+				06F5D15F270B4E6A004931F7 /* Activities */,
 				069FD3CD2691DB3A0076C6FC /* Onboarding */,
 				065F034D2635EB6300A5CDEF /* Home */,
 				065F03522635ED8C00A5CDEF /* Restaurants */,
 				0683A1E5264F33A40000D122 /* Room */,
+				069FDBA0269E17A8004F543F /* Chat */,
 				0683A1DF264ED6670000D122 /* Orders */,
 				069FD3C7268CB4BC0076C6FC /* Info */,
 				069FD3C4268CB4210076C6FC /* News */,
 				0683A1DE264DC75D0000D122 /* Menu */,
 				0683A1F52651D5EE0000D122 /* Watersports */,
 				064352A126385A2000A54BFC /* Misc */,
-				066BF3FA2637552500EE834C /* Resources */,
 				065F0362263621AE00A5CDEF /* Model */,
 				065F035A2635FCEF00A5CDEF /* Map */,
+				066BF3FA2637552500EE834C /* Resources */,
 				065F03292635D47F00A5CDEF /* AppDelegate.swift */,
 				065F032B2635D47F00A5CDEF /* SceneDelegate.swift */,
 				065F03352635D48000A5CDEF /* Assets.xcassets */,
@@ -437,6 +438,13 @@
 				061DC82D2654334C00C4C794 /* DestinationDiningSandbankPicnic.jpg */,
 			);
 			path = DestinationDiningPictures;
+			sourceTree = "<group>";
+		};
+		06F5D15F270B4E6A004931F7 /* Activities */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Activities;
 			sourceTree = "<group>";
 		};
 		06F772732676B39000E64D54 /* AdoptACoral */ = {

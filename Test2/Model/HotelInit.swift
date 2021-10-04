@@ -50,5 +50,5 @@ func initFacilities() {
 //func initRestaurantsFromBundleFiles() {
 //    let restaurants: [Restaurant] = loadFromJSON(fileNameNoExt: "sheratonRestaurants")
 //    hotel.restaurants = restaurants
-//    print(hotel)
+//    Log.log(level: .INFO, hotel)
 //}

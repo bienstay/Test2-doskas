@@ -178,12 +178,11 @@ func loadFromJSON<T>(fileNameNoExt: String) -> T where T: Decodable {
     if let filepath = Bundle.main.path(forResource: fileNameNoExt, ofType: "json") {
         do {
             jsonString = try String(contentsOfFile: filepath)
-            //print(contents)
         } catch {
-            print("Error: \(error)")
+            Log.log("Error: \(error)")
         }
     } else {
-        print("File " + fileNameNoExt + " not found")
+        Log.log("File " + fileNameNoExt + " not found")
     }
     let data = try! JSONDecoder().decode(T.self, from: jsonString.data(using: .utf8)!)
     return data
@@ -199,10 +198,10 @@ func saveJSONData<T>(from data:T, to fileNameNoExt: String) where T: Encodable {
     let fileURL = URL(fileURLWithPath: fileNameNoExt, relativeTo: directoryURL).appendingPathExtension("json")
     
     do {
-        print("Writing to " + fileURL.absoluteString)
+        Log.log(level: .INFO, "Writing to " + fileURL.absoluteString)
         try jsonData.write(to: fileURL)
     } catch {
-        print(error)
+        Log.log(error.localizedDescription)
     }
 }
 
@@ -240,7 +239,7 @@ func prepareNotification(id: String, title: String, subtitle:String, body: Strin
     // Schedule the notification
 
     UNUserNotificationCenter.current().add(request) { error in
-        if let err = error { print(err.localizedDescription) }
+        if let err = error { Log.log(err.localizedDescription) }
     }
 }
 
@@ -471,4 +470,18 @@ func createBarButtonItem(target: Any?, action: Selector) -> UIBarButtonItem {
 
     let barButton = UIBarButtonItem(customView: profileButton)
     return barButton
+}
+
+struct Log {
+    enum LogLevel: Int {
+        case FATAL = 0
+        case ERROR
+        case INFO
+    }
+    static var currentLevel: LogLevel = .ERROR
+    static func log(level: LogLevel = .INFO, _ message: String) {
+        if level.rawValue <= currentLevel.rawValue {
+            print(message)
+        }
+    }
 }

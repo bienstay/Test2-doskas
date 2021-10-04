@@ -23,10 +23,10 @@ class OrderShortSummaryView: UIView {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         xibSetup()
-        view.backgroundColor = .pastelYellowLight
-        //view.layer.cornerRadius = 15
-        view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor.gray.cgColor
+        //view.backgroundColor = .pastelGray
+        view.layer.cornerRadius = 10
+        view.layer.borderWidth = 5
+        view.layer.borderColor = UIColor.lightGray.cgColor
         quantityLabel.textColor = .orange
         proceedButton.tintColor = .orange
     }

@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Check if launched from notification
         let notificationOption = launchOptions?[.remoteNotification]
         if let notification = notificationOption as? [String: AnyObject], let aps = notification["aps"] as? [String: AnyObject] {
-            print("App launched from a notification: \(aps)")
+            Log.log(level: .INFO, "App launched from a notification: \(aps)")
             //(window?.rootViewController as? UITabBarController)?.selectedIndex = 1
         }
 
@@ -37,9 +37,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
 
         Auth.auth().signInAnonymously() { (authResult, error) in
-            if let error = error { print(error) }
+            if let error = error { Log.log(error.localizedDescription) }
             else {
-                print("Signed in with user: " + authResult!.user.uid)
+                Log.log(level: .INFO, "Signed in with user: " + authResult!.user.uid)
                 guest.startObserving()
                 hotel.startObserving()
             }
@@ -53,11 +53,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        print("url: \(url.absoluteURL)")
-        print("scheme: \(String(describing: url.scheme))")
-        print("host: \(String(describing: url.host))")
-        print("path: \(url.path)")
-        print("components: \(url.pathComponents)")
+        Log.log(level: .INFO, "url: \(url.absoluteURL)")
+        Log.log(level: .INFO, "scheme: \(String(describing: url.scheme))")
+        Log.log(level: .INFO, "host: \(String(describing: url.host))")
+        Log.log(level: .INFO, "path: \(url.path)")
+        Log.log(level: .INFO, "components: \(url.pathComponents)")
         
         let message = url.host?.removingPercentEncoding
         pushMenuScreen(restaurantName: message!)
@@ -163,7 +163,7 @@ extension AppDelegate {
 
     func pushMenuScreen(restaurantName: String) {
         guard let restaurant = hotel.restaurants.first(where: {$0.name == restaurantName} ) else {
-            print("Restaurant " + restaurantName + " not found")
+            Log.log("Restaurant " + restaurantName + " not found")
             return
         }
         let storyboard = UIStoryboard(name: "Menu", bundle: nil)
@@ -182,18 +182,14 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
 
-        print("!!!!!!!!!!!!!! In willPresent")
-        print(notification.request.content)
-        print("!!!!!!!!!!!!!!")
+        Log.log(level: .INFO, notification.request.content.debugDescription)
         //let userInfo = notification.request.content.userInfo
         completionHandler([.alert, .sound, .badge])
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
 
-        print("!!!!!!!!!!!!!! In didReceive")
-        print(response)
-        print("!!!!!!!!!!!!!!")
+        Log.log(level: .INFO, response.debugDescription)
         
         UIApplication.shared.applicationIconBadgeNumber = 0 // TODO this should be cleared by addressing the specific notification
         // TODO - instead of showing a dialog box, show a badge on a tabbar for Orders
@@ -201,7 +197,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         let userInfo = response.notification.request.content.userInfo
         // Extract custom parameter value from notification message
         if let orderNumber = userInfo["orderNumber"] as? Int, response.notification.request.identifier == "Test2.orderChanged" {
-            print("Message sent with room \(orderNumber)")
+            Log.log(level: .INFO, "Message sent with room \(orderNumber)")
             if let topVC = getTopmostViewController() {
                 showInfoDialogBox(vc: topVC, title: "Order update", message: String("Order \(orderNumber) has been updated. Please check the order details"))
                 // TODO this should be moved to willPresent if notification happens with app in foreground, so that we do not show the notification but the dialog instead
@@ -212,29 +208,29 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
 
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        print("!!!!!!!!!!! in didReceiveRemoteNotification, this should only be called for silent notifications")
+        Log.log(level: .INFO, "!!!!!!!!!!! in didReceiveRemoteNotification, this should only be called for silent notifications")
         guard let aps = userInfo["aps"] as? [String: AnyObject] else {
             completionHandler(.failed)
             return
         }
-        print("Received remote notification: \(aps)")
+        Log.log(level: .INFO, "Received remote notification: \(aps)")
     }
 
     func registerForPushNotifications() {
 
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
             if granted {
-                print("User notifications are allowed.")
+                Log.log(level: .INFO, "User notifications are allowed.")
             } else {
-                print("User notifications are not allowed.")
+                Log.log("User notifications are not allowed.")
             }
 
             UNUserNotificationCenter.current().delegate = self
         }
 
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { [weak self] granted, error in
-            print("Notification ermission granted: \(granted)")
-            if let err = error { print(err.localizedDescription) }
+            Log.log(level: .INFO, "Notification ermission granted: \(granted)")
+            if let err = error { Log.log(err.localizedDescription) }
             guard granted else { return }
             self?.getNotificationSettings()
           }
@@ -242,7 +238,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     
     func getNotificationSettings() {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
-            print("Notification settings: \(settings)")
+            Log.log(level: .INFO, "Notification settings: \(settings)")
             guard settings.authorizationStatus == .authorized else { return }
             DispatchQueue.main.async {
                 UIApplication.shared.registerForRemoteNotifications()
@@ -253,11 +249,11 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
         let token = tokenParts.joined()
-        print("Device Token: \(token)")
+        Log.log(level: .INFO, "Device Token: \(token)")
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        print("Failed to register: \(error)")
+        Log.log("Failed to register: \(error)")
     }
 }
 

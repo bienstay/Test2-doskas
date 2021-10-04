@@ -59,7 +59,7 @@ class MaintenanceOrderViewController: UIViewController {
                 
             }
         }
-        if errStr != nil { print(errStr!) }
+        if errStr != nil { Log.log(errStr!) }
     }
 
     override func viewDidLoad() {

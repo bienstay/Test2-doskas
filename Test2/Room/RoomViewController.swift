@@ -29,13 +29,14 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
         tableView.delegate = self
 
         tableView.backgroundColor = .BBbackgroundColor
-        tableView.backgroundColor = .offWhite
+        tableView.backgroundColor = UIColor.offWhite
         tableView.allowsSelection = true
 
         let nib = UINib(nibName: "MenuSectionHeaderView", bundle: nil)
         tableView.register(nib, forHeaderFooterViewReuseIdentifier: "HeaderTableView")
 
-        orderSummaryConstraint.constant = 1
+        orderShortSummaryView.isHidden = true
+        //orderSummaryConstraint.constant = 0
         orderShortSummaryView.proceedClosure = {
             let storyboard = UIStoryboard(name: "OrderSummary", bundle: nil)
             let vc = storyboard.instantiateViewController(withIdentifier: "CreateOrder") as! CreateOrderViewController
@@ -45,6 +46,8 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
 
         clearOrder()
+        
+        view.backgroundColor = .lightGray
 
         // observe changes to the navigation bar size and set different title
         self.observer = self.navigationController?.navigationBar.observe(\.bounds, options: [.new], changeHandler: { (navigationBar, changes) in
@@ -120,27 +123,17 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
-            if indexPath.row == 0 { inRoomDiningPressed() }
-            else { maintenancePressed() }
+            switch indexPath.row {
+                case 0: inRoomDiningPressed()
+                case 1: maintenancePressed()
+                default: break
+            }
         } else {
             dd[indexPath.section - 1][indexPath.row].expanded.toggle()
             tableView.reloadRows(at: [indexPath], with: .none)
         }
     }
-/*
-    @IBAction func inRoomDiningButtonPressed(_ sender: UIButton) {
-        let storyboard = UIStoryboard(name: "Menu", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "MenuViewController") as! MenuViewController
-        vc.restaurant = hotel.roomService
-        vc.isRoomService = true
-        if let nc = self.navigationController {
-            nc.pushViewController(vc, animated: true)
-        }
-        else {
-            self.present(vc, animated: true, completion: nil)
-        }
-    }
-*/
+
     func inRoomDiningPressed() {
         let storyboard = UIStoryboard(name: "Menu", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "MenuViewController") as! MenuViewController
@@ -170,7 +163,7 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 { return 0 }
         if section == 1 { return 30 }
-        return 50
+        return 49
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -205,8 +198,11 @@ extension RoomViewController {
             order.addItem(name: item.name, quantity: 1, price: 0)
         }
         orderShortSummaryView.quantityLabel.text = String(order.totalNrOfItemsInOrder)
-        orderSummaryConstraint.constant = order.totalNrOfItemsInOrder <= 0 ? 1 : 60
-        //tableView.contentOffset.y += 50
+        if orderShortSummaryView.isHidden {
+            UIView.animate(withDuration: 0.5) { () -> Void in
+                self.orderShortSummaryView.isHidden = false
+            }
+        }
     }
 
     func removeFromOrder(_ indexPath: IndexPath) {
@@ -215,13 +211,20 @@ extension RoomViewController {
             _ = order.removeItem(name: item.name, quantity: 1)
         }
         orderShortSummaryView.quantityLabel.text = String(order.totalNrOfItemsInOrder)
-        orderSummaryConstraint.constant = order.totalNrOfItemsInOrder <= 0 ? 1 : 60
+        if order.totalNrOfItemsInOrder <= 0 {
+            if !orderShortSummaryView.isHidden {
+                UIView.animate(withDuration: 0.5) { () -> Void in
+                    self.orderShortSummaryView.isHidden = true
+                }
+            }
+        }
     }
 
     func clearOrder() {
         order = Order(roomNumber: guest.roomNumber, description: "Room items")
         dd = Array(repeating: Array(repeating: DisplayData(), count: 100), count: hotel.roomItems.count)
-        orderSummaryConstraint.constant = 1
+        orderShortSummaryView.isHidden = true
+        //orderSummaryConstraint.constant = 0
         tableView.reloadData()
     }
 }

@@ -75,10 +75,10 @@ final class FireB {
             case is HotelIInfo.Type:
                 return dbRef?.queryOrderedByKey().queryEqual(toValue: "info")
             case is GuestInfo.Type:
-                guard case .GuestInfo(let guestId) = parameter else { print(errStr); return nil }
+                guard case .GuestInfo(let guestId) = parameter else { Log.log(errStr); return nil }
                 return dbRef?.queryOrderedByKey().queryEqual(toValue: guestId)
             case is OrderInDB.Type:
-                guard case .OrderInDB(let roomNumber) = parameter else { print(errStr); return nil }
+                guard case .OrderInDB(let roomNumber) = parameter else { Log.log(errStr); return nil }
                 if roomNumber > 0 {
                     return dbRef?.queryOrdered(byChild: "roomNumber").queryEqual(toValue: roomNumber)
                 } else {
@@ -86,7 +86,7 @@ final class FireB {
                     //return dbRef?.queryOrdered(byChild: "roomNumber")
                 }
             case is ChatMessage.Type:
-                guard case .ChatRoom(let chatRoomId) = parameter else { print(errStr); return nil }
+                guard case .ChatRoom(let chatRoomId) = parameter else { Log.log(errStr); return nil }
                 return dbRef?.child(chatRoomId)
             default:
                 return dbRef
@@ -106,14 +106,14 @@ final class FireB {
         // Use the unique key as the image name and prepare the storage reference
         //guard let imageKey = postDatabaseRef.key else { return }
         let imageKey = (imageName != nil ? imageName! : (Auth.auth().currentUser?.uid)! + "___" + Date().formatFull())
-        print("Uploading image with the key: " + imageKey)
+        Log.log(level: .INFO, "Uploading image with the key: " + imageKey)
 
         photosStorageRef = photosStorageRef.child("\(imageKey).jpg")
 
         // Resize the image
         let scaledImage = image.scaleTo(newWidth: 1280.0)
         guard let imageData = scaledImage.jpegData(compressionQuality: 0.5) else {
-            print("failed to convert to jpeg")
+            Log.log("failed to convert to jpeg")
             return
         }
 
@@ -127,20 +127,20 @@ final class FireB {
 
         uploadTask.observe(.success) { (snapshot) in
             snapshot.reference.downloadURL(completion: { (url, error) in
-                guard let url = url else { print("Error getting downloadURL"); return }
-                print("\(url) uploaded")
+                guard let url = url else { Log.log("Error getting downloadURL"); return }
+                Log.log(level: .INFO, "\(url) uploaded")
                 completionHandler(url.absoluteString)
             })
         }
 
         uploadTask.observe(.progress) { (snapshot) in
             let percentComplete: Double = Double(100.0) * Double(snapshot.progress!.completedUnitCount) / Double(snapshot.progress!.totalUnitCount)
-            print("Uploading \(imageKey)... \(percentComplete)% complete")
+            Log.log(level: .INFO, "Uploading \(imageKey)... \(percentComplete)% complete")
         }
 
         uploadTask.observe(.failure) { (snapshot) in
             if let error = snapshot.error {
-                print(error.localizedDescription)
+                Log.log(error.localizedDescription)
             }
         }
     }
@@ -161,11 +161,11 @@ extension FireB {
             if let dbRef = dbRef {
                 dbRef.setValue(dictionary) { error, dbRef in
                     if let err = error {
-                        print("error uploading key \(String(describing: key))")
-                        print(err.localizedDescription)
+                        Log.log("error uploading key \(String(describing: key))")
+                        Log.log(err.localizedDescription)
                         completionHandler(nil)
                     } else {
-                        print("Record with key \(String(describing: key)) added to \(dbRef.url.localized)")
+                        Log.log(level: .INFO, "Record with key \(String(describing: key)) added to \(dbRef.url.localized)")
                         completionHandler(record)
                     }
                 }
@@ -176,7 +176,7 @@ extension FireB {
         else {
             errString = "JSONEncoder failed"
         }
-        if let errStr = errString { print(errStr) }
+        if let errStr = errString { Log.log(errStr) }
         return errString
     }
 
@@ -188,11 +188,11 @@ extension FireB {
         if let dbRef = dbRef {
             dbRef.removeValue() { error, dbRef in
                 if let err = error {
-                    print("error removing key \(String(describing: key))")
-                    print(err.localizedDescription)
+                    Log.log("error removing key \(String(describing: key))")
+                    Log.log(err.localizedDescription)
                     completionHandler(nil)
                 } else {
-                    print("Record with key \(String(describing: key)) removed")
+                    Log.log(level: .INFO, "Record with key \(String(describing: key)) removed")
                     completionHandler(record)
                 }
             }
@@ -206,11 +206,11 @@ extension FireB {
     func subscribeForUpdates<T: Codable>(start timestamp: Int? = nil, limit: UInt? = nil, parameter: QueryParameter? = nil, completionHandler: @ escaping ([(String, T)]) -> Void) {
         
         guard let query = getQuery(type: T.self, parameter: parameter) else { return }
-        print("observing " + query.description)
+        Log.log(level: .INFO, "observing " + query.description)
         observed.insert(query)
         query.observe(.value, with: { (snapshot) in
             var objects: [(String, T)] = []
-            print("adding \(snapshot.children.allObjects.count) new objects of type \(T.self)")
+            Log.log(level: .INFO, "adding \(snapshot.children.allObjects.count) new objects of type \(T.self)")
             for item in snapshot.children.allObjects as! [DataSnapshot] {
                 let decoder = JSONDecoder()
                 if JSONSerialization.isValidJSONObject(item.value!) {
@@ -219,14 +219,14 @@ extension FireB {
                         let object = try decoder.decode(T.self, from: data!)
                         objects.append((item.key, object))
                     } catch {
-                        print("Failed to decode JSON")
-                        print(item)
-                        print(data as Any)
-                        print(error)
+                        Log.log("Failed to decode JSON")
+                        Log.log(item.debugDescription)
+                        Log.log(data.debugDescription)
+                        Log.log(error.localizedDescription)
                     }
                 }
             }
-            print("\(objects.count) new objects of type \(T.self) added")
+            Log.log(level: .INFO, "\(objects.count) new objects of type \(T.self) added")
 
             completionHandler(objects)
         })
@@ -241,14 +241,14 @@ extension FireB {
                 let data = try? JSONSerialization.data(withJSONObject: snapshot.value!)
                 do {
                     let order: Order = try decoder.decode(Order.self, from: data!)
-                    print("Order \(order.number) updated")
+                    Log.log(level: .INFO, "Order \(order.number) updated")
                     if !guest.isAdmin() {
                         prepareNotification(id: String(order.number), title: "ORDER", subtitle: String(order.number), body: "Your order has been " + order.status.rawValue, attachmentFile: "roomOrder")
                     }
                 } catch {
-                    print("Failed to decode JSON")
-                    print(snapshot)
-                    print(error)
+                    Log.log("Failed to decode JSON")
+                    Log.log(snapshot.debugDescription)
+                    Log.log(error.localizedDescription)
                 }
             }
         })
@@ -263,7 +263,7 @@ extension FireB {
     
     func decodeSnapshot<T: Codable>(snapshot: DataSnapshot) -> [(String, T)] {
         var objects: [(String, T)] = []
-        print("decoding \(snapshot.children.allObjects.count) new objects of type \(T.self)")
+        Log.log(level: .INFO, "decoding \(snapshot.children.allObjects.count) new objects of type \(T.self)")
         for item in snapshot.children.allObjects as! [DataSnapshot] {
             let decoder = JSONDecoder()
             let data = try? JSONSerialization.data(withJSONObject: item.value!)
@@ -271,10 +271,10 @@ extension FireB {
                 let object = try decoder.decode(T.self, from: data!)
                 objects.append((item.key, object))
             } catch {
-                print("Failed to decode JSON")
-                print(item)
-                print(data as Any)
-                print(error)
+                Log.log("Failed to decode JSON")
+                Log.log(item.debugDescription)
+                Log.log(data.debugDescription)
+                Log.log(error.localizedDescription)
             }
         }
         return objects
@@ -286,9 +286,9 @@ extension FireB {
         let guestsRef = Database.database().reference().child("hotels").child(hotelID).child("users")
         guestsRef.getData { (error, snapshot) in
             if let error = error {
-                print("Error getting data \(error)")
+                Log.log("Error getting data \(error)")
             } else {
-                print("Got data \(snapshot.value!)")
+                Log.log(level: .INFO, "Got data \(snapshot.value!)")
                 let data: [(String, GuestInfo)] = self.decodeSnapshot(snapshot: snapshot)
                 completionHandler(data)
             }

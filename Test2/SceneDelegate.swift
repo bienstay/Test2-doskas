@@ -53,18 +53,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         for context in URLContexts {
-            print("url: \(context.url.absoluteURL)")
-            print("scheme: \(String(describing: context.url.scheme))")
-            print("host: \(String(describing: context.url.host))")
-            print("path: \(context.url.path)")
-            print("components: \(context.url.pathComponents)")
+            Log.log(level: .INFO, "url: \(context.url.absoluteURL)")
+            Log.log(level: .INFO, "scheme: \(String(describing: context.url.scheme))")
+            Log.log(level: .INFO, "host: \(String(describing: context.url.host))")
+            Log.log(level: .INFO, "path: \(context.url.path)")
+            Log.log(level: .INFO, "components: \(context.url.pathComponents)")
         }
         if let host = URLContexts.first?.url.host {
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             appDelegate.pushMenuScreen(restaurantName: host)
         }
         else {
-            print("Invalid scheme")
+            Log.log("Invalid scheme")
         }
     }
 /*
@@ -72,7 +72,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let storyboard = UIStoryboard(name: "Menu", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "MenuMainViewController") as! MenuMainViewController
         guard let restaurant = hotel.facilities[.Restaurant]![restaurantName] as? Restaurant else {
-            print("Restaurant " + restaurantName + " not found")
+            Log.log("Restaurant " + restaurantName + " not found")
             return
         }
         vc.restaurant = restaurant

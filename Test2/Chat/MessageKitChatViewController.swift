@@ -145,8 +145,6 @@ extension MessageKitChatViewController: MessagesDisplayDelegate {
 
 extension MessageKitChatViewController: InputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
-        print("Send pressed with " + text)
-
         let newChatMessage = ChatMessage(created: Date(), content: text, senderID: guest.id, senderName: guest.Name)
         let key = chatRoomId + "/" + Date().formatFull()
         _ = FireB.shared.addRecord(key: key, record: newChatMessage) { _ in }

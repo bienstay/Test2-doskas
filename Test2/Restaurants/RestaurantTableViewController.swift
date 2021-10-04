@@ -69,7 +69,6 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
     @IBAction func unwindToHome(segue: UIStoryboardSegue) {
         if (segue.identifier == "save") {
             if let newRC = segue.source as? NewRestaurantController {
-                print("adding a new restaurant...")
                 hotel.restaurants.append(newRC.restaurant)  // TODO add to Firebase
             }
             //updateRestaurantListView()

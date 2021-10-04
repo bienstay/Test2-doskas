@@ -69,7 +69,6 @@ class HomeViewController: UIViewController {
     }
 
     @objc func didTap(sender: UITapGestureRecognizer) {
-        print("handleTap")
         ConfigViewController.showPopup(parentVC: self)
     }
 }
@@ -191,7 +190,7 @@ class MoreNewsCell: UITableViewCell {
         super.awakeFromNib()
         backgroundColor = .clear
         selectionStyle = .none
-        note.font = UIFont(name: note.font.fontName, size: 20)
+        //note.font = UIFont(name: note.font.fontName, size: 20)
         note.text = "More news..."
     }
 }

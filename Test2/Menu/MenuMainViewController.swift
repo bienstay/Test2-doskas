@@ -13,7 +13,6 @@ class MenuMainViewController: UIViewController {
     @IBOutlet var closeButton: UIButton!
     @IBAction func pageControlPressed(_ sender: UIPageControl) {
         //menuPageViewController?.currentMenuIndex = sender.currentPage
-        print(sender.currentPage)
         menuPageViewController?.forwardPage()   // TODO - fix this
         updateUI()
     }

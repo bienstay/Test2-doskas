@@ -153,7 +153,7 @@
                                                                                 <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="u1r-5E-vWC">
                                                                                     <rect key="frame" x="132.5" y="0.0" width="133" height="49"/>
                                                                                     <subviews>
-                                                                                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AJr-I4-xq5" customClass="GlossyButton2" customModule="Test2" customModuleProvider="target">
+                                                                                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AJr-I4-xq5">
                                                                                             <rect key="frame" x="0.0" y="0.0" width="49" height="49"/>
                                                                                             <constraints>
                                                                                                 <constraint firstAttribute="width" secondItem="AJr-I4-xq5" secondAttribute="height" id="f4l-qA-efp"/>
@@ -170,7 +170,7 @@
                                                                                             <nil key="textColor"/>
                                                                                             <nil key="highlightedColor"/>
                                                                                         </label>
-                                                                                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PMk-hu-Hds" customClass="GlossyButton2" customModule="Test2" customModuleProvider="target">
+                                                                                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PMk-hu-Hds">
                                                                                             <rect key="frame" x="84" y="0.0" width="49" height="49"/>
                                                                                             <constraints>
                                                                                                 <constraint firstAttribute="width" secondItem="PMk-hu-Hds" secondAttribute="height" id="aGG-z2-ygA"/>

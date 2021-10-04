@@ -12,7 +12,6 @@ class NewsDetailViewController: UIViewController {
     var post = NewsPost()
 
     @IBOutlet var tableView: UITableView!
-    @IBOutlet var headerView: NewsDetailHeaderView!
     @IBOutlet weak var deleteBarButton: UIBarButtonItem!
     
     override func viewDidLoad() {
@@ -23,15 +22,8 @@ class NewsDetailViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
 
-        headerView.draw(post: post)
-
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleLongPress))
-        //tap.minimumPressDuration = 1
         tap.numberOfTapsRequired = 1
-        headerView.titleLabel.isUserInteractionEnabled = true
-        headerView.titleLabel.addGestureRecognizer(tap)
-        headerView.addGestureRecognizer(tap)
-        headerView.headerDimmedView.addGestureRecognizer(tap)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -72,11 +64,11 @@ class NewsDetailViewController: UIViewController {
                 }
             }
         }
-        if errStr != nil { print(errStr!) }
+        if errStr != nil { Log.log(errStr!) }
     }
 
     @objc func handleLongPress(_ sender: UILongPressGestureRecognizer?) {
-        print("Long press detected")
+        Log.log(level: .INFO, "Long press detected")
     }
 }
 
@@ -108,29 +100,6 @@ extension NewsDetailViewController: UITableViewDataSource, UITableViewDelegate {
 }
 
 
-class NewsDetailHeaderView: UIView {
-
-    @IBOutlet var headerImageView: UIImageView!
-    @IBOutlet var headerDimmedView: UIView!
-    @IBOutlet var heartButton: UIButton!
-    @IBOutlet var titleLabel: UILabel!
-    @IBOutlet var subtitleLabel: UILabel!
-    
-    func draw(post: NewsPost) {
-        titleLabel.text = post.title
-        subtitleLabel.text = post.subtitle
-        if let url = URL(string: post.imageFileURL) {
-            headerImageView.isHidden = false
-            headerDimmedView.isHidden = false
-            headerImageView.kf.setImage(with: url)
-        } else {
-            //headerImageView.isHidden = true
-            //headerDimmedView.isHidden = true
-            headerImageView.image = UIImage(named: "Lukasz")
-        }
-        //displayHeart()
-    }
-}
 
 class NewsDetailTextCell: UITableViewCell {
 
@@ -184,7 +153,7 @@ class NewsDetailHeaderCell: UITableViewCell {
             //headerImageView.isHidden = true
             //headerDimmedView.isHidden = true
             headerImageView.contentMode = .scaleAspectFit
-            headerImageView.image = UIImage(named: "Lukasz")
+            headerImageView.image = UIImage(named: "JaNaPlaya")
         }
         //displayHeart()
     }

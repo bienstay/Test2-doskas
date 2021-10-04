@@ -55,7 +55,6 @@ class OnboardingContentViewController: UIViewController {
     }
 
     @objc func didTap(sender: UITapGestureRecognizer) {
-        print("handleTap")
         ConfigViewController.showPopup(parentVC: self)
     }
 }
