@@ -195,8 +195,8 @@ extension FireB {
         return errString
     }
 
-    func removeRecord<T: Encodable>(key:String, record: T, completionHandler: @ escaping (T?) -> Void) -> String? {
-        let dbRefForType = getDBRef(type: T.self)
+    func removeRecord<T: Encodable>(key:String, subNode: String? = nil, record: T, completionHandler: @ escaping (T?) -> Void) -> String? {
+        let dbRefForType = getDBRef(type: T.self, subNode: subNode)
         let dbRef = dbRefForType?.child(key)
 
         var errString:String? = nil

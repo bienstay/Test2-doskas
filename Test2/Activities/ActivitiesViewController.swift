@@ -11,7 +11,7 @@ import FirebaseDatabase
 class ActivitiesViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var newPostBarButton: UIBarButtonItem!
+    @IBOutlet weak var newActivityBarButton: UIBarButtonItem!
 
     var dowIndex: Int = 0
     var expandedCells: Set<Int> = []
@@ -34,6 +34,9 @@ class ActivitiesViewController: UIViewController {
         navigationController?.navigationBar.tintColor = .black
         
         title = Activity.DOW.allCases[dowIndex].rawValue
+        
+        newActivityBarButton.isEnabled = guest.isAdmin() ? true: false
+        newActivityBarButton.title = guest.isAdmin() ? "New" : ""
     }
 
     func resetDay(forward: Bool) {
@@ -120,10 +123,32 @@ extension ActivitiesViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        if !guest.isAdmin() { return nil }
+        let action1 = UIContextualAction(style: .normal, title: "Edit") { action, view, completionHandler in
+            self.openNewActivityViewController(row: indexPath.row)
+            completionHandler(true)
+        }
+        action1.backgroundColor = .orange
+        return UISwipeActionsConfiguration(actions: [action1])
+    }
+
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        if !guest.isAdmin() { return nil }
+        let action1 = UIContextualAction(style: .normal, title: "Delete") { action, view, completionHandler in
+            if let activity = hotel.activities[self.title!]?[indexPath.row] {
+                _ = FireB.shared.removeRecord(key: activity.id!, subNode: self.title, record: activity) { _ in
+                }
+            }
+            completionHandler(true)
+        }
+        action1.backgroundColor = .red
+        return UISwipeActionsConfiguration(actions: [action1])
+    }
+
+    func openNewActivityViewController(row: Int) {
         let vc = self.createViewController(storyBoard: "Activities", id: "NewActivity") as! NewActivityViewController
-        vc.activityIndexToEdit = indexPath.row
+        vc.activityIndexToEdit = row
         vc.dowIndex = dowIndex
         self.navigationController?.pushViewController(vc, animated: true)
-        return nil
     }
 }

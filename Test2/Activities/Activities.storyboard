@@ -165,7 +165,7 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="15" style="compact" translatesAutoresizingMaskIntoConstraints="NO" id="NE8-lJ-Pno">
-                                                                    <rect key="frame" x="23" y="22" width="79" height="50"/>
+                                                                    <rect key="frame" x="18.5" y="22" width="88" height="50"/>
                                                                 </datePicker>
                                                             </subviews>
                                                         </stackView>
@@ -179,7 +179,7 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="15" style="compact" translatesAutoresizingMaskIntoConstraints="NO" id="7yg-Pv-qo5">
-                                                                    <rect key="frame" x="22.5" y="22" width="79" height="50"/>
+                                                                    <rect key="frame" x="18" y="22" width="88" height="50"/>
                                                                 </datePicker>
                                                             </subviews>
                                                         </stackView>
@@ -354,7 +354,7 @@
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="newPostBarButton" destination="ktu-49-Uqp" id="bjG-K9-7D2"/>
+                        <outlet property="newActivityBarButton" destination="ktu-49-Uqp" id="VBL-vf-mh2"/>
                         <outlet property="tableView" destination="26U-6y-cAu" id="aAG-pz-wdV"/>
                     </connections>
                 </viewController>
