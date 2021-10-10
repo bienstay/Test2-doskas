@@ -12,9 +12,8 @@ class SplashViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        //Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(dismissSplash), userInfo: nil, repeats: false)
-        //loadRestaurants(fromServerURL: "https://s3.us-east-2.amazonaws.com/bienstay.com/sheratonRestaurants.json", completionClosure: dismissSplash)
-        dismissSplash()
+        Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(dismissSplash), userInfo: nil, repeats: false)
+        //dismissSplash()
 
     }
     

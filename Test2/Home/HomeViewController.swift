@@ -138,7 +138,8 @@ extension HomeViewController: UITableViewDelegate {
         switch Section(rawValue: indexPath.section) {
         case .info:
             if indexPath.row == 0 {
-                _ = pushViewController(storyBoard: "Map", id: "mapViewController")
+                //_ = pushViewController(storyBoard: "Map", id: "mapViewController")
+                _ = pushViewController(storyBoard: "Activities", id: "Activities")
 
                 //                let vc = OnboardingPageViewController()
 //                vc.modalPresentationStyle = .fullScreen
@@ -153,7 +154,8 @@ extension HomeViewController: UITableViewDelegate {
                 vc.infoItem = hotel.infoItems[0]    // TODO
             }
             if indexPath.row == 2 {
-                _ = pushViewController(storyBoard: "WaterSports", id: "WaterSports")
+                //_ = pushViewController(storyBoard: "WaterSports", id: "WaterSports")
+                _ = pushViewController(storyBoard: "Activities", id: "NewActivity")
             }
         case .news:
             if indexPath.row < 2 {

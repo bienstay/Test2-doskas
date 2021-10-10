@@ -96,7 +96,7 @@ class NewNewsPostViewController: UITableViewController {
                 if let s = errStr { Log.log(s) }
             }
         } else {
-            post.imageFileURL = postToEdit!.imageFileURL
+            post.imageFileURL = postToEdit?.imageFileURL ?? ""
             let errStr = FireB.shared.addRecord(key: post.postId, record: post) { post in self.closeMe(post) }   // update only
             if let s = errStr { Log.log(s) }
         }

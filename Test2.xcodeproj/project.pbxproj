@@ -83,6 +83,12 @@
 		06ACC3DB264D758B000876E3 /* OrderShortSummary.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06ACC3DA264D758B000876E3 /* OrderShortSummary.xib */; };
 		06ACC3DD264D7B84000876E3 /* OrderShortSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06ACC3DC264D7B84000876E3 /* OrderShortSummaryView.swift */; };
 		06DDB8C1265874BE00A5FD84 /* sheratonFacilities.json in Resources */ = {isa = PBXBuildFile; fileRef = 06DDB8C0265874BE00A5FD84 /* sheratonFacilities.json */; };
+		06F5D161270B516D004931F7 /* ActivitiesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F5D160270B516D004931F7 /* ActivitiesViewController.swift */; };
+		06F5D163270B5197004931F7 /* NewActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F5D162270B5197004931F7 /* NewActivityViewController.swift */; };
+		06F5D165270B51B4004931F7 /* ActivityDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F5D164270B51B4004931F7 /* ActivityDetailsViewController.swift */; };
+		06F5D167270B52A4004931F7 /* Activities.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 06F5D166270B52A4004931F7 /* Activities.storyboard */; };
+		06F5D169270B8E1B004931F7 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F5D168270B8E1B004931F7 /* Activity.swift */; };
+		06F5D16B270BC7D4004931F7 /* ActivityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F5D16A270BC7D4004931F7 /* ActivityCell.swift */; };
 		06F7726A26713DC600E64D54 /* NewsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F7726926713DC600E64D54 /* NewsCell.swift */; };
 		06F7726C2671755800E64D54 /* NewNewsPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F7726B2671755800E64D54 /* NewNewsPostViewController.swift */; };
 		06F7726E2673931300E64D54 /* NewsDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F7726D2673931300E64D54 /* NewsDetailViewController.swift */; };
@@ -174,6 +180,12 @@
 		06ACC3DA264D758B000876E3 /* OrderShortSummary.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OrderShortSummary.xib; sourceTree = "<group>"; };
 		06ACC3DC264D7B84000876E3 /* OrderShortSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderShortSummaryView.swift; sourceTree = "<group>"; };
 		06DDB8C0265874BE00A5FD84 /* sheratonFacilities.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sheratonFacilities.json; sourceTree = "<group>"; };
+		06F5D160270B516D004931F7 /* ActivitiesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesViewController.swift; sourceTree = "<group>"; };
+		06F5D162270B5197004931F7 /* NewActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewActivityViewController.swift; sourceTree = "<group>"; };
+		06F5D164270B51B4004931F7 /* ActivityDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityDetailsViewController.swift; sourceTree = "<group>"; };
+		06F5D166270B52A4004931F7 /* Activities.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Activities.storyboard; sourceTree = "<group>"; };
+		06F5D168270B8E1B004931F7 /* Activity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
+		06F5D16A270BC7D4004931F7 /* ActivityCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCell.swift; sourceTree = "<group>"; };
 		06F77266266FD8B500E64D54 /* Test2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Test2.entitlements; sourceTree = "<group>"; };
 		06F7726926713DC600E64D54 /* NewsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCell.swift; sourceTree = "<group>"; };
 		06F7726B2671755800E64D54 /* NewNewsPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewNewsPostViewController.swift; sourceTree = "<group>"; };
@@ -307,6 +319,7 @@
 				061DC83C26547BC300C4C794 /* HotelInit.swift */,
 				0632D4482669A1A5001F7036 /* Guest.swift */,
 				069FDBA726A09A55004F543F /* Chat.swift */,
+				06F5D168270B8E1B004931F7 /* Activity.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -443,6 +456,11 @@
 		06F5D15F270B4E6A004931F7 /* Activities */ = {
 			isa = PBXGroup;
 			children = (
+				06F5D160270B516D004931F7 /* ActivitiesViewController.swift */,
+				06F5D162270B5197004931F7 /* NewActivityViewController.swift */,
+				06F5D164270B51B4004931F7 /* ActivityDetailsViewController.swift */,
+				06F5D166270B52A4004931F7 /* Activities.storyboard */,
+				06F5D16A270BC7D4004931F7 /* ActivityCell.swift */,
 			);
 			path = Activities;
 			sourceTree = "<group>";
@@ -544,6 +562,7 @@
 				061DC8322654334D00C4C794 /* DestinationDiningPrivateEvents.jpg in Resources */,
 				061DC8362654334D00C4C794 /* DestinationDiningBubblesUnderTheStars.jpg in Resources */,
 				065F035C2635FD0B00A5CDEF /* Map.storyboard in Resources */,
+				06F5D167270B52A4004931F7 /* Activities.storyboard in Resources */,
 				0683A1F42651C80C0000D122 /* RoomSectionHeaderView.xib in Resources */,
 				0638E79F2709055B00EACFC1 /* LaunchScreen.storyboard in Resources */,
 				061DC8332654334D00C4C794 /* DestinationDiningSandbankPicnic.jpg in Resources */,
@@ -630,15 +649,19 @@
 				069FDBAA26A39486004F543F /* ChatListViewController.swift in Sources */,
 				065F036A2636221100A5CDEF /* Hotel.swift in Sources */,
 				06F7726A26713DC600E64D54 /* NewsCell.swift in Sources */,
+				06F5D169270B8E1B004931F7 /* Activity.swift in Sources */,
 				069DB364263B105C00C91468 /* RestaurantDetailTwoColumnCell.swift in Sources */,
 				069DB366263B105C00C91468 /* RestaurantDetailMapCell.swift in Sources */,
 				0683A1F2265172070000D122 /* MenuMainViewController.swift in Sources */,
 				06F7727026760FA100E64D54 /* IBPCollectionViewCompositionalLayoutInteroperability.swift in Sources */,
+				06F5D161270B516D004931F7 /* ActivitiesViewController.swift in Sources */,
 				062038662641A37500B87708 /* MapViewController.swift in Sources */,
+				06F5D16B270BC7D4004931F7 /* ActivityCell.swift in Sources */,
 				069DB35C263B0FB800C91468 /* RestaurantTableViewController.swift in Sources */,
 				06606DF3270760330023412C /* MaintenanceOrderViewController.swift in Sources */,
 				06F7726E2673931300E64D54 /* NewsDetailViewController.swift in Sources */,
 				06ACC3DD264D7B84000876E3 /* OrderShortSummaryView.swift in Sources */,
+				06F5D163270B5197004931F7 /* NewActivityViewController.swift in Sources */,
 				069DB369263B12EB00C91468 /* RoundedTextField.swift in Sources */,
 				069DB363263B105C00C91468 /* RestaurantDetailTextCell.swift in Sources */,
 				069FDBA826A09A55004F543F /* Chat.swift in Sources */,
@@ -651,6 +674,7 @@
 				06F7727226762E6A00E64D54 /* InfoViewController.swift in Sources */,
 				069FD3CC268CBB200076C6FC /* OrderSummaryViewController.swift in Sources */,
 				069DB367263B105C00C91468 /* RestaurantTableViewCell.swift in Sources */,
+				06F5D165270B51B4004931F7 /* ActivityDetailsViewController.swift in Sources */,
 				061DC83D26547BC300C4C794 /* HotelInit.swift in Sources */,
 				06F7726C2671755800E64D54 /* NewNewsPostViewController.swift in Sources */,
 				069FDBA2269E17C3004F543F /* MessageKitChatViewController.swift in Sources */,
@@ -771,9 +795,9 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_SWIFT_FLAGS = "-Xfrontend -warn-long-expression-type-checking=50 -Xfrontend -warn-long-expression-type-checking=50 -Xfrontend -warn-long-expression-type-checking=50 -Xfrontend -warn-long-function-bodies=100";
+				OTHER_SWIFT_FLAGS = "-Xfrontend -warn-long-expression-type-checking=100 -Xfrontend -warn-long-expression-type-checking=100 -Xfrontend -warn-long-expression-type-checking=100 -Xfrontend -warn-long-function-bodies=200";
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "___DEBUG";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -827,7 +851,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				OTHER_SWIFT_FLAGS = "-Xfrontend -warn-long-expression-type-checking=50 -Xfrontend -warn-long-expression-type-checking=50 -Xfrontend -warn-long-expression-type-checking=50 -Xfrontend -warn-long-function-bodies=100";
+				OTHER_SWIFT_FLAGS = "-Xfrontend -warn-long-expression-type-checking=100 -Xfrontend -warn-long-expression-type-checking=100 -Xfrontend -warn-long-expression-type-checking=100 -Xfrontend -warn-long-function-bodies=200";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";

@@ -255,7 +255,7 @@ class RoomHeaderCell: UITableViewCell {
         case 1:
             headerTitleLabel.text = "Maintenance"
             headerLabel.text = "Notify us about any issue in your room that requires maintenance"
-            headerImage.image = UIImage(named: "031-cleaning")
+            headerImage.image = UIImage(named: "Maintenance")
         default:
             break
         }

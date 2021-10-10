@@ -20,6 +20,7 @@ final class FireB {
 
     enum PhotoLocation {
         case NEWS
+        case ACTIVITIES
         case RESTAURANTS
     }
 
@@ -28,6 +29,8 @@ final class FireB {
     var INFO_DB_REF: DatabaseReference          { BASE_DB_REF }
     var GUESTS_DB_REF: DatabaseReference        { BASE_DB_REF.child("users") }
     var NEWS_DB_REF: DatabaseReference          { BASE_DB_REF.child("news") }
+    var ACTIVITIES_DB_REF: DatabaseReference    { BASE_DB_REF.child("activities") }
+    var ACTIVITIES2_DB_REF: DatabaseReference    { BASE_DB_REF.child("activities2") }
     var RESTAURANTS_DB_REF: DatabaseReference   { BASE_DB_REF.child("restaurants") }
     var MENUS_DB_REF: DatabaseReference         { BASE_DB_REF.child("menus") }
     var ORDERS_DB_REF: DatabaseReference        { BASE_DB_REF.child("orders") }
@@ -36,16 +39,25 @@ final class FireB {
     // MARK: - Firebase Storage Reference
     let BASE_PHOTOS_REF: StorageReference = Storage.storage().reference().child( "photos")
     let NEWS_PHOTOS_REF: StorageReference = Storage.storage().reference().child( "photos/news")
+    let ACTIVITIES_PHOTOS_REF: StorageReference = Storage.storage().reference().child( "photos/news")
     let RESTAURANTS_PHOTOS_REF: StorageReference = Storage.storage().reference().child( "photos/restaurants")
     
     var observed: Set<DatabaseQuery> = []
     
-    func getDBRef<T>(type: T.Type) -> DatabaseReference? {
+    func getDBRef<T>(type: T.Type, subNode: String? = nil) -> DatabaseReference? {
         switch type {
             case is HotelIInfo.Type:
                 return INFO_DB_REF
             case is NewsPost.Type:
                 return NEWS_DB_REF
+            case is DailyActivities.Type:
+                return ACTIVITIES_DB_REF
+            case is DailyActivities2.Type:
+                if let child = subNode { return ACTIVITIES2_DB_REF.child(child) }
+                else { return ACTIVITIES2_DB_REF }
+            case is Activity.Type:
+                if let child = subNode { return ACTIVITIES2_DB_REF.child(child) }
+                else { return ACTIVITIES2_DB_REF }
             case is OrderInDB.Type:
                 return ORDERS_DB_REF
             case is Restaurant.Type:
@@ -66,6 +78,7 @@ final class FireB {
         case ChatRoom(id: String)
         case ChatUser(id: String)
         case GuestInfo(id: String)
+        case DailyActivities2(id: String)
     }
 
     func getQuery<T>(type: T.Type, parameter:QueryParameter? = nil) -> DatabaseQuery? {
@@ -99,6 +112,8 @@ final class FireB {
         switch forLocation {
             case .NEWS:
                 photosStorageRef = NEWS_PHOTOS_REF
+            case .ACTIVITIES:
+                photosStorageRef = ACTIVITIES_PHOTOS_REF
             case .RESTAURANTS:
                 photosStorageRef = RESTAURANTS_PHOTOS_REF
         }
@@ -148,13 +163,13 @@ final class FireB {
 
 extension FireB {
 
-    func addRecord<T: Encodable>(key:String? = nil, record: T, completionHandler: @ escaping (T?) -> Void) -> String? {
+    func addRecord<T: Encodable>(key:String? = nil, subNode: String? = nil, record: T, completionHandler: @ escaping (T?) -> Void) -> String? {
 
         var errString:String? = nil
         if let jsonData = try? JSONEncoder().encode(record) {
             let dictionary = try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any]
 
-            let dbRefForType = getDBRef(type: T.self)
+            let dbRefForType = getDBRef(type: T.self, subNode: subNode)
             var dbRef = dbRefForType?.childByAutoId()
             if let key = key { dbRef = dbRefForType?.child(key) }
 

@@ -336,12 +336,18 @@ extension Date {
         formatter3.dateFormat = "MMM dd, HH:mm:ss"
         return formatter3.string(from: self)
     }
+    func formatTimeShort() -> String {
+        let formatter3 = DateFormatter()
+        formatter3.dateFormat = "HH:mm"
+        return formatter3.string(from: self)
+    }
 }
 
 extension Notification.Name {
     static let hotelInfoUpdated = Notification.Name("hotelInfoUpdated")
     static let ordersUpdated = Notification.Name("ordersUpdated")
     static let newsUpdated = Notification.Name("newsUpdated")
+    static let activitiesUpdated = Notification.Name("activitiesUpdated")
     static let restaurantsUpdated = Notification.Name("restarantsUpdated")
     static let menusUpdated = Notification.Name("menusUpdated")
     static let chatRoomsUpdated = Notification.Name("chatRoomsUpdated")
@@ -478,10 +484,48 @@ struct Log {
         case ERROR
         case INFO
     }
-    static var currentLevel: LogLevel = .ERROR
+    static var currentLevel: LogLevel = .INFO
     static func log(level: LogLevel = .INFO, _ message: String) {
         if level.rawValue <= currentLevel.rawValue {
             print(message)
         }
+    }
+}
+
+
+
+extension UIViewController  {
+
+    func showPicturePicker(vc: UIViewController & UINavigationControllerDelegate & UIImagePickerControllerDelegate) {
+        let photoSourceRequestController = UIAlertController(title: "", message: NSLocalizedString("Choose your photo source", comment: "Choose your photo source"), preferredStyle: .actionSheet)
+        let cameraAction = UIAlertAction(title: NSLocalizedString("Camera", comment: "Camera"), style: .default, handler: { (action) in
+            if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                let imagePicker = UIImagePickerController()
+                imagePicker.allowsEditing = false
+                imagePicker.sourceType = .camera
+                imagePicker.delegate = vc
+                vc.present(imagePicker, animated: true, completion: nil)
+            }
+        })
+        let photoLibraryAction = UIAlertAction(title: NSLocalizedString("Photo library", comment: "Photo library"), style: .default, handler: { (action) in
+            if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+                let imagePicker = UIImagePickerController()
+                imagePicker.allowsEditing = false
+                imagePicker.sourceType = .photoLibrary
+                //imagePicker.sourceType = .savedPhotosAlbum
+                imagePicker.delegate = vc
+                vc.present(imagePicker, animated: true, completion: nil)
+            }
+        })
+        photoSourceRequestController.addAction(cameraAction)
+        photoSourceRequestController.addAction(photoLibraryAction)
+        
+        // For iPad
+        if let popoverController = photoSourceRequestController.popoverPresentationController {
+            popoverController.sourceView = vc.view
+            popoverController.sourceRect = vc.view.bounds
+        }
+
+        present(photoSourceRequestController, animated: true, completion: nil)
     }
 }
