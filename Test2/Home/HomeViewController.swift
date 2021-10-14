@@ -20,6 +20,7 @@ class HomeViewController: UIViewController {
         //case todayActivities
         static var numberOfSections: Int { return self.allCases.count }
     }
+    var onboardingShown: Bool = false
 
     @IBOutlet var tableView: UITableView!
     @IBOutlet var hotelNameLabel: UILabel!
@@ -40,10 +41,6 @@ class HomeViewController: UIViewController {
         tap.numberOfTapsRequired = 3
         hotelNameLabel.addGestureRecognizer(tap)
         hotelNameLabel.isUserInteractionEnabled = true
-        
-        let vc = OnboardingPageViewController()
-        vc.modalPresentationStyle = .fullScreen
-        self.present(vc, animated: true, completion: nil)
     }
 
     func displayHeader() {
@@ -56,6 +53,15 @@ class HomeViewController: UIViewController {
 
         displayHeader()
         navigationController?.setNavigationBarHidden(true, animated: true)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        if !onboardingShown {
+            let vc = OnboardingPageViewController()
+            vc.modalPresentationStyle = .fullScreen
+            self.present(vc, animated: true, completion: nil)
+            onboardingShown = true
+        }
     }
 
     @objc func onHotelInfoUpdated(_ notification: Notification) {
@@ -138,8 +144,8 @@ extension HomeViewController: UITableViewDelegate {
         switch Section(rawValue: indexPath.section) {
         case .info:
             if indexPath.row == 0 {
-                //_ = pushViewController(storyBoard: "Map", id: "mapViewController")
-                _ = pushViewController(storyBoard: "Activities", id: "Activities")
+                _ = pushViewController(storyBoard: "Map", id: "mapViewController")
+                //_ = pushViewController(storyBoard: "Activities", id: "Activities")
 
                 //                let vc = OnboardingPageViewController()
 //                vc.modalPresentationStyle = .fullScreen
@@ -155,7 +161,7 @@ extension HomeViewController: UITableViewDelegate {
             }
             if indexPath.row == 2 {
                 //_ = pushViewController(storyBoard: "WaterSports", id: "WaterSports")
-                _ = pushViewController(storyBoard: "Activities", id: "NewActivity")
+                _ = pushViewController(storyBoard: "Home", id: "HomeCollectionViewController")
             }
         case .news:
             if indexPath.row < 2 {

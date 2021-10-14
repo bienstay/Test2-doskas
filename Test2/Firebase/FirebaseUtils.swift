@@ -39,7 +39,7 @@ final class FireB {
     // MARK: - Firebase Storage Reference
     let BASE_PHOTOS_REF: StorageReference = Storage.storage().reference().child( "photos")
     let NEWS_PHOTOS_REF: StorageReference = Storage.storage().reference().child( "photos/news")
-    let ACTIVITIES_PHOTOS_REF: StorageReference = Storage.storage().reference().child( "photos/news")
+    let ACTIVITIES_PHOTOS_REF: StorageReference = Storage.storage().reference().child( "photos/activities")
     let RESTAURANTS_PHOTOS_REF: StorageReference = Storage.storage().reference().child( "photos/restaurants")
     
     var observed: Set<DatabaseQuery> = []

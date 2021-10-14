@@ -35,29 +35,29 @@ class ActivityCell: UITableViewCell {
             imageWidthConstraint.constant = mainStackView.frame.width
             mainStackView.axis = .vertical
             mainStackView.alignment = .fill
-            descriptionLabel.isHidden = false
+            descriptionLabel.isHidden = (descriptionLabel.text?.isEmpty ?? true) ? true : false
         } else {
-            imageWidthConstraint.constant = 80
+            imageWidthConstraint.constant = 100
             mainStackView.axis = .horizontal
-            mainStackView.alignment = .top
+            mainStackView.alignment = .center
             descriptionLabel.isHidden = true
         }
  
-        activityImageView.isHidden = true
         if let url = URL(string: activity.imageFileURL) {
             activityImageView.kf.setImage(with: url) { result in
                 switch result {
                 case .success(_):
                     self.activityImageView.isHidden = false
-                    //self.layoutIfNeeded()
-                default: break
+                case .failure(let kingfisherError):
+                    self.activityImageView.isHidden = true
+                    Log.log(level: .ERROR, kingfisherError.localizedDescription)
                 }
-                UIView.animate(withDuration: 0.5, delay: 0.0, options: [], animations: {self.layoutIfNeeded()}, completion: nil)
+                UIView.animate(withDuration: 0.5, delay: 0.0, options: [], animations: {self.layoutIfNeeded()}, completion: {_ in self.setNeedsLayout()})
             }
         }
         else {
-            UIView.animate(withDuration: 0.3, delay: 0.0, options: [], animations: {self.layoutIfNeeded()}, completion: nil)
-            //layoutIfNeeded()
+            activityImageView.isHidden = true
+            UIView.animate(withDuration: 0.5, delay: 0.0, options: [], animations: {self.layoutIfNeeded()}, completion: {_ in self.setNeedsLayout()})
         }
     }
 }

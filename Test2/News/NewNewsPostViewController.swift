@@ -104,17 +104,12 @@ class NewNewsPostViewController: UITableViewController {
     }
 
     func closeMe(_ post:NewsPost?) {
-        guard let post = post else {
+        guard post != nil else {
             showInfoDialogBox(vc: self, title: "Error", message: "Post update failed")
             return
         }
         if let nc = navigationController {
             nc.popViewController(animated: true)
-            if postToEdit != nil {
-                let parent = nc.topViewController as! NewsDetailViewController
-                parent.post = post
-                parent.tableView.reloadData()   // TODO hack
-            }
         }
     }
 }

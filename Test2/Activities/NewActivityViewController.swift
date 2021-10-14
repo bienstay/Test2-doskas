@@ -77,8 +77,6 @@ class NewActivityViewController: UITableViewController {
         var message: String?
         if titleLabel.text == "" { message = NSLocalizedString("Title missing") } else
         if locationLabel.text == "" { message = NSLocalizedString("Subtitle missing") } else
-        if activityText.text == "" { message = NSLocalizedString("Text missing") } else
-        if activityImageView.image == nil { message = NSLocalizedString("Image missing", comment: "Image missing") }
         if let message = message {
             showInfoDialogBox(vc: self, title: "Oops", message: message)
             return

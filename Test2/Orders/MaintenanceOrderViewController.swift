@@ -16,8 +16,9 @@ class MaintenanceOrderViewController: UIViewController {
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var roomNumberTextField: UITextField!
     @IBOutlet weak var commentTextView: UITextView!
-//    @IBOutlet weak var roomNumberStackView: UIStackView!
+    @IBOutlet weak var backgroundPicture: UIImageView!
 
+    var requestType: RoomItemType = .Maintenance
     var completionHandler: (() -> Void)?
 
     @IBAction func sendButtonPressed(_ sender: UIButton) {
@@ -35,6 +36,11 @@ class MaintenanceOrderViewController: UIViewController {
             orderNumber = guestOrders.isEmpty ? 1 : guestOrders.first!.number + 1
         }
 
+        order = Order(roomNumber: guest.roomNumber, description: requestType.rawValue)
+        let item = RoomItem()
+        item.category = requestType
+        item.name = requestType.rawValue
+        order.addItem(name: item.name, quantity: 1, price: 0)
         order.setCreated(orderNumber: orderNumber)
         if let comment = commentTextView.text, !comment.isEmpty {
             order.guestComment = comment
@@ -45,8 +51,7 @@ class MaintenanceOrderViewController: UIViewController {
             if record == nil {
                 showInfoDialogBox(vc: self, title: "Error", message: "Order update failed")
             } else {
-                //showInfoDialogBox(vc: self, title: "Info", message: "Order \(record!.number) created")
-                
+
                     DispatchQueue.main.async {
                         self.completionHandler?()
                         let notificationId = String(self.order.roomNumber) + "_" + String(self.order.number)
@@ -56,7 +61,7 @@ class MaintenanceOrderViewController: UIViewController {
                             tabBarController.selectedIndex = 4
                         }
                     }
-                
+
             }
         }
         if errStr != nil { Log.log(errStr!) }
@@ -67,7 +72,14 @@ class MaintenanceOrderViewController: UIViewController {
         initView()
         tabBarController?.tabBar.isHidden = true
 
-        title = "New request"
+        title = "New " + requestType.rawValue + " Request"
+        switch requestType {
+        case .Maintenance:
+            backgroundPicture.image = UIImage(named: "MaintenanceLarge")
+        case .Cleaning:
+            backgroundPicture.image = UIImage(named: "CleaningServiceLarge")
+        default: break
+        }
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil) //object: self.view.window)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: nil) //object: self.view.window)
@@ -79,7 +91,7 @@ class MaintenanceOrderViewController: UIViewController {
         roomNumberTextField.isEnabled = guest.isAdmin()
         roomNumberTextField.keyboardType = .numberPad
         if !guest.isAdmin() { roomNumberTextField.text = String(guest.roomNumber) }
-        
+
         commentTextView.becomeFirstResponder()
     }
 

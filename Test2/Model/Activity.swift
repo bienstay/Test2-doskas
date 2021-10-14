@@ -24,7 +24,7 @@ struct Activity: Codable, Hashable {
     var start: Date = Date()
     var end: Date = Date()
     var imageFileURL: String = ""
-    var text: String = ""
+    var text: String? = ""
 }
 
 struct DailyActivities: Codable {

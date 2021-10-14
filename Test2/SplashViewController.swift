@@ -12,7 +12,7 @@ class SplashViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(dismissSplash), userInfo: nil, repeats: false)
+        Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(dismissSplash), userInfo: nil, repeats: false)
         //dismissSplash()
 
     }

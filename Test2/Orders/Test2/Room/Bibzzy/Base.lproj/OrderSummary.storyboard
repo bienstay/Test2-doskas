@@ -398,56 +398,63 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="UV8-fT-p7c">
-                                <rect key="frame" x="8" y="52" width="398" height="280"/>
+                                <rect key="frame" x="8" y="52" width="398" height="200"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MAINTENANCE REQUEST" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PPq-bT-Iwx">
-                                        <rect key="frame" x="0.0" y="0.0" width="398" height="30"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
-                                        <color key="textColor" systemColor="systemOrangeColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Kiq-v3-ZZu">
-                                        <rect key="frame" x="0.0" y="46" width="398" height="34"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="80" translatesAutoresizingMaskIntoConstraints="NO" id="9pn-jQ-l07">
+                                        <rect key="frame" x="0.0" y="0.0" width="398" height="34"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Room number:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dVL-SK-Q1c">
-                                                <rect key="frame" x="0.0" y="0.0" width="124" height="34"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Problem description:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W9x-mv-4GP">
+                                                <rect key="frame" x="0.0" y="8.5" width="134" height="17"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter guest's room number" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="09h-HS-YQu">
-                                                <rect key="frame" x="132" y="0.0" width="266" height="34"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
-                                                <textInputTraits key="textInputTraits"/>
-                                            </textField>
+                                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Kiq-v3-ZZu">
+                                                <rect key="frame" x="214" y="0.0" width="184" height="34"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Room:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dVL-SK-Q1c" userLabel="Room:">
+                                                        <rect key="frame" x="0.0" y="8.5" width="43" height="17"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter guest's room number" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="09h-HS-YQu">
+                                                        <rect key="frame" x="51" y="0.0" width="133" height="34"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="Lhn-pv-P5E"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
+                                                        <textInputTraits key="textInputTraits"/>
+                                                    </textField>
+                                                </subviews>
+                                            </stackView>
                                         </subviews>
                                     </stackView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Problem description:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W9x-mv-4GP">
-                                        <rect key="frame" x="0.0" y="96" width="398" height="23"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hsu-Jj-nk5">
-                                        <rect key="frame" x="0.0" y="135" width="398" height="128"/>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="Hsu-Jj-nk5">
+                                        <rect key="frame" x="0.0" y="50" width="398" height="150"/>
                                         <color key="backgroundColor" systemColor="systemGray6Color"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="100" id="AOT-pg-4KY"/>
+                                        </constraints>
                                         <color key="textColor" systemColor="labelColor"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bq3-Ol-eZ6">
-                                        <rect key="frame" x="0.0" y="279" width="398" height="1"/>
-                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="1" id="Jnz-mB-k81"/>
-                                        </constraints>
-                                    </view>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="200" id="13j-sm-gi5"/>
+                                </constraints>
                             </stackView>
-                            <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" verticalCompressionResistancePriority="753" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5hd-Y2-NSr" customClass="GlossyButton" customModule="Test2" customModuleProvider="target">
-                                <rect key="frame" x="8" y="348" width="398" height="498"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="CleaningServiceLarge" translatesAutoresizingMaskIntoConstraints="NO" id="bQw-hF-bTF">
+                                <rect key="frame" x="8" y="260" width="398" height="562"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5hd-Y2-NSr" customClass="GlossyButton" customModule="Test2" customModuleProvider="target">
+                                <rect key="frame" x="8" y="814" width="398" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="QmZ-7v-lJK"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
-                                <state key="normal" title="SEND">
+                                <state key="normal" title="Send">
                                     <color key="titleColor" systemColor="systemOrangeColor"/>
                                 </state>
                                 <connections>
@@ -458,19 +465,23 @@
                         <viewLayoutGuide key="safeArea" id="oJd-mL-H2o"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="oJd-mL-H2o" firstAttribute="bottom" secondItem="5hd-Y2-NSr" secondAttribute="bottom" constant="16" id="0Ug-E7-Yyo"/>
+                            <constraint firstItem="oJd-mL-H2o" firstAttribute="bottom" secondItem="5hd-Y2-NSr" secondAttribute="bottom" constant="8" id="0Ug-E7-Yyo"/>
                             <constraint firstItem="UV8-fT-p7c" firstAttribute="top" secondItem="oJd-mL-H2o" secondAttribute="top" constant="8" id="2tM-u8-D6O"/>
+                            <constraint firstItem="oJd-mL-H2o" firstAttribute="trailing" secondItem="bQw-hF-bTF" secondAttribute="trailing" constant="8" id="4lG-6H-8v3"/>
                             <constraint firstItem="5hd-Y2-NSr" firstAttribute="leading" secondItem="oJd-mL-H2o" secondAttribute="leading" constant="8" id="7pv-ph-LHU"/>
-                            <constraint firstItem="5hd-Y2-NSr" firstAttribute="top" secondItem="UV8-fT-p7c" secondAttribute="bottom" constant="16" id="L31-3r-W8S"/>
+                            <constraint firstItem="bQw-hF-bTF" firstAttribute="centerX" secondItem="8ib-e8-xVz" secondAttribute="centerX" id="Eu9-Ii-Szp"/>
                             <constraint firstItem="oJd-mL-H2o" firstAttribute="trailing" secondItem="UV8-fT-p7c" secondAttribute="trailing" constant="8" id="T88-Ge-0sl"/>
                             <constraint firstItem="UV8-fT-p7c" firstAttribute="leading" secondItem="oJd-mL-H2o" secondAttribute="leading" constant="8" id="Tlc-5w-I0T"/>
                             <constraint firstItem="oJd-mL-H2o" firstAttribute="trailing" secondItem="5hd-Y2-NSr" secondAttribute="trailing" constant="8" id="Ys8-P2-x2M"/>
+                            <constraint firstItem="bQw-hF-bTF" firstAttribute="bottom" secondItem="5hd-Y2-NSr" secondAttribute="top" constant="8" id="bCa-nu-fJW"/>
+                            <constraint firstItem="bQw-hF-bTF" firstAttribute="leading" secondItem="oJd-mL-H2o" secondAttribute="leading" constant="8" id="mHH-nR-eIJ"/>
+                            <constraint firstItem="bQw-hF-bTF" firstAttribute="top" secondItem="UV8-fT-p7c" secondAttribute="bottom" constant="8" id="pDl-ZJ-1Jz"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="backgroundPicture" destination="bQw-hF-bTF" id="Gqw-Jy-p4Q"/>
                         <outlet property="bottomConstraint" destination="0Ug-E7-Yyo" id="TQ7-i2-juH"/>
                         <outlet property="commentTextView" destination="Hsu-Jj-nk5" id="hnZ-cQ-VUn"/>
-                        <outlet property="orderSummaryLabel" destination="PPq-bT-Iwx" id="ZFa-7Z-GvJ"/>
                         <outlet property="roomNumberTextField" destination="09h-HS-YQu" id="W75-cQ-VfD"/>
                         <outlet property="sendButton" destination="5hd-Y2-NSr" id="gmy-X0-2hP"/>
                     </connections>
@@ -481,6 +492,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="CleaningServiceLarge" width="400" height="400"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

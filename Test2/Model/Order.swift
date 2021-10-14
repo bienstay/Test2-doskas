@@ -14,6 +14,7 @@ enum RoomItemType: String, Codable, Hashable {
     case RoomAmenities
     case RoomConsumables
     case Maintenance
+    case Cleaning
     func toInt() -> Int {
         switch self {
         case .Service: return 0
@@ -21,7 +22,8 @@ enum RoomItemType: String, Codable, Hashable {
         case .BathAmenities: return 2
         case .RoomAmenities: return 3
         case .RoomConsumables: return 4
-        case .Maintenance: return 99
+        case .Maintenance: return 98
+        case .Cleaning: return 99
         }
     }
     static func fromInt(_ i: Int) -> RoomItemType {

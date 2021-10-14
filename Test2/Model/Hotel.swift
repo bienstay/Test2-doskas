@@ -124,7 +124,7 @@ class Hotel {
                 activity.id = key
                 arr.append(activity)
             }
-            activities[day] = arr.sorted(by: {$0.start < $1.start} )
+            activities[day] = arr.sorted(by: {$0.start.formatTimeShort() < $1.start.formatTimeShort()} )
             //activities[day] = a.1.map{ var a:Activity = $0.value; a.id = $0.key}.sorted(by: {$0.start < $1.start} )
         }
         NotificationCenter.default.post(name: .activitiesUpdated, object: nil)

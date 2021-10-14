@@ -155,16 +155,8 @@
                         </constraints>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" id="4gi-eH-lHU">
-                        <barButtonItem key="rightBarButtonItem" title="Delete" id="hmb-cT-jpq">
-                            <connections>
-                                <action selector="deleteBarButtonPressed:" destination="2CK-dS-sky" id="5vz-Hu-I3n"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="deleteBarButton" destination="hmb-cT-jpq" id="QDF-Ss-ZbW"/>
                         <outlet property="tableView" destination="aHH-VW-9at" id="nZh-7C-oqZ"/>
                     </connections>
                 </viewController>

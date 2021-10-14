@@ -24,6 +24,8 @@ class MapViewController: UIViewController {
         mapView.showsScale = true
         mapView.showsTraffic = false
         mapView.showsPointsOfInterest = false
+        
+        mapView.mapType = .satellite
 
         if let r = restaurant {
             title = r.name

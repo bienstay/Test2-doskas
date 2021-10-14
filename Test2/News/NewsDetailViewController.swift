@@ -21,9 +21,6 @@ class NewsDetailViewController: UIViewController {
         tableView.contentInsetAdjustmentBehavior = .never   // hides the navigationbar
         tableView.delegate = self
         tableView.dataSource = self
-
-        let tap = UITapGestureRecognizer(target: self, action: #selector(handleLongPress))
-        tap.numberOfTapsRequired = 1
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -33,42 +30,10 @@ class NewsDetailViewController: UIViewController {
         navigationController?.hidesBarsOnSwipe = true
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.tintColor = .white
-        
-        deleteBarButton.title = guest.isAdmin() ? "Delete" : ""
-        deleteBarButton.isEnabled = guest.isAdmin()
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
-    }
-
-    @IBAction func deleteBarButtonPressed(_ sender: UIBarButtonItem) {
-        let deleteAlert = UIAlertController(title: "Delete", message: "Are you sure you want to delete this post?", preferredStyle: UIAlertController.Style.alert)
-        deleteAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction!) in
-            self.deleteCurrentPost()
-        }))
-        deleteAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
-        }))
-        present(deleteAlert, animated: true, completion: nil)
-    }
-        
-    func deleteCurrentPost() {
-        let errStr = FireB.shared.removeRecord(key: post.postId, record: post) { record in
-            if record == nil {
-                showInfoDialogBox(vc: self, title: "Error", message: "Post delete failed")
-            } else {
-                showInfoDialogBox(vc: self, title: "Info", message: "Post deleted") {
-                    DispatchQueue.main.async {
-                        self.navigationController?.popViewController(animated: true)
-                    }
-                }
-            }
-        }
-        if errStr != nil { Log.log(errStr!) }
-    }
-
-    @objc func handleLongPress(_ sender: UILongPressGestureRecognizer?) {
-        Log.log(level: .INFO, "Long press detected")
     }
 }
 
@@ -82,11 +47,6 @@ extension NewsDetailViewController: UITableViewDataSource, UITableViewDelegate {
         switch indexPath.row {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: NewsDetailHeaderCell.self), for: indexPath) as! NewsDetailHeaderCell
-            cell.longTapClosure = {
-                let vc = self.createViewController(storyBoard: "News", id: "NewPost") as! NewNewsPostViewController
-                vc.postToEdit = self.post
-                self.navigationController?.pushViewController(vc, animated: true)
-            }
             cell.draw(post: post)
             return cell
         case 1:
@@ -124,21 +84,9 @@ class NewsDetailHeaderCell: UITableViewCell {
     @IBOutlet var heartButton: UIButton!
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var subtitleLabel: UILabel!
-    var longTapClosure: () -> () = {}
 
     override func awakeFromNib() {
         super.awakeFromNib()
-
-        let tap = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
-        tap.minimumPressDuration = 1
-        titleLabel.isUserInteractionEnabled = true
-        titleLabel.addGestureRecognizer(tap)
-    }
-
-    @objc func handleLongPress(_ sender: UILongPressGestureRecognizer?) {
-        if let s = sender, s.state == .began {
-            longTapClosure()
-        }
     }
 
     func draw(post: NewsPost) {
@@ -150,12 +98,9 @@ class NewsDetailHeaderCell: UITableViewCell {
             headerImageView.contentMode = .scaleAspectFill
             headerImageView.kf.setImage(with: url)
         } else {
-            //headerImageView.isHidden = true
-            //headerDimmedView.isHidden = true
             headerImageView.contentMode = .scaleAspectFit
             headerImageView.image = UIImage(named: "JaNaPlaya")
         }
-        //displayHeart()
     }
 }
 

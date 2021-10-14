@@ -10,7 +10,8 @@ import UIKit
 extension UIView {
     var glossy_radius: CGFloat { frame.width/40.0 }
     private var glossy_bgColor:CGColor { UIColor.offWhiteVeryLight.cgColor }
-    private var glossy_shadowRadius: CGFloat { 10 }
+    //private var glossy_shadowRadius: CGFloat { 10 }
+    private var glossy_shadowRadius: CGFloat { 5 }
 
     @objc func glossy_isDown() -> Bool { return false }
 
@@ -38,10 +39,13 @@ extension UIView {
 
         glossy_bottomShadowLayer.shadowColor = UIColor.black.cgColor
         glossy_bottomShadowLayer.shadowOpacity = 0.2
+        glossy_bottomShadowLayer.shadowPath = UIBezierPath(rect: bounds).cgPath
         glossy_bottomShadowLayer.frame = layer.bounds
 
         glossy_topShadowLayer.shadowColor = UIColor.black.cgColor
-        glossy_topShadowLayer.shadowOpacity = 0.2
+        //glossy_topShadowLayer.shadowOpacity = 0.2
+        glossy_topShadowLayer.shadowOpacity = 0.3
+        glossy_topShadowLayer.shadowPath = UIBezierPath(rect: bounds).cgPath
         glossy_topShadowLayer.frame = layer.bounds
 
         glossy_bottomShadowLayer.shadowRadius = glossy_shadowRadius
@@ -53,7 +57,8 @@ extension UIView {
             glossy_bottomShadowLayer.shadowRadius = 3
             glossy_topShadowLayer.shadowRadius = 3
         } else {
-            glossy_bottomShadowLayer.shadowOffset = CGSize(width: 10, height: 10)
+            //glossy_bottomShadowLayer.shadowOffset = CGSize(width: 10, height: 10)
+            glossy_bottomShadowLayer.shadowOffset = CGSize(width: 5, height: 5)
             glossy_topShadowLayer.shadowOffset = CGSize(width: -5, height: -5)
         }
     }

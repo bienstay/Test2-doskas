@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import PhotosUI
 
 extension UIColor {
     convenience init(_ red: Int, _ green: Int, _ blue: Int) {
@@ -483,8 +484,9 @@ struct Log {
         case FATAL = 0
         case ERROR
         case INFO
+        case DEBUG
     }
-    static var currentLevel: LogLevel = .INFO
+    static var currentLevel: LogLevel = .ERROR
     static func log(level: LogLevel = .INFO, _ message: String) {
         if level.rawValue <= currentLevel.rawValue {
             print(message)
@@ -497,7 +499,7 @@ struct Log {
 extension UIViewController  {
 
     func showPicturePicker(vc: UIViewController & UINavigationControllerDelegate & UIImagePickerControllerDelegate) {
-        let photoSourceRequestController = UIAlertController(title: "", message: NSLocalizedString("Choose your photo source", comment: "Choose your photo source"), preferredStyle: .actionSheet)
+        let photoSourceRequestController = UIAlertController(title: "", message: NSLocalizedString("Choose your photo source", comment: "Choose your photo source"), preferredStyle: .alert)
         let cameraAction = UIAlertAction(title: NSLocalizedString("Camera", comment: "Camera"), style: .default, handler: { (action) in
             if UIImagePickerController.isSourceTypeAvailable(.camera) {
                 let imagePicker = UIImagePickerController()
@@ -507,18 +509,33 @@ extension UIViewController  {
                 vc.present(imagePicker, animated: true, completion: nil)
             }
         })
-        let photoLibraryAction = UIAlertAction(title: NSLocalizedString("Photo library", comment: "Photo library"), style: .default, handler: { (action) in
-            if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
-                let imagePicker = UIImagePickerController()
-                imagePicker.allowsEditing = false
-                imagePicker.sourceType = .photoLibrary
-                //imagePicker.sourceType = .savedPhotosAlbum
-                imagePicker.delegate = vc
-                vc.present(imagePicker, animated: true, completion: nil)
-            }
-        })
         photoSourceRequestController.addAction(cameraAction)
-        photoSourceRequestController.addAction(photoLibraryAction)
+/*
+        if #available(iOS 14, *) {
+            let photoLibraryAction = UIAlertAction(title: NSLocalizedString("Photo library", comment: "Photo library"), style: .default, handler: { (action) in
+                var config = PHPickerConfiguration()
+                config.filter = .images
+                config.selectionLimit = 1
+                config.preferredAssetRepresentationMode = .current
+                let controller = PHPickerViewController(configuration: config)
+                vc.present(controller, animated: true, completion: nil)
+            })
+            photoSourceRequestController.addAction(photoLibraryAction)
+        }
+        else {
+*/
+            let photoLibraryAction = UIAlertAction(title: NSLocalizedString("Photo library", comment: "Photo library"), style: .default, handler: { (action) in
+                if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+                    let imagePicker = UIImagePickerController()
+                    imagePicker.allowsEditing = false
+                    imagePicker.sourceType = .photoLibrary
+                    //imagePicker.sourceType = .savedPhotosAlbum
+                    imagePicker.delegate = vc
+                    vc.present(imagePicker, animated: true, completion: nil)
+                }
+            })
+            photoSourceRequestController.addAction(photoLibraryAction)
+//        }
         
         // For iPad
         if let popoverController = photoSourceRequestController.popoverPresentationController {
@@ -526,6 +543,6 @@ extension UIViewController  {
             popoverController.sourceRect = vc.view.bounds
         }
 
-        present(photoSourceRequestController, animated: true, completion: nil)
+        vc.present(photoSourceRequestController, animated: true, completion: nil)
     }
 }

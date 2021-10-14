@@ -52,6 +52,40 @@ extension NewsViewController: UITableViewDataSource {
         return cell
     }
 
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        if !guest.isAdmin() { return nil }
+        let action1 = UIContextualAction(style: .normal, title: "Edit") { action, view, completionHandler in
+            let vc = self.createViewController(storyBoard: "News", id: "NewPost") as! NewNewsPostViewController
+            vc.postToEdit = hotel.news[indexPath.row]
+            self.navigationController?.pushViewController(vc, animated: true)
+            completionHandler(true)
+        }
+        action1.backgroundColor = .orange
+        return UISwipeActionsConfiguration(actions: [action1])
+    }
+
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        if !guest.isAdmin() { return nil }
+        let action1 = UIContextualAction(style: .destructive, title: "Delete") { action, view, completionHandler in
+            self.deletePost(post: hotel.news[indexPath.row])
+            completionHandler(true)
+        }
+        action1.backgroundColor = .red
+        let configuration = UISwipeActionsConfiguration(actions: [action1])
+        configuration.performsFirstActionWithFullSwipe = false
+        return configuration
+    }
+
+    func deletePost(post: NewsPost) {
+        let errStr = FireB.shared.removeRecord(key: post.postId, record: post) { record in
+            if record == nil {
+                showInfoDialogBox(vc: self, title: "Error", message: "Post delete failed")
+            } else {
+                showInfoDialogBox(vc: self, title: "Info", message: "Post deleted")
+            }
+        }
+        if errStr != nil { Log.log(errStr!) }
+    }
 }
 
 extension NewsViewController: UITableViewDelegate {

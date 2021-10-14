@@ -87,9 +87,14 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             switch indexPath.row {
-            case 0, 1:
+            case 0:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "RoomHeaderCell", for: indexPath) as! RoomHeaderCell
                 cell.display(row: indexPath.row)
+                return cell
+            case 1:
+                let cell = tableView.dequeueReusableCell(withIdentifier: "RoomHeaderCell2", for: indexPath) as! RoomHeaderCell2
+                cell.tapClosure = { category in self.maintenancePressed(category: category) }
+                cell.display()
                 return cell
             default:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "RoomItemsHeaderCell", for: indexPath) as! RoomItemsHeaderCell
@@ -125,7 +130,6 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if indexPath.section == 0 {
             switch indexPath.row {
                 case 0: inRoomDiningPressed()
-                case 1: maintenancePressed()
                 default: break
             }
         } else {
@@ -146,16 +150,26 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.present(vc, animated: true, completion: nil)
         }
     }
-
-    func maintenancePressed() {
-        order = Order(roomNumber: guest.roomNumber, description: "Maintenance")
+/*
+    func maintenancePressed(category: RoomItemType) {
+        order = Order(roomNumber: guest.roomNumber, description: description)
         let item = RoomItem()
-        item.category = .Maintenance
-        item.name = "Maintenance"
+        item.category = category
+        item.name = category.rawValue
         order.addItem(name: item.name, quantity: 1, price: 0)
         let storyboard = UIStoryboard(name: "OrderSummary", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "MaintenanceOrder") as! MaintenanceOrderViewController
         vc.order = self.order
+        vc.requestType = category
+        vc.completionHandler = { self.clearOrder() }
+        self.pushOrPresent(viewController: vc)
+    }
+*/
+    func maintenancePressed(category: RoomItemType) {
+        let storyboard = UIStoryboard(name: "OrderSummary", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "MaintenanceOrder") as! MaintenanceOrderViewController
+        //vc.order = self.order
+        vc.requestType = category
         vc.completionHandler = { self.clearOrder() }
         self.pushOrPresent(viewController: vc)
     }
@@ -250,12 +264,8 @@ class RoomHeaderCell: UITableViewCell {
         switch row {
         case 0:
             headerTitleLabel.text = "In-room dining"
-            headerLabel.text = "Try delicious food from our vast selection of the in-room dining, delivered right to your door. Available 24/7"
-            headerImage.image = UIImage(named: "roomService")
-        case 1:
-            headerTitleLabel.text = "Maintenance"
-            headerLabel.text = "Notify us about any issue in your room that requires maintenance"
-            headerImage.image = UIImage(named: "Maintenance")
+            headerLabel.text = "Try delicious food from our vast selection of the in-room dining. Delivered right to your door 24/7"
+            headerImage.image = UIImage(named: "RoomServiceLarge")
         default:
             break
         }
@@ -279,5 +289,48 @@ class RoomItemsHeaderCell: UITableViewCell {
 //        headerTitleLabel.text = "In-room dining"
 //        headerLabel.text = "Try delicious food from our vast selection of the in-room dining, delivered right to your door.\nAvailable 24/7"
 //        headerImage.image = UIImage(named: "roomService")
+    }
+}
+
+class RoomHeaderCell2: UITableViewCell {
+    @IBOutlet private weak var headerTitleLabel1: UILabel!
+    @IBOutlet private weak var headerLabel1: UILabel!
+    @IBOutlet private weak var headerImage1: UIImageView!
+    @IBOutlet private weak var headerTitleLabel2: UILabel!
+    @IBOutlet private weak var headerLabel2: UILabel!
+    @IBOutlet private weak var headerImage2: UIImageView!
+    var tapClosure: ((_ category: RoomItemType) -> ())? = nil
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        backgroundColor = .clear
+        selectionStyle = .none
+
+        let tap1 = UITapGestureRecognizer(target: self, action: #selector(didTap1))
+        //tap1.numberOfTapsRequired = 1
+        headerImage1.addGestureRecognizer(tap1)
+        headerImage1.isUserInteractionEnabled = true
+
+        let tap2 = UITapGestureRecognizer(target: self, action: #selector(didTap2))
+        //tap2.numberOfTapsRequired = 1
+        headerImage2.addGestureRecognizer(tap2)
+        headerImage2.isUserInteractionEnabled = true
+    }
+
+    @objc func didTap1() {
+        tapClosure?(RoomItemType.Maintenance)
+    }
+
+    @objc func didTap2() {
+        tapClosure?(RoomItemType.Cleaning)
+    }
+
+    func display() {
+        headerTitleLabel1.text = "Maintenance"
+        headerLabel1.text = "Request a repair"
+        headerImage1.image = UIImage(named: "MaintenanceLarge")
+        headerTitleLabel2.text = "Cleaning"
+        headerLabel2.text = "Ask for extra cleaning"
+        headerImage2.image = UIImage(named: "CleaningServiceLarge")
     }
 }

@@ -63,7 +63,7 @@ class ActivitiesViewController: UIViewController {
         tableView.insertRows(at: newPaths, with: forward ? .right : .left)
         //tableView.reloadRows(at: rows, with: forward ? .left : .right)
         tableView.endUpdates()
-        //tableView.layoutIfNeeded()
+        tableView.layoutIfNeeded()
  
         expandedCells = []
     }
@@ -117,7 +117,7 @@ extension ActivitiesViewController: UITableViewDelegate {
             tableView.beginUpdates()
             cell.draw(activity: activity, expanded: expandedCells.contains(activity.hashValue))
             tableView.endUpdates()
-            tableView.layoutIfNeeded()
+            //tableView.layoutIfNeeded()    // causes jerkiness on Mac app
             tableView.scrollToRow(at: indexPath, at: .none, animated: true)
         }
     }
@@ -134,7 +134,7 @@ extension ActivitiesViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         if !guest.isAdmin() { return nil }
-        let action1 = UIContextualAction(style: .normal, title: "Delete") { action, view, completionHandler in
+        let action1 = UIContextualAction(style: .destructive, title: "Delete") { action, view, completionHandler in
             if let activity = hotel.activities[self.title!]?[indexPath.row] {
                 _ = FireB.shared.removeRecord(key: activity.id!, subNode: self.title, record: activity) { _ in
                 }
@@ -142,7 +142,9 @@ extension ActivitiesViewController: UITableViewDelegate {
             completionHandler(true)
         }
         action1.backgroundColor = .red
-        return UISwipeActionsConfiguration(actions: [action1])
+        let configuration = UISwipeActionsConfiguration(actions: [action1])
+        configuration.performsFirstActionWithFullSwipe = false
+        return configuration
     }
 
     func openNewActivityViewController(row: Int) {
