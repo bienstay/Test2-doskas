@@ -21,6 +21,8 @@ class NewsDetailViewController: UIViewController {
         tableView.contentInsetAdjustmentBehavior = .never   // hides the navigationbar
         tableView.delegate = self
         tableView.dataSource = self
+
+        NotificationCenter.default.addObserver(self, selector: #selector(onLikesUpdated(_:)), name: .likesUpdated, object: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -35,6 +37,15 @@ class NewsDetailViewController: UIViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
+    
+    @objc func onLikesUpdated(_ notification: Notification) {
+        DispatchQueue.main.async {
+            self.tableView.beginUpdates()
+            self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
+            self.tableView.endUpdates()
+        }
+        //DispatchQueue.main.async { self.tableView.reloadData() }
+    }
 }
 
 extension NewsDetailViewController: UITableViewDataSource, UITableViewDelegate {
@@ -47,6 +58,9 @@ extension NewsDetailViewController: UITableViewDataSource, UITableViewDelegate {
         switch indexPath.row {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: NewsDetailHeaderCell.self), for: indexPath) as! NewsDetailHeaderCell
+            cell.heartPressedClosure = {
+                guest.toggleLike(group: "news", key: self.post.postId)
+            }
             cell.draw(post: post)
             return cell
         case 1:
@@ -84,6 +98,12 @@ class NewsDetailHeaderCell: UITableViewCell {
     @IBOutlet var heartButton: UIButton!
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var subtitleLabel: UILabel!
+    var heartPressedClosure : (() -> ())? = nil
+    
+    @IBAction func heartPressed(_ sender: UIButton) {
+        heartPressedClosure?()
+        
+    }
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -101,6 +121,8 @@ class NewsDetailHeaderCell: UITableViewCell {
             headerImageView.contentMode = .scaleAspectFit
             headerImageView.image = UIImage(named: "JaNaPlaya")
         }
+        let numLikes = guest.numLikes(group: "news", id: post.postId)
+        heartButton.setImage(UIImage(named: numLikes > 0 ? "heartFull" : "heartEmpty"), for: .normal)
     }
 }
 

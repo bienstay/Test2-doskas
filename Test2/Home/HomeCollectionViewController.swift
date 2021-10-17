@@ -25,9 +25,10 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         case map = "Map"
         case watersports = "Water Sports"
         case adoptACoral = "Adopt a Coral"
+        case kidsClub = "Kids Club"
     }
     
-    let tempIconNames = ["News", "Activities", "FloorTowel", "Ice", "Comb", "Tea", "Sugar", "Soap", "022-room key", "033-bucket"]
+    let tempIconNames = ["News", "Activities", "Map", "Watersports", "AdoptAcoral", "KidsClub", "Sugar", "Soap", "022-room key", "033-bucket"]
     let tempIconColors: [UIColor] = [.color1, .color2, .color3, .lightGray, .color2, .color1, .color3]
 
     var onboardingShown: Bool = false
@@ -113,8 +114,9 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
             case .adoptACoral:
                 let vc = pushOrPresent(storyBoard: "Info", id: "Info") as! InfoViewController
                 vc.infoItem = hotel.infoItems[0]    // TODO
+            case .kidsClub:     _ = pushViewController(storyBoard: "Activities", id: "Activities")
             }
-        default: break
+            default: break
         }
     }
 
@@ -228,7 +230,8 @@ class HomeItemsCell: UICollectionViewCell {
 
     func draw(title: String, pictureName: String, color: UIColor) {
         titleLabel.text = title
-        picture.image = UIImage(named: pictureName)
+        let border = -12.0
+        picture.image = UIImage(named: pictureName)?.withAlignmentRectInsets(UIEdgeInsets(top: border, left: border, bottom: border, right: border))
         titleLabel.superview?.backgroundColor = color
         //picture.kf.setImage(with: URL(string: hotel.news[Int.random(in: 0...7)].imageFileURL))
         //picture.layer.cornerRadius = 10

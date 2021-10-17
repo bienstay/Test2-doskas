@@ -13,7 +13,7 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // model
     var restaurant: Restaurant?
     var menuIndex = 0
-    private var order = Order(roomNumber: guest.roomNumber, description: "In-room dining")
+    private var order = Order(roomNumber: guest.roomNumber, category: .RoomService)
     private var menus: [Menu] = []
 
     // display
@@ -210,7 +210,7 @@ extension MenuViewController {
     }
 
     func clearOrder() {
-        order = Order(roomNumber: guest.roomNumber, description: "In-room dining")
+        order = Order(roomNumber: guest.roomNumber, category: .RoomService)
         dd = Array(repeating: Array(repeating: DisplayData(), count: 100), count: 10)   // TODO
         orderShortSummaryView.isHidden = true
         orderSummaryConstraint.constant = 1

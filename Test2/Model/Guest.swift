@@ -22,14 +22,31 @@ class Guest: Codable {
     var activeOrders: [Order] = []
     var chatRooms: [String] = []
     var chatMessages: [String:[ChatMessage]]? = [:]
+    var likesPerUser: LikesPerUser = [:]
+    var likes: Likes = [:]
 
     func isAdmin() -> Bool {
         return roomNumber == 0
     }
+    
+    func toggleLike(group: String, key: String) {
+        if guest.isAdmin() { return }
+        let isLiked: Bool = guest.likesPerUser[group]?.contains(key) ?? false
+        FireB.shared.updateLike(node: group, key: key, user: guest.id, add: !isLiked)
+    }
+
+    func numLikes(group:String, id:String) -> Int {
+        if isAdmin() {
+            return likes[group]?[id] ?? 0
+        }
+        else {
+            return likesPerUser[group]?.contains(id) ?? false ? 1 : 0
+        }
+    }
 
     func startObserving() {
         FireB.shared.subscribeForUpdates(parameter: .GuestInfo(id: self.id), completionHandler: guestUpdated)
-        
+
         FireB.shared.observeOrderChanges()
     }
 
@@ -42,6 +59,31 @@ class Guest: Codable {
         NotificationCenter.default.post(name: .guestUpdated, object: nil)
         FireB.shared.subscribeForUpdates(parameter: .OrderInDB(roomNumber: roomNumber), completionHandler: ordersUpdated)
         FireB.shared.subscribeForUpdates(parameter: .ChatRoom(id: guest.chatRooms.first!), completionHandler: self.chatMessagesUpdated)
+
+        if guest.isAdmin() {
+            FireB.shared.subscribeForUpdates(completionHandler: likesUpdated)
+        } else {
+            FireB.shared.subscribeForUpdates(subNode: guest.id, completionHandler: likesPerUserUpdated)
+        }
+    }
+
+    func likesPerUserUpdated(allLikes: [(String, LikesPerUserInDB)]) {
+        likesPerUser = [:]
+        // for each group create a set that contains only keys with values == True
+        allLikes.forEach( { likesPerUser[$0.0] = Set($0.1.compactMap { $0.value ? $0.key : nil }) } )
+        NotificationCenter.default.post(name: .likesUpdated, object: nil)
+    }
+
+    func likesUpdated(allLikes: [(String, LikesInDB)]) {
+        likes = [:]
+        for l in allLikes {
+            var countMap: [String:Int] = [:]
+            for c in l.1 {
+                countMap[c.key] = c.value.count
+            }
+            likes[l.0] = countMap
+        }
+        NotificationCenter.default.post(name: .likesUpdated, object: nil)
     }
 
     func ordersUpdated(allOrders: [(String, OrderInDB)]) {

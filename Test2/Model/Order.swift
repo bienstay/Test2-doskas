@@ -7,53 +7,37 @@
 
 import Foundation
 
-enum RoomItemType: String, Codable, Hashable {
-    case Service
-    case Toiletries
-    case BathAmenities
-    case RoomAmenities
-    case RoomConsumables
-    case Maintenance
-    case Cleaning
-    func toInt() -> Int {
-        switch self {
-        case .Service: return 0
-        case .Toiletries: return 1
-        case .BathAmenities: return 2
-        case .RoomAmenities: return 3
-        case .RoomConsumables: return 4
-        case .Maintenance: return 98
-        case .Cleaning: return 99
-        }
-    }
-    static func fromInt(_ i: Int) -> RoomItemType {
-        switch i {
-            case 0: return .Service
-            case 1: return .Toiletries
-            case 2: return .BathAmenities
-            case 3: return .RoomAmenities
-            case 4: return .RoomConsumables
-            default: return .Maintenance
-        }
-    }
-}
-
 class RoomItem: Hashable, Codable {
+    enum ItemType: String, Codable, Hashable, CaseIterable {
+        case Services = "Services"
+        case Toiletries = "Toiletries"
+        case BathAmenities = "Bath Amenities"
+        case RoomAmenities = "Room Amenities"
+        case RoomConsumables = "Room Consumables"
+        case None = ""
+    }
     static func == (lhs: RoomItem, rhs: RoomItem) -> Bool {
-        return lhs.name == rhs.name && lhs.category == rhs.category
+        return lhs.name == rhs.name && lhs.type == rhs.type
     }
     public func hash(into hasher: inout Hasher) {
          hasher.combine(ObjectIdentifier(self))
     }
     
     var name: String = ""
-    var category: RoomItemType = .Toiletries
-    var picture: String = "watchBell"
+    var type: ItemType = .Toiletries
+    var picture: String = ""
     var color: String = "000000"
     var maxQuantity: Int = 5
 }
 
 class Order: Codable {
+    enum Category: String, Codable, Hashable, CaseIterable {
+        case RoomService = "In-room dining"
+        case Maintenance = "Maintenance"
+        case Cleaning = "Cleaning"
+        case RoomItems = "Room Items"
+        case None = ""
+    }
 
     struct OrderItem: Codable {
         var name: String
@@ -62,17 +46,17 @@ class Order: Codable {
     }
 
     enum Status: String {
-        case CREATED  = "created"
-        case CONFIRMED = "confirmed"
-        case DELIVERED = "delivered"
-        case CANCELED = "canceled"
+        case CREATED  = "Created"
+        case CONFIRMED = "Confirmed"
+        case DELIVERED = "Delivered"
+        case CANCELED = "Canceled"
     }
 
     var id: String?
 
-    private (set) var description: String = ""
     private (set) var number: Int = 0
     private (set) var roomNumber: Int
+    private (set) var category: Category = .RoomItems
 
     private (set) var created: Date?
     private (set) var confirmed: Date?
@@ -82,13 +66,14 @@ class Order: Codable {
     private (set) var createdBy: String?
     private (set) var confirmedBy: String?
     private (set) var deliveredBy: String?
+    private (set) var canceledBy: String?
 
     private (set) var items: [OrderItem] = []
     var guestComment: String?
 
-    init(roomNumber: Int, description: String) {
+    init(roomNumber: Int, category: Category) {
         self.roomNumber = roomNumber
-        self.description = description
+        self.category = category
     }
 
     func setCreated(orderNumber: Int) {
@@ -160,7 +145,7 @@ class Order: Codable {
 
 
 struct OrderInDB: Codable {
-    private (set) var description: String
+    private (set) var description: String   // TODO - change in DB and here to category
     private (set) var number: Int
     private (set) var roomNumber: Int
 
@@ -172,12 +157,13 @@ struct OrderInDB: Codable {
     private (set) var createdBy: String?
     private (set) var confirmedBy: String?
     private (set) var deliveredBy: String?
+    private (set) var canceledBy: String?
 
-    private (set) var items: [Order.OrderItem]
+    private (set) var items: [Order.OrderItem]?
     var guestComment: String?
     
     init(order: Order, roomNumber: Int? = nil) {
-        self.description = order.description
+        self.description = order.category.rawValue
         self.number = order.number
         self.roomNumber = roomNumber != nil ? roomNumber! : order.roomNumber
         self.created = order.created
@@ -187,16 +173,16 @@ struct OrderInDB: Codable {
         self.createdBy = order.createdBy
         self.confirmedBy = order.confirmedBy
         self.deliveredBy = order.deliveredBy
-        self.items = order.items
+        self.items = order.items.isEmpty ? nil : order.items
         self.guestComment = order.guestComment
     }
 }
 
 extension Order {
     convenience init(id: String, orderInDb: OrderInDB) {
-        self.init(roomNumber: orderInDb.roomNumber, description: orderInDb.description)
+        self.init(roomNumber: orderInDb.roomNumber, category: Order.Category(rawValue: orderInDb.description) ?? .None)
         self.id = id
-        self.description = orderInDb.description
+        self.category = Order.Category(rawValue: orderInDb.description) ?? .None
         self.number = orderInDb.number
         self.roomNumber = orderInDb.roomNumber
         self.created = orderInDb.created
@@ -206,7 +192,8 @@ extension Order {
         self.createdBy = orderInDb.createdBy
         self.confirmedBy = orderInDb.confirmedBy
         self.deliveredBy = orderInDb.deliveredBy
-        self.items = orderInDb.items
+        self.canceledBy = orderInDb.canceledBy
+        self.items = orderInDb.items ?? []
         self.guestComment = orderInDb.guestComment
     }
 }

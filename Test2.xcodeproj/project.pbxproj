@@ -81,6 +81,8 @@
 		069FDBA826A09A55004F543F /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069FDBA726A09A55004F543F /* Chat.swift */; };
 		069FDBAA26A39486004F543F /* ChatListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069FDBA926A39486004F543F /* ChatListViewController.swift */; };
 		069FDBAC26AEF0A6004F543F /* roomItems.json in Resources */ = {isa = PBXBuildFile; fileRef = 069FDBAB26AEF0A6004F543F /* roomItems.json */; };
+		06AC358B271B58F100D249C6 /* Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AC358A271B58F100D249C6 /* Firebase.swift */; };
+		06AC358D271B7FAE00D249C6 /* Likes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AC358C271B7FAE00D249C6 /* Likes.swift */; };
 		06ACC3DB264D758B000876E3 /* OrderShortSummary.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06ACC3DA264D758B000876E3 /* OrderShortSummary.xib */; };
 		06ACC3DD264D7B84000876E3 /* OrderShortSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06ACC3DC264D7B84000876E3 /* OrderShortSummaryView.swift */; };
 		06DDB8C1265874BE00A5FD84 /* sheratonFacilities.json in Resources */ = {isa = PBXBuildFile; fileRef = 06DDB8C0265874BE00A5FD84 /* sheratonFacilities.json */; };
@@ -179,6 +181,8 @@
 		069FDBA726A09A55004F543F /* Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
 		069FDBA926A39486004F543F /* ChatListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListViewController.swift; sourceTree = "<group>"; };
 		069FDBAB26AEF0A6004F543F /* roomItems.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = roomItems.json; sourceTree = "<group>"; };
+		06AC358A271B58F100D249C6 /* Firebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firebase.swift; sourceTree = "<group>"; };
+		06AC358C271B7FAE00D249C6 /* Likes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Likes.swift; sourceTree = "<group>"; };
 		06ACC3DA264D758B000876E3 /* OrderShortSummary.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OrderShortSummary.xib; sourceTree = "<group>"; };
 		06ACC3DC264D7B84000876E3 /* OrderShortSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderShortSummaryView.swift; sourceTree = "<group>"; };
 		06DDB8C0265874BE00A5FD84 /* sheratonFacilities.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sheratonFacilities.json; sourceTree = "<group>"; };
@@ -281,7 +285,6 @@
 			children = (
 				065F03492635EB5500A5CDEF /* Home.storyboard */,
 				0683A1EB26506E330000D122 /* HomeViewController.swift */,
-				06F7726926713DC600E64D54 /* NewsCell.swift */,
 				069AA4222714F456002EE497 /* HomeCollectionViewController.swift */,
 			);
 			path = Home;
@@ -323,6 +326,7 @@
 				0632D4482669A1A5001F7036 /* Guest.swift */,
 				069FDBA726A09A55004F543F /* Chat.swift */,
 				06F5D168270B8E1B004931F7 /* Activity.swift */,
+				06AC358C271B7FAE00D249C6 /* Likes.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -391,6 +395,7 @@
 		069FD3C4268CB4210076C6FC /* News */ = {
 			isa = PBXGroup;
 			children = (
+				06F7726926713DC600E64D54 /* NewsCell.swift */,
 				06F7726B2671755800E64D54 /* NewNewsPostViewController.swift */,
 				06F7726D2673931300E64D54 /* NewsDetailViewController.swift */,
 				06F7727A267E8A6D00E64D54 /* NewsViewController.swift */,
@@ -472,6 +477,7 @@
 			isa = PBXGroup;
 			children = (
 				0632D4462668E3BD001F7036 /* FirebaseUtils.swift */,
+				06AC358A271B58F100D249C6 /* Firebase.swift */,
 			);
 			path = Firebase;
 			sourceTree = "<group>";
@@ -681,6 +687,7 @@
 				064352A526385F8400A54BFC /* Restaurant.swift in Sources */,
 				069DB35B263B0FB800C91468 /* RestaurantDetailViewController.swift in Sources */,
 				064352A326385A3900A54BFC /* extensions.swift in Sources */,
+				06AC358B271B58F100D249C6 /* Firebase.swift in Sources */,
 				069FDBA6269E384B004F543F /* ChatViewController.swift in Sources */,
 				062038702641E72900B87708 /* MenuViewController.swift in Sources */,
 				06F7727226762E6A00E64D54 /* InfoViewController.swift in Sources */,
@@ -689,6 +696,7 @@
 				06F5D165270B51B4004931F7 /* ActivityDetailsViewController.swift in Sources */,
 				061DC83D26547BC300C4C794 /* HotelInit.swift in Sources */,
 				06F7726C2671755800E64D54 /* NewNewsPostViewController.swift in Sources */,
+				06AC358D271B7FAE00D249C6 /* Likes.swift in Sources */,
 				069FDBA2269E17C3004F543F /* MessageKitChatViewController.swift in Sources */,
 				065F032A2635D47F00A5CDEF /* AppDelegate.swift in Sources */,
 				065F032C2635D47F00A5CDEF /* SceneDelegate.swift in Sources */,

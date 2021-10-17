@@ -77,8 +77,7 @@ class Hotel {
     var news: [NewsPost] = []
     var infoItems: [InfoItem] = []
     var importantNotes: [InfoItem] = []
-    var roomItems: [RoomItemType : [RoomItem]] = [:]
-    //var activities: [String: DailyActivities] = [:]
+    var roomItems: [RoomItem.ItemType : [RoomItem]] = [:]
     var activities: [String: [Activity]] = [:]
 
     func initialize() {
@@ -90,7 +89,6 @@ class Hotel {
         FireB.shared.subscribeForUpdates(completionHandler: restaurantsUpdated)
         FireB.shared.subscribeForUpdates(completionHandler: newsUpdated)
         FireB.shared.subscribeForUpdates(completionHandler: activitiesUpdated)
-        FireB.shared.subscribeForUpdates(completionHandler: activitiesUpdated2)
     }
 
     func hotelInfoUpdated(allHotelInfo: [(String, HotelIInfo)]) {
@@ -107,15 +105,7 @@ class Hotel {
     }
 
     func activitiesUpdated(allActivities: [(String, DailyActivities)]) {
-//        for a in allActivities {
-//            var temp:DailyActivities = a.1
-//            temp.activities.sort(by: {$0.start < $1.start} )
-//            activities[a.0] = temp
-//        }
-//        NotificationCenter.default.post(name: .activitiesUpdated, object: nil)
-    }
-
-    func activitiesUpdated2(allActivities: [(String, DailyActivities2)]) {
+        activities = [:]
         for a in allActivities {
             let day = a.0
             var arr:[Activity] = []
@@ -125,8 +115,8 @@ class Hotel {
                 arr.append(activity)
             }
             activities[day] = arr.sorted(by: {$0.start.formatTimeShort() < $1.start.formatTimeShort()} )
-            //activities[day] = a.1.map{ var a:Activity = $0.value; a.id = $0.key}.sorted(by: {$0.start < $1.start} )
         }
+        //activities[day] = a.1.map{ var a:Activity = $0.value; a.id = $0.key}.sorted(by: {$0.start < $1.start} )
         NotificationCenter.default.post(name: .activitiesUpdated, object: nil)
     }
 

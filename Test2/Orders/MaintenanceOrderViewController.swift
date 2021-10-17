@@ -9,7 +9,7 @@ import UIKit
 
 class MaintenanceOrderViewController: UIViewController {
 
-    var order: Order = Order(roomNumber: 0, description: "")
+    var order: Order = Order(roomNumber: 0, category: .RoomItems)
 
     @IBOutlet weak var sendButton: GlossyButton!
     @IBOutlet weak var orderSummaryLabel: UILabel!
@@ -18,7 +18,7 @@ class MaintenanceOrderViewController: UIViewController {
     @IBOutlet weak var commentTextView: UITextView!
     @IBOutlet weak var backgroundPicture: UIImageView!
 
-    var requestType: RoomItemType = .Maintenance
+    var category: Order.Category = .Maintenance
     var completionHandler: (() -> Void)?
 
     @IBAction func sendButtonPressed(_ sender: UIButton) {
@@ -36,11 +36,13 @@ class MaintenanceOrderViewController: UIViewController {
             orderNumber = guestOrders.isEmpty ? 1 : guestOrders.first!.number + 1
         }
 
-        order = Order(roomNumber: guest.roomNumber, description: requestType.rawValue)
+        order = Order(roomNumber: guest.roomNumber, category: category)
+/*
         let item = RoomItem()
         item.category = requestType
         item.name = requestType.rawValue
         order.addItem(name: item.name, quantity: 1, price: 0)
+ */
         order.setCreated(orderNumber: orderNumber)
         if let comment = commentTextView.text, !comment.isEmpty {
             order.guestComment = comment
@@ -72,14 +74,7 @@ class MaintenanceOrderViewController: UIViewController {
         initView()
         tabBarController?.tabBar.isHidden = true
 
-        title = "New " + requestType.rawValue + " Request"
-        switch requestType {
-        case .Maintenance:
-            backgroundPicture.image = UIImage(named: "MaintenanceLarge")
-        case .Cleaning:
-            backgroundPicture.image = UIImage(named: "CleaningServiceLarge")
-        default: break
-        }
+        title = "New " + category.rawValue + " Request"
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil) //object: self.view.window)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: nil) //object: self.view.window)
@@ -92,6 +87,8 @@ class MaintenanceOrderViewController: UIViewController {
         roomNumberTextField.keyboardType = .numberPad
         if !guest.isAdmin() { roomNumberTextField.text = String(guest.roomNumber) }
 
+        backgroundPicture.image = UIImage(named: category.rawValue)
+        
         commentTextView.becomeFirstResponder()
     }
 

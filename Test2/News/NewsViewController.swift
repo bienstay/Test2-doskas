@@ -17,6 +17,7 @@ class NewsViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(onNewsUpdated(_:)), name: .newsUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onNewsUpdated(_:)), name: .likesUpdated, object: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -45,10 +46,12 @@ extension NewsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return hotel.news.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewsCell2", for: indexPath) as! NewsCell
-        cell.draw(post: hotel.news[indexPath.row])
+        let post = hotel.news[indexPath.row]
+        let numLikes = guest.numLikes(group: "news", id: post.postId)
+        cell.draw(post: post, numLikes: numLikes)
         return cell
     }
 

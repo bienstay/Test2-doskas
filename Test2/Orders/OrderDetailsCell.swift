@@ -46,7 +46,7 @@ class OrderDetailsCell: UITableViewCell {
         
         idLabel.text = String(order.number)
         roomLabel.text = String(order.roomNumber)
-        descriptionLabel.text = order.description
+        descriptionLabel.text = order.category.rawValue
         statusLabel.text = order.status.rawValue
 
         switch order.status {

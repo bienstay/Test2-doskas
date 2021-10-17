@@ -9,7 +9,7 @@ import UIKit
 
 class OrderSummaryViewController: UIViewController, UITableViewDataSource {
 
-    var order: Order = Order(roomNumber: 0, description: "")
+    var order: Order = Order(roomNumber: 0, category: .None)
     
     enum Sections: Int, CaseIterable {
         case Items = 0
@@ -19,7 +19,7 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var entireView: UIView!
     @IBOutlet weak var headerView: UIView!
-    @IBOutlet weak var orderImage: UIImageView!
+    @IBOutlet weak var categoryImage: UIImageView!
 
     @IBOutlet weak var idLabel: UILabel!
     @IBOutlet weak var statusLabel: UILabel!
@@ -55,7 +55,7 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
     func askToCancel() {
         let cancelAlert = UIAlertController(title: "Cancel", message: "Are you sure you want to cancel this order?", preferredStyle: UIAlertController.Style.alert)
         cancelAlert.addAction(UIAlertAction(title: "Yes, Cancel", style: .destructive, handler: { (action: UIAlertAction!) in
-            FireB.shared.updateOrderStatus(orderId: self.order.id!, newStatus: .CANCELED)
+            FireB.shared.updateOrderStatus(orderId: self.order.id!, newStatus: .CANCELED, canceledBy: String(guest.roomNumber))
         }))
         cancelAlert.addAction(UIAlertAction(title: "Back", style: .cancel, handler: { (action: UIAlertAction!) in
         }))
@@ -70,15 +70,17 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
         //tableView.contentInsetAdjustmentBehavior = .never
 
         roomNumberLabel.text = "Room: " + String(order.roomNumber)
-        roomNumberLabel.textColor = .orange
         timeCreatedLabel.text = order.created?.formatFriendly()
         idLabel.text = "id: " + order.id!
 
+        categoryImage.image = UIImage(named: order.category.rawValue)
+
         title = "Order number \(order.number)"
         
-        tableView.showsVerticalScrollIndicator = false
+        tableView.showsVerticalScrollIndicator = true
+        tableView.separatorStyle = .singleLine
         NotificationCenter.default.addObserver(self, selector: #selector(onOrdersUpdated(_:)), name: .ordersUpdated, object: nil)
-        
+
         let barButton = createBarButtonItem(target: self, action: #selector(statusChangeButtonPressed))
         //let button = barButton.customView as! UIButton
         //button.backgroundColor = .gray
@@ -113,12 +115,10 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch Sections(rawValue: indexPath.section) {
-            case .Items:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath)
-                cell.contentView.backgroundColor = .clear
-                cell.textLabel?.text = order.items[indexPath.row].name
-                cell.detailTextLabel?.text = String(order.items[indexPath.row].quantity)
-                return cell
+        case .Items:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as! OrderSummaryItemCell
+            cell.draw(item: order.items[indexPath.row])
+            return cell
         case .GuestComment:
             let cell = tableView.dequeueReusableCell(withIdentifier: "CommentCell", for: indexPath)
             cell.contentView.backgroundColor = .clear
@@ -137,7 +137,7 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
         switch order.status {
         case .CANCELED:
             canceledAtLabel.text = order.canceled?.formatFriendly()
-            //canceledByLabel.text = order.canceledBy
+            canceledByLabel.text = order.canceledBy
             canceledStackView.isHidden = false
             createdAtLabel.text = order.created?.formatFriendly()
             createdByLabel.text = order.createdBy
@@ -217,9 +217,11 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
 extension OrderSummaryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch Sections(rawValue: section) {
-            case .Items: return order.description
-            case .GuestComment: return "Comment"
-            default: return ""
+            //case .Items: return order.description
+        case .GuestComment:
+            if let comment = order.guestComment, !comment.isEmpty { return "Comment" }
+            return nil
+            default: return nil
         }
     }
 }
@@ -280,3 +282,21 @@ class OrderItemCell: UITableViewCell {
 }
 */
 
+
+class OrderSummaryItemCell: UITableViewCell {
+    @IBOutlet weak var itemLabel: UILabel!
+    @IBOutlet weak var priceLabel: UILabel!
+    @IBOutlet weak var countLabel: UILabel!
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        contentView.backgroundColor = .BBbackgroundColor
+        //contentView.backgroundColor = .clear
+    }
+    
+    func draw(item: Order.OrderItem) {
+        itemLabel.text = item.name
+        priceLabel.text = item.price > 0.0 ? String(format: "$%.02f", item.price) : ""
+        countLabel.text = String(item.quantity)
+    }
+}

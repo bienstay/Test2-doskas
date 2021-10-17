@@ -10,7 +10,7 @@ import IBPCollectionViewCompositionalLayout
 
 class CreateOrderViewController: UIViewController, UITableViewDataSource {
 
-    var order: Order = Order(roomNumber: 0, description: "")
+    var order: Order = Order(roomNumber: 0, category: .None)
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var sendButton: GlossyButton!

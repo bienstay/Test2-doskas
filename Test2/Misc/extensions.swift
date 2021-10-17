@@ -354,6 +354,7 @@ extension Notification.Name {
     static let chatRoomsUpdated = Notification.Name("chatRoomsUpdated")
     static let chatMessagesUpdated = Notification.Name("chatMessagesUpdated")
     static let guestUpdated = Notification.Name("guestUpdated")
+    static let likesUpdated = Notification.Name("likesUpdated")
 }
 
 
@@ -486,7 +487,7 @@ struct Log {
         case INFO
         case DEBUG
     }
-    static var currentLevel: LogLevel = .ERROR
+    static var currentLevel: LogLevel = .INFO
     static func log(level: LogLevel = .INFO, _ message: String) {
         if level.rawValue <= currentLevel.rawValue {
             print(message)

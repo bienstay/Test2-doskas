@@ -27,8 +27,4 @@ struct Activity: Codable, Hashable {
     var text: String? = ""
 }
 
-struct DailyActivities: Codable {
-    var activities:[Activity] = []
-}
-
-typealias DailyActivities2 = [String:Activity]
+typealias DailyActivities = [String:Activity]

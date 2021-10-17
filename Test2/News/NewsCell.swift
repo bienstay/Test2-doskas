@@ -14,6 +14,17 @@ class NewsCell: UITableViewCell {
     @IBOutlet var subtitleLabel: UILabel!
     @IBOutlet var timestampLabel: UILabel!
     @IBOutlet var newsImageView: UIImageView!
+    @IBOutlet weak var heartButton: UIButton!
+    @IBOutlet weak var likesLabel: UILabel!
+
+    var post = NewsPost()
+
+    @IBAction func heartPressed(_ sender: UIButton) {
+        guest.toggleLike(group: "news", key: post.postId)
+//        let imageView = UIImage(named: "heartFull")
+//        heartButton.setImage(imageView, for: .normal)
+//        FireB.shared.updateLike(node: "news", key: post.postId, user: guest.id, add: true)
+    }
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -29,9 +40,12 @@ class NewsCell: UITableViewCell {
         backgroundColor = .clear
         newsImageView.layer.cornerRadius = 15
         newsImageView.layer.masksToBounds = true
+        //heartButton.tintColor = .red
     }
 
-    func draw(post: NewsPost) {
+    func draw(post: NewsPost, numLikes: Int) {
+        self.post = post
+
         titleLabel.text = post.title
         subtitleLabel.text = post.subtitle
         timestampLabel.text = post.timestamp.formatFriendly()
@@ -51,6 +65,10 @@ class NewsCell: UITableViewCell {
             }
         }
         else { newsImageView.isHidden = true }
+
+        heartButton.setImage(UIImage(named: numLikes > 0 ? "heartFull" : "heartEmpty"), for: .normal)
+        likesLabel.text = String(numLikes)
+        likesLabel.isHidden = !guest.isAdmin()
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {

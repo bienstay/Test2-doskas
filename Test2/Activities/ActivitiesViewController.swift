@@ -73,7 +73,7 @@ class ActivitiesViewController: UIViewController {
         if dowIndex >= Activity.DOW.allCases.count { dowIndex = 0 }
         resetDay(forward: true)
     }
-    
+
     @IBAction func backwardsPressed(_ sender: UIBarButtonItem) {
         dowIndex -= 1
         if dowIndex < 0 { dowIndex = Activity.DOW.allCases.count - 1 }

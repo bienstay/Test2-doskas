@@ -252,17 +252,17 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MoreNewsCell" id="CQh-pg-SPl" customClass="MoreNewsCell" customModule="Test2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="729.5" width="414" height="65.5"/>
+                                        <rect key="frame" x="0.0" y="729.5" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="CQh-pg-SPl" id="PV8-a1-M2A">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="65.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U12-QX-a3p" customClass="GlossyView" customModule="Test2" customModuleProvider="target">
-                                                    <rect key="frame" x="16" y="16" width="382" height="33.5"/>
+                                                    <rect key="frame" x="16" y="16" width="382" height="12"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="More news..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z08-lm-p00">
-                                                            <rect key="frame" x="8" y="8" width="366" height="17.5"/>
+                                                            <rect key="frame" x="8" y="8" width="366" height="0.0"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -289,24 +289,24 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="InfoCell" id="WNg-ev-Icl" customClass="HomeInfoCell" customModule="Test2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="795" width="414" height="68.5"/>
+                                        <rect key="frame" x="0.0" y="773.5" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="WNg-ev-Icl" id="tXW-8b-R4r">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="68.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="sC2-cC-o3L">
-                                                    <rect key="frame" x="8" y="8" width="398" height="52.5"/>
+                                                    <rect key="frame" x="8" y="8" width="398" height="28"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bsw-li-4fd">
-                                                            <rect key="frame" x="0.0" y="0.5" width="50" height="52"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="28"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="52" id="IpH-ie-KnD"/>
                                                                 <constraint firstAttribute="width" constant="50" id="pIR-yT-XKZ"/>
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h2K-I8-tZH">
-                                                            <rect key="frame" x="66" y="18" width="332" height="17"/>
+                                                            <rect key="frame" x="66" y="5.5" width="332" height="17"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -460,10 +460,10 @@
                                                     <rect key="frame" x="0.0" y="4" width="200" height="192"/>
                                                     <subviews>
                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="JYs-Dd-Bgu">
-                                                            <rect key="frame" x="0.0" y="0.0" width="200" height="192"/>
+                                                            <rect key="frame" x="8" y="0.0" width="184" height="192"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sheraton Full Moon Resort &amp; Spa" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PCg-NH-4fg">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="200" height="192"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="184" height="192"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
@@ -474,9 +474,9 @@
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
                                                         <constraint firstItem="JYs-Dd-Bgu" firstAttribute="top" secondItem="obt-sR-q2Y" secondAttribute="top" id="5WQ-GS-Wqb"/>
-                                                        <constraint firstItem="JYs-Dd-Bgu" firstAttribute="leading" secondItem="obt-sR-q2Y" secondAttribute="leading" id="P1u-TY-M6g"/>
+                                                        <constraint firstItem="JYs-Dd-Bgu" firstAttribute="leading" secondItem="obt-sR-q2Y" secondAttribute="leading" constant="8" id="P1u-TY-M6g"/>
                                                         <constraint firstAttribute="bottom" secondItem="JYs-Dd-Bgu" secondAttribute="bottom" id="ice-Pk-2UZ"/>
-                                                        <constraint firstAttribute="trailing" secondItem="JYs-Dd-Bgu" secondAttribute="trailing" id="v01-eD-nSH"/>
+                                                        <constraint firstAttribute="trailing" secondItem="JYs-Dd-Bgu" secondAttribute="trailing" constant="8" id="v01-eD-nSH"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>

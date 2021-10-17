@@ -8,7 +8,7 @@
 import UIKit
 
 class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-    var order = Order(roomNumber: guest.roomNumber, description: "Room Items")
+    var order = Order(roomNumber: guest.roomNumber, category: .RoomItems)
 
     @IBOutlet weak var orderSummaryConstraint: NSLayoutConstraint!
     @IBOutlet private weak var tableView: UITableView!
@@ -77,7 +77,8 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 { return 3 }
-        let itemType = RoomItemType.fromInt(section - 1)
+        //let itemType = RoomItemType.fromInt(section - 1)
+        let itemType = RoomItem.ItemType.allCases[section - 1]
         if let itemsInSection = hotel.roomItems[itemType] {
             return itemsInSection.count
         }
@@ -105,7 +106,8 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
         let cell = tableView.dequeueReusableCell(withIdentifier: "RoomItemCell", for: indexPath) as! RoomItemCell
         
-        let itemType = RoomItemType.fromInt(indexPath.section - 1)
+        //let itemType = RoomItemType.fromInt(indexPath.section - 1)
+        let itemType = RoomItem.ItemType.allCases[indexPath.section - 1]
         guard let item = hotel.roomItems[itemType]?[indexPath.row] else { return cell }
 
         var expanded = dd[indexPath.section - 1][indexPath.row].expanded
@@ -165,11 +167,11 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.pushOrPresent(viewController: vc)
     }
 */
-    func maintenancePressed(category: RoomItemType) {
+    func maintenancePressed(category: Order.Category) {
         let storyboard = UIStoryboard(name: "OrderSummary", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "MaintenanceOrder") as! MaintenanceOrderViewController
         //vc.order = self.order
-        vc.requestType = category
+        vc.category = category
         vc.completionHandler = { self.clearOrder() }
         self.pushOrPresent(viewController: vc)
     }
@@ -187,7 +189,8 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 { return nil }
-        let itemType = RoomItemType.fromInt(section)
+        //let itemType = RoomItemType.fromInt(section)
+        let itemType = RoomItem.ItemType.allCases[section-1]
         return itemType.rawValue
     }
 }
@@ -207,7 +210,8 @@ extension RoomViewController {
     }
 
     func addToOrder(_ indexPath: IndexPath) {
-        let itemType = RoomItemType.fromInt(indexPath.section - 1)
+        //let itemType = RoomItemType.fromInt(indexPath.section - 1)
+        let itemType = RoomItem.ItemType.allCases[indexPath.section - 1]
         if let item = hotel.roomItems[itemType]?[indexPath.row] {
             order.addItem(name: item.name, quantity: 1, price: 0)
         }
@@ -220,7 +224,8 @@ extension RoomViewController {
     }
 
     func removeFromOrder(_ indexPath: IndexPath) {
-        let itemType = RoomItemType.fromInt(indexPath.section - 1)
+        //let itemType = RoomItemType.fromInt(indexPath.section - 1)
+        let itemType = RoomItem.ItemType.allCases[indexPath.section - 1]
         if let item = hotel.roomItems[itemType]?[indexPath.row] {
             _ = order.removeItem(name: item.name, quantity: 1)
         }
@@ -235,7 +240,7 @@ extension RoomViewController {
     }
 
     func clearOrder() {
-        order = Order(roomNumber: guest.roomNumber, description: "Room items")
+        order = Order(roomNumber: guest.roomNumber, category: .RoomItems)
         dd = Array(repeating: Array(repeating: DisplayData(), count: 100), count: hotel.roomItems.count)
         orderShortSummaryView.isHidden = true
         //orderSummaryConstraint.constant = 0
@@ -265,7 +270,7 @@ class RoomHeaderCell: UITableViewCell {
         case 0:
             headerTitleLabel.text = "In-room dining"
             headerLabel.text = "Try delicious food from our vast selection of the in-room dining. Delivered right to your door 24/7"
-            headerImage.image = UIImage(named: "RoomServiceLarge")
+            headerImage.image = UIImage(named: "In-room dining")
         default:
             break
         }
@@ -299,7 +304,7 @@ class RoomHeaderCell2: UITableViewCell {
     @IBOutlet private weak var headerTitleLabel2: UILabel!
     @IBOutlet private weak var headerLabel2: UILabel!
     @IBOutlet private weak var headerImage2: UIImageView!
-    var tapClosure: ((_ category: RoomItemType) -> ())? = nil
+    var tapClosure: ((_ category: Order.Category) -> ())? = nil
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -318,19 +323,19 @@ class RoomHeaderCell2: UITableViewCell {
     }
 
     @objc func didTap1() {
-        tapClosure?(RoomItemType.Maintenance)
+        tapClosure?(.Maintenance)
     }
 
     @objc func didTap2() {
-        tapClosure?(RoomItemType.Cleaning)
+        tapClosure?(.Cleaning)
     }
 
     func display() {
         headerTitleLabel1.text = "Maintenance"
         headerLabel1.text = "Request a repair"
-        headerImage1.image = UIImage(named: "MaintenanceLarge")
+        headerImage1.image = UIImage(named: "Maintenance")
         headerTitleLabel2.text = "Cleaning"
         headerLabel2.text = "Ask for extra cleaning"
-        headerImage2.image = UIImage(named: "CleaningServiceLarge")
+        headerImage2.image = UIImage(named: "Cleaning")
     }
 }

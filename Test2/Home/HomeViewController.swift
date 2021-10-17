@@ -125,7 +125,7 @@ extension HomeViewController: UITableViewDataSource {
                 return cell
             }
             let cell = tableView.dequeueReusableCell(withIdentifier: "NewsCell", for: indexPath) as! NewsCell
-            cell.draw(post: hotel.news[indexPath.row])
+            cell.draw(post: hotel.news[indexPath.row], numLikes: 0)
             return cell
         default:
             return UITableViewCell()

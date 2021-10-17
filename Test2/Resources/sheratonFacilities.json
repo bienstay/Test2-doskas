@@ -1,7 +1,7 @@
 [
     {
       "name" : "Coral cage",
-      "location" : "By the dive center",
+      "location" : "In front of the Dive Center",
       "geoLatitude" : 0,
       "geoLongitude" : 0,
       "image" : "",
@@ -10,7 +10,7 @@
     },
     {
       "name" : "Coral cage 2",
-      "location" : "",
+      "location" : "Lagoon",
       "geoLatitude" : 0,
       "geoLongitude" : 0,
       "image" : "",
