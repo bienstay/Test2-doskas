@@ -198,7 +198,7 @@
                                                 <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="r80-Mq-UgO">
                                                     <rect key="frame" x="16" y="16" width="382" height="97"/>
                                                     <subviews>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="036-toiletries" translatesAutoresizingMaskIntoConstraints="NO" id="Mc0-RV-oV4">
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Room Items" translatesAutoresizingMaskIntoConstraints="NO" id="Mc0-RV-oV4">
                                                             <rect key="frame" x="0.0" y="0.0" width="100" height="97"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="100" id="Jeu-6x-vdu"/>
@@ -389,10 +389,10 @@
         </scene>
     </scenes>
     <resources>
-        <image name="036-toiletries" width="512" height="512"/>
         <image name="Cleaning" width="400" height="400"/>
         <image name="In-room dining" width="400" height="400"/>
-        <image name="Maintenance" width="400" height="400"/>
+        <image name="Maintenance" width="314.80999755859375" height="379.70001220703125"/>
+        <image name="Room Items" width="205" height="389.16000366210938"/>
         <image name="RoomService@75x-8" width="25" height="16"/>
         <image name="watchBell" width="128" height="128"/>
         <systemColor name="systemBackgroundColor">

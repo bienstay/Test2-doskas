@@ -71,7 +71,7 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
 
         roomNumberLabel.text = "Room: " + String(order.roomNumber)
         timeCreatedLabel.text = order.created?.formatFriendly()
-        idLabel.text = "id: " + order.id!
+        idLabel.text = "Order ID: " + order.id!
 
         categoryImage.image = UIImage(named: order.category.rawValue)
 

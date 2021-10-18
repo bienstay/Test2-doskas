@@ -116,10 +116,29 @@ class CreateOrderViewController: UIViewController, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath)
-        cell.contentView.backgroundColor = .BBbackgroundColor
-        cell.textLabel?.text = order.items[indexPath.row].name
-        cell.detailTextLabel?.text = String(order.items[indexPath.row].quantity)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as! CreateOrderItemCell
+        cell.draw(item: order.items[indexPath.row])
+//        cell.contentView.backgroundColor = .BBbackgroundColor
+//        cell.textLabel?.text = order.items[indexPath.row].name
+//        cell.detailTextLabel?.text = String(order.items[indexPath.row].quantity)
         return cell
+    }
+}
+
+class CreateOrderItemCell: UITableViewCell {
+    @IBOutlet weak var itemLabel: UILabel!
+    @IBOutlet weak var priceLabel: UILabel!
+    @IBOutlet weak var countLabel: UILabel!
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        contentView.backgroundColor = .BBbackgroundColor
+        //contentView.backgroundColor = .clear
+    }
+
+    func draw(item: Order.OrderItem) {
+        itemLabel.text = item.name
+        priceLabel.text = item.price > 0.0 ? String(format: "$%.02f", item.price) : ""
+        countLabel.text = String(item.quantity)
     }
 }
