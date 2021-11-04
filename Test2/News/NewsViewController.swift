@@ -23,17 +23,24 @@ class NewsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        setupListNavigationBar()
+/*
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationController?.hidesBarsOnSwipe = true
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.tintColor = .black
-
+*/
         newPostBarButton.isEnabled = guest.isAdmin() ? true: false
         newPostBarButton.title = guest.isAdmin() ? "New" : ""
     }
 
     @objc func onNewsUpdated(_ notification: Notification) {
-        DispatchQueue.main.async { self.tableView.reloadData() }
+        DispatchQueue.main.async {
+            self.tableView.beginUpdates()
+            self.tableView.reloadSections([0], with: .none)
+            self.tableView.setNeedsLayout()
+            self.tableView.endUpdates()
+        }
     }
     
     @IBAction func newPostPressed(_ sender: Any) {

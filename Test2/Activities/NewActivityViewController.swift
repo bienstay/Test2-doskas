@@ -108,7 +108,7 @@ class NewActivityViewController: UITableViewController {
     }
 
     func updateArrayAndDB(activity: Activity, dow: String) {
-        let errStr = FireB.shared.addRecord(key: activity.id, subNode: dow, record: activity) { post in self.closeMe(activity) }
+        let errStr = FireB.shared.addRecord(key: activity.id, subNode: dow, record: activity) { activity in self.closeMe(activity) }
         if let s = errStr { Log.log(s) }
     }
 

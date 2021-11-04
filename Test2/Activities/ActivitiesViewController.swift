@@ -27,12 +27,14 @@ class ActivitiesViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
+        
+        setupListNavigationBar()
+/*
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationController?.hidesBarsOnSwipe = true
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.tintColor = .black
-        
+*/
         title = Activity.DOW.allCases[dowIndex].rawValue
         
         newActivityBarButton.isEnabled = guest.isAdmin() ? true: false
@@ -81,7 +83,12 @@ class ActivitiesViewController: UIViewController {
     }
 
     @objc func onActivitiesUpdated(_ notification: Notification) {
-        DispatchQueue.main.async { self.tableView.reloadData() }
+        DispatchQueue.main.async {
+            self.tableView.beginUpdates()
+            self.tableView.reloadSections([0], with: .none)
+            self.tableView.setNeedsLayout()
+            self.tableView.endUpdates()
+        }
     }
 
     @IBAction func newActivityPressed(_ sender: Any) {

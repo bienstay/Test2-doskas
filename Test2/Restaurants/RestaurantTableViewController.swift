@@ -7,7 +7,6 @@
 
 import UIKit
 import Kingfisher
-//import MapKit
 
 
 class RestaurantTableViewController: UITableViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
@@ -19,8 +18,6 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
         initView(tableView: tableView)
 
         //tableView.cellLayoutMarginsFollowReadableWidth = true
-
-        //navigationController?.navigationBar.prefersLargeTitles = true
 
         // setup empty table
         tableView.backgroundView = emptyRestaurantView
@@ -45,37 +42,26 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        setupListNavigationBar()
+/*
         navigationItem.backButtonTitle = ""
         navigationController?.setNavigationBarHidden(false, animated: false)
         navigationController?.hidesBarsOnSwipe = true
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.tintColor = .black
+ */
     }
 
     @objc func onRestaurantsUpdated(_ notification: Notification) {
         DispatchQueue.main.async { self.tableView.reloadData() }
     }
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showRestaurantDetail" {
-            if let indexPath = tableView.indexPathForSelectedRow {
-                let destinationController = segue.destination as! RestaurantDetailViewController
-                destinationController.restaurant = hotel.restaurants[indexPath.row]
-            }
-        }
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let storyboard = UIStoryboard(name: "Restaurants", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "RestaurantDetail") as! RestaurantDetailViewController
+        vc.restaurant = hotel.restaurants[indexPath.row]
+        self.pushOrPresent(viewController: vc)
     }
-
-    // unwind from NewRestaurant
-    @IBAction func unwindToHome(segue: UIStoryboardSegue) {
-        if (segue.identifier == "save") {
-            if let newRC = segue.source as? NewRestaurantController {
-                hotel.restaurants.append(newRC.restaurant)  // TODO add to Firebase
-            }
-            //updateRestaurantListView()
-        }
-        dismiss(animated: true, completion: nil)
-    }
-
 
     // section 0 is for restaurants, section 1 is for destination dining
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -106,7 +92,7 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
             //cell.thumbnailImageView?.image = UIImage(data: restaurant.image)
             cell.thumbnailImageView?.kf.setImage(with: URL(string: restaurant.image))
             cell.locationLabel.text = restaurant.location
-            cell.typeLabel.text = restaurant.cuisines[0]
+            cell.typeLabel.text = restaurant.cuisines
             //cell.accessoryType = restaurant.isFavorite ? .checkmark : .none
             return cell
         default:
@@ -140,6 +126,46 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
         cell.addGestureRecognizer(tapAction)
 
         return cell
+    }
+
+    @IBAction func newRestaurantPressed(_ sender: Any) {
+        let vc = self.createViewController(storyBoard: "Restaurants", id: "NewRestaurant") as! NewRestaurantController
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        if !guest.isAdmin() { return nil }
+        let action1 = UIContextualAction(style: .normal, title: "Edit") { action, view, completionHandler in
+            let vc = self.createViewController(storyBoard: "Restaurants", id: "NewRestaurant") as! NewRestaurantController
+            vc.restaurantToEdit = hotel.restaurants[indexPath.row]
+            self.navigationController?.pushViewController(vc, animated: true)
+            completionHandler(true)
+        }
+        action1.backgroundColor = .orange
+        return UISwipeActionsConfiguration(actions: [action1])
+    }
+
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        if !guest.isAdmin() { return nil }
+        let action1 = UIContextualAction(style: .destructive, title: "Delete") { action, view, completionHandler in
+            self.deleteRestaurant(restaurant: hotel.restaurants[indexPath.row])
+            completionHandler(true)
+        }
+        action1.backgroundColor = .red
+        let configuration = UISwipeActionsConfiguration(actions: [action1])
+        configuration.performsFirstActionWithFullSwipe = false
+        return configuration
+    }
+
+    func deleteRestaurant(restaurant: Restaurant) {
+        let errStr = FireB.shared.removeRecord(key: restaurant.id!, record: restaurant) { record in
+            if record == nil {
+                showInfoDialogBox(vc: self, title: "Error", message: "Restaurant delete failed")
+            } else {
+                showInfoDialogBox(vc: self, title: "Info", message: "Restaurant deleted")
+            }
+        }
+        if errStr != nil { Log.log(errStr!) }
     }
 
 }

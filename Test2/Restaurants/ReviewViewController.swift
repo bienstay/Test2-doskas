@@ -16,16 +16,20 @@ class ReviewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         initView()
+        
+        title = "Rate & Review"
 
-        //backgroundImageView.image = UIImage(data: restaurant!.image)  // TODO
+        backgroundImageView.kf.setImage(with: URL(string: restaurant!.image))
 
         // Applying the blur effect
-        let blurEffect = UIBlurEffect(style: .dark)
+        let blurEffect = UIBlurEffect(style: .regular)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         blurEffectView.frame = view.bounds
         backgroundImageView.addSubview(blurEffectView)
 
-        let moveRightTransform = CGAffineTransform.init(translationX: 600, y: 0)
+
+        //let moveRightTransform = CGAffineTransform.init(translationX: 600, y: 0)
+        let moveRightTransform = CGAffineTransform.init(translationX: 0, y: -600)
         let scaleUpTransform = CGAffineTransform.init(scaleX: 5.0, y: 5.0)
         let moveScaleTransform = scaleUpTransform.concatenating(moveRightTransform)
 
@@ -40,6 +44,13 @@ class ReviewViewController: UIViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        navigationController?.setNavigationBarHidden(false, animated: true)
+        navigationController?.hidesBarsOnSwipe = false
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationController?.navigationBar.tintColor = .white
+
         for index: Int in 0...4 {
             let delay: Double = Double(0.1) + Double(index) * Double(0.05)
             UIView.animate(withDuration: 0.4, delay: delay, usingSpringWithDamping: 0.2, initialSpringVelocity: 0.3, options: [], animations: {
@@ -48,5 +59,4 @@ class ReviewViewController: UIViewController {
             }, completion: nil)
         }
     }
-
 }

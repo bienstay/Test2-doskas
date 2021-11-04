@@ -6,27 +6,11 @@
 //
 
 import Foundation
-/*
-class Restaurant: Place, Codable {
-    var imageURL: String
-    var name: String = ""
-    var description: String = ""
-    var image: Data = Data()
-    var icon: Data = Data()
-    var phone: String = ""
-    var location: String = ""
-    var geoLatitude: Double = 0.0
-    var geoLongitude: Double = 0.0
-
-    var cuisines: [String] = []
-    var menus: [Menu] = []
-    
-    init() {}
-}
-*/
 
 class Restaurant: Place, Codable {
+    var id: String?
     var name: String = ""
+    var cuisines: String = ""
     var description: String = ""
     var image: String = ""
     var phone: String = ""
@@ -34,55 +18,8 @@ class Restaurant: Place, Codable {
     var geoLatitude: Double = 0.0
     var geoLongitude: Double = 0.0
 
-    var cuisines: [String] = []
-    lazy var menus: [Menu] = []
+    lazy var menus: [Menu2] = []
 
     init() {}
 }
 
-
-/*
-func loadRestaurants(fromServerURL: String, completionClosure: @escaping ()->()) {
-    
-    let remoteURL = URL(string: fromServerURL)!
-    var req = URLRequest(url: remoteURL)
-    req.cachePolicy = .useProtocolCachePolicy
-
-    let downloadTask = URLSession.shared.downloadTask(with: req) { localURL, urlResponse, error in
-        guard let localURL = localURL else { Log.log(level: .INFO, "localURL == nil"); return }
-        guard let urlResponse = urlResponse else { Log.log(level: .INFO, "urlResponse == nil"); return }
-
-        // decode the response and put it in the hotel data
-        if let jsonString = try? String(contentsOf: localURL) {
-            let restaurants = try! JSONDecoder().decode([Restaurant].self, from: jsonString.data(using: .utf8)!)
-            hotel.facilities[.Restaurant] = Dictionary(uniqueKeysWithValues: restaurants.map{ ($0.name, $0) })
-            Log.log(level: .INFO, "Loaded \(restaurants.count) restaurants")
-            completionClosure()
-        }
-
-        // put the response in the cache
-        if (URLCache.shared.cachedResponse(for: req) == nil) {
-            Log.log(level: .INFO, "Restaurants - writing to the cache")
-            if let data = try? Data(contentsOf: localURL) {
-                URLCache.shared.storeCachedResponse(CachedURLResponse(response: urlResponse, data: data), for: req)
-            }
-        }
-        else { Log.log(level: .INFO, "Restaurants - already in the cache") }
-    }
-    downloadTask.resume()
-}
-
-
-func loadRestaurantsImagesFromBundle() {
-    for r in hotel.facilities[.Restaurant] as! [String: Restaurant] {
-        if let bundlePath = Bundle.main.path(forResource: r.key, ofType: "jpg") {
-            do {
-                try r.value.image = Data(contentsOf: URL(fileURLWithPath: bundlePath))
-            }
-            catch {
-                Log.log(error)
-            }
-        }
-    }
-}
-*/

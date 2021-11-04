@@ -8,9 +8,9 @@
 import UIKit
 
 class NewRestaurantController: UITableViewController {
+    var restaurantToEdit: Restaurant?
+    var photoUpdated: Bool = false
 
-    var restaurant: Restaurant!
-    
     @IBOutlet var photoImageView: UIImageView! {
         didSet {
             photoImageView.layer.cornerRadius = 10.0
@@ -25,27 +25,41 @@ class NewRestaurantController: UITableViewController {
             nameTextField.delegate = self
         }
     }
-    @IBOutlet var typeTextField: RoundedTextField! {
+    @IBOutlet var cuisinesTextField: RoundedTextField! {
         didSet {
-            typeTextField.tag = 2
-            typeTextField.delegate = self
+            cuisinesTextField.tag = 2
+            cuisinesTextField.delegate = self
         }
     }
-    @IBOutlet var addressTextField: RoundedTextField! {
+    @IBOutlet var locationTextField: RoundedTextField! {
         didSet {
-            addressTextField.tag = 3
-            addressTextField.delegate = self
+            locationTextField.tag = 3
+            locationTextField.delegate = self
+        }
+    }
+    @IBOutlet weak var longitudeTextField: RoundedTextField! {
+        didSet {
+            longitudeTextField.keyboardType = .decimalPad
+            longitudeTextField.tag = 4
+            longitudeTextField.delegate = self
+        }
+    }
+    @IBOutlet weak var latitudeTextField: RoundedTextField! {
+        didSet {
+            latitudeTextField.keyboardType = .decimalPad
+            latitudeTextField.tag = 5
+            latitudeTextField.delegate = self
         }
     }
     @IBOutlet var phoneTextField: RoundedTextField! {
         didSet {
-            phoneTextField.tag = 4
+            phoneTextField.tag = 6
             phoneTextField.delegate = self
         }
     }
     @IBOutlet var descriptionTextView: UITextView! {
         didSet {
-            descriptionTextView.tag = 5
+            descriptionTextView.tag = 7
             descriptionTextView.layer.cornerRadius = 10.0
             descriptionTextView.layer.masksToBounds = true
         }
@@ -54,47 +68,81 @@ class NewRestaurantController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         initView()
-        //LookAndFeel.customizeNavigationBarAppearance(navigationController)
         
         // Dismiss keyboard when users tap any blank area of the view
         let tap = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing))
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
+        
+        if let restaurant = restaurantToEdit {  // if restaurantToEdit is not null then we are editing the existing post
+            nameTextField.text = restaurant.name
+            cuisinesTextField.text = restaurant.cuisines
+            descriptionTextView.text = restaurant.description
+            phoneTextField.text = restaurant.phone
+            locationTextField.text = restaurant.location
+            latitudeTextField.text = String(restaurant.geoLatitude)
+            longitudeTextField.text = String(restaurant.geoLongitude)
+            if let url = URL(string: restaurant.image) {
+                photoImageView.kf.setImage(with: url)
+            }
+            title = restaurant.name
+        } else {
+            title = "New Restaurant"
+        }
     }
-/*
+
     @IBAction func savePressed(_ sender: UIBarButtonItem) {
         var message: String?
         if nameTextField.text == "" { message = NSLocalizedString("Name missing", comment: "Name missing") } else
-        if typeTextField.text == "" { message = NSLocalizedString("Type missing", comment: "Type missing") } else
-        if addressTextField.text == "" { message = NSLocalizedString("Address missing", comment: "Address missing") } else
-        if phoneTextField.text == "" { message = NSLocalizedString("Phone number missing", comment: "Phone number missing") } else
+        if cuisinesTextField.text == "" { message = NSLocalizedString("Type missing", comment: "Type missing") } else
+        if locationTextField.text == "" { message = NSLocalizedString("Location missing", comment: "Location missing") } else
         if descriptionTextView.text == "" { message = NSLocalizedString("Description missing", comment: "Description missing") } else
-        if photoImageView.image == nil { message = NSLocalizedString("Image missing", comment: "Image missing") }
+        //if photoImageView.image == nil { message = NSLocalizedString("Image missing", comment: "Image missing") }
         if let message = message {
-            let alertController = UIAlertController(title: NSLocalizedString("Oops", comment: "Oops"), message: message, preferredStyle: .alert)
-            let alertAction = UIAlertAction(title: NSLocalizedString("OK", comment: "OK"), style: .default, handler: nil)
-            alertController.addAction(alertAction)
-            present(alertController, animated: true, completion: nil)
+            showInfoDialogBox(vc: self, title: "Oops", message: message)
             return
         }
 
-        if let appDelegate = (UIApplication.shared.delegate as? AppDelegate) {
-            restaurant = Restaurant(context: appDelegate.persistentContainer.viewContext)
-            restaurant.name = nameTextField.text!
-            restaurant.type = typeTextField.text!
-            restaurant.location = addressTextField.text!
-            restaurant.phone = phoneTextField.text!
-            restaurant.summary = descriptionTextView.text
-            restaurant.isFavorite = false
-            if let imageData = photoImageView.image?.pngData() {
-                restaurant.image = imageData
-            }
-            appDelegate.saveContext()
+        let restaurant = Restaurant()
+        restaurant.name = nameTextField.text ?? ""
+        restaurant.cuisines = cuisinesTextField.text ?? ""
+        restaurant.description = descriptionTextView.text ?? ""
+        restaurant.phone = phoneTextField.text ?? ""
+
+        restaurant.location = locationTextField.text ?? ""
+        restaurant.geoLatitude = Double(latitudeTextField.text!) ?? 0.0
+        restaurant.geoLongitude = Double(longitudeTextField.text!) ?? 0.0
+        
+        if let orgRestaurant = restaurantToEdit {
+            restaurant.id = orgRestaurant.id
         }
-        performSegue(withIdentifier: "save", sender: self)
-        //dismiss(animated: true, completion: nil)
+        
+        if photoUpdated {
+            FireB.shared.uploadImage(image: photoImageView.image!, forLocation: .RESTAURANTS, imageName: restaurant.name) { photoURL in
+                    restaurant.image = photoURL
+                    let errStr = FireB.shared.addRecord(key: restaurant.id, record: restaurant) { restaurant in self.closeMe(restaurant) }
+                    if let s = errStr { Log.log(s) }
+                }
+        } else {
+            restaurant.image = restaurantToEdit?.image ?? ""
+            let errStr = FireB.shared.addRecord(key: restaurant.id, record: restaurant) { restaurant in self.closeMe(restaurant) }   // update only
+            if let s = errStr { Log.log(s) }
+        }
     }
- */
+    
+    func closeMe(_ restaurant:Restaurant?) {
+        guard restaurant != nil else {
+            showInfoDialogBox(vc: self, title: "Error", message: "Restaurant update failed")
+            return
+        }
+        if let nc = navigationController {
+            nc.popViewController(animated: true)
+        }
+    }
+
+    @IBAction func cancelPressed(_ sender: UIBarButtonItem) {
+        navigationController?.popViewController(animated: true)
+    }
 }
 
 extension NewRestaurantController: UITextFieldDelegate {
@@ -157,6 +205,7 @@ extension NewRestaurantController: UIImagePickerControllerDelegate, UINavigation
                 photoImageView.image = selectedImage
                 photoImageView.contentMode = .scaleAspectFill
                 photoImageView.clipsToBounds = true
+                photoUpdated = true
             }
         dismiss(animated: true, completion: nil)
     }

@@ -7,54 +7,45 @@
 
 import UIKit
 import Kingfisher
+import MapKit
 
 class RestaurantDetailViewController: UIViewController {
 
-    var restaurant: Restaurant?
+    var restaurant: Restaurant = Restaurant()
 
     @IBOutlet var tableView: UITableView!
     @IBOutlet var headerView: RestaurantDetailHeaderView!
     
+    @IBAction func rateItPressed(_ sender: UIButton) {
+        let vc = pushOrPresent(storyBoard: "Restaurants", id: "Review") as! ReviewViewController
+        vc.restaurant = restaurant
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         initView(tableView: tableView)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.contentInsetAdjustmentBehavior = .never   // hides the navigationbar
 
         // Configure header view
-        headerView.nameLabel.text = restaurant?.name
-        headerView.typeLabel.text = restaurant?.cuisines[0]
-        //headerView.headerImageView.image = UIImage(data: restaurant!.image)
-        headerView.headerImageView.kf.setImage(with: URL(string: restaurant!.image))
-        //displayHeart()
+        headerView.nameLabel.text = restaurant.name
+        headerView.typeLabel.text = restaurant.cuisines
+        headerView.headerImageView.kf.setImage(with: URL(string: restaurant.image))
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        //tableView.contentInsetAdjustmentBehavior = .never
+        
+        setupTransparentNavigationBar(tableView: tableView)
+
+/*
+        tableView.contentInsetAdjustmentBehavior = .never   // hides the navigationbar
 
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationController?.hidesBarsOnSwipe = true
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.tintColor = .white
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        switch segue.identifier {
-        case "expandMap":
-            let destinationController = segue.destination as! MapViewController
-            destinationController.restaurant = restaurant
-        case "showReview":
-            let destinationController = segue.destination as! ReviewViewController
-            destinationController.restaurant = restaurant
-        default: break
-        }
-    }
-
-    // closing the review scene with X
-    @IBAction func close(segue: UIStoryboardSegue) {
-        dismiss(animated: true, completion: nil)
+ */
     }
 
     // closing the review scene with smileys
@@ -81,37 +72,6 @@ class RestaurantDetailViewController: UIViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
-/*
-    func displayHeart() {
-        headerView.heartButton.tintColor = restaurant!.isFavorite ? .systemYellow : .white
-        if #available(iOS 13.0, *) {
-            let imageName = restaurant!.isFavorite ? "heart.fill" : "heart"
-            headerView.heartButton.setImage(UIImage(systemName: imageName), for: .normal)
-        }
-        else {
-            let imageName = restaurant!.isFavorite ? "suit_heart_fill" : "suit_heart"
-            if let myImage = UIImage(named: imageName) {
-                let tintableImage = myImage.withRenderingMode(.alwaysTemplate)
-                headerView.heartButton.setImage(tintableImage, for: .normal)
-            }
-        }
-    }
-
-    @IBAction func heartPressed(_ sender: UIButton) {
-        restaurant!.isFavorite = !restaurant!.isFavorite
-        displayHeart()
-    }
-*/
-/*
-    func showPopup () {
-        var blockViewController: DemoViewController?
-        blockViewController = DemoViewController(nibName: "DemoViewController", bundle: nil)
-        //make sure to put this over full screen, to allow the transparency
-        blockViewController?.modalPresentationStyle = .overFullScreen
-        blockViewController?.modalTransitionStyle = .crossDissolve
-        self.present(blockViewController!, animated: true)
-    }
- */
 }
 
 extension RestaurantDetailViewController: UITableViewDataSource, UITableViewDelegate {
@@ -124,7 +84,7 @@ extension RestaurantDetailViewController: UITableViewDataSource, UITableViewDele
         switch indexPath.row {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: RestaurantDetailTextCell.self), for: indexPath) as! RestaurantDetailTextCell
-            cell.descriptionLabel.text = restaurant?.description
+            cell.draw(text: restaurant.description)
             return cell
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "MenuCell", for: indexPath)
@@ -132,8 +92,7 @@ extension RestaurantDetailViewController: UITableViewDataSource, UITableViewDele
             return cell
         case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: RestaurantDetailMapCell.self), for: indexPath) as! RestaurantDetailMapCell
-            cell.configure(restaurant!.geoLongitude, restaurant!.geoLatitude)
-            cell.selectionStyle = .none
+            cell.draw(restaurant.geoLongitude, restaurant.geoLatitude)
             return cell
         default:
             return UITableViewCell()
@@ -143,20 +102,76 @@ extension RestaurantDetailViewController: UITableViewDataSource, UITableViewDele
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 1 {
             let vc = pushOrPresent(storyBoard: "Menu", id: "MenuMainViewController") as! MenuMainViewController
-            vc.restaurant = restaurant!
+            vc.restaurant = restaurant
         }
     }
-/*
-    func tableView(_ tableView: UITableView, didHighlightRowAt indexPath: IndexPath) {
-        if let cell = tableView.cellForRow(at: indexPath) {
-            cell.backgroundColor = .green
-      }
+}
+
+class RestaurantDetailHeaderView: UIView {
+
+    @IBOutlet var headerImageView: UIImageView!
+    @IBOutlet var heartButton: UIButton!
+    @IBOutlet var nameLabel: UILabel! {
+        didSet {
+            nameLabel.numberOfLines = 0
+            if let customFont = UIFont(name: "Nunito-Bold", size: 40.0) {
+                nameLabel.font = UIFontMetrics(forTextStyle: .title1).scaledFont(for: customFont)
+            }
+        }
+    }
+    @IBOutlet var typeLabel: UILabel! {
+        didSet {
+            if let customFont = UIFont(name: "Nunito-Bold", size: 20.0) {
+                typeLabel.font = UIFontMetrics(forTextStyle: .headline).scaledFont(for: customFont)
+            }
+        }
+    }
+    @IBOutlet var ratingImageView: UIImageView!
+}
+
+
+class RestaurantDetailTextCell: UITableViewCell {
+    @IBOutlet private var descriptionLabel: UILabel!
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        backgroundColor = .clear
+        selectionStyle = .none
     }
 
-    func tableView(_ tableView: UITableView, didUnhighlightRowAt indexPath: IndexPath) {
-        if let cell = tableView.cellForRow(at: indexPath) {
-            //cell.backgroundColor = .blue
-      }
+    func draw(text: String) {
+        descriptionLabel.text = text
     }
-*/
+}
+
+class RestaurantDetailMapCell: UITableViewCell {
+
+    @IBOutlet var mapView: MKMapView!
+
+    override func awakeFromNib() { super.awakeFromNib()
+        backgroundColor = .clear
+        selectionStyle = .none
+        mapView.layer.cornerRadius = 20.0
+        mapView.clipsToBounds = true
+    }
+
+    func draw(_ longitude: Double, _ latitude: Double) {
+        let coordinate: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = coordinate
+        let region = MKCoordinateRegion(center: annotation.coordinate, latitudinalMeters: 250, longitudinalMeters: 250)
+        self.mapView.setRegion(region, animated: false)
+        self.mapView.addAnnotation(annotation)
+
+        mapView.showsCompass = false
+        mapView.showsScale = false
+        mapView.showsTraffic = false
+        mapView.showsPointsOfInterest = false
+        if #available(iOS 13, *) {
+            //mapView.pointOfInterestFilter?.excludes(MKPointOfInterestCategory.atm)
+            //mapView.pointOfInterestFilter = MKPointOfInterestFilter(
+        }
+    }
+
 }

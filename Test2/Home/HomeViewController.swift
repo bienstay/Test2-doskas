@@ -14,10 +14,6 @@ class HomeViewController: UIViewController {
         case importantNote
         case info
         case news
-        //case map
-        //case coralPropagation
-        //case generalInfo
-        //case todayActivities
         static var numberOfSections: Int { return self.allCases.count }
     }
     var onboardingShown: Bool = false

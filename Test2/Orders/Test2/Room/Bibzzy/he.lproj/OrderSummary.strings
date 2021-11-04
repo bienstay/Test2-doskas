@@ -1,0 +1,99 @@
+
+/* Class = "UITextField"; placeholder = "Enter guest's room number"; ObjectID = "09h-HS-YQu"; */
+"09h-HS-YQu.placeholder" = "Enter guest's room number";
+
+/* Class = "UILabel"; text = "Labelek"; ObjectID = "1s2-fV-57H"; */
+"1s2-fV-57H.text" = "Labelek";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "3nA-Tg-SM1"; */
+"3nA-Tg-SM1.text" = "Label";
+
+/* Class = "UILabel"; text = "Canceled by:"; ObjectID = "4ig-hV-Ihr"; */
+"4ig-hV-Ihr.text" = "Canceled by:";
+
+/* Class = "UIButton"; normalTitle = "Send"; ObjectID = "5hd-Y2-NSr"; */
+"5hd-Y2-NSr.normalTitle" = "Send";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "8ks-SM-sQN"; */
+"8ks-SM-sQN.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "9RK-q7-VeH"; */
+"9RK-q7-VeH.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "Cbl-P7-TZS"; */
+"Cbl-P7-TZS.text" = "Label";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "DgV-Ni-5Hl"; */
+"DgV-Ni-5Hl.text" = "Title";
+
+/* Class = "UILabel"; text = "Created by:"; ObjectID = "JIn-he-ide"; */
+"JIn-he-ide.text" = "Created by:";
+
+/* Class = "UITextField"; placeholder = "Add comments"; ObjectID = "KFb-1A-2VT"; */
+"KFb-1A-2VT.placeholder" = "Add comments";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "O1G-HR-gqx"; */
+"O1G-HR-gqx.text" = "Label";
+
+/* Class = "UILabel"; text = " "; ObjectID = "QvD-TR-5LT"; */
+"QvD-TR-5LT.text" = " ";
+
+/* Class = "UILabel"; text = "ORDER SUMMARY"; ObjectID = "Ser-Yl-8Fm"; */
+"Ser-Yl-8Fm.text" = "ORDER SUMMARY";
+
+/* Class = "UILabel"; text = "Problem description:"; ObjectID = "W9x-mv-4GP"; */
+"W9x-mv-4GP.text" = "Problem description:";
+
+/* Class = "UILabel"; text = "Delivered by:"; ObjectID = "WOA-KU-2YX"; */
+"WOA-KU-2YX.text" = "Delivered by:";
+
+/* Class = "UILabel"; text = "Labelek"; ObjectID = "WVx-G8-Lmv"; */
+"WVx-G8-Lmv.text" = "Labelek";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "bLB-wE-kD1"; */
+"bLB-wE-kD1.text" = "Label";
+
+/* Class = "UILabel"; text = "Room:"; ObjectID = "dVL-SK-Q1c"; */
+"dVL-SK-Q1c.text" = "Room:";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "fgH-x4-W4H"; */
+"fgH-x4-W4H.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "fzL-ss-P47"; */
+"fzL-ss-P47.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "gdc-nA-dlh"; */
+"gdc-nA-dlh.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "iz6-Oa-87i"; */
+"iz6-Oa-87i.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "jN6-zU-6rx"; */
+"jN6-zU-6rx.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "kjw-eQ-uJS"; */
+"kjw-eQ-uJS.text" = "Label";
+
+/* Class = "UIBarButtonItem"; title = "Item"; ObjectID = "kup-rS-jq9"; */
+"kup-rS-jq9.title" = "Item";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "nTb-Tn-PMQ"; */
+"nTb-Tn-PMQ.text" = "Label";
+
+/* Class = "UILabel"; text = "Confirmed by:"; ObjectID = "oZB-J5-nVE"; */
+"oZB-J5-nVE.text" = "Confirmed by:";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "qZ6-h0-Sb9"; */
+"qZ6-h0-Sb9.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "tdj-pO-CND"; */
+"tdj-pO-CND.text" = "Label";
+
+/* Class = "UIButton"; normalTitle = "SEND"; ObjectID = "uxa-vM-lLj"; */
+"uxa-vM-lLj.normalTitle" = "SEND";
+
+/* Class = "UITextField"; placeholder = "Enter guest's room number"; ObjectID = "vfH-M9-oNn"; */
+"vfH-M9-oNn.placeholder" = "Enter guest's room number";
+
+/* Class = "UILabel"; text = "Room number:"; ObjectID = "xhQ-NK-sbb"; */
+"xhQ-NK-sbb.text" = "Room number:";

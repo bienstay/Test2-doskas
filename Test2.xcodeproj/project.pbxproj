@@ -20,6 +20,7 @@
 		061DC83D26547BC300C4C794 /* HotelInit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 061DC83C26547BC300C4C794 /* HotelInit.swift */; };
 		061DC83F26554AD900C4C794 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 061DC83E26554AD900C4C794 /* SplashViewController.swift */; };
 		061DC8432656C57D00C4C794 /* DestinationDiningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 061DC8422656C57D00C4C794 /* DestinationDiningViewController.swift */; };
+		061DE02E2731AEEF0021A37C /* RoomItemsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 061DE02D2731AEEF0021A37C /* RoomItemsViewController.swift */; };
 		062038662641A37500B87708 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 062038652641A37500B87708 /* MapViewController.swift */; };
 		062038702641E72900B87708 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0620386F2641E72900B87708 /* MenuViewController.swift */; };
 		062038722641E81B00B87708 /* Menu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 062038712641E81B00B87708 /* Menu.storyboard */; };
@@ -55,16 +56,13 @@
 		0683A1F026516FF50000D122 /* MenuPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0683A1EF26516FF50000D122 /* MenuPageViewController.swift */; };
 		0683A1F2265172070000D122 /* MenuMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0683A1F1265172070000D122 /* MenuMainViewController.swift */; };
 		0683A1F42651C80C0000D122 /* RoomSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0683A1F32651C80C0000D122 /* RoomSectionHeaderView.xib */; };
+		069945AA2729FC75009548AA /* Translations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069945A92729FC75009548AA /* Translations.swift */; };
 		069AA4232714F456002EE497 /* HomeCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069AA4222714F456002EE497 /* HomeCollectionViewController.swift */; };
 		069DB355263AED0E00C91468 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 069DB354263AED0E00C91468 /* Main.storyboard */; };
 		069DB35A263B0FB800C91468 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069DB356263B0FB800C91468 /* ReviewViewController.swift */; };
 		069DB35B263B0FB800C91468 /* RestaurantDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069DB357263B0FB800C91468 /* RestaurantDetailViewController.swift */; };
 		069DB35C263B0FB800C91468 /* RestaurantTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069DB358263B0FB800C91468 /* RestaurantTableViewController.swift */; };
 		069DB35D263B0FB800C91468 /* NewRestaurantController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069DB359263B0FB800C91468 /* NewRestaurantController.swift */; };
-		069DB363263B105C00C91468 /* RestaurantDetailTextCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069DB35E263B105C00C91468 /* RestaurantDetailTextCell.swift */; };
-		069DB364263B105C00C91468 /* RestaurantDetailTwoColumnCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069DB35F263B105C00C91468 /* RestaurantDetailTwoColumnCell.swift */; };
-		069DB365263B105C00C91468 /* RestaurantDetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069DB360263B105C00C91468 /* RestaurantDetailHeaderView.swift */; };
-		069DB366263B105C00C91468 /* RestaurantDetailMapCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069DB361263B105C00C91468 /* RestaurantDetailMapCell.swift */; };
 		069DB367263B105C00C91468 /* RestaurantTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069DB362263B105C00C91468 /* RestaurantTableViewCell.swift */; };
 		069DB369263B12EB00C91468 /* RoundedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069DB368263B12EB00C91468 /* RoundedTextField.swift */; };
 		069DB36B263B14A300C91468 /* Restaurants.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 069DB36A263B14A300C91468 /* Restaurants.storyboard */; };
@@ -118,6 +116,7 @@
 		061DC83C26547BC300C4C794 /* HotelInit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotelInit.swift; sourceTree = "<group>"; };
 		061DC83E26554AD900C4C794 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		061DC8422656C57D00C4C794 /* DestinationDiningViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationDiningViewController.swift; sourceTree = "<group>"; };
+		061DE02D2731AEEF0021A37C /* RoomItemsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomItemsViewController.swift; sourceTree = "<group>"; };
 		062038652641A37500B87708 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		0620386F2641E72900B87708 /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		062038712641E81B00B87708 /* Menu.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Menu.storyboard; sourceTree = "<group>"; };
@@ -155,16 +154,13 @@
 		0683A1EF26516FF50000D122 /* MenuPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuPageViewController.swift; sourceTree = "<group>"; };
 		0683A1F1265172070000D122 /* MenuMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuMainViewController.swift; sourceTree = "<group>"; };
 		0683A1F32651C80C0000D122 /* RoomSectionHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RoomSectionHeaderView.xib; sourceTree = "<group>"; };
+		069945A92729FC75009548AA /* Translations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Translations.swift; sourceTree = "<group>"; };
 		069AA4222714F456002EE497 /* HomeCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCollectionViewController.swift; sourceTree = "<group>"; };
 		069DB354263AED0E00C91468 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		069DB356263B0FB800C91468 /* ReviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
 		069DB357263B0FB800C91468 /* RestaurantDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestaurantDetailViewController.swift; sourceTree = "<group>"; };
 		069DB358263B0FB800C91468 /* RestaurantTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestaurantTableViewController.swift; sourceTree = "<group>"; };
 		069DB359263B0FB800C91468 /* NewRestaurantController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewRestaurantController.swift; sourceTree = "<group>"; };
-		069DB35E263B105C00C91468 /* RestaurantDetailTextCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestaurantDetailTextCell.swift; sourceTree = "<group>"; };
-		069DB35F263B105C00C91468 /* RestaurantDetailTwoColumnCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestaurantDetailTwoColumnCell.swift; sourceTree = "<group>"; };
-		069DB360263B105C00C91468 /* RestaurantDetailHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestaurantDetailHeaderView.swift; sourceTree = "<group>"; };
-		069DB361263B105C00C91468 /* RestaurantDetailMapCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestaurantDetailMapCell.swift; sourceTree = "<group>"; };
 		069DB362263B105C00C91468 /* RestaurantTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestaurantTableViewCell.swift; sourceTree = "<group>"; };
 		069DB368263B12EB00C91468 /* RoundedTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedTextField.swift; sourceTree = "<group>"; };
 		069DB36A263B14A300C91468 /* Restaurants.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Restaurants.storyboard; sourceTree = "<group>"; };
@@ -327,6 +323,7 @@
 				069FDBA726A09A55004F543F /* Chat.swift */,
 				06F5D168270B8E1B004931F7 /* Activity.swift */,
 				06AC358C271B7FAE00D249C6 /* Likes.swift */,
+				069945A92729FC75009548AA /* Translations.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -379,6 +376,7 @@
 				066BF4022637619B00EE834C /* RoomViewController.swift */,
 				0622163F2638B0B7002C0977 /* RoomItemCell.swift */,
 				0683A1F32651C80C0000D122 /* RoomSectionHeaderView.xib */,
+				061DE02D2731AEEF0021A37C /* RoomItemsViewController.swift */,
 			);
 			path = Room;
 			sourceTree = "<group>";
@@ -439,10 +437,6 @@
 			isa = PBXGroup;
 			children = (
 				069DB357263B0FB800C91468 /* RestaurantDetailViewController.swift */,
-				069DB360263B105C00C91468 /* RestaurantDetailHeaderView.swift */,
-				069DB361263B105C00C91468 /* RestaurantDetailMapCell.swift */,
-				069DB35E263B105C00C91468 /* RestaurantDetailTextCell.swift */,
-				069DB35F263B105C00C91468 /* RestaurantDetailTwoColumnCell.swift */,
 				061DC8422656C57D00C4C794 /* DestinationDiningViewController.swift */,
 			);
 			path = RestaurantsDetail;
@@ -554,6 +548,7 @@
 			knownRegions = (
 				en,
 				Base,
+				he,
 			);
 			mainGroup = 065F031D2635D47F00A5CDEF;
 			packageReferences = (
@@ -658,19 +653,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				069DB35A263B0FB800C91468 /* ReviewViewController.swift in Sources */,
-				069DB365263B105C00C91468 /* RestaurantDetailHeaderView.swift in Sources */,
 				0683A1F026516FF50000D122 /* MenuPageViewController.swift in Sources */,
 				062D1A0926EE247500A14FDE /* ConfigViewController.swift in Sources */,
 				0632D452266ADF66001F7036 /* OrderDetailsCell.swift in Sources */,
 				066BF3F82637460300EE834C /* Order.swift in Sources */,
+				061DE02E2731AEEF0021A37C /* RoomItemsViewController.swift in Sources */,
 				069FDBAA26A39486004F543F /* ChatListViewController.swift in Sources */,
 				065F036A2636221100A5CDEF /* Hotel.swift in Sources */,
 				06F7726A26713DC600E64D54 /* NewsCell.swift in Sources */,
 				06F5D169270B8E1B004931F7 /* Activity.swift in Sources */,
-				069DB364263B105C00C91468 /* RestaurantDetailTwoColumnCell.swift in Sources */,
-				069DB366263B105C00C91468 /* RestaurantDetailMapCell.swift in Sources */,
 				0683A1F2265172070000D122 /* MenuMainViewController.swift in Sources */,
 				06F7727026760FA100E64D54 /* IBPCollectionViewCompositionalLayoutInteroperability.swift in Sources */,
+				069945AA2729FC75009548AA /* Translations.swift in Sources */,
 				06F5D161270B516D004931F7 /* ActivitiesViewController.swift in Sources */,
 				062038662641A37500B87708 /* MapViewController.swift in Sources */,
 				06F5D16B270BC7D4004931F7 /* ActivityCell.swift in Sources */,
@@ -680,7 +674,6 @@
 				06ACC3DD264D7B84000876E3 /* OrderShortSummaryView.swift in Sources */,
 				06F5D163270B5197004931F7 /* NewActivityViewController.swift in Sources */,
 				069DB369263B12EB00C91468 /* RoundedTextField.swift in Sources */,
-				069DB363263B105C00C91468 /* RestaurantDetailTextCell.swift in Sources */,
 				069FDBA826A09A55004F543F /* Chat.swift in Sources */,
 				069AA4232714F456002EE497 /* HomeCollectionViewController.swift in Sources */,
 				069FD3D5269397440076C6FC /* OnboardingContentViewController.swift in Sources */,
@@ -763,6 +756,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -826,6 +820,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

@@ -11,6 +11,7 @@ private let reuseIdentifier = "Cell"
 
 class HomeCollectionViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
+    @IBOutlet weak var chatButton: UIButton!
     @IBOutlet var collectionView: UICollectionView!
 
     private enum Section: Int, CaseIterable {
@@ -35,17 +36,17 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        initView()
+        initView(collectionView: collectionView)
 
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.contentInsetAdjustmentBehavior = .never   // hides the navigation bar
 
         NotificationCenter.default.addObserver(self, selector: #selector(onHotelInfoUpdated(_:)), name: .hotelInfoUpdated, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        navigationController?.setNavigationBarHidden(true, animated: true)
+        collectionView.contentInsetAdjustmentBehavior = .never   // hides the navigation bar
+        navigationController?.setNavigationBarHidden(true, animated: false)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -120,6 +121,9 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         }
     }
 
+    @IBAction func chatButtonPressed(_ sender: UIButton) {
+        _ = pushViewController(storyBoard: "Chat", id: "Chat")
+    }
 }
 
 extension HomeCollectionViewController: UICollectionViewDelegateFlowLayout {
@@ -178,12 +182,10 @@ extension HomeCollectionViewController: UICollectionViewDelegateFlowLayout {
 
 class HomeHeaderCell: UICollectionViewCell {
     @IBOutlet weak var picture: UIImageView!
-    @IBOutlet weak var chatPicture: UIImageView!
     var tapClosure: (() -> ())? = nil
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        chatPicture.layer.cornerRadius = chatPicture.frame.width/2
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(didTap))
         tap.numberOfTapsRequired = 3
@@ -220,8 +222,9 @@ class HomeTitleCell: UICollectionViewCell {
 class HomeItemsCell: UICollectionViewCell {
     @IBOutlet weak var picture: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
-
-    let tempColors: [UIColor] = [.color1, .color2, .color3, UIColor.pastelBlue, .pastelCyan, UIColor.pastelRed, UIColor.pastelYellow, UIColor.pastelMagenta, ]
+    @IBOutlet weak var backgroundColorView: UIView!
+    
+    //let tempColors: [UIColor] = [.color1, .color2, .color3, UIColor.pastelBlue, .pastelCyan, UIColor.pastelRed, UIColor.pastelYellow, UIColor.pastelMagenta, ]
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -233,6 +236,7 @@ class HomeItemsCell: UICollectionViewCell {
         let border = -12.0
         picture.image = UIImage(named: pictureName)?.withAlignmentRectInsets(UIEdgeInsets(top: border, left: border, bottom: border, right: border))
         titleLabel.superview?.backgroundColor = color
+        backgroundColorView.backgroundColor = color
         //picture.kf.setImage(with: URL(string: hotel.news[Int.random(in: 0...7)].imageFileURL))
         //picture.layer.cornerRadius = 10
     }

@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+/*
 class OrderShortSummaryView: UIView {
     let nibName = "OrderShortSummary"
     @IBOutlet var view : UIView!
@@ -44,3 +44,4 @@ class OrderShortSummaryView: UIView {
          return nib.instantiate(withOwner: self, options: nil).first as! UIView
      }
 }
+*/

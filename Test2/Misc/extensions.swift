@@ -39,7 +39,7 @@ extension UIColor {
     static var pastelMagenta: UIColor = UIColor(255, 128, 255)
     static var pastelGrayLight: UIColor = UIColor(224, 224, 224)
     static var pastelGray: UIColor = UIColor(192, 192, 192)
-    
+
     static var pastelVeryLightMalachiteGreen = UIColor(0x64E987)
     static var pastelLightGreen = UIColor(0x92F294)
     static var pastelDiamond = UIColor(0xC0F9FA)
@@ -64,8 +64,8 @@ extension UIColor {
             return pastelRedLight
         }
     }
-    
-    static var BBbackgroundColor: UIColor = .white
+
+    static var BBbackgroundColor: UIColor = .offWhite
 /*
     static var BBbackgroundColor: UIColor {
         if #available(iOS 13, *) {
@@ -92,6 +92,30 @@ func NSLocalizedString(_ key:String) -> String {
 
 extension UIViewController {
 
+    func setupTransparentNavigationBar(tableView: UITableView? = nil, collectionView: UICollectionView? = nil, tintColor: UIColor = .white)
+    {
+        if let t = tableView { t.contentInsetAdjustmentBehavior = .never }   // hides the navigationbar
+        navigationController?.hidesBarsOnSwipe = false  // do not hide the back arrow when swiped
+        navigationController?.navigationBar.tintColor = tintColor
+
+        // setup fully transparent bar
+        navigationController!.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController!.navigationBar.shadowImage = UIImage()
+        navigationController!.navigationBar.isTranslucent = true
+    }
+
+    func setupListNavigationBar(tintColor: UIColor = .black) {
+        navigationItem.backButtonTitle = ""
+        navigationController?.setNavigationBarHidden(false, animated: true)
+        navigationController?.hidesBarsOnSwipe = false
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.tintColor = tintColor
+    }
+
+    
+    
+    
+/*
     func setupNavigationBar(transparent: Bool = true, transluscent: Bool = true, largeTitles: Bool = true, hideOnSwipe: Bool = true, tintColor: UIColor = .white) {
         navigationController?.navigationBar.isTranslucent = transluscent
         navigationController?.navigationBar.prefersLargeTitles = largeTitles
@@ -121,8 +145,9 @@ extension UIViewController {
             }
         }
     }
+ */
 }
-
+/*
 func oldCustomizeNavigationBarAppearance(_ navigationController: UINavigationController?) {
     // Enable large title for navigation bar
     navigationController?.navigationBar.prefersLargeTitles = true
@@ -153,11 +178,11 @@ func oldCustomizeNavigationBarAppearance(_ navigationController: UINavigationCon
         navigationController?.navigationBar.alpha = 0.0
     }
 }
-
+*/
 
 
 extension UIViewController {
-    func initView(tableView: UITableView? = nil) {
+    func initView(tableView: UITableView? = nil, collectionView: UICollectionView? = nil) {
 
         view.backgroundColor = .BBbackgroundColor
 
@@ -165,8 +190,15 @@ extension UIViewController {
         if let tableViewController = self as? UITableViewController { tv = tableViewController.tableView }
         if tv != nil {
             tv!.separatorStyle = .none
+            tv!.showsVerticalScrollIndicator = false
             tv!.cellLayoutMarginsFollowReadableWidth = true
             tv!.backgroundColor = .BBbackgroundColor
+        }
+
+        var cv = collectionView
+        if let collectionViewController = self as? UICollectionViewController { cv = collectionViewController.collectionView }
+        if cv != nil {
+            cv!.backgroundColor = .BBbackgroundColor
         }
 
         navigationItem.backButtonTitle = ""
@@ -547,3 +579,16 @@ extension UIViewController  {
         vc.present(photoSourceRequestController, animated: true, completion: nil)
     }
 }
+
+
+extension String {
+    func height(width: CGFloat, font: UIFont) -> CGFloat {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: width, height: .greatestFiniteMagnitude))
+        label.numberOfLines = 0
+        label.text = self
+        label.font = font
+        label.sizeToFit()
+        return label.frame.height
+    }
+}
+

@@ -41,7 +41,6 @@ extension FireB {
             if let error = error {
                 Log.log("Error getting data \(error)")
             } else {
-                Log.log(level: .INFO, "Got data \(snapshot.value!)")
                 let data: [(String, GuestInfo)] = self.decodeSnapshot(snapshot: snapshot)
                 completionHandler(data)
             }

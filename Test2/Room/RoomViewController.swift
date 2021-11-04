@@ -23,31 +23,14 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        initView()
-        
+        initView(tableView: tableView)
+
         tableView.dataSource = self
         tableView.delegate = self
 
-        tableView.backgroundColor = .BBbackgroundColor
-        tableView.backgroundColor = UIColor.offWhite
+        //tableView.backgroundColor = .BBbackgroundColor
+        //tableView.backgroundColor = UIColor.offWhite
         tableView.allowsSelection = true
-
-        let nib = UINib(nibName: "MenuSectionHeaderView", bundle: nil)
-        tableView.register(nib, forHeaderFooterViewReuseIdentifier: "HeaderTableView")
-
-        orderShortSummaryView.isHidden = true
-        //orderSummaryConstraint.constant = 0
-        orderShortSummaryView.proceedClosure = {
-            let storyboard = UIStoryboard(name: "OrderSummary", bundle: nil)
-            let vc = storyboard.instantiateViewController(withIdentifier: "CreateOrder") as! CreateOrderViewController
-            vc.order = self.order
-            vc.completionHandler = { self.clearOrder() }
-            self.pushOrPresent(viewController: vc)
-        }
-
-        clearOrder()
-        
-        view.backgroundColor = .lightGray
 
         // observe changes to the navigation bar size and set different title
         self.observer = self.navigationController?.navigationBar.observe(\.bounds, options: [.new], changeHandler: { (navigationBar, changes) in
@@ -63,239 +46,42 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationController?.hidesBarsOnSwipe = false
-        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.prefersLargeTitles = false
         navigationController?.navigationBar.tintColor = .black
         
         tabBarController?.tabBar.isHidden = false
     }
 
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        let count = 1 + hotel.roomItems.count
-        return count
-    }
-
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 { return 3 }
-        //let itemType = RoomItemType.fromInt(section - 1)
-        let itemType = RoomItem.ItemType.allCases[section - 1]
-        if let itemsInSection = hotel.roomItems[itemType] {
-            return itemsInSection.count
-        }
-        return 0
+        return 3
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
-            switch indexPath.row {
-            case 0:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "RoomHeaderCell", for: indexPath) as! RoomHeaderCell
-                cell.display(row: indexPath.row)
-                return cell
-            case 1:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "RoomHeaderCell2", for: indexPath) as! RoomHeaderCell2
                 cell.tapClosure = { category in self.maintenancePressed(category: category) }
-                cell.display()
+                cell.display(indexPath.row)
                 return cell
-            default:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "RoomItemsHeaderCell", for: indexPath) as! RoomItemsHeaderCell
-                cell.display()
-                return cell
-            }
-        }
-
-        let cell = tableView.dequeueReusableCell(withIdentifier: "RoomItemCell", for: indexPath) as! RoomItemCell
-        
-        //let itemType = RoomItemType.fromInt(indexPath.section - 1)
-        let itemType = RoomItem.ItemType.allCases[indexPath.section - 1]
-        guard let item = hotel.roomItems[itemType]?[indexPath.row] else { return cell }
-
-        var expanded = dd[indexPath.section - 1][indexPath.row].expanded
-        if let quantity = order.getItem(byString: item.name)?.quantity, quantity > 0 { expanded = true }
-
-        cell.display(roomItem: item, order: order, expanded: expanded)
-
-        cell.buttonTappedClosure = { (cell, add) in
-            if (add) { self.addToOrder(indexPath) }
-            else { self.removeFromOrder(indexPath)}
-//            self.tableView.beginUpdates()
-//            self.tableView.reloadRows(at: [indexPath], with: .none)
-//            tableView.setNeedsLayout()
-//            self.tableView.endUpdates()
-            tableView.reloadData()
-        }
-
-        return cell
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 0 {
-            switch indexPath.row {
-                case 0: inRoomDiningPressed()
-                default: break
-            }
-        } else {
-            dd[indexPath.section - 1][indexPath.row].expanded.toggle()
-            tableView.reloadRows(at: [indexPath], with: .none)
-        }
-    }
-
-    func inRoomDiningPressed() {
-        let storyboard = UIStoryboard(name: "Menu", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "MenuViewController") as! MenuViewController
-        vc.restaurant = hotel.roomService
-        vc.isRoomService = true
-        if let nc = self.navigationController {
-            nc.pushViewController(vc, animated: true)
-        }
-        else {
-            self.present(vc, animated: true, completion: nil)
-        }
-    }
-/*
-    func maintenancePressed(category: RoomItemType) {
-        order = Order(roomNumber: guest.roomNumber, description: description)
-        let item = RoomItem()
-        item.category = category
-        item.name = category.rawValue
-        order.addItem(name: item.name, quantity: 1, price: 0)
-        let storyboard = UIStoryboard(name: "OrderSummary", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "MaintenanceOrder") as! MaintenanceOrderViewController
-        vc.order = self.order
-        vc.requestType = category
-        vc.completionHandler = { self.clearOrder() }
-        self.pushOrPresent(viewController: vc)
-    }
-*/
     func maintenancePressed(category: Order.Category) {
-        let storyboard = UIStoryboard(name: "OrderSummary", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "MaintenanceOrder") as! MaintenanceOrderViewController
-        //vc.order = self.order
-        vc.category = category
-        vc.completionHandler = { self.clearOrder() }
-        self.pushOrPresent(viewController: vc)
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 { return 0 }
-        if section == 1 { return 30 }
-        return 49
-    }
-
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section == 0 { return 0 }
-        return 1
-    }
-
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == 0 { return nil }
-        //let itemType = RoomItemType.fromInt(section)
-        let itemType = RoomItem.ItemType.allCases[section-1]
-        return itemType.rawValue
-    }
-}
-
-extension RoomViewController {
-
-    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        addToOrder(indexPath)
-        tableView.reloadRows(at: [indexPath], with: .right)
-        return nil
-    }
-
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        removeFromOrder(indexPath)
-        tableView.reloadRows(at: [indexPath], with: .left)
-        return nil
-    }
-
-    func addToOrder(_ indexPath: IndexPath) {
-        //let itemType = RoomItemType.fromInt(indexPath.section - 1)
-        let itemType = RoomItem.ItemType.allCases[indexPath.section - 1]
-        if let item = hotel.roomItems[itemType]?[indexPath.row] {
-            order.addItem(name: item.name, quantity: 1, price: 0)
-        }
-        orderShortSummaryView.quantityLabel.text = String(order.totalNrOfItemsInOrder)
-        if orderShortSummaryView.isHidden {
-            UIView.animate(withDuration: 0.5) { () -> Void in
-                self.orderShortSummaryView.isHidden = false
-            }
-        }
-    }
-
-    func removeFromOrder(_ indexPath: IndexPath) {
-        //let itemType = RoomItemType.fromInt(indexPath.section - 1)
-        let itemType = RoomItem.ItemType.allCases[indexPath.section - 1]
-        if let item = hotel.roomItems[itemType]?[indexPath.row] {
-            _ = order.removeItem(name: item.name, quantity: 1)
-        }
-        orderShortSummaryView.quantityLabel.text = String(order.totalNrOfItemsInOrder)
-        if order.totalNrOfItemsInOrder <= 0 {
-            if !orderShortSummaryView.isHidden {
-                UIView.animate(withDuration: 0.5) { () -> Void in
-                    self.orderShortSummaryView.isHidden = true
-                }
-            }
-        }
-    }
-
-    func clearOrder() {
-        order = Order(roomNumber: guest.roomNumber, category: .RoomItems)
-        dd = Array(repeating: Array(repeating: DisplayData(), count: 100), count: hotel.roomItems.count)
-        orderShortSummaryView.isHidden = true
-        //orderSummaryConstraint.constant = 0
-        tableView.reloadData()
-    }
-}
-
-
-
-
-
-
-class RoomHeaderCell: UITableViewCell {
-
-    @IBOutlet private weak var headerTitleLabel: UILabel!
-    @IBOutlet private weak var headerLabel: UILabel!
-    @IBOutlet private weak var headerImage: UIImageView!
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        backgroundColor = .clear
-        selectionStyle = .none
-    }
-
-    func display(row: Int) {
-        switch row {
-        case 0:
-            headerTitleLabel.text = "In-room dining"
-            headerLabel.text = "Try delicious food from our vast selection of the in-room dining. Delivered right to your door 24/7"
-            headerImage.image = UIImage(named: "In-room dining")
+        switch (category) {
+        case .Cleaning, .Maintenance, .LuggageService, .Buggy:
+            let vc = pushViewController(storyBoard: "OrderSummary", id: "MaintenanceOrder") as! MaintenanceOrderViewController
+            vc.category = category
+        case .RoomItems:
+            _ = pushViewController(storyBoard: "Room", id: "RoomItemsController")
+        case .RoomService:
+            //_ = pushViewController(storyBoard: "Menu", id: "MenuViewController")
+            let vc = pushViewController(storyBoard: "Menu", id: "MenuViewController") as! MenuViewController
+            vc.restaurant = hotel.roomService
+            vc.isRoomService = true
         default:
-            break
+            break;
         }
-
     }
+
 }
 
-
-class RoomItemsHeaderCell: UITableViewCell {
-    @IBOutlet private weak var headerTitleLabel: UILabel!
-    @IBOutlet private weak var headerLabel: UILabel!
-    @IBOutlet private weak var headerImage: UIImageView!
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        backgroundColor = .clear
-        selectionStyle = .none
-    }
-
-    func display() {
-//        headerTitleLabel.text = "In-room dining"
-//        headerLabel.text = "Try delicious food from our vast selection of the in-room dining, delivered right to your door.\nAvailable 24/7"
-//        headerImage.image = UIImage(named: "roomService")
-    }
-}
 
 class RoomHeaderCell2: UITableViewCell {
     @IBOutlet private weak var headerTitleLabel1: UILabel!
@@ -305,6 +91,7 @@ class RoomHeaderCell2: UITableViewCell {
     @IBOutlet private weak var headerLabel2: UILabel!
     @IBOutlet private weak var headerImage2: UIImageView!
     var tapClosure: ((_ category: Order.Category) -> ())? = nil
+    var row: Int = 0
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -323,19 +110,46 @@ class RoomHeaderCell2: UITableViewCell {
     }
 
     @objc func didTap1() {
-        tapClosure?(.Maintenance)
+        switch row {
+        case 0: tapClosure?(.RoomItems)
+        case 1: tapClosure?(.Maintenance)
+        case 2: tapClosure?(.LuggageService)
+        default: break
+        }
     }
 
     @objc func didTap2() {
-        tapClosure?(.Cleaning)
+        switch row {
+        case 0: tapClosure?(.RoomService)
+        case 1: tapClosure?(.Cleaning)
+        case 2: tapClosure?(.Buggy)
+        default: break
+        }
     }
 
-    func display() {
-        headerTitleLabel1.text = "Maintenance"
-        headerLabel1.text = "Request a repair"
-        headerImage1.image = UIImage(named: "Maintenance")
-        headerTitleLabel2.text = "Cleaning"
-        headerLabel2.text = "Ask for extra cleaning"
-        headerImage2.image = UIImage(named: "Cleaning")
+    func display(_ row:Int) {
+        self.row = row
+        headerLabel1.isHidden = true
+        headerLabel2.isHidden = true
+        headerLabel1.text = ""
+        headerLabel2.text = ""
+        switch (row) {
+        case 0:
+            headerTitleLabel1.text = "Room Items"
+            headerImage1.image = UIImage(named: "Room Items")
+            headerTitleLabel2.text = "In-room dining"
+            headerImage2.image = UIImage(named: "In-room dining")
+        case 1:
+            headerTitleLabel1.text = "Maintenance"
+            headerImage1.image = UIImage(named: "Maintenance")
+            headerTitleLabel2.text = "Cleaning"
+            headerImage2.image = UIImage(named: "Cleaning")
+        case 2:
+            headerTitleLabel1.text = "Luggage"
+            headerImage1.image = UIImage(named: "Luggage")
+            headerTitleLabel2.text = "Buggy"
+            headerImage2.image = UIImage(named: "Buggy")
+        default: break
+        }
     }
 }

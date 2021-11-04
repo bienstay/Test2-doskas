@@ -52,7 +52,7 @@ class NewsCell: UITableViewCell {
         newsImageView.image = nil
         if let url = URL(string: post.imageFileURL) {
             newsImageView.isHidden = false
-            newsImageView.kf.setImage(with: url, placeholder: UIImage(named: "JaNaPlaya"), options: [.transition(.fade(1))]) {
+            newsImageView.kf.setImage(with: url, options: [.transition(.fade(1))]) {
                 result in
                 switch result {
                 case .success(_):

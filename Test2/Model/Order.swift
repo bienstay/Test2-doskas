@@ -35,6 +35,8 @@ class Order: Codable {
         case RoomService = "In-room dining"
         case Maintenance = "Maintenance"
         case Cleaning = "Cleaning"
+        case LuggageService = "Luggage"
+        case Buggy = "Buggy"
         case RoomItems = "Room Items"
         case None = ""
     }

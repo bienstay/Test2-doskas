@@ -32,12 +32,13 @@ final class FireB {
     var NEWS_DB_REF: DatabaseReference          { BASE_DB_REF.child("news") }
     var ACTIVITIES_DB_REF: DatabaseReference    { BASE_DB_REF.child("activities") }
     var RESTAURANTS_DB_REF: DatabaseReference   { BASE_DB_REF.child("restaurants") }
-    var MENUS_DB_REF: DatabaseReference         { BASE_DB_REF.child("menus") }
+    var MENUS_DB_REF: DatabaseReference         { BASE_DB_REF.child("menus2") }
     var ORDERS_DB_REF: DatabaseReference        { BASE_DB_REF.child("orders") }
     var LIKES_DB_REF: DatabaseReference         { BASE_DB_REF.child("likes") }
     var LIKESGLOBAL_DB_REF: DatabaseReference   { LIKES_DB_REF.child("global") }
     var LIKESPERUSER_DB_REF: DatabaseReference  { LIKES_DB_REF.child("perUser") }
     var CHAT_MESSAGES_DB_REF: DatabaseReference { BASE_DB_REF.child("chats").child("messages") }
+    var TRANSLATIONS_DB_REF: DatabaseReference  { BASE_DB_REF.child("translations") }
 
     // MARK: - Firebase Storage Reference
     let BASE_PHOTOS_REF: StorageReference = Storage.storage().reference().child( "photos")
@@ -63,7 +64,7 @@ final class FireB {
                 return ORDERS_DB_REF
             case is Restaurant.Type:
                 return RESTAURANTS_DB_REF
-            case is Menu.Type:
+            case is Menu2.Type:
                 return MENUS_DB_REF
             case is ChatMessage.Type:
                 return CHAT_MESSAGES_DB_REF
@@ -75,6 +76,9 @@ final class FireB {
             case is LikesInDB.Type:
                 if let child = subNode { return LIKESGLOBAL_DB_REF.child(child) }
                 else { return LIKESGLOBAL_DB_REF }
+            case is Translations.Type:
+                if let child = subNode { return TRANSLATIONS_DB_REF.child(child) }
+                else { return TRANSLATIONS_DB_REF }
             default:
                 return nil
         }
@@ -85,7 +89,6 @@ final class FireB {
         case ChatRoom(id: String)
         case ChatUser(id: String)
         case GuestInfo(id: String)
-        case DailyActivities2(id: String)
     }
 
     func getQuery<T>(type: T.Type, subNode: String? = nil, parameter:QueryParameter? = nil) -> DatabaseQuery? {
@@ -239,7 +242,7 @@ final class FireB {
                         let object = try decoder.decode(T.self, from: data!)
                         objects.append((item.key, object))
                     } catch {
-                        Log.log("Failed to decode JSON")
+                        Log.log("Failed to decode JSON for type \(T.self)")
                         Log.log(item.debugDescription)
                         Log.log(data.debugDescription)
                         Log.log(error.localizedDescription)

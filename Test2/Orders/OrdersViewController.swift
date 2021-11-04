@@ -15,7 +15,7 @@ class OrdersViewController: UIViewController, UITableViewDataSource {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        initView()
+        initView(tableView: tableView)
         tableView.dataSource = self
         tableView.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(onOrdersUpdated(_:)), name: .ordersUpdated, object: nil)
@@ -25,12 +25,14 @@ class OrdersViewController: UIViewController, UITableViewDataSource {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        setupListNavigationBar()
+/*
         navigationItem.backButtonTitle = ""
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationController?.hidesBarsOnSwipe = false
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.tintColor = .black
-
+*/
         tabBarController?.tabBar.isHidden = false
     }
 

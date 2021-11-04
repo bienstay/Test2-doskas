@@ -15,20 +15,20 @@ class MenuFoodCell: UITableViewCell {
     @IBOutlet private weak var cuisineLabel: UILabel!
     @IBOutlet private weak var descriptionLabel: UILabel!
 
-    @IBOutlet private weak var enlargedStackView: UIStackView!
+    @IBOutlet private weak var quantityStackView: UIStackView!
     @IBOutlet private weak var largeIcon: UIImageView!
     @IBOutlet private weak var countLabel: UILabel!
-    @IBOutlet private weak var countLabel2: UILabel!
     @IBOutlet private weak var minusButton: UIButton!
     @IBOutlet private weak var plusButton: UIButton!
-    @IBOutlet private weak var quantityStackView: UIStackView!
+    @IBOutlet weak var smallIconWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var largeIconConstraint: NSLayoutConstraint!
 
-    var buttonTappedClosure : ((UITableViewCell, Bool) -> Void)?
+    var buttonTappedClosure : ((Bool) -> Void)?
     @IBAction func minusPressed(_ sender: UIButton) {
-        buttonTappedClosure?(self, false)
+        buttonTappedClosure?(false)
     }
     @IBAction func plusPressed(_ sender: UIButton) {
-        buttonTappedClosure?(self, true)
+        buttonTappedClosure?(true)
     }
 
     override func awakeFromNib() {
@@ -38,20 +38,22 @@ class MenuFoodCell: UITableViewCell {
         icon.layer.cornerRadius = icon.bounds.height/2.0
     }
 
-    func display(menuItem: MenuItem, order: Order, expanded: Bool, orderEnabled: Bool) {
+    func display(menuItem: MenuItem2, order: Order, expanded: Bool, orderEnabled: Bool) {
         titleLabel.text = menuItem.title
         priceLabel.text = "$" + String(format: "%g", menuItem.price)
-        descriptionLabel.text = menuItem.description
+        descriptionLabel.text = menuItem.txt
         cuisineLabel.text = menuItem.attributes?.joined(separator: " ")
-        if icon.image == nil { icon.isHidden = true }
-        else { icon.isHidden = false }
-        icon.isHidden = expanded
-        enlargedStackView.isHidden = !expanded
 
-        countLabel.text = String(order.getItem(byString: menuItem.title)?.quantity ?? 0)
-        countLabel2.text = countLabel.text
-        countLabel2.isHidden = expanded || countLabel2.text == "0"
-        quantityStackView.isHidden = !orderEnabled
+        if icon.image == nil || expanded { smallIconWidthConstraint.isActive = true }
+        else { smallIconWidthConstraint.isActive = false }
+
+        if largeIcon.image == nil || !expanded { largeIconConstraint.constant = 0 }
+        else { largeIconConstraint.constant = UIScreen.main.bounds.height * 0.5 }
+
+        let count = order.getItem(byString: menuItem.title)?.quantity ?? 0
+        countLabel.text = String(count)
+        let isVisible = orderEnabled && (expanded || count > 0)
+        quantityStackView.isHidden = !isVisible
     }
 }
 
@@ -65,7 +67,12 @@ class MenuGroupCell: UITableViewCell {
         groupHeaderLabel.textColor = .orange
     }
 
-    func display(menuItem: MenuItem) {
+    func display(menuItem: MenuItem2) {
+        switch menuItem.type {
+            case MenuItem2.SECTION: groupHeaderLabel.font = UIFont.preferredFont(forTextStyle: .title2)
+            case MenuItem2.GROUP :  groupHeaderLabel.font = UIFont.preferredFont(forTextStyle: .title3)
+            default: break
+        }
         groupHeaderLabel.text = menuItem.title
     }
 }

@@ -65,6 +65,7 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         initView(tableView: tableView)
+        tableView.backgroundColor = .white
         tableView.separatorStyle = .none
         tableView.dataSource = self
         //tableView.contentInsetAdjustmentBehavior = .never
@@ -290,7 +291,7 @@ class OrderSummaryItemCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        contentView.backgroundColor = .BBbackgroundColor
+        //contentView.backgroundColor = .BBbackgroundColor
         //contentView.backgroundColor = .clear
     }
     

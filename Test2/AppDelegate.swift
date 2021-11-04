@@ -33,8 +33,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         //UITabBar.setTransparentTabbar()
-        
+
         FirebaseApp.configure()
+        FirebaseConfiguration.shared.setLoggerLevel(.max)
 
         Auth.auth().signInAnonymously() { (authResult, error) in
             if let error = error { Log.log(error.localizedDescription) }

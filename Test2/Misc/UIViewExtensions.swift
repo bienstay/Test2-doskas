@@ -9,20 +9,23 @@ import UIKit
 
 extension UIView {
     var glossy_radius: CGFloat { frame.width/40.0 }
-    private var glossy_bgColor:CGColor { UIColor.offWhiteVeryLight.cgColor }
+    //private var glossy_bgColor:CGColor { UIColor.white.cgColor }
+    //private var glossy_bgColor:CGColor { UIColor.offWhiteVeryLight.cgColor }
+    @objc func glossy_bgColor() -> CGColor { return UIColor.offWhiteVeryLight.cgColor }
+    //private var glossy_bgColor:CGColor { UIColor.offWhite.cgColor }
     //private var glossy_shadowRadius: CGFloat { 10 }
     private var glossy_shadowRadius: CGFloat { 5 }
 
     @objc func glossy_isDown() -> Bool { return false }
 
     func glossy_initialSetup() {
-        layer.backgroundColor = glossy_bgColor
+        layer.backgroundColor = glossy_bgColor()
         layer.cornerRadius = glossy_radius
         layer.masksToBounds = false
         layer.frame = layer.bounds
 
         [CAShapeLayer(), CAShapeLayer()].forEach {
-            $0.backgroundColor = glossy_bgColor
+            $0.backgroundColor = glossy_bgColor()
             $0.cornerRadius = glossy_radius
             $0.shadowRadius = glossy_shadowRadius
             $0.masksToBounds = false
@@ -43,7 +46,7 @@ extension UIView {
         glossy_bottomShadowLayer.frame = layer.bounds
 
         glossy_topShadowLayer.shadowColor = UIColor.black.cgColor
-        //glossy_topShadowLayer.shadowOpacity = 0.2
+        //glossy_topShadowLayer.shadowOpacity = 0.3
         glossy_topShadowLayer.shadowOpacity = 0.3
         glossy_topShadowLayer.shadowPath = UIBezierPath(rect: bounds).cgPath
         glossy_topShadowLayer.frame = layer.bounds

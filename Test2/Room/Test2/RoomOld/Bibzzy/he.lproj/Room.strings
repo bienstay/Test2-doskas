@@ -1,0 +1,42 @@
+
+/* Class = "UILabel"; text = "text"; ObjectID = "0qU-7y-xZO"; */
+"0qU-7y-xZO.text" = "text";
+
+/* Class = "UILabel"; text = "Room amenities"; ObjectID = "AVm-rU-r8s"; */
+"AVm-rU-r8s.text" = "Room amenities";
+
+/* Class = "UINavigationItem"; title = "Room"; ObjectID = "Ab8-CV-nLW"; */
+"Ab8-CV-nLW.title" = "Room";
+
+/* Class = "UIButton"; normalTitle = "+"; ObjectID = "CzM-2N-C2E"; */
+"CzM-2N-C2E.normalTitle" = "+";
+
+/* Class = "UILabel"; text = "In-room dining"; ObjectID = "D3y-Dz-Yi5"; */
+"D3y-Dz-Yi5.text" = "In-room dining";
+
+/* Class = "UIButton"; normalTitle = "-"; ObjectID = "GAW-Ef-Xla"; */
+"GAW-Ef-Xla.normalTitle" = "-";
+
+/* Class = "UILabel"; text = "Order any amenities that you may need from the list below"; ObjectID = "GQv-CE-BwX"; */
+"GQv-CE-BwX.text" = "Order any amenities that you may need from the list below";
+
+/* Class = "UILabel"; text = "In-room dining"; ObjectID = "Jhy-Ls-emU"; */
+"Jhy-Ls-emU.text" = "In-room dining";
+
+/* Class = "UILabel"; text = "text"; ObjectID = "Uqr-dy-FIn"; */
+"Uqr-dy-FIn.text" = "text";
+
+/* Class = "UILabel"; text = "In-room dining"; ObjectID = "hD2-Wz-NZ5"; */
+"hD2-Wz-NZ5.text" = "In-room dining";
+
+/* Class = "UILabel"; text = "text"; ObjectID = "hlM-me-FDu"; */
+"hlM-me-FDu.text" = "text";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "iiO-DF-21G"; */
+"iiO-DF-21G.text" = "Label";
+
+/* Class = "UILabel"; text = "0"; ObjectID = "oep-YL-049"; */
+"oep-YL-049.text" = "0";
+
+/* Class = "UITabBarItem"; title = "Room"; ObjectID = "rHN-7X-v7T"; */
+"rHN-7X-v7T.title" = "Room";
