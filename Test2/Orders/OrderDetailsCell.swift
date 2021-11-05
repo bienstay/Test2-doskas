@@ -12,9 +12,11 @@ class OrderDetailsCell: UITableViewCell {
     @IBOutlet weak var idLabel: UILabel!
     @IBOutlet weak var roomLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
-    
+
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
+
+    @IBOutlet weak var separatorView: UIView!
 
     @IBOutlet weak var itemNameLabel: UILabel!
     @IBOutlet weak var itemCountLabel: UILabel!
@@ -70,6 +72,7 @@ class OrderDetailsCell: UITableViewCell {
             itemPriceLabel.text?.append(String(item.price))
             itemPriceLabel.text?.append("\n")
         }
+        separatorView.isHidden = order.items.isEmpty
     }
 
     @IBAction func statusChangePressed(_ sender: Any) {

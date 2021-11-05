@@ -31,7 +31,9 @@
                                                 <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="JaNaPlaya" translatesAutoresizingMaskIntoConstraints="NO" id="lB0-Mf-wWd" userLabel="Header Image View">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="300.5"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="300" id="buT-cS-fE1"/>
+                                                        <constraint firstAttribute="height" constant="300" id="buT-cS-fE1">
+                                                            <variation key="heightClass=regular-widthClass=regular" constant="600"/>
+                                                        </constraint>
                                                     </constraints>
                                                 </imageView>
                                                 <view alpha="0.20000000298023224" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="riY-eB-ctP" userLabel="Dim View">
@@ -281,7 +283,7 @@
                                                                     <rect key="frame" x="0.0" y="19" width="350" height="200"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="height" constant="200" id="Omc-22-Unz">
-                                                                            <variation key="widthClass=regular" constant="354"/>
+                                                                            <variation key="widthClass=regular" constant="400"/>
                                                                         </constraint>
                                                                     </constraints>
                                                                     <userDefinedRuntimeAttributes>

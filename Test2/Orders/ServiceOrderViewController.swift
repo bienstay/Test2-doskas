@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MaintenanceOrderViewController: UIViewController {
+class ServiceOrderViewController: UIViewController {
 
     var order: Order = Order(roomNumber: 0, category: .RoomItems)
 

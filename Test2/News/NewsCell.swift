@@ -52,6 +52,8 @@ class NewsCell: UITableViewCell {
         newsImageView.image = nil
         if let url = URL(string: post.imageFileURL) {
             newsImageView.isHidden = false
+            newsImageView.kf.setImage(with: url)
+/*
             newsImageView.kf.setImage(with: url, options: [.transition(.fade(1))]) {
                 result in
                 switch result {
@@ -63,6 +65,7 @@ class NewsCell: UITableViewCell {
                     Log.log("KF setImage Job failed: \(error.localizedDescription)")
                 }
             }
+ */
         }
         else { newsImageView.isHidden = true }
 

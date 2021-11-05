@@ -9,7 +9,7 @@ import Foundation
 
 class RoomItem: Hashable, Codable {
     enum ItemType: String, Codable, Hashable, CaseIterable {
-        case Services = "Services"
+        //case Services = "Services"
         case Toiletries = "Toiletries"
         case BathAmenities = "Bath Amenities"
         case RoomAmenities = "Room Amenities"

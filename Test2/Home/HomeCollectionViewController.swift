@@ -11,7 +11,6 @@ private let reuseIdentifier = "Cell"
 
 class HomeCollectionViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
 
-    @IBOutlet weak var chatButton: UIButton!
     @IBOutlet var collectionView: UICollectionView!
 
     private enum Section: Int, CaseIterable {
@@ -182,6 +181,8 @@ extension HomeCollectionViewController: UICollectionViewDelegateFlowLayout {
 
 class HomeHeaderCell: UICollectionViewCell {
     @IBOutlet weak var picture: UIImageView!
+    @IBOutlet weak var chatButton: UIButton!
+
     var tapClosure: (() -> ())? = nil
 
     override func awakeFromNib() {
@@ -191,6 +192,8 @@ class HomeHeaderCell: UICollectionViewCell {
         tap.numberOfTapsRequired = 3
         picture.addGestureRecognizer(tap)
         picture.isUserInteractionEnabled = true
+        chatButton.backgroundColor = .orange
+        chatButton.setBackgroundImage(UIImage(named: "Chat"), for: .normal)
     }
 
     @objc func didTap() {
@@ -199,6 +202,12 @@ class HomeHeaderCell: UICollectionViewCell {
 
     func draw(imageURL: String) {
         picture.kf.setImage(with: URL(string: imageURL))
+    }
+
+    // width constrain for ipad is set to 100 but is still 60 in awakeFromNib() and draw()
+    override func layoutSubviews() {
+        let width = chatButton.frame.width
+        chatButton.layer.cornerRadius =  width / 2
     }
 }
 
@@ -223,8 +232,6 @@ class HomeItemsCell: UICollectionViewCell {
     @IBOutlet weak var picture: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var backgroundColorView: UIView!
-    
-    //let tempColors: [UIColor] = [.color1, .color2, .color3, UIColor.pastelBlue, .pastelCyan, UIColor.pastelRed, UIColor.pastelYellow, UIColor.pastelMagenta, ]
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -237,8 +244,6 @@ class HomeItemsCell: UICollectionViewCell {
         picture.image = UIImage(named: pictureName)?.withAlignmentRectInsets(UIEdgeInsets(top: border, left: border, bottom: border, right: border))
         titleLabel.superview?.backgroundColor = color
         backgroundColorView.backgroundColor = color
-        //picture.kf.setImage(with: URL(string: hotel.news[Int.random(in: 0...7)].imageFileURL))
-        //picture.layer.cornerRadius = 10
     }
 }
 

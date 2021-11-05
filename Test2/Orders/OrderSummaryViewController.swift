@@ -65,10 +65,11 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         initView(tableView: tableView)
-        tableView.backgroundColor = .white
-        tableView.separatorStyle = .none
+
         tableView.dataSource = self
-        //tableView.contentInsetAdjustmentBehavior = .never
+        tableView.backgroundColor = .white
+        tableView.showsVerticalScrollIndicator = true
+        tableView.separatorStyle = .singleLine
 
         roomNumberLabel.text = "Room: " + String(order.roomNumber)
         timeCreatedLabel.text = order.created?.formatFriendly()
@@ -77,14 +78,10 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
         categoryImage.image = UIImage(named: order.category.rawValue)
 
         title = "Order number \(order.number)"
-        
-        tableView.showsVerticalScrollIndicator = true
-        tableView.separatorStyle = .singleLine
+    
         NotificationCenter.default.addObserver(self, selector: #selector(onOrdersUpdated(_:)), name: .ordersUpdated, object: nil)
 
         let barButton = createBarButtonItem(target: self, action: #selector(statusChangeButtonPressed))
-        //let button = barButton.customView as! UIButton
-        //button.backgroundColor = .gray
         statusChangeButton = barButton
         self.navigationItem.rightBarButtonItem = barButton
     }
@@ -186,24 +183,6 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
             button.setTitle(title, for: .normal)
             button.isHidden = order.status != Order.Status.CREATED
         }
-/*
-        if guest.isAdmin() {
-            statusChangeButton.isEnabled = true
-            if order.status == Order.Status.CREATED {
-                statusChangeButton.title = "Confirm"
-            }
-            else if order.status == Order.Status.CONFIRMED {
-                statusChangeButton.title = "Close"
-            } else {
-                statusChangeButton.isEnabled = false
-                statusChangeButton.title = ""
-            }
-        }
-        else {
-            statusChangeButton.title = order.status == Order.Status.CREATED ? "Cancel" : ""
-            statusChangeButton.isEnabled = order.status == Order.Status.CREATED
-        }
- */
     }
     
     @objc func onOrdersUpdated(_ notification: Notification) {
@@ -218,7 +197,6 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
 extension OrderSummaryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch Sections(rawValue: section) {
-            //case .Items: return order.description
         case .GuestComment:
             if let comment = order.guestComment, !comment.isEmpty { return "Comment" }
             return nil
@@ -227,61 +205,6 @@ extension OrderSummaryViewController: UITableViewDelegate {
     }
 }
 
-/*
-class OrderHeaderCell: UITableViewCell {
-
-    @IBOutlet weak var orderImage: UIImageView!
-    @IBOutlet weak var idLabel: UILabel!
-    @IBOutlet weak var numberLabel: UILabel!
-    @IBOutlet weak var descriptionLabel: UILabel!
-    @IBOutlet weak var statusLabel: UILabel!
-    @IBOutlet weak var timeCreatedLabel: UILabel!
-    @IBOutlet weak var roomNumberLabel: UILabel!
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        backgroundColor = .clear
-        selectionStyle = .none
-    }
-        
-    func draw(order: Order) {
-        idLabel.text = order.id
-        numberLabel.text = String(order.number)
-        descriptionLabel.text = order.description
-        statusLabel.text = order.status.rawValue
-        timeCreatedLabel.text = order.created?.formatFriendly()
-        roomNumberLabel.text = String(order.roomNumber)
-        switch order.status {
-            case .CREATED: statusLabel.textColor = .black
-            case .CONFIRMED: statusLabel.textColor = .blue
-            case .DELIVERED: statusLabel.textColor = .green
-            case .CANCELED: statusLabel.textColor = .cyan
-        }
-    }
-}
-
-class OrderItemCell: UITableViewCell {
-
-    @IBOutlet weak var itemNameLabel: UILabel!
-    @IBOutlet weak var itemCountLabel: UILabel!
-    @IBOutlet weak var itemMultiplierSymbolLabel: UILabel!
-    @IBOutlet weak var itemPriceLabel: UILabel!
-
-        
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        backgroundColor = .clear
-        selectionStyle = .none
-    }
-        
-    func draw(item: Order.OrderItem) {
-        itemNameLabel.text = item.name
-        itemCountLabel.text = String(item.quantity)
-        itemPriceLabel.text = item.price > 0 ? "$" + String(item.price) : ""
-        itemMultiplierSymbolLabel.text = item.price > 0 ? "x" : ""
-    }
-}
-*/
 
 
 class OrderSummaryItemCell: UITableViewCell {

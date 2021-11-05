@@ -37,15 +37,10 @@ class RestaurantDetailViewController: UIViewController {
         super.viewWillAppear(animated)
         
         setupTransparentNavigationBar(tableView: tableView)
+    }
 
-/*
-        tableView.contentInsetAdjustmentBehavior = .never   // hides the navigationbar
-
-        navigationController?.setNavigationBarHidden(false, animated: true)
-        navigationController?.hidesBarsOnSwipe = true
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationBar.tintColor = .white
- */
+    override func viewWillDisappear(_ animated: Bool) {
+        endTransparentNavigationBar()
     }
 
     // closing the review scene with smileys

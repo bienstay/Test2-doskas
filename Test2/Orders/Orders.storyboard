@@ -178,6 +178,7 @@
                                             <outlet property="itemNameLabel" destination="VSK-7f-ddA" id="3hg-kg-ofa"/>
                                             <outlet property="itemPriceLabel" destination="Ir8-dK-6iR" id="NsL-mP-aZg"/>
                                             <outlet property="roomLabel" destination="r3R-gh-5kl" id="shp-qg-Bqp"/>
+                                            <outlet property="separatorView" destination="8BF-Z3-HMy" id="OFf-2A-YGX"/>
                                             <outlet property="statusChangeButton" destination="4Ot-jK-8ry" id="mSM-hr-YgR"/>
                                             <outlet property="statusLabel" destination="lbb-rQ-ob7" id="d46-q5-2JI"/>
                                             <outlet property="timeLabel" destination="FDS-we-buE" id="bGD-8J-mXD"/>

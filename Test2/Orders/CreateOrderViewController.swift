@@ -20,6 +20,7 @@ class CreateOrderViewController: UIViewController, UITableViewDataSource {
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var roomNumberTextField: UITextField!
     @IBOutlet weak var roomNumberStackView: UIStackView!
+    @IBOutlet weak var categoryImageView: UIImageView!
 
     var completionHandler: (() -> Void)?
 
@@ -46,7 +47,9 @@ class CreateOrderViewController: UIViewController, UITableViewDataSource {
         let orderInDB = OrderInDB(order: order, roomNumber: roomNumber)
         let errStr = FireB.shared.addRecord(record: orderInDB) { record in
             if record == nil {
-                showInfoDialogBox(vc: self, title: "Error", message: "Order update failed")
+                DispatchQueue.main.async {
+                    showInfoDialogBox(vc: self, title: "Error", message: "Order update failed")
+                }
             } else {
                 DispatchQueue.main.async {
                     self.completionHandler?()
@@ -58,9 +61,15 @@ class CreateOrderViewController: UIViewController, UITableViewDataSource {
                     }
                 }
             }
-            self.activityIndicator.stopAnimating()
+            DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
+                self.sendButton.isEnabled = true
+            }
         }
-        if errStr != nil { Log.log(level: .ERROR, errStr!) }
+        if errStr != nil {
+            Log.log(level: .ERROR, errStr!)
+            showInfoDialogBox(vc: self, title: "Error", message: "Updating order failed")
+        }
         else {
             activityIndicator.startAnimating()
             sendButton.isEnabled = false
@@ -69,12 +78,18 @@ class CreateOrderViewController: UIViewController, UITableViewDataSource {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        initView()
+        initView(tableView: tableView)
+
         tableView.dataSource = self
-        tableView.backgroundColor = .BBbackgroundColor
+        tableView.backgroundColor = .white
+        tableView.showsVerticalScrollIndicator = true
+        tableView.separatorStyle = .singleLine
+
         tabBarController?.tabBar.isHidden = true
+        activityIndicator.hidesWhenStopped = true
 
         title = "New order"
+        categoryImageView.image = UIImage(named: order.category.rawValue)
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil) //object: self.view.window)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: nil) //object: self.view.window)
@@ -82,7 +97,7 @@ class CreateOrderViewController: UIViewController, UITableViewDataSource {
         let t = UITapGestureRecognizer(target: self, action: #selector(clearKeyboard))
         tableView.addGestureRecognizer(t)
         t.cancelsTouchesInView = false
-        
+
         roomNumberTextField.isEnabled = guest.isAdmin()
         roomNumberTextField.keyboardType = .numberPad
         if !guest.isAdmin() { roomNumberTextField.text = String(guest.roomNumber) }
@@ -135,7 +150,6 @@ class CreateOrderItemCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        contentView.backgroundColor = .BBbackgroundColor
     }
 
     func draw(item: Order.OrderItem) {

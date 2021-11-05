@@ -43,13 +43,9 @@ class RoomItemsViewController: UIViewController, UITableViewDataSource, UITableV
         tableView.dataSource = self
         tableView.delegate = self
 
-        //tableView.backgroundColor = .BBbackgroundColor
-        //tableView.backgroundColor = UIColor.offWhite
-        //tableView.allowsSelection = true
-
         title = "Room \(guest.roomNumber)"
 
-        tableView.tableHeaderView?.frame.size = CGSize(width: tableView.frame.width, height: 100.0)
+        tableView.tableHeaderView?.frame.size = CGSize(width: tableView.frame.width, height: UIScreen.main.bounds.height/4)
 
         orderShortSummaryView.layer.cornerRadius = 20
         orderSummaryConstraint.constant = -80
@@ -60,9 +56,7 @@ class RoomItemsViewController: UIViewController, UITableViewDataSource, UITableV
         }
 
         clearOrder()
-
-        //view.backgroundColor = .lightGray
-
+/*
         // observe changes to the navigation bar size and set different title
         self.observer = self.navigationController?.navigationBar.observe(\.bounds, options: [.new], changeHandler: { (navigationBar, changes) in
                 let heightForCollapsedNav = UINavigationController().navigationBar.frame.size.height
@@ -70,19 +64,15 @@ class RoomItemsViewController: UIViewController, UITableViewDataSource, UITableV
                     self.navigationItem.title = height > heightForCollapsedNav ? "Room \(guest.roomNumber)" : "Room \(guest.roomNumber) - \(guest.Name)"
                 }
             })
+ */
+        navigationItem.title = "Room \(guest.roomNumber) - \(guest.Name)"
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         setupListNavigationBar()
-/*
-        navigationController?.setNavigationBarHidden(false, animated: true)
-        navigationController?.hidesBarsOnSwipe = false
         navigationController?.navigationBar.prefersLargeTitles = false
-        navigationController?.navigationBar.tintColor = .black
-        //tabBarController?.tabBar.isHidden = false
- */
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {

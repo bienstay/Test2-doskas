@@ -185,29 +185,5 @@
       "type" : "Room Consumables",
       "maxQuantity" : 3
     }
-  ],
-  "Services",
-  [
-    {
-      "picture" : "ExtraCleaningService",
-      "color": "F3BA91",
-      "name" : "Extra Cleaning Service",
-      "type" : "Services",
-      "maxQuantity" : 1
-    },
-    {
-      "picture" : "LuggageAssistance",
-      "color": "5BB993",
-      "name" : "Luggage Assistance",
-      "type" : "Services",
-      "maxQuantity" : 1
-    },
-    {
-      "picture" : "Buggy",
-      "color": "F3AC37",
-      "name" : "Buggy",
-      "type" : "Services",
-      "maxQuantity" : 1
-    }
   ]
 ]

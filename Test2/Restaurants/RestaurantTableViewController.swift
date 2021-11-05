@@ -12,7 +12,8 @@ import Kingfisher
 class RestaurantTableViewController: UITableViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 
     @IBOutlet var emptyRestaurantView: UIView!
-
+    @IBOutlet weak var newRestaurantBarButton: UIBarButtonItem!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         initView(tableView: tableView)
@@ -43,6 +44,10 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
         super.viewWillAppear(animated)
 
         setupListNavigationBar()
+        
+        newRestaurantBarButton.isEnabled = guest.isAdmin() ? true: false
+        newRestaurantBarButton.title = guest.isAdmin() ? "New" : ""
+
 /*
         navigationItem.backButtonTitle = ""
         navigationController?.setNavigationBarHidden(false, animated: false)
@@ -85,8 +90,8 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
         switch indexPath.section {
         case 0:
             let restaurant = hotel.restaurants[indexPath.row]
-            var cellName = "bigcell"
-            if UIDevice.current.userInterfaceIdiom == .pad { cellName = "smallcell"}
+            let cellName = "bigcell"
+            //if UIDevice.current.userInterfaceIdiom == .pad { cellName = "smallcell"}
             let cell = tableView.dequeueReusableCell(withIdentifier: cellName, for: indexPath) as! RestaurantTableViewCell
             cell.nameLabel?.text = restaurant.name
             //cell.thumbnailImageView?.image = UIImage(data: restaurant.image)

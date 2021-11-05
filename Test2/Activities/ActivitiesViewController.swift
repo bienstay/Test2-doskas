@@ -22,21 +22,14 @@ class ActivitiesViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(onActivitiesUpdated(_:)), name: .activitiesUpdated, object: nil)
-        title = Activity.DOW.allCases[dowIndex].rawValue
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         setupListNavigationBar()
-/*
-        navigationController?.setNavigationBarHidden(false, animated: true)
-        navigationController?.hidesBarsOnSwipe = true
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationBar.tintColor = .black
-*/
         title = Activity.DOW.allCases[dowIndex].rawValue
-        
+
         newActivityBarButton.isEnabled = guest.isAdmin() ? true: false
         newActivityBarButton.title = guest.isAdmin() ? "New" : ""
     }
@@ -56,9 +49,6 @@ class ActivitiesViewController: UIViewController {
                 newPaths.append(indexPath)
             }
         }
-
-        //UIView.transition(with: tableView, duration: 3.0, options: [.layoutSubviews, .transitionCrossDissolve], animations: {self.tableView.reloadData()}, completion: nil)
-        //tableView.reloadSections([0], with: .left)
 
         tableView.beginUpdates()
         tableView.deleteRows(at: oldPaths, with: forward ? .left : .right)

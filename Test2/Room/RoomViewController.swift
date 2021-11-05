@@ -17,7 +17,6 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
     struct DisplayData {
         var expanded: Bool = false
     }
-    lazy var dd = Array(repeating: Array(repeating: DisplayData(), count: 100), count: hotel.roomItems.count)
     
     var observer: NSKeyValueObservation?
 
@@ -28,8 +27,6 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
         tableView.dataSource = self
         tableView.delegate = self
 
-        //tableView.backgroundColor = .BBbackgroundColor
-        //tableView.backgroundColor = UIColor.offWhite
         tableView.allowsSelection = true
 
         // observe changes to the navigation bar size and set different title
@@ -66,12 +63,11 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func maintenancePressed(category: Order.Category) {
         switch (category) {
         case .Cleaning, .Maintenance, .LuggageService, .Buggy:
-            let vc = pushViewController(storyBoard: "OrderSummary", id: "MaintenanceOrder") as! MaintenanceOrderViewController
+            let vc = pushViewController(storyBoard: "OrderSummary", id: "MaintenanceOrder") as! ServiceOrderViewController
             vc.category = category
         case .RoomItems:
             _ = pushViewController(storyBoard: "Room", id: "RoomItemsController")
         case .RoomService:
-            //_ = pushViewController(storyBoard: "Menu", id: "MenuViewController")
             let vc = pushViewController(storyBoard: "Menu", id: "MenuViewController") as! MenuViewController
             vc.restaurant = hotel.roomService
             vc.isRoomService = true
@@ -99,12 +95,10 @@ class RoomHeaderCell2: UITableViewCell {
         selectionStyle = .none
 
         let tap1 = UITapGestureRecognizer(target: self, action: #selector(didTap1))
-        //tap1.numberOfTapsRequired = 1
         headerImage1.addGestureRecognizer(tap1)
         headerImage1.isUserInteractionEnabled = true
 
         let tap2 = UITapGestureRecognizer(target: self, action: #selector(didTap2))
-        //tap2.numberOfTapsRequired = 1
         headerImage2.addGestureRecognizer(tap2)
         headerImage2.isUserInteractionEnabled = true
     }

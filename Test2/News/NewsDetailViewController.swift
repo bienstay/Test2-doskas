@@ -28,30 +28,12 @@ class NewsDetailViewController: UIViewController {
         super.viewWillAppear(animated)
 
         setupTransparentNavigationBar(tableView: tableView)
-/*
-        //navigationController?.setNavigationBarHidden(false, animated: true)
-        //navigationController?.hidesBarsOnSwipe = true
-        //navigationController?.navigationBar.prefersLargeTitles = true
-        //navigationController?.navigationBar.tintColor = .white
-        //tableView.contentInsetAdjustmentBehavior = .never   // hides the navigationbar
-
-        //navigationController?.navigationBar.backgroundColor = .white.withAlphaComponent(0.0)
-        //navigationController?.navigationBar.prefersLargeTitles = true
-        //navigationController?.setNavigationBarHidden(false, animated: false)
-        tableView.contentInsetAdjustmentBehavior = .never   // hides the navigationbar
-        navigationController?.hidesBarsOnSwipe = false
-        navigationController?.navigationBar.tintColor = .white
-
-        navigationController!.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        navigationController!.navigationBar.shadowImage = UIImage()
-        navigationController!.navigationBar.isTranslucent = true
-*/
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        endTransparentNavigationBar()
     }
 
-//    override var preferredStatusBarStyle: UIStatusBarStyle {
-//        return .lightContent
-//    }
-    
     @objc func onLikesUpdated(_ notification: Notification) {
         DispatchQueue.main.async {
             self.tableView.beginUpdates()
