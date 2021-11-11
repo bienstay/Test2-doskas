@@ -21,18 +21,12 @@ class OrdersViewController: UIViewController, UITableViewDataSource {
         NotificationCenter.default.addObserver(self, selector: #selector(onOrdersUpdated(_:)), name: .ordersUpdated, object: nil)
         activeOrdersSwitchClicked(activeOrdersSwitch)
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         setupListNavigationBar()
-/*
-        navigationItem.backButtonTitle = ""
-        navigationController?.setNavigationBarHidden(false, animated: true)
-        navigationController?.hidesBarsOnSwipe = false
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationBar.tintColor = .black
-*/
+        title = .orders
         tabBarController?.tabBar.isHidden = false
     }
 
@@ -51,10 +45,9 @@ class OrdersViewController: UIViewController, UITableViewDataSource {
     @objc func onOrdersUpdated(_ notification: Notification) {
         DispatchQueue.main.async {
             self.tableView.reloadData()
-            //prepareNotification(id: "order", title: "ORDERS", subtitle: "", body: "Orders have been updated", attachmentFile: "roomOrder")
         }
     }
-    
+
     @IBAction func activeOrdersSwitchClicked(_ sender: UISwitch) {
         showActiveOnly = !sender.isOn
         switchLabel.title = sender.isOn ? "All" : "Active"

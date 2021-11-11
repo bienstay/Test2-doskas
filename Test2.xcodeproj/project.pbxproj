@@ -11,6 +11,9 @@
 		061C4E0F2734AB8C00A6D5DA /* OrderSummary.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 061C4E0E2734AB8C00A6D5DA /* OrderSummary.storyboard */; };
 		061C4E142734ACAC00A6D5DA /* Room.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 061C4E132734ACAC00A6D5DA /* Room.storyboard */; };
 		061C4E162734AED700A6D5DA /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 061C4E152734AED700A6D5DA /* Home.storyboard */; };
+		061C4E1F2735E8D500A6D5DA /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 061C4E1D2735E8D500A6D5DA /* Localizable.strings */; };
+		061C4E222735E8E700A6D5DA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 061C4E202735E8E700A6D5DA /* InfoPlist.strings */; };
+		061C4E6E2736010200A6D5DA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 061C4E702736010200A6D5DA /* LaunchScreen.storyboard */; };
 		061DC82726526E0E00C4C794 /* RestaurantDestinationDiningCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 061DC82626526E0E00C4C794 /* RestaurantDestinationDiningCell.swift */; };
 		061DC82B2654244700C4C794 /* RestaurantSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 061DC82A2654244700C4C794 /* RestaurantSectionHeaderView.xib */; };
 		061DC8322654334D00C4C794 /* DestinationDiningPrivateEvents.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 061DC82C2654334C00C4C794 /* DestinationDiningPrivateEvents.jpg */; };
@@ -37,7 +40,6 @@
 		0632D450266ACB22001F7036 /* Orders.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0632D44F266ACB22001F7036 /* Orders.storyboard */; };
 		0632D452266ADF66001F7036 /* OrderDetailsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0632D451266ADF66001F7036 /* OrderDetailsCell.swift */; };
 		0638E79D2709053700EACFC1 /* WaterSports.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0638E79C2709053700EACFC1 /* WaterSports.storyboard */; };
-		0638E79F2709055B00EACFC1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0638E79E2709055B00EACFC1 /* LaunchScreen.storyboard */; };
 		064352A326385A3900A54BFC /* extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 064352A226385A3900A54BFC /* extensions.swift */; };
 		064352A526385F8400A54BFC /* Restaurant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 064352A426385F8400A54BFC /* Restaurant.swift */; };
 		065F032A2635D47F00A5CDEF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065F03292635D47F00A5CDEF /* AppDelegate.swift */; };
@@ -79,8 +81,9 @@
 		069FDBAC26AEF0A6004F543F /* roomItems.json in Resources */ = {isa = PBXBuildFile; fileRef = 069FDBAB26AEF0A6004F543F /* roomItems.json */; };
 		06AC358B271B58F100D249C6 /* Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AC358A271B58F100D249C6 /* Firebase.swift */; };
 		06AC358D271B7FAE00D249C6 /* Likes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AC358C271B7FAE00D249C6 /* Likes.swift */; };
-		06ACC3DD264D7B84000876E3 /* OrderShortSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06ACC3DC264D7B84000876E3 /* OrderShortSummaryView.swift */; };
 		06DDB8C1265874BE00A5FD84 /* sheratonFacilities.json in Resources */ = {isa = PBXBuildFile; fileRef = 06DDB8C0265874BE00A5FD84 /* sheratonFacilities.json */; };
+		06E5FC432739804A0082EFAC /* RoomService.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E5FC422739804A0082EFAC /* RoomService.png */; };
+		06E5FC45273B3E3C0082EFAC /* FirebaseFunctionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E5FC44273B3E3C0082EFAC /* FirebaseFunctionTest.swift */; };
 		06F5D161270B516D004931F7 /* ActivitiesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F5D160270B516D004931F7 /* ActivitiesViewController.swift */; };
 		06F5D163270B5197004931F7 /* NewActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F5D162270B5197004931F7 /* NewActivityViewController.swift */; };
 		06F5D167270B52A4004931F7 /* Activities.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 06F5D166270B52A4004931F7 /* Activities.storyboard */; };
@@ -103,6 +106,10 @@
 		061C4E0E2734AB8C00A6D5DA /* OrderSummary.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = OrderSummary.storyboard; sourceTree = "<group>"; };
 		061C4E132734ACAC00A6D5DA /* Room.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Room.storyboard; sourceTree = "<group>"; };
 		061C4E152734AED700A6D5DA /* Home.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
+		061C4E1E2735E8D500A6D5DA /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Localizable.strings; sourceTree = "<group>"; };
+		061C4E212735E8E700A6D5DA /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		061C4E232735E8E700A6D5DA /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		061C4E6F2736010200A6D5DA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		061DC82626526E0E00C4C794 /* RestaurantDestinationDiningCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantDestinationDiningCell.swift; sourceTree = "<group>"; };
 		061DC82A2654244700C4C794 /* RestaurantSectionHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RestaurantSectionHeaderView.xib; sourceTree = "<group>"; };
 		061DC82C2654334C00C4C794 /* DestinationDiningPrivateEvents.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = DestinationDiningPrivateEvents.jpg; sourceTree = "<group>"; };
@@ -129,7 +136,6 @@
 		0632D44F266ACB22001F7036 /* Orders.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Orders.storyboard; sourceTree = "<group>"; };
 		0632D451266ADF66001F7036 /* OrderDetailsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetailsCell.swift; sourceTree = "<group>"; };
 		0638E79C2709053700EACFC1 /* WaterSports.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = WaterSports.storyboard; sourceTree = "<group>"; };
-		0638E79E2709055B00EACFC1 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		064352A226385A3900A54BFC /* extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = extensions.swift; sourceTree = "<group>"; };
 		064352A426385F8400A54BFC /* Restaurant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restaurant.swift; sourceTree = "<group>"; };
 		065F03262635D47F00A5CDEF /* Test2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Test2.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -173,8 +179,9 @@
 		069FDBAB26AEF0A6004F543F /* roomItems.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = roomItems.json; sourceTree = "<group>"; };
 		06AC358A271B58F100D249C6 /* Firebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firebase.swift; sourceTree = "<group>"; };
 		06AC358C271B7FAE00D249C6 /* Likes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Likes.swift; sourceTree = "<group>"; };
-		06ACC3DC264D7B84000876E3 /* OrderShortSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderShortSummaryView.swift; sourceTree = "<group>"; };
 		06DDB8C0265874BE00A5FD84 /* sheratonFacilities.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sheratonFacilities.json; sourceTree = "<group>"; };
+		06E5FC422739804A0082EFAC /* RoomService.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RoomService.png; sourceTree = "<group>"; };
+		06E5FC44273B3E3C0082EFAC /* FirebaseFunctionTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseFunctionTest.swift; sourceTree = "<group>"; };
 		06F5D160270B516D004931F7 /* ActivitiesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesViewController.swift; sourceTree = "<group>"; };
 		06F5D162270B5197004931F7 /* NewActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewActivityViewController.swift; sourceTree = "<group>"; };
 		06F5D166270B52A4004931F7 /* Activities.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Activities.storyboard; sourceTree = "<group>"; };
@@ -259,8 +266,10 @@
 				065F032B2635D47F00A5CDEF /* SceneDelegate.swift */,
 				065F03352635D48000A5CDEF /* Assets.xcassets */,
 				069DB354263AED0E00C91468 /* Main.storyboard */,
-				0638E79E2709055B00EACFC1 /* LaunchScreen.storyboard */,
+				061C4E702736010200A6D5DA /* LaunchScreen.storyboard */,
 				065F033A2635D48000A5CDEF /* Info.plist */,
+				061C4E202735E8E700A6D5DA /* InfoPlist.strings */,
+				061C4E1D2735E8D500A6D5DA /* Localizable.strings */,
 				0632D44426683C9C001F7036 /* GoogleService-Info.plist */,
 				061DC83E26554AD900C4C794 /* SplashViewController.swift */,
 				06F77266266FD8B500E64D54 /* Test2.entitlements */,
@@ -322,6 +331,7 @@
 		066BF3FA2637552500EE834C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				06E5FC422739804A0082EFAC /* RoomService.png */,
 				069FDBAB26AEF0A6004F543F /* roomItems.json */,
 				06F772732676B39000E64D54 /* AdoptACoral */,
 				06DDB8BF2658745E00A5FD84 /* DestinationDiningPictures */,
@@ -348,7 +358,6 @@
 			isa = PBXGroup;
 			children = (
 				061C4E0E2734AB8C00A6D5DA /* OrderSummary.storyboard */,
-				06ACC3DC264D7B84000876E3 /* OrderShortSummaryView.swift */,
 				0683A1E0264EDB540000D122 /* CreateOrderViewController.swift */,
 				0632D44A266AC3A3001F7036 /* OrdersViewController.swift */,
 				0632D44F266ACB22001F7036 /* Orders.storyboard */,
@@ -460,6 +469,7 @@
 			children = (
 				0632D4462668E3BD001F7036 /* FirebaseUtils.swift */,
 				06AC358A271B58F100D249C6 /* Firebase.swift */,
+				06E5FC44273B3E3C0082EFAC /* FirebaseFunctionTest.swift */,
 			);
 			path = Firebase;
 			sourceTree = "<group>";
@@ -535,8 +545,9 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
-				Base,
 				he,
+				pl,
+				Base,
 			);
 			mainGroup = 065F031D2635D47F00A5CDEF;
 			packageReferences = (
@@ -564,10 +575,11 @@
 				061DC8362654334D00C4C794 /* DestinationDiningBubblesUnderTheStars.jpg in Resources */,
 				065F035C2635FD0B00A5CDEF /* Map.storyboard in Resources */,
 				06F5D167270B52A4004931F7 /* Activities.storyboard in Resources */,
-				0638E79F2709055B00EACFC1 /* LaunchScreen.storyboard in Resources */,
+				061C4E6E2736010200A6D5DA /* LaunchScreen.storyboard in Resources */,
 				061DC8332654334D00C4C794 /* DestinationDiningSandbankPicnic.jpg in Resources */,
 				069DB355263AED0E00C91468 /* Main.storyboard in Resources */,
 				069FDBA4269E34CE004F543F /* Chat.storyboard in Resources */,
+				061C4E1F2735E8D500A6D5DA /* Localizable.strings in Resources */,
 				0632D44526683C9C001F7036 /* GoogleService-Info.plist in Resources */,
 				061DC83B26546E2800C4C794 /* Extreme-Watersports-Sheraton-AP2021.pdf in Resources */,
 				06F772792676B3DD00E64D54 /* adoptacoral1.jpg in Resources */,
@@ -585,6 +597,8 @@
 				069DB36B263B14A300C91468 /* Restaurants.storyboard in Resources */,
 				069FDBAC26AEF0A6004F543F /* roomItems.json in Resources */,
 				061C4E142734ACAC00A6D5DA /* Room.storyboard in Resources */,
+				061C4E222735E8E700A6D5DA /* InfoPlist.strings in Resources */,
+				06E5FC432739804A0082EFAC /* RoomService.png in Resources */,
 				061DC8352654334D00C4C794 /* DestinationDiningCuratedExperiences.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -657,7 +671,6 @@
 				069DB35C263B0FB800C91468 /* RestaurantTableViewController.swift in Sources */,
 				06606DF3270760330023412C /* ServiceOrderViewController.swift in Sources */,
 				06F7726E2673931300E64D54 /* NewsDetailViewController.swift in Sources */,
-				06ACC3DD264D7B84000876E3 /* OrderShortSummaryView.swift in Sources */,
 				06F5D163270B5197004931F7 /* NewActivityViewController.swift in Sources */,
 				069DB369263B12EB00C91468 /* RoundedTextField.swift in Sources */,
 				069FDBA826A09A55004F543F /* Chat.swift in Sources */,
@@ -678,6 +691,7 @@
 				069FDBA2269E17C3004F543F /* MessageKitChatViewController.swift in Sources */,
 				065F032A2635D47F00A5CDEF /* AppDelegate.swift in Sources */,
 				065F032C2635D47F00A5CDEF /* SceneDelegate.swift in Sources */,
+				06E5FC45273B3E3C0082EFAC /* FirebaseFunctionTest.swift in Sources */,
 				0683A1E1264EDB540000D122 /* CreateOrderViewController.swift in Sources */,
 				069FD3D326938A150076C6FC /* OnboardingPageViewController.swift in Sources */,
 				066BF4032637619B00EE834C /* RoomViewController.swift in Sources */,
@@ -699,6 +713,34 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		061C4E1D2735E8D500A6D5DA /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				061C4E1E2735E8D500A6D5DA /* he */,
+				061C4E232735E8E700A6D5DA /* pl */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		061C4E202735E8E700A6D5DA /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				061C4E212735E8E700A6D5DA /* pl */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		061C4E702736010200A6D5DA /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				061C4E6F2736010200A6D5DA /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		065F033B2635D48000A5CDEF /* Debug */ = {

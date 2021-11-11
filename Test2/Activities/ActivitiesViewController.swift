@@ -28,14 +28,16 @@ class ActivitiesViewController: UIViewController {
         super.viewWillAppear(animated)
         
         setupListNavigationBar()
-        title = Activity.DOW.allCases[dowIndex].rawValue
+        //title = Activity.DOW.allCases[dowIndex].rawValue
+        title = Calendar.current.weekdaySymbols[dowIndex]
 
         newActivityBarButton.isEnabled = guest.isAdmin() ? true: false
         newActivityBarButton.title = guest.isAdmin() ? "New" : ""
     }
 
     func resetDay(forward: Bool) {
-        title = Activity.DOW.allCases[dowIndex].rawValue
+        //title = Activity.DOW.allCases[dowIndex].rawValue
+        title = Calendar.current.weekdaySymbols[dowIndex]
 
         var oldPaths = [IndexPath]()
         for row in 0..<tableView.numberOfRows(inSection: 0) {
@@ -43,7 +45,7 @@ class ActivitiesViewController: UIViewController {
             oldPaths.append(indexPath)
         }
         var newPaths = [IndexPath]()
-        if let count = hotel.activities[title!]?.count {
+        if let count = hotel.activities[dowIndex]?.count {
             for row in 0..<count {
                 let indexPath = IndexPath(row: row, section: 0)
                 newPaths.append(indexPath)
@@ -91,12 +93,12 @@ class ActivitiesViewController: UIViewController {
 extension ActivitiesViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return hotel.activities[title!]?.count ?? 0
+        return hotel.activities[dowIndex]?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ActivityCell", for: indexPath) as! ActivityCell
-        if let activity = hotel.activities[title!]?[indexPath.row] {
+        if let activity = hotel.activities[dowIndex]?[indexPath.row] {
             let expanded = expandedCells.contains(activity.hashValue)
             cell.draw(activity: activity, expanded: expanded)
         }
@@ -108,7 +110,7 @@ extension ActivitiesViewController: UITableViewDataSource {
 extension ActivitiesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let cell = tableView.cellForRow(at: indexPath) as? ActivityCell else { return }
-        if let activity = hotel.activities[title!]?[indexPath.row] {
+        if let activity = hotel.activities[dowIndex]?[indexPath.row] {
             if expandedCells.contains(activity.hashValue) { expandedCells.remove(activity.hashValue) }
             else { expandedCells.insert(activity.hashValue) }
             tableView.beginUpdates()
@@ -132,7 +134,7 @@ extension ActivitiesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         if !guest.isAdmin() { return nil }
         let action1 = UIContextualAction(style: .destructive, title: "Delete") { action, view, completionHandler in
-            if let activity = hotel.activities[self.title!]?[indexPath.row] {
+            if let activity = hotel.activities[self.dowIndex]?[indexPath.row] {
                 _ = FireB.shared.removeRecord(key: activity.id!, subNode: self.title, record: activity) { _ in
                 }
             }

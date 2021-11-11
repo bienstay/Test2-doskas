@@ -21,6 +21,8 @@ class OrderShortSummaryView: GlossyView {
     }
     func configure(quantity: Int) {
         quantityLabel.text = String(quantity)
+        proceedButton.setTitle(.proceed, for: .normal)
+        proceedButton.layer.cornerRadius = 5
     }
 }
 
@@ -65,7 +67,7 @@ class RoomItemsViewController: UIViewController, UITableViewDataSource, UITableV
                 }
             })
  */
-        navigationItem.title = "Room \(guest.roomNumber) - \(guest.Name)"
+        navigationItem.title = .room + " \(guest.roomNumber) - \(guest.Name)"
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -127,7 +129,7 @@ class RoomItemsViewController: UIViewController, UITableViewDataSource, UITableV
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let itemType = RoomItem.ItemType.allCases[section]
-        return itemType.rawValue
+        return itemType.toString()
     }
 }
 

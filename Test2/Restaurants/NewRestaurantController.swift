@@ -97,7 +97,8 @@ class NewRestaurantController: UITableViewController {
         if cuisinesTextField.text == "" { message = NSLocalizedString("Type missing", comment: "Type missing") } else
         if locationTextField.text == "" { message = NSLocalizedString("Location missing", comment: "Location missing") } else
         if descriptionTextView.text == "" { message = NSLocalizedString("Description missing", comment: "Description missing") } else
-        //if photoImageView.image == nil { message = NSLocalizedString("Image missing", comment: "Image missing") }
+        if photoImageView.image == nil { message = NSLocalizedString("Image missing", comment: "Image missing") }
+        
         if let message = message {
             showInfoDialogBox(vc: self, title: "Oops", message: message)
             return

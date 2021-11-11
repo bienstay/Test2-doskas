@@ -14,19 +14,15 @@ class ChatViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let chatId = guest.chatRooms.first!
-        messageKitChatViewController.chatRoomId = chatId
+        messageKitChatViewController.chatRoomId = guest.chatRooms.first!
         embed(viewController: messageKitChatViewController, inView: messageKitView)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        navigationItem.backButtonTitle = ""
-        navigationController?.setNavigationBarHidden(false, animated: true)
-        navigationController?.hidesBarsOnSwipe = false
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationBar.tintColor = .black
+        setupListNavigationBar()
+        title = messageKitChatViewController.chatRoomId
     }
 
 }

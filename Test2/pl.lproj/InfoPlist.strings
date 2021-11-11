@@ -1,0 +1,9 @@
+/* Bundle name */
+"CFBundleName" = "Test2";
+
+/* Privacy - Calendars Usage Description */
+"NSCalendarsUsageDescription" = "Dla celów testowych";
+
+/* Privacy - Camera Usage Description */
+"NSCameraUsageDescription" = "Pozwól na robienie zdjęć";
+

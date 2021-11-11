@@ -170,10 +170,10 @@
             </objects>
             <point key="canvasLocation" x="5440.579710144928" y="-830.35714285714278"/>
         </scene>
-        <!--News-->
+        <!--News View Controller-->
         <scene sceneID="rPp-mR-3gu">
             <objects>
-                <viewController storyboardIdentifier="News" title="News" hidesBottomBarWhenPushed="YES" id="dZi-dR-Eve" customClass="NewsViewController" customModule="Test2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="News" hidesBottomBarWhenPushed="YES" id="dZi-dR-Eve" customClass="NewsViewController" customModule="Test2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iHf-l9-LRY">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -376,7 +376,7 @@
                         </constraints>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="News" id="Vgh-ST-tNM">
+                    <navigationItem key="navigationItem" id="Vgh-ST-tNM">
                         <barButtonItem key="rightBarButtonItem" title="New" id="IKk-Ul-Gvd">
                             <connections>
                                 <action selector="newPostPressed:" destination="dZi-dR-Eve" id="zku-IU-9eE"/>

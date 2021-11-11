@@ -33,7 +33,12 @@ class RoomItemCell: UITableViewCell {
     }
 
     func display(roomItem: RoomItem, order: Order, expanded: Bool) {
-        itemLabel.text = roomItem.name
+        //if let lang = Locale.current.languageCode, let itemList = String.roomItemsList[lang] {
+        if let itemList = String.roomItemsList[guest.lang] {
+            itemLabel.text = itemList[roomItem.name]
+        } else {
+            itemLabel.text = roomItem.name
+        }
         quantityLabel.text = String( order.getItem(byString: roomItem.name)?.quantity ?? 0)
         if let hexColor = Int(roomItem.color, radix: 16) {
             itemImage.backgroundColor = UIColor(hexColor)

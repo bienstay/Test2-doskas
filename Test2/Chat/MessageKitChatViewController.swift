@@ -21,6 +21,7 @@ struct Message: MessageType {
     let text: String
     let messageId: String
     let timestamp: Date
+    let translations: [String:String]?
 
     var sender: SenderType {
         return Sender(senderId: senderId, displayName: senderName)
@@ -29,9 +30,29 @@ struct Message: MessageType {
     var sentDate: Date {
         return timestamp
     }
-    
+
     var kind: MessageKind {
-        return .text(text)
+        let orgColor:UIColor = senderId == guest.id ? .white : .black
+        let orgAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: orgColor, .font: UIFont.systemFont(ofSize: 18)]
+        let orgText = NSMutableAttributedString(string: text, attributes: orgAttributes)
+        // show what has been translated to my language
+        if let t = translations?[guest.lang], t != text {
+            let tAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.red, .font: UIFont.systemFont(ofSize: 16)]
+            let tText = NSAttributedString(string: "\n" + t, attributes: tAttributes)
+            orgText.append(tText)
+        } else if senderId == guest.id, let translations = translations {
+        // show what the receiver had seen
+            for t in translations.values {
+                if t != text {
+                    let tAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.purple, .font: UIFont.systemFont(ofSize: 16)]
+                    let tText = NSAttributedString(string: "\n" + t, attributes: tAttributes)
+                    orgText.append(tText)
+                }
+            }
+        }
+
+        return .attributedText(orgText)
+//        return .text(text)
     }
 }
 
@@ -77,24 +98,32 @@ class MessageKitChatViewController: MessagesViewController {
         messages = []
         if let msgs = guest.chatMessages?[chatRoomId] {
             for m in msgs {
-                messages.append(Message(senderId: m.senderID, senderName: m.senderName, text: m.content, messageId: m.created.formatFull(), timestamp: m.created))
+                messages.append(Message(senderId: m.senderID, senderName: m.senderName, text: m.content, messageId: m.id!, timestamp: m.created, translations: m.translations))
             }
             messages.sort(by: {$0.sentDate < $1.sentDate})
+/*
+            if let last = messages.last, last.translations?[guest.lang] == nil {
+                if last.senderId != guest.id {
+                    //let lang = guest.isAdmin() ? "en" : guest.lang
+                    let lang = guest.lang
+                    FireB.shared.translateChat(chatRoom: chatRoomId, chatID: last.messageId, textToTranslate: last.text, targetLanguage: lang, completionHandler: { _ in } )
+                }
+            }
+*/
         }
     }
     
     func configure() {
-        messageInputBar.contentView.backgroundColor = .pastelYellowLight
-        messageInputBar.inputTextView.layer.borderWidth = 1.0
+        messageInputBar.contentView.backgroundColor = .darkGray
+        messageInputBar.inputTextView.textColor = .white
+        //messageInputBar.inputTextView.layer.borderWidth = 1.0
         messageInputBar.inputTextView.layer.cornerRadius = 16.0
         messageInputBar.inputTextView.layer.masksToBounds = true
         
-        messageInputBar.sendButton.setTitleColor(.black, for: .normal)
-        messageInputBar.sendButton.setTitleColor(.black.withAlphaComponent(0.3), for: .highlighted)
+        messageInputBar.sendButton.setTitleColor(.white, for: .normal)
+        messageInputBar.sendButton.setTitleColor(.white.withAlphaComponent(0.3), for: .highlighted)
     }
 }
-
-
 
 
 
@@ -120,6 +149,7 @@ extension MessageKitChatViewController: MessagesDataSource {
         let s = NSAttributedString(string: message.sentDate.formatFriendly(), attributes: [.font: UIFont.preferredFont(forTextStyle: .caption2), .foregroundColor: UIColor.lightGray])
         return s
     }
+
 }
 
 extension MessageKitChatViewController: MessagesLayoutDelegate {
@@ -146,8 +176,7 @@ extension MessageKitChatViewController: MessagesDisplayDelegate {
 extension MessageKitChatViewController: InputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
         let newChatMessage = ChatMessage(created: Date(), content: text, senderID: guest.id, senderName: guest.Name)
-        let key = chatRoomId + "/" + Date().formatFull()
-        _ = FireB.shared.addRecord(key: key, record: newChatMessage) { _ in }
+        _ = FireB.shared.addRecord(subNode: chatRoomId, record: newChatMessage) { _ in }
         inputBar.inputTextView.text = ""
     }
 }

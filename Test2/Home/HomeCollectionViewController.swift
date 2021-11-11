@@ -19,16 +19,29 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         case items = 2
         static var numberOfSections: Int { return self.allCases.count }
     }
-    private enum Items: String, CaseIterable {
+
+    enum Items: String, CaseIterable {
+        // raw value is the icon name
         case news = "News"
         case activities = "Activities"
         case map = "Map"
-        case watersports = "Water Sports"
-        case adoptACoral = "Adopt a Coral"
-        case kidsClub = "Kids Club"
+        case watersports = "Watersports"
+        case adoptACoral = "AdoptAcoral"
+        case kidsClub = "KidsClub"
+
+        static func getString(item: Items) -> String {
+            switch item {
+            case .news: return .news
+            case .activities: return .activities
+            case .map: return .map
+            case .watersports: return .waterSports
+            case .adoptACoral: return .adoptACoral
+            case .kidsClub: return .kidsClub
+            }
+        }
     }
-    
-    let tempIconNames = ["News", "Activities", "Map", "Watersports", "AdoptAcoral", "KidsClub", "Sugar", "Soap", "022-room key", "033-bucket"]
+
+    //let tempIconNames = ["News", "Activities", "Map", "Watersports", "AdoptAcoral", "KidsClub", "Sugar", "Soap", "022-room key", "033-bucket"]
     let tempIconColors: [UIColor] = [.color1, .color2, .color3, .lightGray, .color2, .color1, .color3]
 
     var onboardingShown: Bool = false
@@ -41,6 +54,11 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         collectionView.delegate = self
 
         NotificationCenter.default.addObserver(self, selector: #selector(onHotelInfoUpdated(_:)), name: .hotelInfoUpdated, object: nil)
+
+        tabBarController?.viewControllers?[0].tabBarItem.title = .home
+        tabBarController?.viewControllers?[1].tabBarItem.title = .food
+        tabBarController?.viewControllers?[2].tabBarItem.title = .room
+        tabBarController?.viewControllers?[3].tabBarItem.title = .orders
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -94,7 +112,8 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         case .items:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeItemsCell", for: indexPath) as! HomeItemsCell
             cell.tag = indexPath.row
-            cell.draw(title: Items.allCases[indexPath.row].rawValue, pictureName: tempIconNames[indexPath.row], color: tempIconColors[indexPath.row])
+            //cell.draw(title: Items.allCases[indexPath.row].rawValue, pictureName: tempIconNames[indexPath.row], color: tempIconColors[indexPath.row])
+            cell.draw(item: Items.allCases[indexPath.row], index: indexPath.row)
             return cell
         case .none:
             Log.log(level: .ERROR, "invalid section in cellForItem")
@@ -232,6 +251,7 @@ class HomeItemsCell: UICollectionViewCell {
     @IBOutlet weak var picture: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var backgroundColorView: UIView!
+    let iconColors: [UIColor] = [.color1, .color2, .color3, .lightGray, .color2, .color1, .color3]
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -244,6 +264,14 @@ class HomeItemsCell: UICollectionViewCell {
         picture.image = UIImage(named: pictureName)?.withAlignmentRectInsets(UIEdgeInsets(top: border, left: border, bottom: border, right: border))
         titleLabel.superview?.backgroundColor = color
         backgroundColorView.backgroundColor = color
+    }
+
+    func draw(item:HomeCollectionViewController.Items, index: Int) {
+        titleLabel.text = HomeCollectionViewController.Items.getString(item: item)
+        let border = -12.0
+        picture.image = UIImage(named: item.rawValue)?.withAlignmentRectInsets(UIEdgeInsets(top: border, left: border, bottom: border, right: border))
+        titleLabel.superview?.backgroundColor = iconColors[index]
+        backgroundColorView.backgroundColor = iconColors[index]
     }
 }
 
@@ -258,3 +286,93 @@ func calculateLabelHeight(s: String, width: CGFloat) -> CGFloat {
     return label.frame.height
 }
               
+
+extension String {
+    static let news = NSLocalizedString("News", comment: "News")
+    static let activities = NSLocalizedString("Activities", comment: "Activities")
+    static let waterSports = NSLocalizedString("Water Sports", comment: "Water Sports")
+    static let map = NSLocalizedString("Map", comment: "Map")
+    static let adoptACoral = NSLocalizedString("Adopt a Coral", comment: "Adopt a Coral")
+    static let kidsClub = NSLocalizedString("Kids Club", comment: "Kids Club")
+}
+
+extension String {
+    static let home = NSLocalizedString("Home", comment: "Tab 0")
+    static let food = NSLocalizedString("Food", comment: "Tab 1")
+    static let room = NSLocalizedString("Room", comment: "Tab 2")
+    static let orders = NSLocalizedString("Orders", comment: "Tab 3")
+}
+
+extension String {
+    static let toiletries = NSLocalizedString("Toiletries", comment: "Toiletries")
+    static let bathAmenities = NSLocalizedString("Bath Amenities", comment: "Bath Amenities")
+    static let roomAmenities = NSLocalizedString("Room Amenities", comment: "Room Amenities")
+    static let roomConsumables = NSLocalizedString("Room Consumables", comment: "Room Consumables")
+}
+
+extension String {
+    static let roomService = NSLocalizedString("In-room dining", comment: "In-room dining")
+    static let maintenance = NSLocalizedString("Maintenance", comment: "Maintenance")
+    static let cleaning = NSLocalizedString("Cleaning", comment: "Cleaning")
+    static let luggageService = NSLocalizedString("Luggage", comment: "Luggage")
+    static let buggy = NSLocalizedString("Buggy", comment: "Buggy")
+    static let roomItems = NSLocalizedString("Room Items", comment: "Room Items")
+}
+
+extension String {
+    static let create = NSLocalizedString("Create", comment: "Create")
+    static let confirm = NSLocalizedString("Confirm", comment: "Confirm")
+    static let finish = NSLocalizedString("Finish", comment: "Finish")
+    static let cancel = NSLocalizedString("Cancel", comment: "Cancel")
+    static let created = NSLocalizedString("Created", comment: "Created")
+    static let confirmed = NSLocalizedString("Confirmed", comment: "Confirmed")
+    static let delivered = NSLocalizedString("Delivered", comment: "Delivered")
+    static let canceled = NSLocalizedString("Canceled", comment: "Canceled")
+}
+
+extension String {
+    static let order = NSLocalizedString("Order", comment: "Order")
+    static let newOrder = NSLocalizedString("New Order", comment: "New Order")
+    static let comment = NSLocalizedString("Comment", comment: "Comment")
+    static let send = NSLocalizedString("Send", comment: "Send")
+    static let proceed = NSLocalizedString("Proceed", comment: "Proceed")
+    static let description = NSLocalizedString("Description", comment: "Description")
+}
+
+extension String {
+    static let yes = NSLocalizedString("Yes", comment: "Yes")
+    static let no = NSLocalizedString("No", comment: "No")
+    static let ok = NSLocalizedString("OK", comment: "OK")
+}
+
+extension String {
+    static let roomItemsList: [String:[String:String]] =
+    ["pl": [
+        "Bath towel" : "Ręcznik kąpielowy",
+        "Hand towel" : "Ręcznik do rąk",
+        "Floor towel": "Ręcznik na podłogę",
+        "Beach towel": "Ręcznik na plażę",
+        "Slippers" : "Kapcie",
+        "Bathrobe" : "Szlafrok",
+        "Feather pillow" : "Poduszka z pierza",
+        "Foam pillow" : "Poduszka sztuczna",
+        "Blanket" : "Koc",
+        "Soap" : "Mydło",
+        "Shampoo" : "Szampon",
+        "Conditioner" : "Odżywka do włosów",
+        "Shower Gel" : "Płyn pod prysznic",
+        "Body Lotion" : "Balsam do ciała",
+        "Dental Kit" : "Zestaw dentystyczny",
+        "Shaving Kit" : "Zestaw do golenia",
+        "Shower Cap" : "Czepek do kąpieli",
+        "Comb" : "Grzebień",
+        "Toilet Paper" : "Papier toaletowy",
+        "Cotton Buds" : "Patyczki higieniczne",
+        "Ice": "Lód",
+        "Tea" : "Herbata",
+        "Coffee" : "Kawa",
+        "Sugar" : "Cukier",
+        "Milk" : "Mleko"
+    ]
+    ]
+}

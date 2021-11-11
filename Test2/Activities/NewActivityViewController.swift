@@ -37,11 +37,10 @@ class NewActivityViewController: UITableViewController {
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
 
-        let dow = Activity.DOW.allCases[dowIndex].rawValue
-        dowLabel.text = dow
+        dowLabel.text = Activity.DOW.allCases[dowIndex].rawValue
         // if the activity index is not null then we are editing the existing activity
         if let activityIndex = activityIndexToEdit {
-            if let activity = hotel.activities[dow]?[activityIndex] {
+            if let activity = hotel.activities[dowIndex]?[activityIndex] {
                 titleLabel.text = activity.title
                 locationLabel.text = activity.location
                 startDatePickerView.date = activity.start
@@ -85,7 +84,7 @@ class NewActivityViewController: UITableViewController {
         let dow = Activity.DOW.allCases[dowIndex]
 
         var activity = Activity()
-        if let i = activityIndexToEdit { activity.id = hotel.activities[dow.rawValue]?[i].id }
+        if let i = activityIndexToEdit { activity.id = hotel.activities[dowIndex]?[i].id }
         activity.title = titleLabel.text!
         activity.location = locationLabel.text!
         activity.text = activityText.text!
@@ -100,7 +99,7 @@ class NewActivityViewController: UITableViewController {
             }
         } else {
             if let i = activityIndexToEdit {
-                activity.imageFileURL = hotel.activities[dow.rawValue]![i].imageFileURL
+                activity.imageFileURL = hotel.activities[dowIndex]![i].imageFileURL
             }
             self.updateArrayAndDB(activity: activity, dow: dow.rawValue)
         }

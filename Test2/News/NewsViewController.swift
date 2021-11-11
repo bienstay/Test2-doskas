@@ -24,12 +24,7 @@ class NewsViewController: UIViewController {
         super.viewWillAppear(animated)
 
         setupListNavigationBar()
-/*
-        navigationController?.setNavigationBarHidden(false, animated: true)
-        navigationController?.hidesBarsOnSwipe = true
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationBar.tintColor = .black
-*/
+        title = .news
         newPostBarButton.isEnabled = guest.isAdmin() ? true: false
         newPostBarButton.title = guest.isAdmin() ? "New" : ""
     }
@@ -104,3 +99,4 @@ extension NewsViewController: UITableViewDelegate {
         vc.post = hotel.news[indexPath.row]
     }
 }
+

@@ -28,6 +28,7 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
 
     @IBOutlet weak var createdByLabel: UILabel!
     @IBOutlet weak var createdAtLabel: UILabel!
+    @IBOutlet weak var createdStackView: UIStackView!
     @IBOutlet weak var canceledByLabel: UILabel!
     @IBOutlet weak var canceledAtLabel: UILabel!
     @IBOutlet weak var canceledStackView: UIStackView!
@@ -53,11 +54,11 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
     }
 
     func askToCancel() {
-        let cancelAlert = UIAlertController(title: "Cancel", message: "Are you sure you want to cancel this order?", preferredStyle: UIAlertController.Style.alert)
-        cancelAlert.addAction(UIAlertAction(title: "Yes, Cancel", style: .destructive, handler: { (action: UIAlertAction!) in
+        let cancelAlert = UIAlertController(title: .cancel.localizedUppercase, message: .confirm, preferredStyle: UIAlertController.Style.alert)
+        cancelAlert.addAction(UIAlertAction(title: .yes, style: .destructive, handler: { (action: UIAlertAction!) in
             FireB.shared.updateOrderStatus(orderId: self.order.id!, newStatus: .CANCELED, canceledBy: String(guest.roomNumber))
         }))
-        cancelAlert.addAction(UIAlertAction(title: "Back", style: .cancel, handler: { (action: UIAlertAction!) in
+        cancelAlert.addAction(UIAlertAction(title: .no, style: .cancel, handler: { (action: UIAlertAction!) in
         }))
         present(cancelAlert, animated: true, completion: nil)
     }
@@ -70,15 +71,10 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
         tableView.backgroundColor = .white
         tableView.showsVerticalScrollIndicator = true
         tableView.separatorStyle = .singleLine
-
-        roomNumberLabel.text = "Room: " + String(order.roomNumber)
-        timeCreatedLabel.text = order.created?.formatFriendly()
-        idLabel.text = "Order ID: " + order.id!
+        tableView.allowsSelection = false
 
         categoryImage.image = UIImage(named: order.category.rawValue)
 
-        title = "Order number \(order.number)"
-    
         NotificationCenter.default.addObserver(self, selector: #selector(onOrdersUpdated(_:)), name: .ordersUpdated, object: nil)
 
         let barButton = createBarButtonItem(target: self, action: #selector(statusChangeButtonPressed))
@@ -93,6 +89,11 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
         navigationController?.hidesBarsOnSwipe = false
         tableView.contentInsetAdjustmentBehavior = .never
         
+        title = .order +  " " + "\(order.number)"
+        roomNumberLabel.text = .room + ": \(order.roomNumber)"
+        timeCreatedLabel.text = order.created?.formatFriendly()
+        idLabel.text = .order + ": \(order.id!)"
+
         updateStatusLabelsAndButtons()
     }
 
@@ -115,7 +116,7 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
         switch Sections(rawValue: indexPath.section) {
         case .Items:
             let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as! OrderSummaryItemCell
-            cell.draw(item: order.items[indexPath.row])
+            cell.draw(item: order.items[indexPath.row], category: order.category)
             return cell
         case .GuestComment:
             let cell = tableView.dequeueReusableCell(withIdentifier: "CommentCell", for: indexPath)
@@ -126,32 +127,36 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
                 return UITableViewCell()
         }
     }
-    
+
     func updateStatusLabelsAndButtons() {
-        statusLabel.text = order.status.rawValue
+        statusLabel.text = order.status.toString()
+        createdStackView.isHidden = true
         confirmedStackView.isHidden = true
         deliveredStackView.isHidden = true
         canceledStackView.isHidden = true
-        switch order.status {
-        case .CANCELED:
-            canceledAtLabel.text = order.canceled?.formatFriendly()
-            canceledByLabel.text = order.canceledBy
-            canceledStackView.isHidden = false
-            createdAtLabel.text = order.created?.formatFriendly()
-            createdByLabel.text = order.createdBy
-        case .DELIVERED:
-            deliveredAtLabel.text = order.delivered?.formatFriendly()
-            deliveredByLabel.text = order.deliveredBy
-            deliveredStackView.isHidden = false
-            fallthrough
-        case .CONFIRMED:
-            confirmedAtLabel.text = order.confirmed?.formatFriendly()
-            confirmedByLabel.text = order.confirmedBy
-            confirmedStackView.isHidden = false
-            fallthrough
-        case .CREATED:
-            createdAtLabel.text = order.created?.formatFriendly()
-            createdByLabel.text = order.createdBy
+        if guest.isAdmin() {
+            createdStackView.isHidden = false
+            switch order.status {
+                case .CANCELED:
+                    canceledAtLabel.text = order.canceled?.formatFriendly()
+                    canceledByLabel.text = order.canceledBy
+                    canceledStackView.isHidden = false
+                    createdAtLabel.text = order.created?.formatFriendly()
+                    createdByLabel.text = order.createdBy
+                case .DELIVERED:
+                    deliveredAtLabel.text = order.delivered?.formatFriendly()
+                    deliveredByLabel.text = order.deliveredBy
+                    deliveredStackView.isHidden = false
+                    fallthrough
+                case .CONFIRMED:
+                    confirmedAtLabel.text = order.confirmed?.formatFriendly()
+                    confirmedByLabel.text = order.confirmedBy
+                    confirmedStackView.isHidden = false
+                    fallthrough
+                case .CREATED:
+                    createdAtLabel.text = order.created?.formatFriendly()
+                    createdByLabel.text = order.createdBy
+                }
         }
 
         switch order.status {
@@ -169,17 +174,17 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
         if guest.isAdmin() {
             button.isHidden = false
             if order.status == Order.Status.CREATED {
-                button.setTitle("Confirm", for: .normal)
+                button.setTitle(.confirm, for: .normal)
             }
             else if order.status == Order.Status.CONFIRMED {
-                button.setTitle("Close", for: .normal)
+                button.setTitle(.finish, for: .normal)
             } else {
                 button.isHidden = true
                 button.setTitle("", for: .normal)
             }
         }
         else {
-            let title: String = order.status == Order.Status.CREATED ? "Cancel" : ""
+            let title: String = order.status == Order.Status.CREATED ? .cancel : ""
             button.setTitle(title, for: .normal)
             button.isHidden = order.status != Order.Status.CREATED
         }
@@ -198,7 +203,7 @@ extension OrderSummaryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch Sections(rawValue: section) {
         case .GuestComment:
-            if let comment = order.guestComment, !comment.isEmpty { return "Comment" }
+            if let comment = order.guestComment, !comment.isEmpty { return .comment }
             return nil
             default: return nil
         }
@@ -214,12 +219,15 @@ class OrderSummaryItemCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        //contentView.backgroundColor = .BBbackgroundColor
-        //contentView.backgroundColor = .clear
     }
     
-    func draw(item: Order.OrderItem) {
-        itemLabel.text = item.name
+    func draw(item: Order.OrderItem, category: Order.Category) {
+        //if let lang = Locale.current.languageCode, let itemList = String.roomItemsList[lang], category == .RoomItems {
+        if let itemList = String.roomItemsList[guest.lang], category == .RoomItems {
+            itemLabel.text = itemList[item.name]
+        } else {
+            itemLabel.text = item.name
+        }
         priceLabel.text = item.price > 0.0 ? String(format: "$%.02f", item.price) : ""
         countLabel.text = String(item.quantity)
     }

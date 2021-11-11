@@ -44,17 +44,10 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
         super.viewWillAppear(animated)
 
         setupListNavigationBar()
-        
+        title = .food
+
         newRestaurantBarButton.isEnabled = guest.isAdmin() ? true: false
         newRestaurantBarButton.title = guest.isAdmin() ? "New" : ""
-
-/*
-        navigationItem.backButtonTitle = ""
-        navigationController?.setNavigationBarHidden(false, animated: false)
-        navigationController?.hidesBarsOnSwipe = true
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationBar.tintColor = .black
- */
     }
 
     @objc func onRestaurantsUpdated(_ notification: Notification) {

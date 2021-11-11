@@ -12,6 +12,8 @@ struct ChatMessage: Codable {
     var content: String = ""
     var senderID: String = ""
     var senderName: String = ""
+    var translations: [String:String]? = nil
+    var id: String?
 }
 
 struct ChatRoom: Codable {
@@ -24,4 +26,6 @@ struct ChatRoom: Codable {
         self.users = users
     }
 }
+
+//typealias ChatTranslations = [String:String]
 

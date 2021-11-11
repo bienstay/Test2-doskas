@@ -25,10 +25,20 @@ class Guest: Codable {
     var likesPerUser: LikesPerUser = [:]
     var likes: Likes = [:]
 
+    var lang: String {
+        // Locale.current.languageCode returns the phone language only if the app itself is localized
+        // we want to allow translations even if the app's interface is not localized
+        // therefore we use the preferred language
+        let preferredLang = Locale.preferredLanguages.first?.components(separatedBy: "-").first
+        let localeLang = Locale.current.languageCode
+        //print("LANG: \(preferredLang1)   \(preferredLang2)   \(localeLang)")
+        return (preferredLang ?? localeLang ?? "en")
+    }
+
     func isAdmin() -> Bool {
         return roomNumber == 0
     }
-    
+
     func toggleLike(group: String, key: String) {
         if guest.isAdmin() { return }
         let isLiked: Bool = guest.likesPerUser[group]?.contains(key) ?? false
@@ -41,6 +51,18 @@ class Guest: Codable {
         }
         else {
             return likesPerUser[group]?.contains(id) ?? false ? 1 : 0
+        }
+    }
+
+    func updateGuestDataInDB() {
+        if let phoneID: String = UIDevice.current.identifierForVendor?.uuidString, let phoneLang: String = Locale.current.languageCode {
+            FireB.shared.GUESTS_DB_REF.child("/\(id)/phones/\(phoneID)/language").setValue(phoneLang) { (error, ref) in
+                if let error = error {
+                    Log.log(level: .ERROR, "Data could not be saved: \(error).")
+                } else {
+                    Log.log("Data saved successfully!")
+                }
+              }
         }
     }
 
@@ -58,7 +80,8 @@ class Guest: Codable {
         }
         NotificationCenter.default.post(name: .guestUpdated, object: nil)
         FireB.shared.subscribeForUpdates(parameter: .OrderInDB(roomNumber: roomNumber), completionHandler: ordersUpdated)
-        FireB.shared.subscribeForUpdates(parameter: .ChatRoom(id: guest.chatRooms.first!), completionHandler: self.chatMessagesUpdated)
+        FireB.shared.subscribeForUpdates(parameter: .ChatRoom(id: guest.chatRooms.first!), completionHandler: chatMessagesUpdated)
+        //FireB.shared.subscribeForUpdates(parameter: .ChatRoom(id: guest.chatRooms.first!), completionHandler: chatTranslationsUpdated)
 
         if guest.isAdmin() {
             FireB.shared.subscribeForUpdates(completionHandler: likesUpdated)
@@ -100,9 +123,40 @@ class Guest: Codable {
     func chatMessagesUpdated(allChatMessages: [(String, ChatMessage)]) {
         let chatRoomId = self.chatRooms.first!
         chatMessages![chatRoomId] = []
-        allChatMessages.forEach( {chatMessages![chatRoomId]!.append($0.1)})
+        allChatMessages.forEach( {
+            var chatMessage = $0.1
+            chatMessage.id = $0.0
+            chatMessages![chatRoomId]!.append(chatMessage)
+        })
+        chatMessages![chatRoomId]!.sort(by: {$0.created < $1.created})
+/*
+        for m in chatMessages![chatRoomId]! {
+            if m.translations?[guest.lang] == nil {
+                if m.senderID != guest.id {
+                    let lang = guest.lang
+                    print("translating --- \(m.content) --- to \(lang)")
+                    //FireB.shared.translateChat(chatRoom: chatRoomId, chatID: m.id!, textToTranslate: m.content, targetLanguage: lang, completionHandler: { _ in } )
+                }
+            }
+        }
+*/
+        // translate the last message
+        if let m = chatMessages?[chatRoomId]?.last, m.senderID != guest.id {
+            FireB.shared.translateChat(chatRoom: chatRoomId, chatID: m.id!, textToTranslate: m.content, targetLanguage: lang, completionHandler: { _ in } )
+        }
         NotificationCenter.default.post(name: .chatMessagesUpdated, object: nil)
     }
+/*
+    func chatTranslationsUpdated(allChatTranslations: [(String, ChatTranslations)]) {
+        let chatRoomId = self.chatRooms.first!
+        for t in allChatTranslations {
+            let chatId = t.0
+            if let i:Int = chatMessages?[chatRoomId]?.firstIndex(where: { $0.id == chatId  }) {
+                chatMessages?[chatRoomId]?[i].translations = t.1
+            }
+        }
+    }
+*/
 }
 
 var guest = Guest()

@@ -18,6 +18,7 @@ class CreateOrderViewController: UIViewController, UITableViewDataSource {
     @IBOutlet weak var orderSummaryLabel: UILabel!
     @IBOutlet weak var commentField: UITextField!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var roomNumberLabel: UILabel!
     @IBOutlet weak var roomNumberTextField: UITextField!
     @IBOutlet weak var roomNumberStackView: UIStackView!
     @IBOutlet weak var categoryImageView: UIImageView!
@@ -54,7 +55,7 @@ class CreateOrderViewController: UIViewController, UITableViewDataSource {
                 DispatchQueue.main.async {
                     self.completionHandler?()
                     let notificationId = String(self.order.roomNumber) + "_" + String(self.order.number)
-                    prepareNotification(id: notificationId, title: "ORDER", subtitle: String(self.order.number), body: "Your order has been registered!", attachmentFile: "roomOrder")
+                    prepareNotification(id: notificationId, title: .order.capitalized, subtitle: String(self.order.number), body: .created.capitalized, attachmentFile: "RoomService")
                     if let tabBarController = self.tabBarController {
                         self.navigationController?.popToRootViewController(animated: false)
                         tabBarController.selectedIndex = 4
@@ -88,7 +89,6 @@ class CreateOrderViewController: UIViewController, UITableViewDataSource {
         tabBarController?.tabBar.isHidden = true
         activityIndicator.hidesWhenStopped = true
 
-        title = "New order"
         categoryImageView.image = UIImage(named: order.category.rawValue)
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil) //object: self.view.window)
@@ -98,9 +98,13 @@ class CreateOrderViewController: UIViewController, UITableViewDataSource {
         tableView.addGestureRecognizer(t)
         t.cancelsTouchesInView = false
 
+        roomNumberLabel.text = .room
         roomNumberTextField.isEnabled = guest.isAdmin()
         roomNumberTextField.keyboardType = .numberPad
         if !guest.isAdmin() { roomNumberTextField.text = String(guest.roomNumber) }
+
+        commentField.placeholder = .comment
+        sendButton.setTitle(.send, for: .normal)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -108,6 +112,8 @@ class CreateOrderViewController: UIViewController, UITableViewDataSource {
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationController?.navigationBar.tintColor = .black
         navigationController?.hidesBarsOnSwipe = false
+
+        title = .newOrder
     }
 
     @objc func keyboardWillShow(sender: NSNotification) {
@@ -138,7 +144,7 @@ class CreateOrderViewController: UIViewController, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as! CreateOrderItemCell
-        cell.draw(item: order.items[indexPath.row])
+        cell.draw(item: order.items[indexPath.row], category: order.category)
         return cell
     }
 }
@@ -152,8 +158,13 @@ class CreateOrderItemCell: UITableViewCell {
         super.awakeFromNib()
     }
 
-    func draw(item: Order.OrderItem) {
-        itemLabel.text = item.name
+    func draw(item: Order.OrderItem, category: Order.Category) {
+        //if let lang = Locale.current.languageCode, let itemList = String.roomItemsList[lang], category == .RoomItems {
+        if let itemList = String.roomItemsList[guest.lang], category == .RoomItems {
+            itemLabel.text = itemList[item.name]
+        } else {
+            itemLabel.text = item.name
+        }
         priceLabel.text = item.price > 0.0 ? String(format: "$%.02f", item.price) : ""
         countLabel.text = String(item.quantity)
     }

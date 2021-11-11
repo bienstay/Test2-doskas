@@ -79,7 +79,7 @@ class Hotel {
     var infoItems: [InfoItem] = []
     var importantNotes: [InfoItem] = []
     var roomItems: [RoomItem.ItemType : [RoomItem]] = [:]
-    var activities: [String: [Activity]] = [:]
+    var activities: [Int: [Activity]] = [:]
     var translations: [String: Translations] = [:]
 
     func initialize() {
@@ -118,7 +118,9 @@ class Hotel {
                 activity.id = key
                 arr.append(activity)
             }
-            activities[day] = arr.sorted(by: {$0.start.formatTimeShort() < $1.start.formatTimeShort()} )
+            if let index = Activity.DOWIndex(day) {
+                activities[index] = arr.sorted(by: {$0.start.formatTimeShort() < $1.start.formatTimeShort()} )
+            }
         }
         //activities[day] = a.1.map{ var a:Activity = $0.value; a.id = $0.key}.sorted(by: {$0.start < $1.start} )
         NotificationCenter.default.post(name: .activitiesUpdated, object: nil)
@@ -175,7 +177,7 @@ class Hotel {
 
     func translationsUpdated(allTranslations: [(String, Translations)]) {
         for l in allTranslations { translations[l.0] = l.1 }
-        print(translations)
+        //print(translations)
         applyTranslations()
         NotificationCenter.default.post(name: .newsUpdated, object: nil)
         NotificationCenter.default.post(name: .activitiesUpdated, object: nil)
@@ -183,10 +185,12 @@ class Hotel {
     }
 
     func applyTranslations() {
-        // find the preferred language of the device
-        let lang = Locale.preferredLanguages[0].components(separatedBy: "-")[0]
-        
-        if let t = translations[lang] {
+//        guard let lang = Locale.current.languageCode else {
+//            Log.log(level: .ERROR, "languageCode is nil")
+//            return
+//        }
+
+        if let t = translations[guest.lang] {
             for i in 0...news.count-1 {
                 if let nt: [String:String] = t["news"]?[news[i].postId] {
                     if let title = nt["title"] { news[i].title = title }
@@ -195,12 +199,12 @@ class Hotel {
                 }
             }
 
-            activities.forEach { (day: String, da: [Activity]) in
+            activities.forEach { (dayIndex: Int, da: [Activity]) in
                 for i in 0...da.count-1 {
                     if let nt: [String:String] = t["activities"]?[da[i].id ?? ""] {
-                        if let title = nt["title"] { activities[day]?[i].title = title }
-                        if let location = nt["location"] { activities[day]?[i].location = location }
-                        if let text = nt["text"] { activities[day]?[i].text = text }
+                        if let title = nt["title"] { activities[dayIndex]?[i].title = title }
+                        if let location = nt["location"] { activities[dayIndex]?[i].location = location }
+                        if let text = nt["text"] { activities[dayIndex]?[i].text = text }
                     }
                 }
             }

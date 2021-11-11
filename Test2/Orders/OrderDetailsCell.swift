@@ -11,6 +11,7 @@ class OrderDetailsCell: UITableViewCell {
     @IBOutlet weak var statusChangeButton: UIButton!
     @IBOutlet weak var idLabel: UILabel!
     @IBOutlet weak var roomLabel: UILabel!
+    @IBOutlet weak var roomNumberLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
 
     @IBOutlet weak var statusLabel: UILabel!
@@ -28,7 +29,7 @@ class OrderDetailsCell: UITableViewCell {
         super.awakeFromNib()
         contentView.backgroundColor = .BBbackgroundColor
     }
-    
+
     func draw(order: Order) {
         self.order = order
         if guest.isAdmin() {
@@ -45,11 +46,12 @@ class OrderDetailsCell: UITableViewCell {
         else {
             statusChangeButton.isHidden = true
         }
-        
+
         idLabel.text = String(order.number)
-        roomLabel.text = String(order.roomNumber)
-        descriptionLabel.text = order.category.rawValue
-        statusLabel.text = order.status.rawValue
+        roomLabel.text = .room
+        roomNumberLabel.text = String(order.roomNumber)
+        descriptionLabel.text = order.category.toString()
+        statusLabel.text = order.status.toString()
 
         switch order.status {
             case .CREATED: statusLabel.textColor = .red
@@ -65,7 +67,14 @@ class OrderDetailsCell: UITableViewCell {
         itemCountLabel.text = ""
         itemPriceLabel.text = ""
         for item in order.items {
-            itemNameLabel.text?.append(item.name)
+            var s = ""
+            //if let lang = Locale.current.languageCode, let itemList = String.roomItemsList[lang], order.category == .RoomItems {
+            if let itemList = String.roomItemsList[guest.lang], order.category == .RoomItems {
+                s = itemList[item.name] ?? ""
+            } else {
+                s = item.name
+            }
+            itemNameLabel.text?.append(s)
             itemNameLabel.text?.append("\n")
             itemCountLabel.text?.append(String(item.quantity))
             itemCountLabel.text?.append("\n")

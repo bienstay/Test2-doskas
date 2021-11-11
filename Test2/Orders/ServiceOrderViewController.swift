@@ -12,9 +12,10 @@ class ServiceOrderViewController: UIViewController {
     var order: Order = Order(roomNumber: 0, category: .RoomItems)
 
     @IBOutlet weak var sendButton: GlossyButton!
-    @IBOutlet weak var orderSummaryLabel: UILabel!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var roomNumberLabel: UILabel!
     @IBOutlet weak var roomNumberTextField: UITextField!
+    @IBOutlet weak var commentLabel: UILabel!
     @IBOutlet weak var commentTextView: UITextView!
     @IBOutlet weak var backgroundPicture: UIImageView!
 
@@ -57,7 +58,7 @@ class ServiceOrderViewController: UIViewController {
                     DispatchQueue.main.async {
                         self.completionHandler?()
                         let notificationId = String(self.order.roomNumber) + "_" + String(self.order.number)
-                        prepareNotification(id: notificationId, title: "ORDER", subtitle: String(self.order.number), body: "Your order has been registered!", attachmentFile: "roomOrder")
+                        prepareNotification(id: notificationId, title: .order.localizedUppercase, subtitle: String(self.order.number), body: .created.localizedCapitalized, attachmentFile: "RoomService")
                         if let tabBarController = self.tabBarController {
                             self.navigationController?.popToRootViewController(animated: false)
                             tabBarController.selectedIndex = 4
@@ -74,7 +75,7 @@ class ServiceOrderViewController: UIViewController {
         initView()
         tabBarController?.tabBar.isHidden = true
 
-        title = "New " + category.rawValue + " Request"
+        title = category.toString()
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil) //object: self.view.window)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: nil) //object: self.view.window)
@@ -90,6 +91,9 @@ class ServiceOrderViewController: UIViewController {
         backgroundPicture.image = UIImage(named: category.rawValue)
         
         commentTextView.becomeFirstResponder()
+        sendButton.setTitle(.send, for: .normal)
+        commentLabel.text = .description + ":"
+        roomNumberLabel.text = .room
     }
 
     override func viewWillAppear(_ animated: Bool) {

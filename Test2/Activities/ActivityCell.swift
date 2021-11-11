@@ -59,5 +59,6 @@ class ActivityCell: UITableViewCell {
             activityImageView.isHidden = true
             UIView.animate(withDuration: 0.5, delay: 0.0, options: [], animations: {self.layoutIfNeeded()}, completion: {_ in self.setNeedsLayout()})
         }
+        layoutSubviews()
     }
 }

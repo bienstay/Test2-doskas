@@ -33,19 +33,23 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.observer = self.navigationController?.navigationBar.observe(\.bounds, options: [.new], changeHandler: { (navigationBar, changes) in
                 let heightForCollapsedNav = UINavigationController().navigationBar.frame.size.height
                 if let height = changes.newValue?.height {
-                    self.navigationItem.title = height > heightForCollapsedNav ? "Room \(guest.roomNumber)" : "Room \(guest.roomNumber) - \(guest.Name)"
+                    self.navigationItem.title = height > heightForCollapsedNav ? .room + " \(guest.roomNumber)" : .room + " \(guest.roomNumber) - \(guest.Name)"
                 }
             })
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        setupListNavigationBar()
+        navigationController?.navigationBar.prefersLargeTitles = false
 
+/*
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationController?.hidesBarsOnSwipe = false
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationController?.navigationBar.tintColor = .black
-        
+*/
         tabBarController?.tabBar.isHidden = false
     }
 
@@ -54,10 +58,10 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "RoomHeaderCell2", for: indexPath) as! RoomHeaderCell2
-                cell.tapClosure = { category in self.maintenancePressed(category: category) }
-                cell.display(indexPath.row)
-                return cell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "RoomHeaderCell2", for: indexPath) as! RoomHeaderCell2
+        cell.tapClosure = { category in self.maintenancePressed(category: category) }
+        cell.display(indexPath.row)
+        return cell
     }
 
     func maintenancePressed(category: Order.Category) {
@@ -129,19 +133,19 @@ class RoomHeaderCell2: UITableViewCell {
         headerLabel2.text = ""
         switch (row) {
         case 0:
-            headerTitleLabel1.text = "Room Items"
+            headerTitleLabel1.text = .roomItems
             headerImage1.image = UIImage(named: "Room Items")
-            headerTitleLabel2.text = "In-room dining"
+            headerTitleLabel2.text = .roomService
             headerImage2.image = UIImage(named: "In-room dining")
         case 1:
-            headerTitleLabel1.text = "Maintenance"
+            headerTitleLabel1.text = .maintenance
             headerImage1.image = UIImage(named: "Maintenance")
-            headerTitleLabel2.text = "Cleaning"
+            headerTitleLabel2.text = .cleaning
             headerImage2.image = UIImage(named: "Cleaning")
         case 2:
-            headerTitleLabel1.text = "Luggage"
+            headerTitleLabel1.text = .luggageService
             headerImage1.image = UIImage(named: "Luggage")
-            headerTitleLabel2.text = "Buggy"
+            headerTitleLabel2.text = .buggy
             headerImage2.image = UIImage(named: "Buggy")
         default: break
         }

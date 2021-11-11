@@ -14,7 +14,16 @@ class RoomItem: Hashable, Codable {
         case BathAmenities = "Bath Amenities"
         case RoomAmenities = "Room Amenities"
         case RoomConsumables = "Room Consumables"
-        case None = ""
+        case None = "None"
+        func toString() -> String {
+            switch self {
+            case .Toiletries: return .toiletries
+            case .BathAmenities: return .bathAmenities
+            case .RoomAmenities: return .roomAmenities
+            case .RoomConsumables: return .roomConsumables
+            case .None: return ""
+            }
+        }
     }
     static func == (lhs: RoomItem, rhs: RoomItem) -> Bool {
         return lhs.name == rhs.name && lhs.type == rhs.type
@@ -39,6 +48,17 @@ class Order: Codable {
         case Buggy = "Buggy"
         case RoomItems = "Room Items"
         case None = ""
+        func toString() -> String {
+            switch self {
+            case .RoomService: return .roomService
+            case .Maintenance: return .maintenance
+            case .Cleaning: return .cleaning
+            case .LuggageService: return .luggageService
+            case .Buggy: return .buggy
+            case .RoomItems: return .roomItems
+            case .None: return ""
+            }
+        }
     }
 
     struct OrderItem: Codable {
@@ -47,11 +67,27 @@ class Order: Codable {
         var price: Double
     }
 
+/*
     enum Status: String {
         case CREATED  = "Created"
         case CONFIRMED = "Confirmed"
         case DELIVERED = "Delivered"
         case CANCELED = "Canceled"
+    }
+*/
+    enum Status {
+        case CREATED
+        case CONFIRMED
+        case DELIVERED
+        case CANCELED
+        func toString() -> String {
+            switch self {
+            case .CREATED: return .created
+            case .CONFIRMED: return .confirmed
+            case .DELIVERED: return .delivered
+            case .CANCELED: return .canceled
+            }
+        }
     }
 
     var id: String?

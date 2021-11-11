@@ -61,7 +61,7 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
         tabBarController?.tabBar.isHidden = true
         
-        title = restaurant.name
+        title = isRoomService ? .roomService : restaurant.name
         if restaurant.menus.count > 0 { headerLabel.text = restaurant.menus[menuIndex].title }
         resetDisplayData()
         

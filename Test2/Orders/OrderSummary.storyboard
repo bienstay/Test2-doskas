@@ -169,6 +169,7 @@
                         <outlet property="categoryImageView" destination="Bdw-j8-POr" id="hqn-tq-f5G"/>
                         <outlet property="commentField" destination="KFb-1A-2VT" id="uhz-NU-zMV"/>
                         <outlet property="orderSummaryLabel" destination="Ser-Yl-8Fm" id="rvd-aZ-uSW"/>
+                        <outlet property="roomNumberLabel" destination="xhQ-NK-sbb" id="ao2-0a-Hwr"/>
                         <outlet property="roomNumberTextField" destination="vfH-M9-oNn" id="eYp-7i-ROH"/>
                         <outlet property="sendButton" destination="uxa-vM-lLj" id="Qp6-dG-Lln"/>
                         <outlet property="tableView" destination="b1x-uA-kss" id="oS4-2o-KlS"/>
@@ -478,6 +479,7 @@
                         <outlet property="confirmedStackView" destination="DNM-Je-A2n" id="eMp-yP-OU9"/>
                         <outlet property="createdAtLabel" destination="jN6-zU-6rx" id="9xG-NY-vHC"/>
                         <outlet property="createdByLabel" destination="gdc-nA-dlh" id="CfB-Xx-4H7"/>
+                        <outlet property="createdStackView" destination="E3b-jf-bhW" id="4Zr-Ro-WJ7"/>
                         <outlet property="deliveredAtLabel" destination="Cbl-P7-TZS" id="Egr-L2-YVG"/>
                         <outlet property="deliveredByLabel" destination="nTb-Tn-PMQ" id="ilC-Y0-IPG"/>
                         <outlet property="deliveredStackView" destination="eJr-AH-ECw" id="NZf-v2-pfU"/>
@@ -508,13 +510,13 @@
                                         <rect key="frame" x="0.0" y="0.0" width="398" height="34"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Problem description:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W9x-mv-4GP">
-                                                <rect key="frame" x="0.0" y="8.5" width="134" height="17"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                <rect key="frame" x="0.0" y="8.5" width="217" height="17"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Kiq-v3-ZZu">
-                                                <rect key="frame" x="214" y="0.0" width="184" height="34"/>
+                                                <rect key="frame" x="297" y="0.0" width="101" height="34"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Room:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dVL-SK-Q1c" userLabel="Room:">
                                                         <rect key="frame" x="0.0" y="8.5" width="43" height="17"/>
@@ -523,9 +525,9 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter guest's room number" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="09h-HS-YQu">
-                                                        <rect key="frame" x="51" y="0.0" width="133" height="34"/>
+                                                        <rect key="frame" x="51" y="0.0" width="50" height="34"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="Lhn-pv-P5E"/>
+                                                            <constraint firstAttribute="width" constant="50" id="Lhn-pv-P5E"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                                         <textInputTraits key="textInputTraits"/>
@@ -584,7 +586,9 @@
                     <connections>
                         <outlet property="backgroundPicture" destination="bQw-hF-bTF" id="Gqw-Jy-p4Q"/>
                         <outlet property="bottomConstraint" destination="0Ug-E7-Yyo" id="TQ7-i2-juH"/>
+                        <outlet property="commentLabel" destination="W9x-mv-4GP" id="Mc6-hq-6Bv"/>
                         <outlet property="commentTextView" destination="Hsu-Jj-nk5" id="hnZ-cQ-VUn"/>
+                        <outlet property="roomNumberLabel" destination="dVL-SK-Q1c" id="ZKo-jP-eb1"/>
                         <outlet property="roomNumberTextField" destination="09h-HS-YQu" id="W75-cQ-VfD"/>
                         <outlet property="sendButton" destination="5hd-Y2-NSr" id="gmy-X0-2hP"/>
                     </connections>

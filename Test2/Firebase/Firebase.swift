@@ -10,6 +10,7 @@ import Foundation
 import Firebase
 import FirebaseDatabase
 import FirebaseStorage
+import FirebaseFunctions
 
 final class FireB {
     static let shared: FireB = FireB()
@@ -25,6 +26,8 @@ final class FireB {
         case RESTAURANTS
     }
 
+    lazy var functions = Functions.functions()
+
     // MARK: - Firebase Database References
     var BASE_DB_REF: DatabaseReference { Database.database().reference().child("hotels").child(hotel.id) }
     var INFO_DB_REF: DatabaseReference          { BASE_DB_REF }
@@ -38,6 +41,7 @@ final class FireB {
     var LIKESGLOBAL_DB_REF: DatabaseReference   { LIKES_DB_REF.child("global") }
     var LIKESPERUSER_DB_REF: DatabaseReference  { LIKES_DB_REF.child("perUser") }
     var CHAT_MESSAGES_DB_REF: DatabaseReference { BASE_DB_REF.child("chats").child("messages") }
+    var CHAT_TRANSLATIONS_DB_REF: DatabaseReference { BASE_DB_REF.child("chats").child("translations") }
     var TRANSLATIONS_DB_REF: DatabaseReference  { BASE_DB_REF.child("translations") }
 
     // MARK: - Firebase Storage Reference
@@ -67,7 +71,11 @@ final class FireB {
             case is Menu2.Type:
                 return MENUS_DB_REF
             case is ChatMessage.Type:
-                return CHAT_MESSAGES_DB_REF
+                if let child = subNode { return CHAT_MESSAGES_DB_REF.child(child) }
+                else {return CHAT_MESSAGES_DB_REF }
+//            case is ChatTranslations.Type:
+//                if let child = subNode { return CHAT_TRANSLATIONS_DB_REF.child(child) }
+//                else { return CHAT_TRANSLATIONS_DB_REF }
             case is GuestInfo.Type:
                 return GUESTS_DB_REF
             case is LikesPerUserInDB.Type:
@@ -111,6 +119,9 @@ final class FireB {
             case is ChatMessage.Type:
                 guard case .ChatRoom(let chatRoomId) = parameter else { Log.log(errStr); return nil }
                 return dbRef?.child(chatRoomId)
+//            case is ChatTranslations.Type:
+//                guard case .ChatRoom(let chatRoomId) = parameter else { Log.log(errStr); return nil }
+//                return dbRef?.child(chatRoomId)
             default:
                 return dbRef
         }
@@ -187,7 +198,7 @@ final class FireB {
                         Log.log(level: .ERROR, err.localizedDescription)
                         completionHandler(nil)
                     } else {
-                        Log.log(level: .INFO, "Record with key \(String(describing: key)) added to \(dbRef.url.localized)")
+                        Log.log(level: .INFO, "Record with key \(String(describing: key)) added to \(dbRef.url)")
                         completionHandler(record)
                     }
                 }
@@ -228,12 +239,11 @@ final class FireB {
     func subscribeForUpdates<T: Codable>(subNode: String? = nil, start timestamp: Int? = nil, limit: UInt? = nil, parameter: QueryParameter? = nil, completionHandler: @ escaping ([(String, T)]) -> Void) {
         
         guard let query = getQuery(type: T.self, subNode: subNode, parameter: parameter) else { return }
-        Log.log(level: .INFO, "observing " + query.description)
-        print(query.ref.url)
+        Log.log(level: .DEBUG, "observing " + query.description)
         observed.insert(query)
         query.observe(.value, with: { (snapshot) in
             var objects: [(String, T)] = []
-            Log.log(level: .INFO, "adding \(snapshot.children.allObjects.count) new objects of type \(T.self)")
+            Log.log(level: .DEBUG, "adding \(snapshot.children.allObjects.count) new objects of type \(T.self)")
             for item in snapshot.children.allObjects as! [DataSnapshot] {
                 let decoder = JSONDecoder()
                 if JSONSerialization.isValidJSONObject(item.value!) {
@@ -249,7 +259,7 @@ final class FireB {
                     }
                 }
             }
-            Log.log(level: .INFO, "\(objects.count) new objects of type \(T.self) added")
+            Log.log(level: .DEBUG, "\(objects.count) new objects of type \(T.self) added")
 
             completionHandler(objects)
         })
@@ -264,7 +274,7 @@ final class FireB {
     
     func decodeSnapshot<T: Codable>(snapshot: DataSnapshot) -> [(String, T)] {
         var objects: [(String, T)] = []
-        Log.log(level: .INFO, "decoding \(snapshot.children.allObjects.count) new objects of type \(T.self)")
+        Log.log(level: .DEBUG, "decoding \(snapshot.children.allObjects.count) new objects of type \(T.self)")
         for item in snapshot.children.allObjects as! [DataSnapshot] {
             let decoder = JSONDecoder()
             let data = try? JSONSerialization.data(withJSONObject: item.value!)
