@@ -41,6 +41,25 @@ func initDestinationDining() {
     hotel.destinationDining.headline.0 = "Destination Dining"
     hotel.destinationDining.headline.1 = "With its turquoise blue waters, tropical islands and dreamy sunsets, the Maldives have long been an inspiration to many romantics. This overview is a short guide to a curated selection of some of our most popular private culinary journeys on offer."
     hotel.destinationDining.headline.2 = "All packages, unless otherwise stated, are quoted per couple (2 adults) and are inclusive of Service Charge and GST."
+    
+    
+/*
+    hotel.offerGroups = [
+
+        OfferGroup(title: "Early Risers", subTitle: "Sunrise to 11am", offers: [
+            Offer(title: "Sunrise Champagne Breakfast", subTitle: "Choice of venue: Anchorage Beach, Kakuni Beach, In-Villa Dining, Lagoon Dining or In-Pool Dining", imageURL: "DestinationDiningChampagneBreakfast.jpg", price: "$210 per couple", text: "Set the tone to a great day with a curated breakfast experience in the privacy of your own plunge pool or whilst splashing around in the lagoon. Or perhaps a romantic breakfast on the beach is more your style. No matter your preference, we have you covered. Our team is here to ensure you have an unforgettable start to your day in paradise.\nPackage includes:\nChoice of American, Continental or Maldivian\nA bottle of premium champagne (375 ml)"),
+            Offer(title: "HAMACLAND™ Breakfast Cruise", subTitle: "", imageURL: "DestinationDiningLagoonLunch.jpg", price: "$250 per couple", text: "HamacLand™ is an innovative waterbased recreational concept for those who enjoy the unconventional. This private floating island offers you unparalleled views of the natural surroundings with an elevated level of comfort.\nPackage includes:\nChoice of American, Continental or Maldivian style\nA bottle of premium champagne (375 ml)\nA private host")
+        ]),
+        OfferGroup(title: "Sun Lovers", subTitle: "Offered daily from noon to 4pm", offers: [
+            Offer(title: "Lagoon Lunch", subTitle: "12:00 PM Midday to 4:00 PM", imageURL: "DestinationDiningLagoonLunch.jpg", price: "$320 per couple", text: "LAGOON LUNCH\nThe ideal combination of sun & sea. Enjoy a hearty three-course lunch, barefoot in the calm, turquoise blue waters of the lagoon. Feel the water beneath your feet as you feast on sumptuous treats and soak in the scenic views of your natural surroundings.\nPackage includes:\nYour favorite welcome cocktail 3-course meal curated to your preference\nA bottle of selected red, white or sparkling wine\nPrivate host"),
+            Offer(title: "HAMACLAND™ Lunch Cruise", subTitle: "", imageURL: "DestinationDiningLagoonLunch.jpg", price: "$385 per couple", text: "This innovative floating hammock pontoon is suited to those who enjoy the unconventional. This private craft offers you unparalleled views of the natural surroundings with an elevated level of comfort.\nPackage includes:\nYour favorite welcome cocktail\n3-course meal curated to your preference\nA bottle of red, white or sparkling wine\nPrivate host"),
+            Offer(title: "Sandbank Picnic", subTitle: "", imageURL: "DestinationDiningSandbankPicnic.jpg", price: "$1,600 per couple", text: "Quintessentially Maldivian, this iconic experience is by far one of the most popular dining excursions. Often featured on the covers of glossy editorials, this highly personalized trip is known to be the epitome of a true Maldivian vacation. Enjoy spectacular views as you indulge in a generous spread of your favorite dishes.\nPackage includes:\n\nWelcome champagne cocktail\nA tailored 5-course menu created by your very own personal chef\nA bottle of selected red, white or sparkling wine\nPrivate dolphin cruise with champagne & canapés\nPrivate speed boat transfers\nPrivate host"),
+            Offer(title: "Furanafushi Picnic", subTitle: "", imageURL: "DestinationDiningLagoonLunch.jpg", price: "$140 per couple", text: "Spend your afternoon with a long and relaxing picnic in a secluded location on the island, in your room or on one of the lagoon islets.\nPackage includes:\n\nA bottle of selected red, white or sparkling wine\nA picnic basket tailored your preference complete with cutlery, glassware & picnic blanket"),
+            Offer(title: "Cooking Class", subTitle: "", imageURL: "DestinationDiningLagoonLunch.jpg", price: "$295 per couple", text: "Try your hand at cooking up a storm with this interactive cooking class. Choose from Thai, Maldivian or Indian cuisines under the guidance of our experienced culinary team.\nFit for any foodie, package includes:\n\nAn unforgettable ad interactive learning experience\nA bottle of selected red, white or sparkling wine\nAprons with logo and chef’s hat")
+        ]),
+
+    ]
+ */
 }
 
 func initFacilities() {

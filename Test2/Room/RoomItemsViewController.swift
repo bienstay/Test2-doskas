@@ -8,8 +8,8 @@
 import UIKit
 
 
-class OrderShortSummaryView: GlossyView {
-//class OrderShortSummaryView: UIView {
+//class OrderShortSummaryView: GlossyView {
+class OrderShortSummaryView: UIView {
     @IBOutlet private weak var quantityLabel: UILabel!
     @IBOutlet private weak var proceedButton: UIButton!
     private var proceedClosure: (() -> ())? = nil
@@ -18,8 +18,15 @@ class OrderShortSummaryView: GlossyView {
     }
     func setup(proceedClosure: @escaping () -> ()) {
         self.proceedClosure = proceedClosure
+        let sidePadding: CGFloat = 8.0
+        //proceedButton.titleEdgeInsets = UIEdgeInsets(top: 0.0, left: -sidePadding, bottom: 0.0, right: -sidePadding)
+        proceedButton.contentEdgeInsets = UIEdgeInsets(top: 0.0, left: sidePadding, bottom: 0.0, right: sidePadding)
     }
     func configure(quantity: Int) {
+        backgroundColor = .BBreversedCellColor
+        quantityLabel.textColor = .BBreversedTextColor
+        proceedButton.backgroundColor = .BBreversedCellColor
+        proceedButton.setTitleColor(.BBreversedTextColor, for: .normal)
         quantityLabel.text = String(quantity)
         proceedButton.setTitle(.proceed, for: .normal)
         proceedButton.layer.cornerRadius = 5

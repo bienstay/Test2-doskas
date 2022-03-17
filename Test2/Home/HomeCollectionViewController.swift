@@ -6,12 +6,16 @@
 //
 
 import UIKit
+import CoreLocation
 
 private let reuseIdentifier = "Cell"
 
-class HomeCollectionViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+class HomeCollectionViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, CLLocationManagerDelegate {
 
     @IBOutlet var collectionView: UICollectionView!
+    var squareSize: Double = 0.0
+    var locationManager:CLLocationManager!
+
 
     private enum Section: Int, CaseIterable {
         case header = 0
@@ -24,25 +28,24 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         // raw value is the icon name
         case news = "News"
         case activities = "Activities"
+        case offers = "Offers"
         case map = "Map"
-        case watersports = "Watersports"
-        case adoptACoral = "AdoptAcoral"
-        case kidsClub = "KidsClub"
+        //case watersports = "Watersports"
+        //case adoptACoral = "AdoptAcoral"
+        //case kidsClub = "KidsClub"
 
         static func getString(item: Items) -> String {
             switch item {
             case .news: return .news
             case .activities: return .activities
+            case .offers: return .offers
             case .map: return .map
-            case .watersports: return .waterSports
-            case .adoptACoral: return .adoptACoral
-            case .kidsClub: return .kidsClub
+            //case .watersports: return .waterSports
+            //case .adoptACoral: return .adoptACoral
+            //case .kidsClub: return .kidsClub
             }
         }
     }
-
-    //let tempIconNames = ["News", "Activities", "Map", "Watersports", "AdoptAcoral", "KidsClub", "Sugar", "Soap", "022-room key", "033-bucket"]
-    let tempIconColors: [UIColor] = [.color1, .color2, .color3, .lightGray, .color2, .color1, .color3]
 
     var onboardingShown: Bool = false
 
@@ -54,16 +57,31 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         collectionView.delegate = self
 
         NotificationCenter.default.addObserver(self, selector: #selector(onHotelInfoUpdated(_:)), name: .hotelInfoUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onChatMessagesUpdated(_:)), name: .chatMessagesUpdated, object: nil)
 
         tabBarController?.viewControllers?[0].tabBarItem.title = .home
         tabBarController?.viewControllers?[1].tabBarItem.title = .food
         tabBarController?.viewControllers?[2].tabBarItem.title = .room
         tabBarController?.viewControllers?[3].tabBarItem.title = .orders
+
+        if (CLLocationManager.locationServicesEnabled())
+        {
+            locationManager = CLLocationManager()
+            // Ask for Authorisation from the User.
+            self.locationManager.requestAlwaysAuthorization()
+            // For use in foreground
+            self.locationManager.requestWhenInUseAuthorization()
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.startUpdatingLocation()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         collectionView.contentInsetAdjustmentBehavior = .never   // hides the navigation bar
         navigationController?.setNavigationBarHidden(true, animated: false)
+        
+        tabBarController?.tabBar.isHidden = false
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -81,8 +99,29 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         }
     }
 
+    @objc func onChatMessagesUpdated(_ notification: Notification) {
+        DispatchQueue.main.async {
+            self.collectionView.reloadSections([Section.header.rawValue])
+        }
+    }
+
     @objc func didTap(sender: UITapGestureRecognizer) {
         ConfigViewController.showPopup(parentVC: self)
+    }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let location = locations.last! as CLLocation
+        print(location.coordinate.latitude)
+        print(location.coordinate.longitude)
+        let locValue:CLLocationCoordinate2D = manager.location!.coordinate
+        print("locations = \(locValue.latitude) \(locValue.longitude)")
+        guest.currentLocationLatitude = locValue.latitude
+        guest.currentLocationLongitude = locValue.longitude
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        locationManager.stopUpdatingLocation()
+        print(error)
     }
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -103,10 +142,15 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         case .header:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeHeaderCell", for: indexPath) as! HomeHeaderCell
             cell.tapClosure = { ConfigViewController.showPopup(parentVC: self) }
-            cell.draw(imageURL: hotel.image)
+            cell.swipeClosure = { _ = self.pushViewController(storyBoard: "Home", id: "NewHotel") }
+            cell.draw(title:hotel.name, imageURL: hotel.image)
             return cell
         case .title:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeTitleCell", for: indexPath) as! HomeTitleCell
+            cell.tapClosure = {
+                let vc = self.pushViewController(storyBoard: "Home", id: "NewHotel") as! UpdateHotelInfoViewController
+                vc.hotelToEdit = hotel
+            }
             cell.draw(title: hotel.name)
             return cell
         case .items:
@@ -126,21 +170,99 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         case .items:
             let item: Items = Items.allCases[indexPath.row]
             switch item {
-            case .news:         _ = pushOrPresent(storyBoard: "News", id: "News")
-            case .activities:   _ = pushViewController(storyBoard: "Activities", id: "Activities")
-            case .map:          _ = pushViewController(storyBoard: "Map", id: "mapViewController")
-            case .watersports:  _ = pushViewController(storyBoard: "WaterSports", id: "WaterSports")
-            case .adoptACoral:
-                let vc = pushOrPresent(storyBoard: "Info", id: "Info") as! InfoViewController
-                vc.infoItem = hotel.infoItems[0]    // TODO
-            case .kidsClub:     _ = pushViewController(storyBoard: "Activities", id: "Activities")
+                case .news:         _ = pushViewController(storyBoard: "News", id: "News")
+                case .activities:   _ = pushViewController(storyBoard: "Activities", id: "Activities")
+                case .offers:       _ = pushViewController(storyBoard: "Offers", id: "Offers")
+                case .map:          _ = pushViewController(storyBoard: "Map", id: "mapViewController")
+                //case .watersports:  _ = pushViewController(storyBoard: "WaterSports", id: "WaterSports")
+/*
+                case .adoptACoral:
+                    let vc = pushOrPresent(storyBoard: "Info", id: "Info") as! InfoViewController
+                    vc.infoItem = hotel.infoItems[0]    // TODO
+*/
+                    //dbProxy.t1()
+                    //let vc = pushOrPresent(storyBoard: "Info", id: "Info") as! InfoViewController
+                    //vc.infoItem = hotel.infoItems[0]    // TODO
+                    //let net = NetworkStatus.shared
+                    //net.start() // Internet connection monitoring starts
+                    //net.stop() // Internet connection monitoring stops
+                    //let status = net.connType // Returns the connection type
+                    //print(status)
+/*
+                case .kidsClub:
+                    UIApplication.tryURL(urls: [
+                        //"fb://page/?id=ritzcarltonkohsamui" // App
+                        "fb://profile?id=ritzcarltonkohsamui" // App
+                        ,"fb://user?username=ritzcarltonkohsamui" // App
+                        ,"http://www.facebook.com/ritzcarltonkohsamui" // Website if app fails
+                        , "twitter://RitzCarlton"
+                        , "https://twitter.com/RitzCarlton"
+                        , "instagram:/ritzcarltonkohsamui"
+                        , "https://www.instagram.com/ritzcarltonkohsamui"
+                    ])
+
+                case .watersports:
+                    UIApplication.tryURL(urls: [
+                        "instagram://user?username=ritzcarltonkohsamui"
+                        , "https://www.instagram.com/ritzcarltonkohsamui"
+                        ,"https://www.tripadvisor.com/Hotel_Review-g1179396-d12504573-Reviews-The_Ritz_Carlton_Koh_Samui-Bophut_Ko_Samui_Surat_Thani_Province.html"
+                        , "twitter://RitzCarlton"
+                        , "https://twitter.com/RitzCarlton"
+                    ])
+*/
+                //_ = pushViewController(storyBoard: "Activities", id: "Activities")
+                      //Create a picker specifying file type and mode
+//                    let documentPicker = UIDocumentPickerViewController(documentTypes: ["*"], in: .import)
+//                    documentPicker.delegate = self
+//                    documentPicker.allowsMultipleSelection = false
+//                    documentPicker.modalPresentationStyle = .fullScreen
+//                    present(documentPicker, animated: true, completion: nil)
             }
-            default: break
+        default: break
         }
     }
 
     @IBAction func chatButtonPressed(_ sender: UIButton) {
         _ = pushViewController(storyBoard: "Chat", id: "Chat")
+    }
+
+    @IBAction func buggyButtonPressed(_ sender: UIButton) {
+        let vc = pushViewController(storyBoard: "OrderSummary", id: "BuggyOrder") as! BuggyOrderViewController
+        vc.category = Order.Category.Buggy
+    }
+
+    @IBAction func socialButtonPressed(_ sender: UIButton) {
+        switch sender.tag {
+        case 0: UIApplication.tryURL(urls: [
+            hotel.socialURLs["instagram"] ?? "",
+            hotel.socialURLs["instagramweb"] ?? ""
+            //"instagram://user?username=ritzcarltonkohsamui",
+            //"https://www.instagram.com/ritzcarltonkohsamui"
+        ])
+        case 1: UIApplication.tryURL(urls: [
+            hotel.socialURLs["facebook"] ?? "",
+            hotel.socialURLs["facebookweb"] ?? ""
+//            "fb://profile?id=ritzcarltonkohsamui", // App
+//            "https://www.facebook.com/ritzcarltonkohsamui" // Website if app fails
+            ])
+        case 2: UIApplication.tryURL(urls: [
+            hotel.socialURLs["twitter"] ?? "",
+            hotel.socialURLs["twitterweb"] ?? ""
+//            "twitter:///user?screen_name=RitzCarlton",
+//            "https://twitter.com/RitzCarlton"
+            ])
+        case 3: UIApplication.tryURL(urls: [
+            hotel.socialURLs["tripadvisor"] ?? "",
+            hotel.socialURLs["tripadvisorweb"] ?? ""
+            //"https://www.tripadvisor.com/Hotel_Review-g1179396-d12504573-Reviews-The_Ritz_Carlton_Koh_Samui-Bophut_Ko_Samui_Surat_Thani_Province.html"
+        ])
+        case 4: UIApplication.tryURL(urls: [
+            hotel.socialURLs["bonvoy"] ?? "",
+            hotel.socialURLs["bonvoyweb"] ?? ""
+            //"https://www.ritzcarlton.com/en/hotels/koh-samui"
+            ])
+        default: break
+        }
     }
 }
 
@@ -154,7 +276,7 @@ extension HomeCollectionViewController: UICollectionViewDelegateFlowLayout {
             return CGSize(width: collectionView.bounds.width, height: floor(collectionView.bounds.width*3.0/4.0))
         case .title:
             //let h = calculateLabelHeight(s: hotel.name, width: collectionView.bounds.width)
-            return CGSize(width: collectionView.bounds.width, height: 80)
+            return CGSize(width: collectionView.bounds.width, height: 40)
         case .items:
             let width = collectionView.bounds.width
             let numberOfItemsPerRow: CGFloat = 2
@@ -165,11 +287,17 @@ extension HomeCollectionViewController: UICollectionViewDelegateFlowLayout {
             // let hOneLine = calculateLabelHeight(s: "bla", width: itemDimension)
             // let h = calculateLabelHeight(s: Items.allCases[indexPath.row].rawValue, width: itemDimension)
             // return CGSize(width: itemDimension, height: itemDimension - hOneLine + h)
+
             return CGSize(width: itemDimension, height: itemDimension)
         case .none:
             Log.log(level: .ERROR, "Invalid section in sizeFotItemAt")
             return CGSize.zero
         }
+    }
+
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        collectionView.collectionViewLayout.invalidateLayout()  // needed to resize after device rotation
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -201,32 +329,56 @@ extension HomeCollectionViewController: UICollectionViewDelegateFlowLayout {
 class HomeHeaderCell: UICollectionViewCell {
     @IBOutlet weak var picture: UIImageView!
     @IBOutlet weak var chatButton: UIButton!
+    @IBOutlet weak var buggyButton: UIButton!
+    @IBOutlet weak var unreadChatLabel: UILabel!
+    @IBOutlet weak var titleLabel: UILabel!
 
     var tapClosure: (() -> ())? = nil
+    var swipeClosure: (() -> ())? = nil
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        let tap = UITapGestureRecognizer(target: self, action: #selector(didTap))
-        tap.numberOfTapsRequired = 3
-        picture.addGestureRecognizer(tap)
+
         picture.isUserInteractionEnabled = true
+        let tap3 = UITapGestureRecognizer(target: self, action: #selector(didTap))
+        tap3.numberOfTapsRequired = 3
+        picture.addGestureRecognizer(tap3)
+        let swipe = UISwipeGestureRecognizer(target: self, action: #selector(didSwipe))
+        swipe.direction = .right
+        picture.addGestureRecognizer(swipe)
+
         chatButton.backgroundColor = .orange
         chatButton.setBackgroundImage(UIImage(named: "Chat"), for: .normal)
+        unreadChatLabel.layer.cornerRadius = 20
+        unreadChatLabel.layer.masksToBounds = true
+        unreadChatLabel.layer.backgroundColor = UIColor.red.cgColor
+        unreadChatLabel.textAlignment = .center
+        unreadChatLabel.textColor = .white
+
+        buggyButton.backgroundColor = .orange
+        buggyButton.setBackgroundImage(UIImage(named: "buggyIcon2"), for: .normal)
     }
 
     @objc func didTap() {
         tapClosure?()
     }
 
-    func draw(imageURL: String) {
+    @objc func didSwipe() {
+        swipeClosure?()
+    }
+
+    func draw(title: String, imageURL: String) {
         picture.kf.setImage(with: URL(string: imageURL))
+        titleLabel.text = title
+        unreadChatLabel.text = String(guest.unreadChatCount)
+        unreadChatLabel.isHidden = guest.unreadChatCount < 1
     }
 
     // width constrain for ipad is set to 100 but is still 60 in awakeFromNib() and draw()
     override func layoutSubviews() {
         let width = chatButton.frame.width
         chatButton.layer.cornerRadius =  width / 2
+        buggyButton.layer.cornerRadius =  width / 2
     }
 }
 
@@ -234,16 +386,29 @@ class HomeTitleCell: UICollectionViewCell {
 
     @IBOutlet weak var titleLabel: UILabel!
 
+    var tapClosure: (() -> ())? = nil
+
     override func awakeFromNib() {
         super.awakeFromNib()
+/*
+        titleLabel.isUserInteractionEnabled = true
+        let tap3 = UITapGestureRecognizer(target: self, action: #selector(didTap))
+        tap3.numberOfTapsRequired = 3
+        titleLabel.addGestureRecognizer(tap3)
+        
         titleLabel.backgroundColor = .offWhiteVeryLight
         contentView.backgroundColor = .offWhiteVeryLight
         contentView.layer.borderWidth = 1
         contentView.layer.borderColor = UIColor.lightGray.cgColor
+ */
+    }
+
+    @objc func didTap() {
+        tapClosure?()
     }
 
     func draw(title: String) {
-        titleLabel.text = title
+        //titleLabel.text = title
     }
 }
 
@@ -294,6 +459,7 @@ extension String {
     static let map = NSLocalizedString("Map", comment: "Map")
     static let adoptACoral = NSLocalizedString("Adopt a Coral", comment: "Adopt a Coral")
     static let kidsClub = NSLocalizedString("Kids Club", comment: "Kids Club")
+    static let offers = NSLocalizedString("Offers", comment: "Offers")
 }
 
 extension String {
@@ -375,4 +541,19 @@ extension String {
         "Milk" : "Mleko"
     ]
     ]
+}
+
+
+extension HomeCollectionViewController: UIDocumentPickerDelegate {
+    public func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        guard controller.documentPickerMode == .import, let url = urls.first else { return }
+
+        let s =  try! String(contentsOfFile: url.path)
+        print(s)
+        controller.dismiss(animated: true)
+    }
+
+    public func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+        controller.dismiss(animated: true)
+    }
 }

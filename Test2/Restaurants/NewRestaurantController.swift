@@ -119,14 +119,14 @@ class NewRestaurantController: UITableViewController {
         }
         
         if photoUpdated {
-            FireB.shared.uploadImage(image: photoImageView.image!, forLocation: .RESTAURANTS, imageName: restaurant.name) { photoURL in
+            dbProxy.uploadImage(image: photoImageView.image!, forLocation: .RESTAURANTS, imageName: restaurant.name) { photoURL in
                     restaurant.image = photoURL
-                    let errStr = FireB.shared.addRecord(key: restaurant.id, record: restaurant) { restaurant in self.closeMe(restaurant) }
+                    let errStr = dbProxy.addRecord(key: restaurant.id, record: restaurant) { restaurant in self.closeMe(restaurant) }
                     if let s = errStr { Log.log(s) }
                 }
         } else {
             restaurant.image = restaurantToEdit?.image ?? ""
-            let errStr = FireB.shared.addRecord(key: restaurant.id, record: restaurant) { restaurant in self.closeMe(restaurant) }   // update only
+            let errStr = dbProxy.addRecord(key: restaurant.id, record: restaurant) { restaurant in self.closeMe(restaurant) }   // update only
             if let s = errStr { Log.log(s) }
         }
     }

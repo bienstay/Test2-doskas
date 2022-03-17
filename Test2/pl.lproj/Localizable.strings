@@ -1,5 +1,5 @@
 /* Activities */
-"Activities" = "Atrakcje";
+"Activities" = "Zajęcia";
 
 /* Adopt a Coral */
 "Adopt a Coral" = "Zaadoptuj Koral";
@@ -90,6 +90,12 @@
 
 /* No */
 "No" = "Nie";
+
+/* Offers and Promotions */
+"Offers and Promotions" = "Oferty i Promocje";
+
+/* Offers */
+"Offers" = "Oferty";
 
 /* OK */
 "OK" = "OK";

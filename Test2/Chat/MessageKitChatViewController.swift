@@ -40,8 +40,8 @@ struct Message: MessageType {
             let tAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.red, .font: UIFont.systemFont(ofSize: 16)]
             let tText = NSAttributedString(string: "\n" + t, attributes: tAttributes)
             orgText.append(tText)
-        } else if senderId == guest.id, let translations = translations {
-        // show what the receiver had seen
+        } else if senderId == guest.id, guest.isAdmin(), let translations = translations {
+        // show what the receiver(s) had seen if you are an admin
             for t in translations.values {
                 if t != text {
                     let tAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.purple, .font: UIFont.systemFont(ofSize: 16)]
@@ -99,24 +99,15 @@ class MessageKitChatViewController: MessagesViewController {
         if let msgs = guest.chatMessages?[chatRoomId] {
             for m in msgs {
                 messages.append(Message(senderId: m.senderID, senderName: m.senderName, text: m.content, messageId: m.id!, timestamp: m.created, translations: m.translations))
+                if !(m.read ?? false) { dbProxy.markChatAsRead(chatRoom: chatRoomId, chatID: m.id!) }
             }
             messages.sort(by: {$0.sentDate < $1.sentDate})
-/*
-            if let last = messages.last, last.translations?[guest.lang] == nil {
-                if last.senderId != guest.id {
-                    //let lang = guest.isAdmin() ? "en" : guest.lang
-                    let lang = guest.lang
-                    FireB.shared.translateChat(chatRoom: chatRoomId, chatID: last.messageId, textToTranslate: last.text, targetLanguage: lang, completionHandler: { _ in } )
-                }
-            }
-*/
         }
     }
     
     func configure() {
         messageInputBar.contentView.backgroundColor = .darkGray
         messageInputBar.inputTextView.textColor = .white
-        //messageInputBar.inputTextView.layer.borderWidth = 1.0
         messageInputBar.inputTextView.layer.cornerRadius = 16.0
         messageInputBar.inputTextView.layer.masksToBounds = true
         
@@ -176,7 +167,7 @@ extension MessageKitChatViewController: MessagesDisplayDelegate {
 extension MessageKitChatViewController: InputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
         let newChatMessage = ChatMessage(created: Date(), content: text, senderID: guest.id, senderName: guest.Name)
-        _ = FireB.shared.addRecord(subNode: chatRoomId, record: newChatMessage) { _ in }
+        _ = dbProxy.addRecord(key: nil, subNode: chatRoomId, record: newChatMessage) { _ in }
         inputBar.inputTextView.text = ""
     }
 }

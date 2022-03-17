@@ -93,7 +93,7 @@ class NewActivityViewController: UITableViewController {
         activity.imageFileURL = ""
 
         if photoUpdated {
-            FireB.shared.uploadImage(image: activityImageView.image!, forLocation: .ACTIVITIES, imageName: activity.title) { photoURL in
+            dbProxy.uploadImage(image: activityImageView.image!, forLocation: .ACTIVITIES, imageName: activity.title) { photoURL in
                 activity.imageFileURL = photoURL
                 self.updateArrayAndDB(activity: activity, dow: dow.rawValue)
             }
@@ -107,7 +107,7 @@ class NewActivityViewController: UITableViewController {
     }
 
     func updateArrayAndDB(activity: Activity, dow: String) {
-        let errStr = FireB.shared.addRecord(key: activity.id, subNode: dow, record: activity) { activity in self.closeMe(activity) }
+        let errStr = dbProxy.addRecord(key: activity.id, subNode: dow, record: activity) { activity in self.closeMe(activity) }
         if let s = errStr { Log.log(s) }
     }
 

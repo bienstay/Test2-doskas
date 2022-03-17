@@ -17,13 +17,17 @@ class GuestInfo: Codable {
 class Guest: Codable {
     var id: String = "MacsMaciulek" // default guest
     var Name = ""
-    var roomNumber = -1
+    var roomNumber = 0
     var orders: [Order] = []
     var activeOrders: [Order] = []
     var chatRooms: [String] = []
     var chatMessages: [String:[ChatMessage]]? = [:]
+    var unreadChatCount: Int = 0
     var likesPerUser: LikesPerUser = [:]
     var likes: Likes = [:]
+
+    var currentLocationLongitude: Double = 0.0
+    var currentLocationLatitude: Double = 0.0
 
     var lang: String {
         // Locale.current.languageCode returns the phone language only if the app itself is localized
@@ -42,7 +46,7 @@ class Guest: Codable {
     func toggleLike(group: String, key: String) {
         if guest.isAdmin() { return }
         let isLiked: Bool = guest.likesPerUser[group]?.contains(key) ?? false
-        FireB.shared.updateLike(node: group, key: key, user: guest.id, add: !isLiked)
+        dbProxy.updateLike(node: group, key: key, user: guest.id, add: !isLiked)
     }
 
     func numLikes(group:String, id:String) -> Int {
@@ -56,20 +60,21 @@ class Guest: Codable {
 
     func updateGuestDataInDB() {
         if let phoneID: String = UIDevice.current.identifierForVendor?.uuidString, let phoneLang: String = Locale.current.languageCode {
-            FireB.shared.GUESTS_DB_REF.child("/\(id)/phones/\(phoneID)/language").setValue(phoneLang) { (error, ref) in
+            dbProxy.updateGuestDataInDB(guestId: id, phoneID: phoneID, phoneLang: phoneLang)
+    /*
+            dbProxy.GUESTS_DB_REF.child("/\(id)/phones/\(phoneID)/language").setValue(phoneLang) { (error, ref) in
                 if let error = error {
-                    Log.log(level: .ERROR, "Data could not be saved: \(error).")
-                } else {
-                    Log.log("Data saved successfully!")
+                    Log.log(level: .ERROR, "Data could not be saved: \(error)")
                 }
               }
+     */
         }
     }
 
     func startObserving() {
-        FireB.shared.subscribeForUpdates(parameter: .GuestInfo(id: self.id), completionHandler: guestUpdated)
+        dbProxy.subscribeForUpdates(parameter: .GuestInfo(id: self.id), completionHandler: guestUpdated)
 
-        FireB.shared.observeOrderChanges()
+        dbProxy.observeOrderChanges()
     }
 
     func guestUpdated(allGuests: [(String, GuestInfo)]) {
@@ -79,14 +84,16 @@ class Guest: Codable {
             self.chatRooms = g.1.chatRooms.keys.map({$0})
         }
         NotificationCenter.default.post(name: .guestUpdated, object: nil)
-        FireB.shared.subscribeForUpdates(parameter: .OrderInDB(roomNumber: roomNumber), completionHandler: ordersUpdated)
-        FireB.shared.subscribeForUpdates(parameter: .ChatRoom(id: guest.chatRooms.first!), completionHandler: chatMessagesUpdated)
-        //FireB.shared.subscribeForUpdates(parameter: .ChatRoom(id: guest.chatRooms.first!), completionHandler: chatTranslationsUpdated)
+        dbProxy.subscribeForUpdates(parameter: .OrderInDB(roomNumber: roomNumber), completionHandler: ordersUpdated)
+        if let chatRoom = guest.chatRooms.first {
+            dbProxy.subscribeForUpdates(parameter: .ChatRoom(id: chatRoom), completionHandler: chatMessagesUpdated)
+        //dbProxy.subscribeForUpdates(parameter: .ChatRoom(id: guest.chatRooms.first!), completionHandler: chatTranslationsUpdated)
+        }
 
         if guest.isAdmin() {
-            FireB.shared.subscribeForUpdates(completionHandler: likesUpdated)
+            dbProxy.subscribeForUpdates(completionHandler: likesUpdated)
         } else {
-            FireB.shared.subscribeForUpdates(subNode: guest.id, completionHandler: likesPerUserUpdated)
+            dbProxy.subscribeForUpdates(subNode: guest.id, parameter: nil, completionHandler: likesPerUserUpdated)
         }
     }
 
@@ -123,9 +130,11 @@ class Guest: Codable {
     func chatMessagesUpdated(allChatMessages: [(String, ChatMessage)]) {
         let chatRoomId = self.chatRooms.first!
         chatMessages![chatRoomId] = []
+        unreadChatCount = 0
         allChatMessages.forEach( {
             var chatMessage = $0.1
             chatMessage.id = $0.0
+            if !(chatMessage.read ?? false) { unreadChatCount += 1 }
             chatMessages![chatRoomId]!.append(chatMessage)
         })
         chatMessages![chatRoomId]!.sort(by: {$0.created < $1.created})
@@ -135,28 +144,17 @@ class Guest: Codable {
                 if m.senderID != guest.id {
                     let lang = guest.lang
                     print("translating --- \(m.content) --- to \(lang)")
-                    //FireB.shared.translateChat(chatRoom: chatRoomId, chatID: m.id!, textToTranslate: m.content, targetLanguage: lang, completionHandler: { _ in } )
+                    //dbProxy.translateChat(chatRoom: chatRoomId, chatID: m.id!, textToTranslate: m.content, targetLanguage: lang, completionHandler: { _ in } )
                 }
             }
         }
 */
         // translate the last message
         if let m = chatMessages?[chatRoomId]?.last, m.senderID != guest.id {
-            FireB.shared.translateChat(chatRoom: chatRoomId, chatID: m.id!, textToTranslate: m.content, targetLanguage: lang, completionHandler: { _ in } )
+            dbProxy.translateChat(chatRoom: chatRoomId, chatID: m.id!, textToTranslate: m.content, targetLanguage: lang, completionHandler: { _ in } )
         }
         NotificationCenter.default.post(name: .chatMessagesUpdated, object: nil)
     }
-/*
-    func chatTranslationsUpdated(allChatTranslations: [(String, ChatTranslations)]) {
-        let chatRoomId = self.chatRooms.first!
-        for t in allChatTranslations {
-            let chatId = t.0
-            if let i:Int = chatMessages?[chatRoomId]?.firstIndex(where: { $0.id == chatId  }) {
-                chatMessages?[chatRoomId]?[i].translations = t.1
-            }
-        }
-    }
-*/
 }
 
 var guest = Guest()

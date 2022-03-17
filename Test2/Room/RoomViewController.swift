@@ -44,12 +44,6 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
         setupListNavigationBar()
         navigationController?.navigationBar.prefersLargeTitles = false
 
-/*
-        navigationController?.setNavigationBarHidden(false, animated: true)
-        navigationController?.hidesBarsOnSwipe = false
-        navigationController?.navigationBar.prefersLargeTitles = false
-        navigationController?.navigationBar.tintColor = .black
-*/
         tabBarController?.tabBar.isHidden = false
     }
 
@@ -66,7 +60,10 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     func maintenancePressed(category: Order.Category) {
         switch (category) {
-        case .Cleaning, .Maintenance, .LuggageService, .Buggy:
+        case .Buggy:
+            let vc = pushViewController(storyBoard: "OrderSummary", id: "BuggyOrder") as! BuggyOrderViewController
+            vc.category = category
+        case .Cleaning, .Maintenance, .LuggageService:
             let vc = pushViewController(storyBoard: "OrderSummary", id: "MaintenanceOrder") as! ServiceOrderViewController
             vc.category = category
         case .RoomItems:

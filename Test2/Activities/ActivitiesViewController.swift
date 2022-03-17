@@ -135,7 +135,7 @@ extension ActivitiesViewController: UITableViewDelegate {
         if !guest.isAdmin() { return nil }
         let action1 = UIContextualAction(style: .destructive, title: "Delete") { action, view, completionHandler in
             if let activity = hotel.activities[self.dowIndex]?[indexPath.row] {
-                _ = FireB.shared.removeRecord(key: activity.id!, subNode: self.title, record: activity) { _ in
+                _ = dbProxy.removeRecord(key: activity.id!, subNode: self.title, record: activity) { _ in
                 }
             }
             completionHandler(true)

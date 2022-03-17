@@ -155,7 +155,7 @@
                                                             </subviews>
                                                         </stackView>
                                                     </subviews>
-                                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstItem="ub3-na-SOg" firstAttribute="leading" secondItem="mt3-Oi-gRp" secondAttribute="leading" constant="8" id="8xc-S9-fKd"/>
                                                         <constraint firstAttribute="bottom" secondItem="ub3-na-SOg" secondAttribute="bottom" id="JkE-SZ-f1T"/>
@@ -173,6 +173,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="descriptionLabel" destination="Cst-DA-fXb" id="6ff-w5-zeF"/>
+                                            <outlet property="glossyView" destination="mt3-Oi-gRp" id="k40-qH-c7s"/>
                                             <outlet property="idLabel" destination="UhH-I6-I2L" id="exL-gI-2m5"/>
                                             <outlet property="itemCountLabel" destination="43N-np-hlr" id="JZX-UL-cJD"/>
                                             <outlet property="itemNameLabel" destination="VSK-7f-ddA" id="3hg-kg-ofa"/>

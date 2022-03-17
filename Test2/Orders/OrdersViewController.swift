@@ -30,6 +30,11 @@ class OrdersViewController: UIViewController, UITableViewDataSource {
         tabBarController?.tabBar.isHidden = false
     }
 
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        tableView.reloadData()
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if showActiveOnly { return guest.activeOrders.count }
         else { return guest.orders.count }

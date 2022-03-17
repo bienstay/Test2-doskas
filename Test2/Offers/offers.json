@@ -1,0 +1,132 @@
+
+[
+   {
+      "title":"Early Risers",
+      "subTitle":"Sunrise to 11am",
+      "offers":[
+         {
+            "title":"Sunrise Champagne Breakfast",
+            "subTitle":"Choice of venue: Anchorage Beach, Kakuni Beach, In-Villa Dining, Lagoon Dining or In-Pool Dining",
+            "text":"Set the tone to a great day with a curated breakfast experience in the privacy of your own plunge pool or whilst splashing around in the lagoon. Or perhaps a romantic breakfast on the beach is more your style. No matter your preference, we have you covered. Our team is here to ensure you have an unforgettable start to your day in paradise.\nPackage includes:\nChoice of American, Continental or Maldivian\nA bottle of premium champagne (375 ml)",
+            "price":"$210 per couple",
+            "imageURL":"DestinationDiningChampagneBreakfast.jpg"
+         },
+         {
+            "title":"HAMACLAND™ BREAKFAST CRUISE",
+            "subTitle":"",
+            "text":"HamacLand™ is an innovative waterbased recreational concept for those who enjoy the unconventional. This private floating island offers you unparalleled views of the natural surroundings with an elevated level of comfort.\nPackage includes:\nChoice of American, Continental or Maldivian style\nA bottle of premium champagne (375 ml)\nA private host",
+            "price":"$250 per couple",
+            "imageURL":"DestinationDiningLagoonLunch.jpg"
+         }
+      ]
+   },
+   {
+      "title":"Sun Lovers",
+      "subTitle":"Offered daily from noon to 4pm",
+      "offers":[
+         {
+            "title":"Lagoon Lunch",
+            "subTitle":"12:00 PM Midday to 4:00 PM",
+            "text":"LAGOON LUNCH\nThe ideal combination of sun & sea. Enjoy a hearty three-course lunch, barefoot in the calm, turquoise blue waters of the lagoon. Feel the water beneath your feet as you feast on sumptuous treats and soak in the scenic views of your natural surroundings.\nPackage includes:\nYour favorite welcome cocktail 3-course meal curated to your preference\nA bottle of selected red, white or sparkling wine\nPrivate host",
+            "price":"$320 per couple",
+            "imageURL":"DestinationDiningLagoonLunch.jpg"
+         },
+         {
+            "title":"HAMACLAND™ LUNCH CRUISE",
+            "subTitle":"",
+            "text":"This innovative floating hammock pontoon is suited to those who enjoy the unconventional. This private craft offers you unparalleled views of the natural surroundings with an elevated level of comfort.\nPackage includes:\nYour favorite welcome cocktail\n3-course meal curated to your preference\nA bottle of red, white or sparkling wine\nPrivate host",
+            "price":"$385 per couple",
+            "imageURL":"DestinationDiningLagoonLunch.jpg"
+         },
+         {
+            "title":"Sandbank Picnic",
+            "subTitle":"",
+            "text":"Quintessentially Maldivian, this iconic experience is by far one of the most popular dining excursions. Often featured on the covers of glossy editorials, this highly personalized trip is known to be the epitome of a true Maldivian vacation. Enjoy spectacular views as you indulge in a generous spread of your favorite dishes.\nPackage includes:\n\nWelcome champagne cocktail\nA tailored 5-course menu created by your very own personal chef\nA bottle of selected red, white or sparkling wine\nPrivate dolphin cruise with champagne & canapés\nPrivate speed boat transfers\nPrivate host",
+            "price":"$1,600 per couple",
+            "imageURL":"DestinationDiningSandbankPicnic.jpg"
+         },
+         {
+            "title":"FURANAFUSHI PICNIC",
+            "subTitle":"",
+            "text":"Spend your afternoon with a long and relaxing picnic in a secluded location on the island, in your room or on one of the lagoon islets.\nPackage includes:\n\nA bottle of selected red, white or sparkling wine\nA picnic basket tailored your preference complete with cutlery, glassware & picnic blanket",
+            "price":"$140 per couple",
+            "imageURL":"DestinationDiningLagoonLunch.jpg"
+         },
+         {
+            "title":"COOKING CLASS",
+            "subTitle":"",
+            "text":"Try your hand at cooking up a storm with this interactive cooking class. Choose from Thai, Maldivian or Indian cuisines under the guidance of our experienced culinary team.\nFit for any foodie, package includes:\n\nAn unforgettable ad interactive learning experience\nA bottle of selected red, white or sparkling wine\nAprons with logo and chef’s hat",
+            "price":"$295 per couple",
+            "imageURL":"DestinationDiningLagoonLunch.jpg"
+         }
+      ]
+   },
+   {
+      "title":"Romantics",
+      "subTitle":"Available every day from 4pm to 11pm",
+      "offers":[
+         {
+            "title":"BUBBLY SUNSET ROMANCE",
+            "subTitle":"",
+            "text":"This innovative floating hammock pontoon is suited to those who enjoy the unconventional. This private craft offers you unparalleled views of the natural surroundings with an elevated level of comfort.\n\nPackage includes:\n\nCruising the lagoon over sunset\nChoice of selected hot and cold canapés\nA bottle of selected red, white or sparkling wine\nFruit platter\nPrivate host",
+            "price":"#310 per couple",
+            "imageURL":"DestinationDiningLagoonLunch.jpg"
+         },
+         {
+            "title":"COCKTAIL MASTERCLASS",
+            "subTitle":"",
+            "text":"In this invigorating masterclass, our experienced bartenders will share tips & tricks to creating sumptuous cocktails. A party hit for any occasion.\n\nPackage includes:\n\nSignature Sheraton cocktail recipes\nFun and interactive learnings\nExperienced mixologist",
+            "price":"$60 per person",
+            "imageURL":"DestinationDiningLagoonLunch.jpg"
+         },
+         {
+            "title":"DEGUSTATION DINNER",
+            "subTitle":"",
+            "text":"A sumptuous 5-course dinner, tailored to your preferences and served in the Sea Salt pavilion, overlooking the lagoon.\n\nPackage includes:\nA curated 5-course meal\nPaired premium wines with each course",
+            "price":"$400 per couple",
+            "imageURL":"DestinationDiningLagoonLunch.jpg"
+         },
+         {
+            "title":"DINNER OF DREAMS",
+            "subTitle":"",
+            "text":"The ultimate setting for an unforgettable evening. On the beach, surrounded by the scenic beauty of the Maldives, this setting sets the tone for a truly special occasion. Complete with a private serenade by a dedicated musician and a professional photographer to capture every moment.\n\nPackage includes:\n\nA bottle of premium champagne\nSelected hot and cold canapés\nA personalized 5-course dinner\nA bottle of selected red, white or sparkling wine\nPrivate musician to serenade you throughout dinner\nProfessional photographer to capture the evening’s special moments\nIn-Villa or beachside breakfast the following day\nRomantic bed decoration, complete with fruit platter and Baileys\nPrivate host",
+            "price":"$1,250 per couple",
+            "imageURL":"DestinationDiningLagoonLunch.jpg"
+         },
+         {
+            "title":"ORIENTAL NIGHT",
+            "subTitle":"",
+            "text":"A magical evening under the stars! Set on the beach, in true Ottoman fashion, this evening blends an Arabian themed setting with an Asian inspired menu.\n\nPackage includes:\n\nAsian inspired canapés & entrees\nPersonalized 5-course menu\nA bottle of selected red, white or sparkling wine\nShisha with your choice of tobacco flavor",
+            "price":"$550 per couple",
+            "imageURL":"DestinationDiningLagoonLunch.jpg"
+         },
+         {
+            "title":"Bubbles Under The Stars",
+            "subTitle":"",
+            "text":"As romantic as it gets! A spectacular beach setting with a fabulous champagne dinner, culminating with a champagne breakfast in the comfort of your room or beachside for those early risers.\n\nPackage includes:\n\nA bottle of premium champagne\nSelected hot and cold canapés\nYour selection of a Thai, Mediterranean,\nMaldivian, Vegetarian or Asian\n5-course menu\nRomantic beach setting\nIn-villa or beachside champagne breakfast the following day\nBed decorations, complete with fruit platter and Baileys\nPrivate host ",
+            "price":"$580 per couple",
+            "imageURL":"DestinationDiningBubblesUnderTheStars.jpg"
+         }
+      ]
+   },
+   {
+      "title":"Other",
+      "subTitle":"",
+      "offers":[
+         {
+            "title":"Private Events",
+            "subTitle":"",
+            "text":"Want to host your own private event? Check out our multi-purpose venue Jalsaa, equipped with a private pool and garden",
+            "price":"",
+            "imageURL":"DestinationDiningPrivateEvents.jpg"
+         },
+         {
+            "title":"Curated Experiences",
+            "subTitle":"",
+            "text":"Have your own vision on what the perfect setting should look like? Let us know. We are here to help create unforgettable moments",
+            "price":"",
+            "imageURL":"DestinationDiningCuratedExperiences.jpg"
+         }
+      ]
+   }
+]

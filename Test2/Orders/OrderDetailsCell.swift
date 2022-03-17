@@ -18,6 +18,7 @@ class OrderDetailsCell: UITableViewCell {
     @IBOutlet weak var timeLabel: UILabel!
 
     @IBOutlet weak var separatorView: UIView!
+    @IBOutlet weak var glossyView: UIView!
 
     @IBOutlet weak var itemNameLabel: UILabel!
     @IBOutlet weak var itemCountLabel: UILabel!
@@ -27,10 +28,13 @@ class OrderDetailsCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        contentView.backgroundColor = .BBbackgroundColor
+        //contentView.backgroundColor = .BBbackgroundColor
+        backgroundColor = .clear
+        selectionStyle = .none
     }
 
     func draw(order: Order) {
+        glossyView.setNeedsDisplay()
         self.order = order
         if guest.isAdmin() {
             statusChangeButton.isHidden = false
@@ -86,10 +90,10 @@ class OrderDetailsCell: UITableViewCell {
 
     @IBAction func statusChangePressed(_ sender: Any) {
         if order?.status == Order.Status.CREATED {
-            FireB.shared.updateOrderStatus(orderId: order!.id!, newStatus: .CONFIRMED, confirmedBy: guest.Name)
+            dbProxy.updateOrderStatus(orderId: order!.id!, newStatus: .CONFIRMED, confirmedBy: guest.Name)
         } else
         if order?.status == Order.Status.CONFIRMED {
-            FireB.shared.updateOrderStatus(orderId: order!.id!, newStatus: .DELIVERED, deliveredBy: guest.Name)
+            dbProxy.updateOrderStatus(orderId: order!.id!, newStatus: .DELIVERED, deliveredBy: guest.Name)
         }
     }
 }

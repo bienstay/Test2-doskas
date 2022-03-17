@@ -50,7 +50,7 @@ class ServiceOrderViewController: UIViewController {
         }
 
         let orderInDB = OrderInDB(order: order, roomNumber: roomNumber)
-        let errStr = FireB.shared.addRecord(record: orderInDB) { record in
+        let errStr = dbProxy.addRecord(record: orderInDB) { record in
             if record == nil {
                 showInfoDialogBox(vc: self, title: "Error", message: "Order update failed")
             } else {
@@ -75,8 +75,6 @@ class ServiceOrderViewController: UIViewController {
         initView()
         tabBarController?.tabBar.isHidden = true
 
-        title = category.toString()
-
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil) //object: self.view.window)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: nil) //object: self.view.window)
 
@@ -90,6 +88,8 @@ class ServiceOrderViewController: UIViewController {
 
         backgroundPicture.image = UIImage(named: category.rawValue)
         
+        commentTextView.layer.borderColor = UIColor.BBseparatorColor.cgColor
+        commentTextView.layer.borderWidth = 1
         commentTextView.becomeFirstResponder()
         sendButton.setTitle(.send, for: .normal)
         commentLabel.text = .description + ":"
@@ -97,10 +97,8 @@ class ServiceOrderViewController: UIViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        navigationController?.setNavigationBarHidden(false, animated: true)
-        navigationController?.navigationBar.prefersLargeTitles = false
-        navigationController?.navigationBar.tintColor = .black
-        navigationController?.hidesBarsOnSwipe = false
+        setupListNavigationBar(largeTitle: false)
+        title = category.toString()
     }
 
     @objc func keyboardWillShow(sender: NSNotification) {

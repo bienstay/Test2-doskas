@@ -63,14 +63,15 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
 
     // section 0 is for restaurants, section 1 is for destination dining
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2    // restaurants and destination dining
+        return 1    // restaurants and destination dining
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section : Int) -> Int {
         switch section {
         case 0: return hotel.restaurants.count
         //default: return 1   // 1 row with destination dining collection view in section 1
-        default: return hotel.destinationDining.groups.count
+        //default: return hotel.destinationDining.groups.count
+        default: return 0
         }
     }
 
@@ -94,12 +95,16 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
             //cell.accessoryType = restaurant.isFavorite ? .checkmark : .none
             return cell
         default:
+            return UITableViewCell()
+/*
+        default:
             // collection view inside the cell
             let cell = tableView.dequeueReusableCell(withIdentifier: "DestinationDiningCell", for: indexPath) as! RestaurantDestinationDiningCell
             cell.groupTitleLabel.text = hotel.destinationDining.groups[indexPath.row].title
             cell.groupSubLabel.text = hotel.destinationDining.groups[indexPath.row].description
             cell.setCollectionViewDataSourceDelegate(dataSourceDelegate: self, forRow: indexPath.row)
             return cell
+*/
         }
     }
 
@@ -156,7 +161,7 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
     }
 
     func deleteRestaurant(restaurant: Restaurant) {
-        let errStr = FireB.shared.removeRecord(key: restaurant.id!, record: restaurant) { record in
+        let errStr = dbProxy.removeRecord(key: restaurant.id!, record: restaurant) { record in
             if record == nil {
                 showInfoDialogBox(vc: self, title: "Error", message: "Restaurant delete failed")
             } else {

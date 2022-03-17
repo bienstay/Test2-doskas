@@ -14,6 +14,7 @@ struct ChatMessage: Codable {
     var senderName: String = ""
     var translations: [String:String]? = nil
     var id: String?
+    var read: Bool?
 }
 
 struct ChatRoom: Codable {

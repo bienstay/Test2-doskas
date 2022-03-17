@@ -8,12 +8,12 @@
 import UIKit
 
 extension UIView {
-    var glossy_radius: CGFloat { frame.width/40.0 }
-    //private var glossy_bgColor:CGColor { UIColor.white.cgColor }
-    //private var glossy_bgColor:CGColor { UIColor.offWhiteVeryLight.cgColor }
-    @objc func glossy_bgColor() -> CGColor { return UIColor.offWhiteVeryLight.cgColor }
-    //private var glossy_bgColor:CGColor { UIColor.offWhite.cgColor }
-    //private var glossy_shadowRadius: CGFloat { 10 }
+    @objc var glossy_radius: CGFloat { frame.width/40.0 }
+
+    @objc func glossy_bgColor() -> CGColor { return UIColor.BBcellColor.cgColor }
+    @objc func glossy_shadowColor() -> CGColor { return UIColor.black.cgColor }
+    @objc func glossy_offset() -> CGSize { return CGSize(width: 5, height: 5) }
+
     private var glossy_shadowRadius: CGFloat { 5 }
 
     @objc func glossy_isDown() -> Bool { return false }
@@ -24,7 +24,8 @@ extension UIView {
         layer.masksToBounds = false
         layer.frame = layer.bounds
 
-        [CAShapeLayer(), CAShapeLayer()].forEach {
+        //[CAShapeLayer(), CAShapeLayer()].forEach {
+        [CAShapeLayer()].forEach {
             $0.backgroundColor = glossy_bgColor()
             $0.cornerRadius = glossy_radius
             $0.shadowRadius = glossy_shadowRadius
@@ -37,32 +38,30 @@ extension UIView {
     }
 
     func glossy_setupShadows() {
+        layer.backgroundColor = glossy_bgColor()
         let glossy_bottomShadowLayer = layer.sublayers![0]
-        let glossy_topShadowLayer = layer.sublayers![1]
+//        let glossy_topShadowLayer = layer.sublayers![1]
 
-        glossy_bottomShadowLayer.shadowColor = UIColor.black.cgColor
-        glossy_bottomShadowLayer.shadowOpacity = 0.2
+        glossy_bottomShadowLayer.shadowColor = glossy_shadowColor()
+        glossy_bottomShadowLayer.shadowOpacity = 0.5
         glossy_bottomShadowLayer.shadowPath = UIBezierPath(rect: bounds).cgPath
         glossy_bottomShadowLayer.frame = layer.bounds
 
-        glossy_topShadowLayer.shadowColor = UIColor.black.cgColor
-        //glossy_topShadowLayer.shadowOpacity = 0.3
-        glossy_topShadowLayer.shadowOpacity = 0.3
-        glossy_topShadowLayer.shadowPath = UIBezierPath(rect: bounds).cgPath
-        glossy_topShadowLayer.frame = layer.bounds
+//        glossy_topShadowLayer.shadowColor = glossy_shadowColor()
+//        glossy_topShadowLayer.shadowOpacity = 0.2
+//        glossy_topShadowLayer.shadowPath = UIBezierPath(rect: bounds).cgPath
+//        glossy_topShadowLayer.frame = layer.bounds
 
         glossy_bottomShadowLayer.shadowRadius = glossy_shadowRadius
-        glossy_topShadowLayer.shadowRadius = glossy_shadowRadius
+//        glossy_topShadowLayer.shadowRadius = glossy_shadowRadius
 
         if glossy_isDown() {
             glossy_bottomShadowLayer.shadowOffset = CGSize(width: 0, height: 0)
-            glossy_topShadowLayer.shadowOffset = CGSize(width: 0, height: 0)
-            glossy_bottomShadowLayer.shadowRadius = 3
-            glossy_topShadowLayer.shadowRadius = 3
+//            glossy_topShadowLayer.shadowOffset = CGSize(width: 0, height: 0)
+            glossy_bottomShadowLayer.shadowRadius = 1
+//            glossy_topShadowLayer.shadowRadius = 3
         } else {
-            //glossy_bottomShadowLayer.shadowOffset = CGSize(width: 10, height: 10)
-            glossy_bottomShadowLayer.shadowOffset = CGSize(width: 5, height: 5)
-            glossy_topShadowLayer.shadowOffset = CGSize(width: -5, height: -5)
+            glossy_bottomShadowLayer.shadowOffset = glossy_offset()
         }
     }
 }
@@ -97,6 +96,8 @@ class GlossyButton: UIButton {
     }
 
     @objc override func glossy_isDown() -> Bool { return isTouchInside }
+    @objc override func glossy_offset() -> CGSize { return CGSize(width: 3, height: 3) }
+    @objc override var glossy_radius: CGFloat { frame.height/5.0 }
 
     override func layoutSubviews() {
         super.layoutSubviews()

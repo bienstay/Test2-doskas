@@ -23,7 +23,7 @@ class NewsCell: UITableViewCell {
         guest.toggleLike(group: "news", key: post.postId)
 //        let imageView = UIImage(named: "heartFull")
 //        heartButton.setImage(imageView, for: .normal)
-//        FireB.shared.updateLike(node: "news", key: post.postId, user: guest.id, add: true)
+//        dbProxy.updateLike(node: "news", key: post.postId, user: guest.id, add: true)
     }
 
     override func awakeFromNib() {

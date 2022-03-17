@@ -61,6 +61,20 @@ class Order: Codable {
         }
     }
 
+    struct BuggyData: Codable {
+        enum LocationType: Int, Codable {
+            case Room
+            case GPS
+            case Photo
+            case Other
+            func toString() -> String {
+                return String(describing: self)
+            }
+        }
+        var locationType: LocationType
+        var locationData: String
+    }
+
     struct OrderItem: Codable {
         var name: String
         var quantity: Int
@@ -107,6 +121,8 @@ class Order: Codable {
     private (set) var canceledBy: String?
 
     private (set) var items: [OrderItem] = []
+    var buggyData: BuggyData?
+
     var guestComment: String?
 
     init(roomNumber: Int, category: Category) {
@@ -198,6 +214,7 @@ struct OrderInDB: Codable {
     private (set) var canceledBy: String?
 
     private (set) var items: [Order.OrderItem]?
+    var buggyData: Order.BuggyData?
     var guestComment: String?
     
     init(order: Order, roomNumber: Int? = nil) {
@@ -212,6 +229,7 @@ struct OrderInDB: Codable {
         self.confirmedBy = order.confirmedBy
         self.deliveredBy = order.deliveredBy
         self.items = order.items.isEmpty ? nil : order.items
+        self.buggyData = order.buggyData
         self.guestComment = order.guestComment
     }
 }
@@ -232,6 +250,7 @@ extension Order {
         self.deliveredBy = orderInDb.deliveredBy
         self.canceledBy = orderInDb.canceledBy
         self.items = orderInDb.items ?? []
+        self.buggyData = orderInDb.buggyData
         self.guestComment = orderInDb.guestComment
     }
 }

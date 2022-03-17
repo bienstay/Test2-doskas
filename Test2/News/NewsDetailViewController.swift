@@ -29,7 +29,7 @@ class NewsDetailViewController: UIViewController {
 
         setupTransparentNavigationBar(tableView: tableView)
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         endTransparentNavigationBar()
     }

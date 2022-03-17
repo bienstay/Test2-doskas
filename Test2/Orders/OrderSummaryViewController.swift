@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import Kingfisher
+import MapKit
 
 class OrderSummaryViewController: UIViewController, UITableViewDataSource {
 
@@ -20,6 +22,13 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
     @IBOutlet weak var entireView: UIView!
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var categoryImage: UIImageView!
+    
+    @IBOutlet weak var buggyDataView: UIStackView!
+    @IBOutlet weak var buggyLocationTypeLabel: UILabel!
+    @IBOutlet weak var buggyCommentLabel: UILabel!
+    @IBOutlet weak var buggyLocationImage: UIImageView!
+    @IBOutlet weak var buggyMapView: MKMapView!
+
 
     @IBOutlet weak var idLabel: UILabel!
     @IBOutlet weak var statusLabel: UILabel!
@@ -43,20 +52,20 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
     @IBAction func statusChangeButtonPressed(_ sender: UIBarButtonItem) {
         if order.status == Order.Status.CREATED {
             if guest.isAdmin() {
-                FireB.shared.updateOrderStatus(orderId: order.id!, newStatus: .CONFIRMED, confirmedBy: guest.Name)
+                dbProxy.updateOrderStatus(orderId: order.id!, newStatus: .CONFIRMED, confirmedBy: guest.Name)
             } else {
                 askToCancel()
             }
         }
         else if order.status == Order.Status.CONFIRMED {
-            FireB.shared.updateOrderStatus(orderId: order.id!, newStatus: .DELIVERED, deliveredBy: guest.Name)
+            dbProxy.updateOrderStatus(orderId: order.id!, newStatus: .DELIVERED, deliveredBy: guest.Name)
         }
     }
 
     func askToCancel() {
         let cancelAlert = UIAlertController(title: .cancel.localizedUppercase, message: .confirm, preferredStyle: UIAlertController.Style.alert)
         cancelAlert.addAction(UIAlertAction(title: .yes, style: .destructive, handler: { (action: UIAlertAction!) in
-            FireB.shared.updateOrderStatus(orderId: self.order.id!, newStatus: .CANCELED, canceledBy: String(guest.roomNumber))
+            dbProxy.updateOrderStatus(orderId: self.order.id!, newStatus: .CANCELED, canceledBy: String(guest.roomNumber))
         }))
         cancelAlert.addAction(UIAlertAction(title: .no, style: .cancel, handler: { (action: UIAlertAction!) in
         }))
@@ -68,12 +77,43 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
         initView(tableView: tableView)
 
         tableView.dataSource = self
-        tableView.backgroundColor = .white
-        tableView.showsVerticalScrollIndicator = true
+        tableView.backgroundColor = .BBcellColor
+        tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .singleLine
+        tableView.separatorColor = .BBseparatorColor
         tableView.allowsSelection = false
 
         categoryImage.image = UIImage(named: order.category.rawValue)
+        if order.category == .Buggy, let buggyData = order.buggyData {
+            buggyDataView.isHidden = false
+            tableView.isHidden = true
+            buggyCommentLabel.text = order.guestComment
+            buggyLocationTypeLabel.text = buggyData.locationType.toString()
+            buggyLocationImage.image = nil
+            buggyLocationImage.isHidden = true
+            buggyMapView.isHidden = true
+            switch buggyData.locationType {
+            case .Room: break
+            case .GPS:
+                //if let coordinates = order.buggyData?.locationData.split(separator: ","), coordinates.count == 2 {
+                let coo = order.buggyData?.locationData.components(separatedBy: [",", " "])
+                if let coordinates = order.buggyData?.locationData.components(separatedBy: [",", " "]), coordinates.count == 2 {
+                    let latitude = Double(coordinates[0]) ?? 0.0
+                    let longitude = Double(coordinates[1]) ?? 0.0
+                    setupMap(mapView: buggyMapView, latitude: latitude, longitude: longitude)
+                    buggyMapView.isHidden = false
+                }
+            case .Photo:
+                if let url = URL(string: buggyData.locationData) {
+                    buggyLocationImage.kf.setImage(with: url)
+                    buggyLocationImage.isHidden = false
+                }
+            case .Other: break
+            }
+        } else {
+            buggyDataView.isHidden = true
+            tableView.isHidden = false
+        }
 
         NotificationCenter.default.addObserver(self, selector: #selector(onOrdersUpdated(_:)), name: .ordersUpdated, object: nil)
 
@@ -83,12 +123,10 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        navigationController?.setNavigationBarHidden(false, animated: true)
-        navigationController?.navigationBar.prefersLargeTitles = false
-        navigationController?.navigationBar.tintColor = .black
-        navigationController?.hidesBarsOnSwipe = false
+        setupListNavigationBar(largeTitle: false)
+
         tableView.contentInsetAdjustmentBehavior = .never
-        
+
         title = .order +  " " + "\(order.number)"
         roomNumberLabel.text = .room + ": \(order.roomNumber)"
         timeCreatedLabel.text = order.created?.formatFriendly()
@@ -98,6 +136,9 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
+        if order.guestComment?.isEmpty ?? true {
+            return 1
+        }
         return Sections.allCases.count
     }
 
@@ -105,7 +146,7 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
         switch Sections(rawValue: section) {
             case .Items:
                 return order.items.count
-        case .GuestComment:
+            case .GuestComment:
                 return 1
             default:
                 return 0
@@ -120,6 +161,7 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
             return cell
         case .GuestComment:
             let cell = tableView.dequeueReusableCell(withIdentifier: "CommentCell", for: indexPath)
+            cell.backgroundColor = .clear
             cell.contentView.backgroundColor = .clear
             cell.textLabel?.text = order.guestComment
             return cell
@@ -210,6 +252,29 @@ extension OrderSummaryViewController: UITableViewDelegate {
     }
 }
 
+extension OrderSummaryViewController {
+    func setupMap(mapView:MKMapView, latitude: Double, longitude: Double) {
+        mapView.layer.cornerRadius = 20.0
+        mapView.clipsToBounds = true
+
+        let coordinate: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+
+        guard CLLocationCoordinate2DIsValid(coordinate) else {
+            Log.log(level: .ERROR, "Invalid coordinates")
+            return }
+        
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = coordinate
+        let region = MKCoordinateRegion(center: annotation.coordinate, latitudinalMeters: 250, longitudinalMeters: 250)
+        mapView.setRegion(region, animated: false)
+        mapView.addAnnotation(annotation)
+        mapView.showsCompass = false
+        mapView.showsScale = true
+        mapView.showsTraffic = false
+        mapView.showsPointsOfInterest = false
+        mapView.showsBuildings = true
+    }
+}
 
 
 class OrderSummaryItemCell: UITableViewCell {
@@ -219,6 +284,8 @@ class OrderSummaryItemCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
     }
     
     func draw(item: Order.OrderItem, category: Order.Category) {

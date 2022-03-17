@@ -63,14 +63,17 @@ struct InfoItem {
     var text: String = ""
 }
 
-struct HotelIInfo: Codable {
+struct HotelInfo: Codable {
     var name: String
     var image: String
+    var socialURLs: [String:String]
 }
 
 class Hotel {
-    var id: String = "SheratonFullMoon" // default hotel
+    //var id: String = "SheratonFullMoon" // default hotel
+    var id: String? = nil
     var name: String = ""
+    var socialURLs: [String:String] = [:]
     var image: String = ""
     var restaurants: [Restaurant] = []
     var roomService: Restaurant = Restaurant()
@@ -80,6 +83,8 @@ class Hotel {
     var importantNotes: [InfoItem] = []
     var roomItems: [RoomItem.ItemType : [RoomItem]] = [:]
     var activities: [Int: [Activity]] = [:]
+    var offerGroups: [OfferGroup] = []
+    var offers: [String:Offer] = [:]
     var translations: [String: Translations] = [:]
 
     func initialize() {
@@ -87,16 +92,20 @@ class Hotel {
     }
 
     func startObserving() {
-        FireB.shared.subscribeForUpdates(completionHandler: hotelInfoUpdated)
-        FireB.shared.subscribeForUpdates(completionHandler: restaurantsUpdated)
-        FireB.shared.subscribeForUpdates(completionHandler: newsUpdated)
-        FireB.shared.subscribeForUpdates(completionHandler: activitiesUpdated)
-        FireB.shared.subscribeForUpdates(completionHandler: translationsUpdated)
+        dbProxy.subscribeForUpdates(completionHandler: hotelInfoUpdated)
+        dbProxy.subscribeForUpdates(completionHandler: restaurantsUpdated)
+        dbProxy.subscribeForUpdates(completionHandler: newsUpdated)
+        dbProxy.subscribeForUpdates(completionHandler: offersUpdated)
+        dbProxy.subscribeForUpdates(completionHandler: offerGroupsUpdated)
+        dbProxy.subscribeForUpdates(completionHandler: offersUpdated)
+        dbProxy.subscribeForUpdates(completionHandler: activitiesUpdated)
+        dbProxy.subscribeForUpdates(completionHandler: translationsUpdated)
     }
 
-    func hotelInfoUpdated(allHotelInfo: [(String, HotelIInfo)]) {
+    func hotelInfoUpdated(allHotelInfo: [(String, HotelInfo)]) {
         hotel.name = allHotelInfo.first?.1.name ?? "HOTEL"
         hotel.image = allHotelInfo.first?.1.image ?? ""
+        hotel.socialURLs = allHotelInfo.first?.1.socialURLs ?? [:]
         NotificationCenter.default.post(name: .hotelInfoUpdated, object: nil)
     }
 
@@ -106,6 +115,21 @@ class Hotel {
         _news.forEach( { news.append($0.1) } )
         applyTranslations()
         NotificationCenter.default.post(name: .newsUpdated, object: nil)
+    }
+
+    func offerGroupsUpdated(allOffers: [(String, OfferGroup)]) {
+        hotel.offerGroups = allOffers.map { $0.1 }
+        //applyTranslations()
+        NotificationCenter.default.post(name: .offersUpdated, object: nil)
+    }
+
+    func offersUpdated(allOffers: [(String, Offer)]) {
+        for pair in allOffers {
+            hotel.offers[pair.0] = pair.1
+            hotel.offers[pair.0]?.id = pair.0
+        }
+        //applyTranslations()
+        NotificationCenter.default.post(name: .offersUpdated, object: nil)
     }
 
     func activitiesUpdated(allActivities: [(String, DailyActivities)]) {
@@ -134,28 +158,9 @@ class Hotel {
             restaurants.append(r)
         } )
         NotificationCenter.default.post(name: .restaurantsUpdated, object: nil)
-        FireB.shared.subscribeForUpdates(completionHandler: self.menusUpdated)
+        dbProxy.subscribeForUpdates(completionHandler: self.menusUpdated)
     }
-/*
-    func menusUpdated(allMenus: [(String, Menu)]) {
-        hotel.restaurants.forEach( {$0.menus = []} )
-        hotel.roomService.menus = []
-        for m in allMenus {
-            if let r = hotel.restaurants.first(where: {$0.name == m.1.restaurant} ) {
-                if r.menus.first(where: {$0.title == m.1.title} ) == nil {
-                    r.menus.append(m.1)
-                }
-            }
-            if m.1.restaurant == "In Room Dining" {
-                hotel.roomService.menus.append(m.1)
-            }
-        }
-        for r in hotel.restaurants {
-            r.menus.sort(by: {$0.position < $1.position} )
-        }
-        NotificationCenter.default.post(name: .menusUpdated, object: nil)
-    }
-*/
+
     func menusUpdated(allMenus: [(String, Menu2)]) {
         hotel.restaurants.forEach( {$0.menus = []} )
         hotel.roomService.menus = []
@@ -191,11 +196,13 @@ class Hotel {
 //        }
 
         if let t = translations[guest.lang] {
-            for i in 0...news.count-1 {
-                if let nt: [String:String] = t["news"]?[news[i].postId] {
-                    if let title = nt["title"] { news[i].title = title }
-                    if let subtitle = nt["subtitle"] { news[i].subtitle = subtitle }
-                    if let text = nt["text"] { news[i].text = text }
+            if !news.isEmpty {
+                for i in 0...news.count-1 {
+                    if let nt: [String:String] = t["news"]?[news[i].postId] {
+                        if let title = nt["title"] { news[i].title = title }
+                        if let subtitle = nt["subtitle"] { news[i].subtitle = subtitle }
+                        if let text = nt["text"] { news[i].text = text }
+                    }
                 }
             }
 
@@ -209,20 +216,45 @@ class Hotel {
                 }
             }
 
-            for i in 0...restaurants.count-1 {
-                if let nt: [String:String] = t["restaurants"]?[restaurants[i].id!] {
-                    //if let name = nt["name"] { restaurants[i].name = name }
-                    if let cuisines = nt["cuisines"] { restaurants[i].cuisines = cuisines }
-                    if let location = nt["location"] { restaurants[i].location = location }
-                    if let description = nt["description"] { restaurants[i].description = description }
+            if !restaurants.isEmpty {
+                for i in 0...restaurants.count-1 {
+                    if let nt: [String:String] = t["restaurants"]?[restaurants[i].id!] {
+                        //if let name = nt["name"] { restaurants[i].name = name }
+                        if let cuisines = nt["cuisines"] { restaurants[i].cuisines = cuisines }
+                        if let location = nt["location"] { restaurants[i].location = location }
+                        if let description = nt["description"] { restaurants[i].description = description }
+                    }
                 }
             }
-
         }
     }
 }
 
+struct HotelInDB: Codable {
+    var id: String? = nil
+    struct Info: Codable {
+        var name: String = ""
+        var image: String = ""
+    }
+    private (set) var info: Info = Info()
+    private (set) var languages: [String:Bool] = [:]
 
+    init(hotel: Hotel) {
+        self.id = hotel.id
+        self.info.name = hotel.name
+        self.info.image = hotel.image
+        self.languages = ["pl":true, "fr":true]
+    }
+}
+
+extension Hotel {
+    convenience init(id: String, hotelInDb: HotelInDB) {
+        self.init()
+        self.id = id
+        self.name = hotelInDb.info.name
+        self.image = hotelInDb.info.image
+    }
+}
 
 
 var hotel = Hotel()

@@ -8,6 +8,7 @@
 import UIKit
 import PhotosUI
 
+// MARK: - UIColor
 extension UIColor {
     convenience init(_ red: Int, _ green: Int, _ blue: Int) {
         let redValue: CGFloat = CGFloat(red) / CGFloat(255.0)
@@ -65,9 +66,73 @@ extension UIColor {
         }
     }
 
-    static var BBbackgroundColor: UIColor = .offWhite
-/*
+    //static var BBbackgroundColor: UIColor = .offWhite
+
     static var BBbackgroundColor: UIColor {
+        if #available(iOS 13, *) {
+            let c = UIColor { traitCollection in
+                switch traitCollection.userInterfaceStyle {
+                    case .dark:
+                        return .black
+                    default:
+                        return .offWhite
+                }
+            }
+            return c
+        } else {
+            return .offWhite
+        }
+    }
+
+    static var BBcellColor: UIColor {
+        if #available(iOS 13, *) {
+            let c = UIColor { traitCollection in
+                switch traitCollection.userInterfaceStyle {
+                    case .dark:
+                        return .darkGray
+                    default:
+                        return .offWhiteVeryLight
+                }
+            }
+            return c
+        } else {
+            return .offWhiteVeryLight
+        }
+    }
+
+    static var BBreversedCellColor: UIColor {
+        if #available(iOS 13, *) {
+            let c = UIColor { traitCollection in
+                switch traitCollection.userInterfaceStyle {
+                    case .dark:
+                        return .offWhiteVeryLight
+                    default:
+                        return .darkGray
+                }
+            }
+            return c
+        } else {
+            return .darkGray
+        }
+    }
+
+    static var BBtextColor: UIColor {
+        if #available(iOS 13, *) {
+            let c = UIColor { traitCollection in
+                switch traitCollection.userInterfaceStyle {
+                    case .dark:
+                        return .white
+                    default:
+                        return .black
+                }
+            }
+            return c
+        } else {
+            return .black
+        }
+    }
+
+    static var BBreversedTextColor: UIColor {
         if #available(iOS 13, *) {
             let c = UIColor { traitCollection in
                 switch traitCollection.userInterfaceStyle {
@@ -82,14 +147,40 @@ extension UIColor {
             return .white
         }
     }
-*/
+
+    static var BBseparatorColor: UIColor {
+        if #available(iOS 13, *) {
+            let c = UIColor { traitCollection in
+                switch traitCollection.userInterfaceStyle {
+                    case .dark:
+                        return UIColor(192, 192, 192)
+                    default:
+                        return UITableView().separatorColor ?? .gray
+                }
+            }
+            return c
+        } else {
+            return UITableView().separatorColor ?? .gray
+        }
+    }
+
+    class func randomColor() -> UIColor {
+
+        let hue = CGFloat(arc4random() % 100) / 100
+        let saturation = CGFloat(arc4random() % 100) / 100
+        let brightness = CGFloat(arc4random() % 100) / 100
+
+        return UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: 1.0)
+    }
+    
 }
 
+// MARK: - NSLocalizedString
 func NSLocalizedString(_ key:String) -> String {
     return NSLocalizedString(key, comment: key)
 }
 
-
+// MARK: - UIViewController: navigation bars
 extension UIViewController {
 
     func setupTransparentNavigationBar(tableView: UITableView? = nil, collectionView: UICollectionView? = nil, tintColor: UIColor = .white)
@@ -103,90 +194,24 @@ extension UIViewController {
         navigationController!.navigationBar.shadowImage = UIImage()
         navigationController!.navigationBar.isTranslucent = true
     }
-    
+
     func endTransparentNavigationBar() {
         navigationController!.navigationBar.setBackgroundImage(nil, for: .default)
         navigationController!.navigationBar.shadowImage = nil
         navigationController!.navigationBar.isTranslucent = true
     }
 
-    func setupListNavigationBar(tintColor: UIColor = .black) {
+    func setupListNavigationBar(tintColor: UIColor = .BBtextColor, largeTitle: Bool = true) {
         navigationItem.backButtonTitle = ""
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationController?.hidesBarsOnSwipe = false
-        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.prefersLargeTitles = largeTitle
         navigationController?.navigationBar.tintColor = tintColor
     }
 
-    
-    
-    
-/*
-    func setupNavigationBar(transparent: Bool = true, transluscent: Bool = true, largeTitles: Bool = true, hideOnSwipe: Bool = true, tintColor: UIColor = .white) {
-        navigationController?.navigationBar.isTranslucent = transluscent
-        navigationController?.navigationBar.prefersLargeTitles = largeTitles
-        navigationController?.hidesBarsOnSwipe = hideOnSwipe
-        navigationController?.navigationBar.tintColor = tintColor
-        navigationItem.backButtonTitle = ""
-
-        if #available(iOS 13, *) {
-            if let appearance = navigationController?.navigationBar.standardAppearance {
-                if transparent { appearance.configureWithTransparentBackground() }
-                else { appearance.configureWithDefaultBackground() }
-                if let customFont = UIFont(name: "Nunito-Bold", size: 45.0) {
-                    appearance.titleTextAttributes = [.foregroundColor: UIColor(named: "NavigationBarTitle")!]
-                    appearance.largeTitleTextAttributes = [.foregroundColor: UIColor(named: "NavigationBarTitle")!, .font: customFont]
-                }
-                navigationController?.navigationBar.standardAppearance = appearance
-                navigationController?.navigationBar.compactAppearance = appearance
-                navigationController?.navigationBar.scrollEdgeAppearance = appearance
-            }
-        } else {
-            if transparent {
-                navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-                navigationController?.navigationBar.shadowImage = UIImage()
-                navigationController?.navigationBar.alpha = 0.0
-            } else {
-                navigationController?.navigationBar.barTintColor = nil
-            }
-        }
-    }
- */
 }
-/*
-func oldCustomizeNavigationBarAppearance(_ navigationController: UINavigationController?) {
-    // Enable large title for navigation bar
-    navigationController?.navigationBar.prefersLargeTitles = true
-    navigationController?.hidesBarsOnSwipe = true
-    navigationController?.navigationBar.tintColor = .white
 
-    // Customize the navigation bar appearance
-    if #available(iOS 13, *) {
-        if let appearance = navigationController?.navigationBar.standardAppearance {
-        
-            appearance.configureWithTransparentBackground()
-
-            if let customFont = UIFont(name: "Nunito-Bold", size: 45.0) {
-                appearance.titleTextAttributes = [.foregroundColor: UIColor(named: "NavigationBarTitle")!]
-                appearance.largeTitleTextAttributes = [.foregroundColor: UIColor(named: "NavigationBarTitle")!, .font: customFont]
-            }
-
-            navigationController?.navigationBar.standardAppearance = appearance
-            navigationController?.navigationBar.compactAppearance = appearance
-            navigationController?.navigationBar.scrollEdgeAppearance = appearance
-        }
-    } else {
-        //navigationController?.navigationBar.barTintColor = .clear
-        //navigationController?.navigationBar.backgroundColor = .clear
-        navigationController?.navigationBar.isTranslucent = true
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        navigationController?.navigationBar.shadowImage = UIImage()
-        navigationController?.navigationBar.alpha = 0.0
-    }
-}
-*/
-
-
+// MARK: - UIViewController: init
 extension UIViewController {
     func initView(tableView: UITableView? = nil, collectionView: UICollectionView? = nil) {
 
@@ -209,8 +234,10 @@ extension UIViewController {
 
         navigationItem.backButtonTitle = ""
     }
+
 }
 
+// MARK: - JSON
 // load json from a file in the bundle
 func loadFromJSON<T>(fileNameNoExt: String) -> T where T: Decodable {
     var jsonString = ""
@@ -240,10 +267,10 @@ func saveJSONData<T>(from data:T, to fileNameNoExt: String) where T: Encodable {
         Log.log(level: .INFO, "Writing to " + fileURL.absoluteString)
         try jsonData.write(to: fileURL)
     } catch {
-        Log.log(error.localizedDescription)
+        Log.log(level: .ERROR, "\(error)")
     }
 }
-
+/*
 func setOrderButton(orderButton: UIButton) {
     orderButton.layer.cornerRadius = 50
     orderButton.backgroundColor = .pastelRed
@@ -258,30 +285,9 @@ func setOrderButton(orderButton: UIButton) {
     orderButton.layer.borderWidth = 2
     orderButton.layer.borderColor = UIColor.black.cgColor    //UIColor(named: "buttonBorder")?.cgColor
 }
+*/
 
-func prepareNotification(id: String, title: String, subtitle:String, body: String, attachmentFile: String, userInfo: [AnyHashable: Any]? = nil) {
-    // Create the user notification
-    let content = UNMutableNotificationContent()
-    content.title = title
-    content.subtitle = subtitle
-    content.body = body
-    content.sound = UNNotificationSound.default
-    if let bundlePath = Bundle.main.path(forResource: attachmentFile, ofType: "png") {
-        if let orderImage = try? UNNotificationAttachment(identifier: "orderImage", url: URL(fileURLWithPath: bundlePath), options: nil) {
-            content.attachments = [orderImage]
-        }
-    }
-    if let userInfo = userInfo { content.userInfo = userInfo } // Array of custom
-
-    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-    let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
-    // Schedule the notification
-
-    UNUserNotificationCenter.current().add(request) { error in
-        if let err = error { Log.log(err.localizedDescription) }
-    }
-}
-
+/*
 extension UITabBar {
     static func setTransparentTabbar() {
         UITabBar.appearance().backgroundImage = UIImage()
@@ -289,38 +295,9 @@ extension UITabBar {
         UITabBar.appearance().clipsToBounds = true
     }
 }
-
-
-
-func generateRandomColors() -> [[UIColor]] {
-    let numberOfRows = 20
-    let numberOfItemsPerRow = 15
-
-    return (0..<numberOfRows).map { _ in
-        return (0..<numberOfItemsPerRow).map { _ in UIColor.randomColor() }
-    }
-}
-
-extension UIColor {
-    
-    class func randomColor() -> UIColor {
-
-        let hue = CGFloat(arc4random() % 100) / 100
-        let saturation = CGFloat(arc4random() % 100) / 100
-        let brightness = CGFloat(arc4random() % 100) / 100
-
-        return UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: 1.0)
-    }
-}
-
-/*
-extension String {
-    var localized: String {
-        return NSLocalizedString(self, comment: "")
-    }
-}
 */
 
+// MARK: - String
 extension String {
     var htmlToAttributedString: NSAttributedString? {
         guard let data = data(using: .utf8) else { return nil }
@@ -336,6 +313,7 @@ extension String {
 }
 
 
+// MARK: - UIImage
 extension UIImage {
     func scaleTo(newWidth: CGFloat) -> UIImage {
         // Make sure the given width is different from the existing one
@@ -355,6 +333,7 @@ extension UIImage {
 }
 
 
+// MARK: - Date
 extension Date {
     func formatFull() -> String {
         let formatter3 = DateFormatter()
@@ -383,9 +362,34 @@ extension Date {
     }
 }
 
+// MARK: - Notifications
+func prepareNotification(id: String, title: String, subtitle:String, body: String, attachmentFile: String, userInfo: [AnyHashable: Any]? = nil) {
+    // Create the user notification
+    let content = UNMutableNotificationContent()
+    content.title = title
+    content.subtitle = subtitle
+    content.body = body
+    content.sound = UNNotificationSound.default
+    if let bundlePath = Bundle.main.path(forResource: attachmentFile, ofType: "png") {
+        if let orderImage = try? UNNotificationAttachment(identifier: "orderImage", url: URL(fileURLWithPath: bundlePath), options: nil) {
+            content.attachments = [orderImage]
+        }
+    }
+    if let userInfo = userInfo { content.userInfo = userInfo } // Array of custom
+
+    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+    let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
+    // Schedule the notification
+
+    UNUserNotificationCenter.current().add(request) { error in
+        if let err = error { Log.log(level: .ERROR, "\(err)") }
+    }
+}
+
 extension Notification.Name {
     static let hotelInfoUpdated = Notification.Name("hotelInfoUpdated")
     static let ordersUpdated = Notification.Name("ordersUpdated")
+    static let offersUpdated = Notification.Name("offersUpdated")
     static let newsUpdated = Notification.Name("newsUpdated")
     static let activitiesUpdated = Notification.Name("activitiesUpdated")
     static let restaurantsUpdated = Notification.Name("restarantsUpdated")
@@ -599,3 +603,41 @@ extension String {
     }
 }
 
+extension UICollectionView {
+    func getCellIndex(_ view: UIView) -> IndexPath? {
+        var superview = view.superview
+        while let view = superview, !(view is UITableViewCell) {
+            superview = view.superview
+        }
+        guard let cell = superview as? UICollectionViewCell else {
+            print("view is not contained in a collection view cell")
+            return nil
+        }
+        guard let indexPath = self.indexPath(for: cell) else {
+            print("failed to get index path for cell containing button")
+            return nil
+        }
+        // We've got the index path for the cell that contains the button, now do something with it.
+        print("button is in row \(indexPath.row)")
+        return indexPath
+    }
+}
+
+extension UIApplication {
+    class func tryURL(urls: [String]) {
+        let application = UIApplication.shared
+        for url in urls {
+            if let u = URL(string: url) {
+                if application.canOpenURL(u) {
+                    if #available(iOS 10.0, *) {
+                        application.open(URL(string: url)!, options: [:], completionHandler: nil)
+                    }
+                    else {
+                        application.openURL(URL(string: url)!)
+                    }
+                    return
+                }
+            }
+        }
+    }
+}

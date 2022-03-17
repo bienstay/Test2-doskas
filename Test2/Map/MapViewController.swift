@@ -67,6 +67,10 @@ class MapViewController: UIViewController {
                 annotations.append(annotation)
             }
             mapView.showAnnotations(annotations, animated: true)
+            var region = mapView.region
+            region.span.latitudeDelta = 2 * region.span.latitudeDelta
+            region.span.longitudeDelta = 2 * region.span.longitudeDelta
+            mapView.setRegion(region, animated: true)
         }
         //self.mapView.selectAnnotation(annotation, animated: true)
     }

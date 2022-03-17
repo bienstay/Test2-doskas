@@ -12,24 +12,44 @@ import FirebaseDatabase
 import FirebaseStorage
 import FirebaseFunctions
 
-final class FireB {
+final class FireB: DBProxy {
     static let shared: FireB = FireB()
+    let useEmulator: Bool = false
+
+    lazy var functions: Functions = Functions.functions()
+    lazy var storage: Storage = Storage.storage()
+    lazy var auth: Auth = Auth.auth()
+    lazy var database: Database = useEmulator ? Database.database(url:"http://localhost:9000?ns=bienstay-45c85-default-rtdb") : Database.database()
+
     private init() { }
 
+
     func initialize() {
-        Database.database().isPersistenceEnabled = true
+        database.isPersistenceEnabled = true
+        if useEmulator {
+            //auth.useEmulator(withHost:"localhost", port:9099)
+            functions.useEmulator(withHost: "localhost", port: 5001)
+            //storage.useEmulator(withHost: "localhost", port: 9199)
+        }
     }
 
-    enum PhotoLocation {
-        case NEWS
-        case ACTIVITIES
-        case RESTAURANTS
+    var ROOT_DB_REF: DatabaseReference {
+        //let db = useEmulator ? Database.database(url:"http://localhost:9000?ns=bienstay-45c85-default-rtdb") : Database.database()
+        //return db.reference()
+        return database.reference()
     }
 
-    lazy var functions = Functions.functions()
+    var BASE_DB_REF: DatabaseReference          {
+        if let hotelId = hotel.id {
+            return ROOT_DB_REF.child("hotels").child(hotelId)
+        } else {
+            return ROOT_DB_REF.child("hotels")
+        }
 
-    // MARK: - Firebase Database References
-    var BASE_DB_REF: DatabaseReference { Database.database().reference().child("hotels").child(hotel.id) }
+    }
+
+    var CONFIG_DB_REF: DatabaseReference        { ROOT_DB_REF.child("config") }
+    var HOTEL_DB_REF: DatabaseReference         { BASE_DB_REF }
     var INFO_DB_REF: DatabaseReference          { BASE_DB_REF }
     var GUESTS_DB_REF: DatabaseReference        { BASE_DB_REF.child("users") }
     var NEWS_DB_REF: DatabaseReference          { BASE_DB_REF.child("news") }
@@ -37,24 +57,21 @@ final class FireB {
     var RESTAURANTS_DB_REF: DatabaseReference   { BASE_DB_REF.child("restaurants") }
     var MENUS_DB_REF: DatabaseReference         { BASE_DB_REF.child("menus2") }
     var ORDERS_DB_REF: DatabaseReference        { BASE_DB_REF.child("orders") }
+    var OFFERGROUPS_DB_REF: DatabaseReference   { BASE_DB_REF.child("offerGroups") }
+    var OFFERS_DB_REF: DatabaseReference        { BASE_DB_REF.child("offers") }
     var LIKES_DB_REF: DatabaseReference         { BASE_DB_REF.child("likes") }
     var LIKESGLOBAL_DB_REF: DatabaseReference   { LIKES_DB_REF.child("global") }
     var LIKESPERUSER_DB_REF: DatabaseReference  { LIKES_DB_REF.child("perUser") }
     var CHAT_MESSAGES_DB_REF: DatabaseReference { BASE_DB_REF.child("chats").child("messages") }
-    var CHAT_TRANSLATIONS_DB_REF: DatabaseReference { BASE_DB_REF.child("chats").child("translations") }
     var TRANSLATIONS_DB_REF: DatabaseReference  { BASE_DB_REF.child("translations") }
-
-    // MARK: - Firebase Storage Reference
-    let BASE_PHOTOS_REF: StorageReference = Storage.storage().reference().child( "photos")
-    let NEWS_PHOTOS_REF: StorageReference = Storage.storage().reference().child( "photos/news")
-    let ACTIVITIES_PHOTOS_REF: StorageReference = Storage.storage().reference().child( "photos/activities")
-    let RESTAURANTS_PHOTOS_REF: StorageReference = Storage.storage().reference().child( "photos/restaurants")
 
     var observed: Set<DatabaseQuery> = []
 
     func getDBRef<T>(type: T.Type, subNode: String? = nil) -> DatabaseReference? {
         switch type {
-            case is HotelIInfo.Type:
+            case is HotelInDB.Type:
+                return ROOT_DB_REF.child("hotels")
+            case is HotelInfo.Type:
                 return INFO_DB_REF
             case is NewsPost.Type:
                 return NEWS_DB_REF
@@ -66,6 +83,10 @@ final class FireB {
                 else { return ACTIVITIES_DB_REF }
             case is OrderInDB.Type:
                 return ORDERS_DB_REF
+            case is OfferGroup.Type:
+                return OFFERGROUPS_DB_REF
+            case is Offer.Type:
+                return OFFERS_DB_REF
             case is Restaurant.Type:
                 return RESTAURANTS_DB_REF
             case is Menu2.Type:
@@ -73,9 +94,6 @@ final class FireB {
             case is ChatMessage.Type:
                 if let child = subNode { return CHAT_MESSAGES_DB_REF.child(child) }
                 else {return CHAT_MESSAGES_DB_REF }
-//            case is ChatTranslations.Type:
-//                if let child = subNode { return CHAT_TRANSLATIONS_DB_REF.child(child) }
-//                else { return CHAT_TRANSLATIONS_DB_REF }
             case is GuestInfo.Type:
                 return GUESTS_DB_REF
             case is LikesPerUserInDB.Type:
@@ -91,19 +109,19 @@ final class FireB {
                 return nil
         }
     }
-
+/*
     enum QueryParameter {
         case OrderInDB(roomNumber: Int)
         case ChatRoom(id: String)
         case ChatUser(id: String)
         case GuestInfo(id: String)
     }
-
+*/
     func getQuery<T>(type: T.Type, subNode: String? = nil, parameter:QueryParameter? = nil) -> DatabaseQuery? {
         let dbRef = getDBRef(type: type.self, subNode: subNode)
         let errStr = "Invalid parameter in getQuery for \(T.Type.self): \(String(describing: parameter))"
         switch type {
-            case is HotelIInfo.Type:
+            case is HotelInfo.Type:
                 return dbRef?.queryOrderedByKey().queryEqual(toValue: "info")
             case is GuestInfo.Type:
                 guard case .GuestInfo(let guestId) = parameter else { Log.log(errStr); return nil }
@@ -114,70 +132,12 @@ final class FireB {
                     return dbRef?.queryOrdered(byChild: "roomNumber").queryEqual(toValue: roomNumber)
                 } else {
                     return dbRef?.queryOrderedByKey()
-                    //return dbRef?.queryOrdered(byChild: "roomNumber")
                 }
             case is ChatMessage.Type:
                 guard case .ChatRoom(let chatRoomId) = parameter else { Log.log(errStr); return nil }
                 return dbRef?.child(chatRoomId)
-//            case is ChatTranslations.Type:
-//                guard case .ChatRoom(let chatRoomId) = parameter else { Log.log(errStr); return nil }
-//                return dbRef?.child(chatRoomId)
             default:
                 return dbRef
-        }
-    }
-
-    func uploadImage(image: UIImage, forLocation: PhotoLocation, imageName: String? = nil, completionHandler: @escaping (String) -> Void) {
-        // Generate a unique ID for the post and prepare the post database reference
-        var photosStorageRef = BASE_PHOTOS_REF
-        switch forLocation {
-            case .NEWS:
-                photosStorageRef = NEWS_PHOTOS_REF
-            case .ACTIVITIES:
-                photosStorageRef = ACTIVITIES_PHOTOS_REF
-            case .RESTAURANTS:
-                photosStorageRef = RESTAURANTS_PHOTOS_REF
-        }
-
-        // Use the unique key as the image name and prepare the storage reference
-        //guard let imageKey = postDatabaseRef.key else { return }
-        let imageKey = (imageName != nil ? imageName! : (Auth.auth().currentUser?.uid)! + "___" + Date().formatFull())
-        Log.log(level: .INFO, "Uploading image with the key: " + imageKey)
-
-        photosStorageRef = photosStorageRef.child("\(imageKey).jpg")
-
-        // Resize the image
-        let scaledImage = image.scaleTo(newWidth: 1280.0)
-        guard let imageData = scaledImage.jpegData(compressionQuality: 0.5) else {
-            Log.log("failed to convert to jpeg")
-            return
-        }
-
-        // Create the file metadata
-        let metadata = StorageMetadata()
-        metadata.contentType = "image/jpg"
-        metadata.cacheControl = "public,max-age=3600"
-
-        // Prepare the upload task
-        let uploadTask = photosStorageRef.putData(imageData, metadata: metadata) // Observe the upload status
-
-        uploadTask.observe(.success) { (snapshot) in
-            snapshot.reference.downloadURL(completion: { (url, error) in
-                guard let url = url else { Log.log("Error getting downloadURL"); return }
-                Log.log(level: .INFO, "\(url) uploaded")
-                completionHandler(url.absoluteString)
-            })
-        }
-
-        uploadTask.observe(.progress) { (snapshot) in
-            let percentComplete: Double = Double(100.0) * Double(snapshot.progress!.completedUnitCount) / Double(snapshot.progress!.totalUnitCount)
-            Log.log(level: .INFO, "Uploading \(imageKey)... \(percentComplete)% complete")
-        }
-
-        uploadTask.observe(.failure) { (snapshot) in
-            if let error = snapshot.error {
-                Log.log(error.localizedDescription)
-            }
         }
     }
 
@@ -195,7 +155,7 @@ final class FireB {
                 dbRef.setValue(dictionary) { error, dbRef in
                     if let err = error {
                         Log.log(level: .ERROR, "error uploading key \(String(describing: key))")
-                        Log.log(level: .ERROR, err.localizedDescription)
+                        Log.log(level: .ERROR, "\(err)")
                         completionHandler(nil)
                     } else {
                         Log.log(level: .INFO, "Record with key \(String(describing: key)) added to \(dbRef.url)")
@@ -222,7 +182,7 @@ final class FireB {
             dbRef.removeValue() { error, dbRef in
                 if let err = error {
                     Log.log("error removing key \(String(describing: key))")
-                    Log.log(err.localizedDescription)
+                    Log.log(level: .ERROR, "\(err)")
                     completionHandler(nil)
                 } else {
                     Log.log(level: .INFO, "Record with key \(String(describing: key)) removed")
@@ -252,10 +212,10 @@ final class FireB {
                         let object = try decoder.decode(T.self, from: data!)
                         objects.append((item.key, object))
                     } catch {
-                        Log.log("Failed to decode JSON for type \(T.self)")
-                        Log.log(item.debugDescription)
-                        Log.log(data.debugDescription)
-                        Log.log(error.localizedDescription)
+                        Log.log(level: .ERROR, "Failed to decode JSON for type \(T.self)")
+                        Log.log(level: .ERROR, item.debugDescription)
+                        Log.log(level: .ERROR, data.debugDescription)
+                        Log.log(level: .ERROR, "\(error)")
                     }
                 }
             }
@@ -285,7 +245,7 @@ final class FireB {
                 Log.log("Failed to decode JSON")
                 Log.log(item.debugDescription)
                 Log.log(data.debugDescription)
-                Log.log(error.localizedDescription)
+                Log.log(level: .ERROR, "\(error)")
             }
         }
         return objects

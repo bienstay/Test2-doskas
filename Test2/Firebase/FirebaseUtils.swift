@@ -13,6 +13,7 @@ import FirebaseFunctions
 
 extension FireB {
 
+    // need a special function to know which specific order has been updated
     func observeOrderChanges() {
         observed.insert(ORDERS_DB_REF)
         ORDERS_DB_REF.observe(.childChanged, with: { (snapshot) in
@@ -30,20 +31,33 @@ extension FireB {
                 } catch {
                     Log.log(level: .ERROR, "Failed to decode JSON")
                     Log.log(level: .ERROR, snapshot.debugDescription)
-                    Log.log(level: .ERROR, error.localizedDescription)
+                    Log.log(level: .ERROR, "\(error)")
                 }
             }
         })
     }
 
-    func getGuests(hotelID: String, completionHandler: @ escaping ([(String, GuestInfo)]) -> Void) {
-        let guestsRef = Database.database().reference().child("hotels").child(hotelID).child("users")
+    func getHotels(completionHandler: @ escaping ([String:String]) -> Void) {
+        let hotelsRef = ROOT_DB_REF.child("config").child("hotels")
+        hotelsRef.getData { (error, snapshot) in
+            if let error = error {
+                Log.log("Error getting data \(error)")
+            } else {
+                if let data = snapshot.value as? [String:String] {
+                    completionHandler(data)
+                }
+            }
+        }
+    }
+
+    func getGuests(hotelID: String, index: Int, completionHandler: @ escaping (Int, [(String, GuestInfo)]) -> Void) {
+        let guestsRef = ROOT_DB_REF.child("hotels").child(hotelID).child("users")
         guestsRef.getData { (error, snapshot) in
             if let error = error {
                 Log.log("Error getting data \(error)")
             } else {
                 let data: [(String, GuestInfo)] = self.decodeSnapshot(snapshot: snapshot)
-                completionHandler(data)
+                completionHandler(index, data)
             }
         }
     }
@@ -68,13 +82,6 @@ extension FireB {
             childUpdates["canceledBy"] = name
         }
 
-//        guard let key = ref.child("posts").childByAutoId().key else { return }
-//        let post = ["uid": userID,
-//                    "author": username,
-//                    "title": title,
-//                    "body": body]
-//        let childUpdates = ["/posts/\(key)": post,
-//                            "/user-posts/\(userID)/\(key)/": post]
         orderRef.updateChildValues(childUpdates) { (error, dbref) in
             if let error = error {
                 Log.log(level: .ERROR, "Error getting data \(error)")
@@ -126,35 +133,17 @@ extension FireB {
             }
         }
     }
-/*
+
     func translateChat(chatRoom: String, chatID: String, textToTranslate: String, targetLanguage: String, completionHandler: @ escaping (String?) -> Void) {
-        let chatPath = "/hotels/\(hotel.id)/chats/messages/\(chatRoom)/\(chatID)"
-        functions.httpsCallable("translateAndUpdateChat").call(
-            ["text": textToTranslate,
-             "targetLanguage": targetLanguage,
-             "chatPath": chatPath
-            ]) { result, error in
-                if let error = error {
-                    Log.log(level: .ERROR, error.localizedDescription)
-                }
-                if let data = result?.data {
-                    print(data)
-                    completionHandler("Ok")
-                } else {
-                    completionHandler(nil)
-                }
-            }
-    }
-*/
-    func translateChat(chatRoom: String, chatID: String, textToTranslate: String, targetLanguage: String, completionHandler: @ escaping (String?) -> Void) {
-        let chatTranslationPath = "/hotels/\(hotel.id)/chats/messages/\(chatRoom)/\(chatID)/translations"
+        let hotelId: String = hotel.id!
+        let chatTranslationPath = "/hotels/\(hotelId)/chats/messages/\(chatRoom)/\(chatID)/translations"
         functions.httpsCallable("translateAndUpdateChat").call(
             ["text": textToTranslate,
              "targetLanguage": targetLanguage,
              "chatPath": chatTranslationPath
             ]) { result, error in
                 if let error = error {
-                    Log.log(level: .ERROR, "Error translating... " + error.localizedDescription)
+                    Log.log(level: .ERROR, "Error translating... - \(error)")
                 }
                 if let data = result?.data {
                     print(data)
@@ -165,4 +154,30 @@ extension FireB {
             }
     }
 
+    func markChatAsRead(chatRoom: String, chatID: String) {
+        CHAT_MESSAGES_DB_REF.child(chatRoom).child(chatID).child("read").setValue(true)
+    }
+
+    func addHotelToConfig(hotelId: String, hotelName: String) {
+        CONFIG_DB_REF.child("hotels").child(hotelId).setValue(hotelName)
+    }
+
+    func updateGuestDataInDB(guestId: String, phoneID: String, phoneLang: String) {
+        GUESTS_DB_REF.child("/\(guestId)/phones/\(phoneID)/language").setValue(phoneLang) { (error, ref) in
+            if let error = error {
+                Log.log(level: .ERROR, "Data could not be saved: \(error)")
+            }
+          }
+    }
+
+    func t1() {
+        functions.httpsCallable("t1").call() {result, error in
+            if let error = error {
+                Log.log(level: .ERROR, "Error translating... - \(error)")
+            }
+            if let data = result?.data {
+                print(data)
+            }
+        }
+    }
 }

@@ -82,7 +82,7 @@ extension NewsViewController: UITableViewDataSource {
     }
 
     func deletePost(post: NewsPost) {
-        let errStr = FireB.shared.removeRecord(key: post.postId, record: post) { record in
+        let errStr = dbProxy.removeRecord(key: post.postId, record: post) { record in
             if record == nil {
                 showInfoDialogBox(vc: self, title: "Error", message: "Post delete failed")
             } else {

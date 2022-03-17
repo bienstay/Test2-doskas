@@ -9,17 +9,20 @@ import UIKit
 import CoreData
 import Firebase
 
+var dbProxy: DBProxy!
+
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        hotel.name = "Sheraton Full Moon"
+        //hotel.name = "Sheraton Full Moon"
+        //hotel.id = "SheratonFullMoon"
+        //guest.id = "MacsMaciulek"
+        hotel.id = "RitzKohSamui"
+        guest.id = "AnitaMaciek"
         hotel.initialize()
-
-        //initRoomOrdersFromSampleData()
-        //saveJSONData(from: roomItems, to: "roomItems")
 
         initDestinationDining()
         initInfoItems() // TODO remove
@@ -32,29 +35,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             //(window?.rootViewController as? UITabBarController)?.selectedIndex = 1
         }
 
-        //UITabBar.setTransparentTabbar()
-
         FirebaseApp.configure()
         //FirebaseConfiguration.shared.setLoggerLevel(.max)
+        FirebaseConfiguration.shared.setLoggerLevel(.error)
+        FireB.shared.initialize()
+        dbProxy = FireB.shared
 
         Auth.auth().signInAnonymously() { (authResult, error) in
-            if let error = error { Log.log(error.localizedDescription) }
+            if let error = error { Log.log(level: .ERROR, "\(error)") }
             else {
                 Log.log(level: .INFO, "Signed in with user: " + authResult!.user.uid)
                 guest.updateGuestDataInDB()
                 guest.startObserving()
                 hotel.startObserving()
-//                FireB.shared.translate(textToTranslate: "I want to be a rich man", targetLanguage: "pl") { translatedText in
-//                    print(translatedText)
-//                }
-//                FireB.shared.translateChat(
-//                    //chatPath: "/hotels/SheratonFullMoon/chats/messages/MacsMaciulek_hotel/2021-07-18 13:21:30^976",
-//                    chatRoom: "MacsMaciulek_hotel",
-//                    chatID: "2021-07-18 13:21:30^976",
-//                    textToTranslate: "I want to be a rich man",
-//                    targetLanguage: "pl") { result in
-//                    print(result)
-//                }
             }
         }
 
@@ -195,14 +188,14 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
 
-        Log.log(level: .INFO, notification.request.content.debugDescription)
+        Log.log(level: .DEBUG, notification.request.content.debugDescription)
         //let userInfo = notification.request.content.userInfo
         completionHandler([.alert, .sound, .badge])
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
 
-        Log.log(level: .INFO, response.debugDescription)
+        Log.log(level: .DEBUG, response.debugDescription)
         
         UIApplication.shared.applicationIconBadgeNumber = 0 // TODO this should be cleared by addressing the specific notification
         // TODO - instead of showing a dialog box, show a badge on a tabbar for Orders
@@ -243,7 +236,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { [weak self] granted, error in
             Log.log(level: .INFO, "Notification ermission granted: \(granted)")
-            if let err = error { Log.log(err.localizedDescription) }
+            if let error = error { Log.log(level: .ERROR, "\(error)") }
             guard granted else { return }
             self?.getNotificationSettings()
           }

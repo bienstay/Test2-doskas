@@ -46,7 +46,7 @@ class CreateOrderViewController: UIViewController, UITableViewDataSource {
         }
 
         let orderInDB = OrderInDB(order: order, roomNumber: roomNumber)
-        let errStr = FireB.shared.addRecord(record: orderInDB) { record in
+        let errStr = dbProxy.addRecord(record: orderInDB) { record in
             if record == nil {
                 DispatchQueue.main.async {
                     showInfoDialogBox(vc: self, title: "Error", message: "Order update failed")
@@ -82,9 +82,10 @@ class CreateOrderViewController: UIViewController, UITableViewDataSource {
         initView(tableView: tableView)
 
         tableView.dataSource = self
-        tableView.backgroundColor = .white
+        tableView.backgroundColor = .clear
         tableView.showsVerticalScrollIndicator = true
         tableView.separatorStyle = .singleLine
+        tableView.separatorColor = .BBseparatorColor
 
         tabBarController?.tabBar.isHidden = true
         activityIndicator.hidesWhenStopped = true
@@ -108,11 +109,7 @@ class CreateOrderViewController: UIViewController, UITableViewDataSource {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        navigationController?.setNavigationBarHidden(false, animated: true)
-        navigationController?.navigationBar.prefersLargeTitles = false
-        navigationController?.navigationBar.tintColor = .black
-        navigationController?.hidesBarsOnSwipe = false
-
+        setupListNavigationBar(largeTitle: false)
         title = .newOrder
     }
 
@@ -156,6 +153,8 @@ class CreateOrderItemCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
     }
 
     func draw(item: Order.OrderItem, category: Order.Category) {

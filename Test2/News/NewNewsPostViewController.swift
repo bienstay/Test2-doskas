@@ -90,14 +90,14 @@ class NewNewsPostViewController: UITableViewController {
             post.postId = post.timestamp.formatForSort()
         }
         if photoUpdated {
-            FireB.shared.uploadImage(image: photoImageView.image!, forLocation: .NEWS, imageName: post.postId) { photoURL in
+            dbProxy.uploadImage(image: photoImageView.image!, forLocation: .NEWS, imageName: post.postId) { photoURL in
                 post.imageFileURL = photoURL
-                let errStr = FireB.shared.addRecord(key: post.postId, record: post) { post in self.closeMe(post) }
+                let errStr = dbProxy.addRecord(key: post.postId, record: post) { post in self.closeMe(post) }
                 if let s = errStr { Log.log(s) }
             }
         } else {
             post.imageFileURL = postToEdit?.imageFileURL ?? ""
-            let errStr = FireB.shared.addRecord(key: post.postId, record: post) { post in self.closeMe(post) }   // update only
+            let errStr = dbProxy.addRecord(key: post.postId, record: post) { post in self.closeMe(post) }   // update only
             if let s = errStr { Log.log(s) }
         }
 
