@@ -22,23 +22,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guest.id = "AnitaMaciek"
         hotel.initialize()
 
-        initDestinationDining()
-        initInfoItems() // TODO remove
-
-        registerForPushNotifications()
-        // Check if launched from notification
-        let notificationOption = launchOptions?[.remoteNotification]
-        if let notification = notificationOption as? [String: AnyObject], let aps = notification["aps"] as? [String: AnyObject] {
-            Log.log(level: .INFO, "App launched from a notification: \(aps)")
-            //(window?.rootViewController as? UITabBarController)?.selectedIndex = 1
-        }
+        //initDestinationDining()
+        //initInfoItems() // TODO remove
 
         FirebaseApp.configure()
-        //FirebaseConfiguration.shared.setLoggerLevel(.max)
         FirebaseConfiguration.shared.setLoggerLevel(.error)
         FireB.shared.initialize()
         dbProxy = FireB.shared
-        
+
+        UNUserNotificationCenter.current().delegate = self
+        // ask user for permission to receive notification
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
+            if granted { Log.log(level: .INFO, "User notifications allowed") }
+            else { Log.log("User notifications not allowed, error: " + error.debugDescription) }
+        }
+        // always register for notifications, user can change permission outside the app, in system settings
+        UIApplication.shared.registerForRemoteNotifications()
+
+        // setup firebase messaging delegate
+        Messaging.messaging().delegate = self
+
+/*
         Messaging.messaging().token { token, error in
           if let error = error {
             print("Error fetching FCM registration token: \(error)")
@@ -46,7 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("FCM registration token: \(token)")
           }
         }
-        Messaging.messaging().delegate = self
+*/
 
         Auth.auth().signInAnonymously() { (authResult, error) in
             if let error = error { Log.log(level: .ERROR, "\(error)") }
@@ -62,7 +66,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             [NSAttributedString.Key.font: UIFont(name: "Verdana", size: 12)!],
             for: .normal)
 
-        
+        // Check if launched from notification
+        let notificationOption = launchOptions?[.remoteNotification]
+        if let notification = notificationOption as? [String: AnyObject], let aps = notification["aps"] as? [String: AnyObject] {
+            Log.log(level: .INFO, "App launched from a notification: \(aps)")
+            //(window?.rootViewController as? UITabBarController)?.selectedIndex = 1
+        }
+
         return true
     }
 
@@ -74,7 +84,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Log.log(level: .INFO, "path: \(url.path)")
         Log.log(level: .INFO, "components: \(url.pathComponents)")
         
-        let message = url.host?.removingPercentEncoding
+        //let message = url.host?.removingPercentEncoding
         //pushMenuScreen(restaurantName: message!)
         return true
     }
@@ -169,14 +179,16 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
 
-        Log.log(level: .DEBUG, notification.request.content.debugDescription)
+        Log.log(level: .INFO, "In userNotificationCenter willPresent")
+        Log.log(level: .INFO, notification.request.content.debugDescription)
         //let userInfo = notification.request.content.userInfo
         completionHandler([.alert, .sound, .badge])
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
 
-        Log.log(level: .DEBUG, response.debugDescription)
+        Log.log(level: .INFO, "In userNotificationCenter willPresent")
+        Log.log(level: .INFO, response.debugDescription)
         
         UIApplication.shared.applicationIconBadgeNumber = 0 // TODO this should be cleared by addressing the specific notification
         // TODO - instead of showing a dialog box, show a badge on a tabbar for Orders
@@ -202,7 +214,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         }
         Log.log(level: .INFO, "Received remote notification: \(aps)")
     }
-
+/*
     func registerForPushNotifications() {
 
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
@@ -222,7 +234,8 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             self?.getNotificationSettings()
           }
     }
-    
+*/
+/*
     func getNotificationSettings() {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             Log.log(level: .INFO, "Notification settings: \(settings)")
@@ -232,11 +245,12 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             }
         }
     }
-    
+*/
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
         let token = tokenParts.joined()
-        Log.log(level: .INFO, "Device Token: \(token)")
+        Log.log(level: .INFO, "Device APN Token: \(token)")
+        // setup firebase messaging
         Messaging.messaging().apnsToken = deviceToken
     }
     
@@ -247,7 +261,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 
 extension AppDelegate: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        Log.log(level: .INFO, "RegistrationToken: " + (fcmToken ?? "empty token"))
+        Log.log(level: .INFO, "FCM Registration Token: " + (fcmToken ?? "empty token"))
 /*
     let tokenDict = ["token": fcmToken ?? ""]
     NotificationCenter.default.post(

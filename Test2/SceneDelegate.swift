@@ -66,13 +66,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             Log.log(level: .INFO, "path: \(context.url.path)")
             Log.log(level: .INFO, "components: \(context.url.pathComponents)")
         }
+/*
         if let host = URLContexts.first?.url.host {
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
-            //appDelegate.pushMenuScreen(restaurantName: host)
+            appDelegate.pushMenuScreen(restaurantName: host)
         }
         else {
             Log.log("Invalid scheme")
         }
+*/
     }
 /*
     func pushMenuScreen(restaurantName: String) {
