@@ -8,6 +8,7 @@ target 'Test2' do
   pod 'Firebase/Database'
   pod 'Firebase/Storage'
   pod 'Firebase/Functions'
+  pod 'Firebase/Messaging'
 
   pod 'Kingfisher', '~> 7.0'
   pod 'IBPCollectionViewCompositionalLayout'

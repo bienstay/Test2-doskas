@@ -111,10 +111,10 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let location = locations.last! as CLLocation
-        print(location.coordinate.latitude)
-        print(location.coordinate.longitude)
+        //print(location.coordinate.latitude)
+        //print(location.coordinate.longitude)
         let locValue:CLLocationCoordinate2D = manager.location!.coordinate
-        print("locations = \(locValue.latitude) \(locValue.longitude)")
+        //print("locations = \(locValue.latitude) \(locValue.longitude)")
         guest.currentLocationLatitude = locValue.latitude
         guest.currentLocationLongitude = locValue.longitude
     }

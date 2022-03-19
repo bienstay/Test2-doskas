@@ -28,7 +28,7 @@ protocol DBProxy {
     func removeRecord<T: Encodable>(key:String, subNode: String?, record: T, completionHandler: @ escaping (T?) -> Void) -> String?
     func subscribeForUpdates<T: Codable>(subNode: String?, start timestamp: Int?, limit: UInt?, parameter: QueryParameter?, completionHandler: @ escaping ([(String, T)]) -> Void)
     func removeAllObservers()
-    
+
     func observeOrderChanges()
     func getHotels(completionHandler: @ escaping ([String:String]) -> Void)
     func getGuests(hotelID: String, index: Int, completionHandler: @ escaping (Int, [(String, GuestInfo)]) -> Void)
@@ -44,6 +44,7 @@ protocol DBProxy {
     func uploadImage(image: UIImage, forLocation: PhotoLocation, imageName: String?, completionHandler: @escaping (String) -> Void)
 }
 
+// extensions are needed as a workaround to no default parameters in protocols
 extension DBProxy {
     func addRecord<T: Encodable>(key:String?, record: T, completionHandler: @ escaping (T?) -> Void) -> String? {
         return addRecord(key:key, subNode: nil, record: record, completionHandler: completionHandler)

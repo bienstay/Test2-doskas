@@ -96,7 +96,7 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
             case .Room: break
             case .GPS:
                 //if let coordinates = order.buggyData?.locationData.split(separator: ","), coordinates.count == 2 {
-                let coo = order.buggyData?.locationData.components(separatedBy: [",", " "])
+                //let coo = order.buggyData?.locationData.components(separatedBy: [",", " "])
                 if let coordinates = order.buggyData?.locationData.components(separatedBy: [",", " "]), coordinates.count == 2 {
                     let latitude = Double(coordinates[0]) ?? 0.0
                     let longitude = Double(coordinates[1]) ?? 0.0
