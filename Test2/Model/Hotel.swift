@@ -7,21 +7,30 @@
 
 import UIKit
 
-protocol Place {
-    var name: String { get }
-    var description: String { get }
-    var image: String { get }
-    var location: String { get }
-    var geoLatitude: Double { get }
-    var geoLongitude: Double { get }
+enum POIType: String, Codable {
+    case Restaurant
+    case Recreation
+    case Administration
 }
 
-enum FacilityType {
-    case Restaurant
-    case Spa
-    case Fitness
-    case Watersports
-    case Divecenter
+protocol POI {
+    var name: String { get }
+    var type: POIType { get }
+    var description: String { get }
+    var image: String { get }
+    var geoLatitude: Double { get }
+    var geoLongitude: Double { get }
+    init()
+}
+
+struct Facility: POI, Codable {
+    var id: String?
+    var name: String = ""
+    var type: POIType = .Recreation
+    var description: String = ""
+    var image: String = ""
+    var geoLatitude: Double = 0.0
+    var geoLongitude: Double = 0.0
 }
 
 struct DestinationDiningItem {
@@ -76,6 +85,7 @@ class Hotel {
     var socialURLs: [String:String] = [:]
     var image: String = ""
     var restaurants: [Restaurant] = []
+    var facilities: [Facility] = []
     var roomService: Restaurant = Restaurant()
     var destinationDining: DestinationDining = DestinationDining()
     var news: [NewsPost] = []
@@ -89,11 +99,13 @@ class Hotel {
 
     func initialize() {
         roomItems = loadFromJSON(fileNameNoExt: "roomItems")
+        roomService.name = "In room dining"
     }
 
     func startObserving() {
         dbProxy.subscribeForUpdates(completionHandler: hotelInfoUpdated)
         dbProxy.subscribeForUpdates(completionHandler: restaurantsUpdated)
+        dbProxy.subscribeForUpdates(completionHandler: facilitiesUpdated)
         dbProxy.subscribeForUpdates(completionHandler: newsUpdated)
         dbProxy.subscribeForUpdates(completionHandler: offersUpdated)
         dbProxy.subscribeForUpdates(completionHandler: offerGroupsUpdated)
@@ -160,6 +172,17 @@ class Hotel {
         NotificationCenter.default.post(name: .restaurantsUpdated, object: nil)
         dbProxy.subscribeForUpdates(completionHandler: self.menusUpdated)
     }
+
+    func facilitiesUpdated(allFacilities: [(String, Facility)]) {
+        facilities = []
+        allFacilities.forEach( {
+            var f = $0.1
+            f.id = $0.0
+            facilities.append(f)
+        } )
+        NotificationCenter.default.post(name: .facilitiesUpdated, object: nil)
+    }
+
 
     func menusUpdated(allMenus: [(String, Menu2)]) {
         hotel.restaurants.forEach( {$0.menus = []} )

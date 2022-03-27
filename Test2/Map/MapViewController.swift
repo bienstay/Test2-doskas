@@ -8,6 +8,10 @@
 import UIKit
 import MapKit
 
+class MyAnnotation: MKPointAnnotation {
+    var poi: POI?
+}
+
 class MapViewController: UIViewController {
 
     @IBOutlet var mapView: MKMapView!
@@ -17,6 +21,7 @@ class MapViewController: UIViewController {
         super.viewDidLoad()
         initView()
 
+        mapView.delegate = self
         initMapview()
 
         mapView.showsCompass = true
@@ -33,7 +38,6 @@ class MapViewController: UIViewController {
             title = hotel.name
         }
 
-        //mapView.delegate = self
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -58,12 +62,16 @@ class MapViewController: UIViewController {
             mapView.setRegion(region, animated: false)
         }
         else {  // all facilities, TODO now restaurants only
-            var annotations: [MKPointAnnotation] = []
-            for f in hotel.restaurants {
-                let coordinate = CLLocationCoordinate2D(latitude: f.geoLatitude, longitude: f.geoLongitude)
-                let annotation = MKPointAnnotation()
+            var annotations: [MyAnnotation] = []
+            var pois: [POI] = []
+            pois.append(contentsOf: hotel.restaurants)
+            pois.append(contentsOf: hotel.facilities)
+            for p in pois {
+                let coordinate = CLLocationCoordinate2D(latitude: p.geoLatitude, longitude: p.geoLongitude)
+                let annotation = MyAnnotation()
                 annotation.coordinate = coordinate
-                annotation.title = f.name
+                annotation.title = p.name
+                annotation.poi = p
                 annotations.append(annotation)
             }
             mapView.showAnnotations(annotations, animated: true)
@@ -95,3 +103,23 @@ extension MapViewController: MKMapViewDelegate {
     }
 }
 */
+
+extension MapViewController: MKMapViewDelegate {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let reuseIdentifier = "MyMarker"
+        let myAnnotation = annotation as! MyAnnotation
+        var annotationView: MKMarkerAnnotationView? = mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier) as? MKMarkerAnnotationView
+        if annotationView == nil {
+            annotationView = MKMarkerAnnotationView(annotation: myAnnotation, reuseIdentifier: reuseIdentifier)
+        }
+        var color = UIColor.red
+        switch myAnnotation.poi?.type {
+        case .Restaurant: color = .red
+        case .Recreation: color = .green
+        case .Administration: color = .blue
+        default: color = .red
+        }
+        annotationView?.markerTintColor = color
+        return annotationView
+    }
+}

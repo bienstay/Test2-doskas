@@ -47,8 +47,6 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         }
     }
 
-    var onboardingShown: Bool = false
-
     override func viewDidLoad() {
         super.viewDidLoad()
         initView(collectionView: collectionView)
@@ -85,11 +83,11 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
     }
 
     override func viewDidAppear(_ animated: Bool) {
-        if !onboardingShown {
+        if !UserDefaults.standard.bool(forKey: "OnboardingShown") {
             let vc = OnboardingPageViewController()
             vc.modalPresentationStyle = .fullScreen
             self.present(vc, animated: true, completion: nil)
-            onboardingShown = true
+            UserDefaults.standard.set(true, forKey: "OnboardingShown") //Bool
         }
     }
 
@@ -110,7 +108,7 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let location = locations.last! as CLLocation
+        //let location = locations.last! as CLLocation
         //print(location.coordinate.latitude)
         //print(location.coordinate.longitude)
         let locValue:CLLocationCoordinate2D = manager.location!.coordinate

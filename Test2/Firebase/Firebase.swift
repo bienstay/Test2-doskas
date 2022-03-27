@@ -55,6 +55,7 @@ final class FireB: DBProxy {
     var NEWS_DB_REF: DatabaseReference          { BASE_DB_REF.child("news") }
     var ACTIVITIES_DB_REF: DatabaseReference    { BASE_DB_REF.child("activities") }
     var RESTAURANTS_DB_REF: DatabaseReference   { BASE_DB_REF.child("restaurants") }
+    var FACILITIES_DB_REF: DatabaseReference    { BASE_DB_REF.child("facilities") }
     var MENUS_DB_REF: DatabaseReference         { BASE_DB_REF.child("menus2") }
     var ORDERS_DB_REF: DatabaseReference        { BASE_DB_REF.child("orders") }
     var OFFERGROUPS_DB_REF: DatabaseReference   { BASE_DB_REF.child("offerGroups") }
@@ -89,6 +90,8 @@ final class FireB: DBProxy {
                 return OFFERS_DB_REF
             case is Restaurant.Type:
                 return RESTAURANTS_DB_REF
+            case is Facility.Type:
+                return FACILITIES_DB_REF
             case is Menu2.Type:
                 return MENUS_DB_REF
             case is ChatMessage.Type:

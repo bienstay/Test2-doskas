@@ -44,6 +44,7 @@
 		0638E79D2709053700EACFC1 /* WaterSports.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0638E79C2709053700EACFC1 /* WaterSports.storyboard */; };
 		064352A326385A3900A54BFC /* extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 064352A226385A3900A54BFC /* extensions.swift */; };
 		064352A526385F8400A54BFC /* Restaurant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 064352A426385F8400A54BFC /* Restaurant.swift */; };
+		064C205227EF604C00DA7A4A /* ScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 064C205127EF604C00DA7A4A /* ScannerViewController.swift */; };
 		065F032A2635D47F00A5CDEF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065F03292635D47F00A5CDEF /* AppDelegate.swift */; };
 		065F032C2635D47F00A5CDEF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065F032B2635D47F00A5CDEF /* SceneDelegate.swift */; };
 		065F03362635D48000A5CDEF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 065F03352635D48000A5CDEF /* Assets.xcassets */; };
@@ -151,6 +152,7 @@
 		0638E79C2709053700EACFC1 /* WaterSports.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = WaterSports.storyboard; sourceTree = "<group>"; };
 		064352A226385A3900A54BFC /* extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = extensions.swift; sourceTree = "<group>"; };
 		064352A426385F8400A54BFC /* Restaurant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restaurant.swift; sourceTree = "<group>"; };
+		064C205127EF604C00DA7A4A /* ScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerViewController.swift; sourceTree = "<group>"; };
 		065F03262635D47F00A5CDEF /* Test2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Test2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		065F03292635D47F00A5CDEF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		065F032B2635D47F00A5CDEF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -286,6 +288,7 @@
 				065F035A2635FCEF00A5CDEF /* Map */,
 				065F0362263621AE00A5CDEF /* Model */,
 				066BF3FA2637552500EE834C /* Resources */,
+				064C205127EF604C00DA7A4A /* ScannerViewController.swift */,
 				065F03292635D47F00A5CDEF /* AppDelegate.swift */,
 				065F032B2635D47F00A5CDEF /* SceneDelegate.swift */,
 				065F03352635D48000A5CDEF /* Assets.xcassets */,
@@ -734,6 +737,7 @@
 				069FD3CC268CBB200076C6FC /* OrderSummaryViewController.swift in Sources */,
 				069DB367263B105C00C91468 /* RestaurantTableViewCell.swift in Sources */,
 				06AF200F27E2ED7600B9A692 /* DBProxy.swift in Sources */,
+				064C205227EF604C00DA7A4A /* ScannerViewController.swift in Sources */,
 				061DC83D26547BC300C4C794 /* HotelInit.swift in Sources */,
 				06F7726C2671755800E64D54 /* NewNewsPostViewController.swift in Sources */,
 				06AC358D271B7FAE00D249C6 /* Likes.swift in Sources */,

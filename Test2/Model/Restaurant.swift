@@ -7,9 +7,10 @@
 
 import Foundation
 
-class Restaurant: Place, Codable {
+class Restaurant: POI, Codable {
     var id: String?
     var name: String = ""
+    var type: POIType { return .Restaurant }
     var cuisines: String = ""
     var description: String = ""
     var image: String = ""
@@ -20,6 +21,6 @@ class Restaurant: Place, Codable {
 
     lazy var menus: [Menu2] = []
 
-    init() {}
+    required init() {}
 }
 

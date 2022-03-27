@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="9tM-2L-oAn">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="9tM-2L-oAn">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -98,11 +98,70 @@
             </objects>
             <point key="canvasLocation" x="152" y="512"/>
         </scene>
+        <!--Scanner View Controller-->
+        <scene sceneID="E0y-r2-SUX">
+            <objects>
+                <viewController storyboardIdentifier="Scanner" id="6Lh-Dd-ZMj" customClass="ScannerViewController" customModule="Test2" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="PjS-1C-p5H">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LpO-mH-hFy">
+                                <rect key="frame" x="0.0" y="241" width="414" height="414"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="LpO-mH-hFy" secondAttribute="height" multiplier="1:1" id="fKQ-68-9BW" userLabel="aspect = 1:1"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Scan the QR code" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BrS-nB-vpN">
+                                <rect key="frame" x="87.5" y="429.5" width="239.5" height="37"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
+                                <color key="textColor" systemColor="systemYellowColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GbX-QF-CLm">
+                                <rect key="frame" x="181" y="801" width="52" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Skip">
+                                    <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="skipButtonPressed:" destination="6Lh-Dd-ZMj" eventType="touchUpInside" id="TGZ-4R-yg6"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Mga-dL-ajB"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="LpO-mH-hFy" firstAttribute="centerY" secondItem="PjS-1C-p5H" secondAttribute="centerY" id="4gv-w8-7AQ"/>
+                            <constraint firstItem="Mga-dL-ajB" firstAttribute="bottom" secondItem="GbX-QF-CLm" secondAttribute="bottom" constant="30" id="EKy-5J-0R4"/>
+                            <constraint firstItem="LpO-mH-hFy" firstAttribute="leading" secondItem="Mga-dL-ajB" secondAttribute="leading" id="PXt-2L-bCg"/>
+                            <constraint firstItem="BrS-nB-vpN" firstAttribute="centerX" secondItem="PjS-1C-p5H" secondAttribute="centerX" id="T1F-ui-rgs"/>
+                            <constraint firstItem="BrS-nB-vpN" firstAttribute="centerY" secondItem="PjS-1C-p5H" secondAttribute="centerY" id="T79-Wb-COZ"/>
+                            <constraint firstItem="Mga-dL-ajB" firstAttribute="trailing" secondItem="LpO-mH-hFy" secondAttribute="trailing" id="UkT-aY-xq5"/>
+                            <constraint firstItem="LpO-mH-hFy" firstAttribute="centerX" secondItem="PjS-1C-p5H" secondAttribute="centerX" id="dth-PU-ZPs"/>
+                            <constraint firstItem="GbX-QF-CLm" firstAttribute="centerX" secondItem="PjS-1C-p5H" secondAttribute="centerX" id="vcO-4u-WzJ"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="captureView" destination="LpO-mH-hFy" id="806-Lu-hoC"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Pxk-gv-w6j" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="880" y="82"/>
+        </scene>
     </scenes>
     <resources>
         <image name="logoAppviator3dWithLetters" width="398.8599853515625" height="398.8599853515625"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="systemOrangeColor">
             <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemYellowColor">
+            <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

@@ -387,12 +387,15 @@ func prepareNotification(id: String, title: String, subtitle:String, body: Strin
 }
 
 extension Notification.Name {
+    static let dbProxyReady = Notification.Name("dbProxyReady")
+
     static let hotelInfoUpdated = Notification.Name("hotelInfoUpdated")
     static let ordersUpdated = Notification.Name("ordersUpdated")
     static let offersUpdated = Notification.Name("offersUpdated")
     static let newsUpdated = Notification.Name("newsUpdated")
     static let activitiesUpdated = Notification.Name("activitiesUpdated")
     static let restaurantsUpdated = Notification.Name("restarantsUpdated")
+    static let facilitiesUpdated = Notification.Name("facilitiesUpdated")
     static let menusUpdated = Notification.Name("menusUpdated")
     static let chatRoomsUpdated = Notification.Name("chatRoomsUpdated")
     static let chatMessagesUpdated = Notification.Name("chatMessagesUpdated")
@@ -428,11 +431,11 @@ class PaddingLabel: UILabel {
 }
 
 
-func showInfoDialogBox(vc: UIViewController, title:String, message: String, completion: (() -> Void)? = nil) {
+func showInfoDialogBox(vc: UIViewController, title:String, message: String, completion: ((UIAlertAction) -> Void)? = nil) {
     let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-    let OKAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+    let OKAction = UIAlertAction(title: "Ok", style: .default, handler: completion)
     alertController.addAction(OKAction)
-    vc.present(alertController, animated: true, completion:completion)
+    vc.present(alertController, animated: true, completion: nil)
 }
 
 extension UIViewController {
@@ -640,4 +643,17 @@ extension UIApplication {
             }
         }
     }
+}
+
+
+func convertJSONStringToDictionary(text: String) -> [String:AnyObject]? {
+    if let data = text.data(using: .utf8) {
+        do {
+            let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:AnyObject]
+            return json
+        } catch {
+            print("Error converting string to dictionary: \(text)")
+        }
+    }
+    return nil
 }
