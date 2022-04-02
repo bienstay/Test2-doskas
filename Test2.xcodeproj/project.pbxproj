@@ -94,6 +94,8 @@
 		06AC358B271B58F100D249C6 /* Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AC358A271B58F100D249C6 /* Firebase.swift */; };
 		06AC358D271B7FAE00D249C6 /* Likes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AC358C271B7FAE00D249C6 /* Likes.swift */; };
 		06AF200F27E2ED7600B9A692 /* DBProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AF200E27E2ED7500B9A692 /* DBProxy.swift */; };
+		06B9776327F16C0500E2ACA1 /* NFCReaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06B9776227F16C0500E2ACA1 /* NFCReaderViewController.swift */; };
+		06B9776527F5809800E2ACA1 /* BarcodeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06B9776427F5809800E2ACA1 /* BarcodeData.swift */; };
 		06DDB8C1265874BE00A5FD84 /* sheratonFacilities.json in Resources */ = {isa = PBXBuildFile; fileRef = 06DDB8C0265874BE00A5FD84 /* sheratonFacilities.json */; };
 		06E5FC432739804A0082EFAC /* RoomService.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E5FC422739804A0082EFAC /* RoomService.png */; };
 		06F5D161270B516D004931F7 /* ActivitiesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F5D160270B516D004931F7 /* ActivitiesViewController.swift */; };
@@ -204,6 +206,8 @@
 		06AC358A271B58F100D249C6 /* Firebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firebase.swift; sourceTree = "<group>"; };
 		06AC358C271B7FAE00D249C6 /* Likes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Likes.swift; sourceTree = "<group>"; };
 		06AF200E27E2ED7500B9A692 /* DBProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBProxy.swift; sourceTree = "<group>"; };
+		06B9776227F16C0500E2ACA1 /* NFCReaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCReaderViewController.swift; sourceTree = "<group>"; };
+		06B9776427F5809800E2ACA1 /* BarcodeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeData.swift; sourceTree = "<group>"; };
 		06DDB8C0265874BE00A5FD84 /* sheratonFacilities.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sheratonFacilities.json; sourceTree = "<group>"; };
 		06E5FC422739804A0082EFAC /* RoomService.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RoomService.png; sourceTree = "<group>"; };
 		06F5D160270B516D004931F7 /* ActivitiesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesViewController.swift; sourceTree = "<group>"; };
@@ -271,6 +275,7 @@
 		065F03282635D47F00A5CDEF /* Test2 */ = {
 			isa = PBXGroup;
 			children = (
+				06B9776127F16B3B00E2ACA1 /* Main */,
 				06882F63274911B600D643A0 /* Offers */,
 				064352A126385A2000A54BFC /* Misc */,
 				06F5D16C2713283A004931F7 /* Firebase */,
@@ -288,17 +293,13 @@
 				065F035A2635FCEF00A5CDEF /* Map */,
 				065F0362263621AE00A5CDEF /* Model */,
 				066BF3FA2637552500EE834C /* Resources */,
-				064C205127EF604C00DA7A4A /* ScannerViewController.swift */,
 				065F03292635D47F00A5CDEF /* AppDelegate.swift */,
 				065F032B2635D47F00A5CDEF /* SceneDelegate.swift */,
 				065F03352635D48000A5CDEF /* Assets.xcassets */,
-				069DB354263AED0E00C91468 /* Main.storyboard */,
-				061C4E702736010200A6D5DA /* LaunchScreen.storyboard */,
 				065F033A2635D48000A5CDEF /* Info.plist */,
 				061C4E202735E8E700A6D5DA /* InfoPlist.strings */,
 				061C4E1D2735E8D500A6D5DA /* Localizable.strings */,
 				0632D44426683C9C001F7036 /* GoogleService-Info.plist */,
-				061DC83E26554AD900C4C794 /* SplashViewController.swift */,
 				06F77266266FD8B500E64D54 /* Test2.entitlements */,
 			);
 			path = Test2;
@@ -353,6 +354,7 @@
 				06AC358C271B7FAE00D249C6 /* Likes.swift */,
 				069945A92729FC75009548AA /* Translations.swift */,
 				06882F682749644D00D643A0 /* Offer.swift */,
+				06B9776427F5809800E2ACA1 /* BarcodeData.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -472,6 +474,18 @@
 				069FDBA926A39486004F543F /* ChatListViewController.swift */,
 			);
 			path = Chat;
+			sourceTree = "<group>";
+		};
+		06B9776127F16B3B00E2ACA1 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				064C205127EF604C00DA7A4A /* ScannerViewController.swift */,
+				069DB354263AED0E00C91468 /* Main.storyboard */,
+				061C4E702736010200A6D5DA /* LaunchScreen.storyboard */,
+				061DC83E26554AD900C4C794 /* SplashViewController.swift */,
+				06B9776227F16C0500E2ACA1 /* NFCReaderViewController.swift */,
+			);
+			path = Main;
 			sourceTree = "<group>";
 		};
 		06BDB9C1263B39D500999FB8 /* RestaurantsDetail */ = {
@@ -699,6 +713,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				069DB35A263B0FB800C91468 /* ReviewViewController.swift in Sources */,
+				06B9776327F16C0500E2ACA1 /* NFCReaderViewController.swift in Sources */,
 				0683A1F026516FF50000D122 /* MenuPageViewController.swift in Sources */,
 				062D1A0926EE247500A14FDE /* ConfigViewController.swift in Sources */,
 				0632D452266ADF66001F7036 /* OrderDetailsCell.swift in Sources */,
@@ -721,6 +736,7 @@
 				06606DF3270760330023412C /* ServiceOrderViewController.swift in Sources */,
 				06F7726E2673931300E64D54 /* NewsDetailViewController.swift in Sources */,
 				06882F5E2742B89C00D643A0 /* UpdateHotelInfoViewController.swift in Sources */,
+				06B9776527F5809800E2ACA1 /* BarcodeData.swift in Sources */,
 				06F5D163270B5197004931F7 /* NewActivityViewController.swift in Sources */,
 				06882F692749644D00D643A0 /* Offer.swift in Sources */,
 				069DB369263B12EB00C91468 /* RoundedTextField.swift in Sources */,

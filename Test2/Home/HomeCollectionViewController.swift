@@ -171,6 +171,7 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
                 case .news:         _ = pushViewController(storyBoard: "News", id: "News")
                 case .activities:   _ = pushViewController(storyBoard: "Activities", id: "Activities")
                 case .offers:       _ = pushViewController(storyBoard: "Offers", id: "Offers")
+                //case .map:          _ = pushViewController(storyBoard: "Main", id: "NFCReader")
                 case .map:          _ = pushViewController(storyBoard: "Map", id: "mapViewController")
                 //case .watersports:  _ = pushViewController(storyBoard: "WaterSports", id: "WaterSports")
 /*

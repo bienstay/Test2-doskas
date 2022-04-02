@@ -13,6 +13,7 @@ enum QueryParameter {
     case ChatRoom(id: String)
     case ChatUser(id: String)
     case GuestInfo(id: String)
+    case GuestInDb(id: String)
 }
 
 enum PhotoLocation {
@@ -39,9 +40,11 @@ protocol DBProxy {
     func translateChat(chatRoom: String, chatID: String, textToTranslate: String, targetLanguage: String, completionHandler: @ escaping (String?) -> Void)
     func markChatAsRead(chatRoom: String, chatID: String)
     func addHotelToConfig(hotelId: String, hotelName: String)
-    func updateGuestDataInDB(guestId: String, phoneID: String, phoneLang: String)
+    func updatePhoneData(guestId: String, phoneID: String, phoneLang: String)
 
     func uploadImage(image: UIImage, forLocation: PhotoLocation, imageName: String?, completionHandler: @escaping (String) -> Void)
+    
+    func updateGuest(guestId: String, guestData: GuestInDB)
 }
 
 // extensions are needed as a workaround to no default parameters in protocols

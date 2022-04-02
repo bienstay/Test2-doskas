@@ -93,24 +93,22 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { return }
             guard let stringValue = readableObject.stringValue else { return }
             AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
-            found(code: stringValue)
+            found(barcodeString: stringValue)
         }
 
         //dismiss(animated: true)
     }
 
     @IBAction func skipButtonPressed(_ sender: UIButton) {
-        found(code: """
-              { "hotelId": "RitzKohSamui", "roomNumber": 9104, "guestId": "AnitaMaciek" }
-              """)
-//        found(code: """
-//              { "hotelId": "SheratonFullMoon", "roomNumber": 117, "guestId": "MacsMaciulek" }
-//              """)
+        found(barcodeString: """
+            { "hotelId": "RitzKohSamui", "roomNumber": 9104, "guestId": "AnitaMaciek", "guestName": "Anita & Maciek", "startDate": 669364704.669543 }
+        """)
     }
 
-    func found(code: String) {
-        print(code)
+    func found(barcodeString: String) {
+        Log.log(level: .INFO, "Barcode scanned: \(barcodeString)")
 
+/*
         guard   let params = convertJSONStringToDictionary(text: code),
                 let hotelId = params["hotelId"] as? String,
                 let roomNumber = params["roomNumber"] as? Int,
@@ -120,31 +118,29 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             showInfoDialogBox(vc: self, title: "Invalid barcode", message: "This is not a valid barcode") { _ in self.captureSession.startRunning() }
             return
         }
-
+        Log.log(level: .INFO, "Barcode: hotelId=\(hotelId), roomNumber=\(roomNumber), guestId=\(guestId)")
         UserDefaults.standard.set(code, forKey: "barcodeData")
+*/
+        guard let b: BarcodeData = parseJSON(barcodeString) else {
+            Log.log(level: .INFO, "Invalid barcode: \(barcodeString)")
+            showInfoDialogBox(vc: self, title: "Invalid barcode", message: "This is not a valid barcode") { _ in self.captureSession.startRunning() }
+            return
+        }
+        Log.log(level: .INFO, "Barcode parsed: \(b)")
 
+        hotel.id = b.hotelId
+
+        // store guest data in db
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let guestId = appDelegate.formatGuestId(barcodeData: b)
+        let guestInDb = GuestInDB(roomNumber: b.roomNumber, name: b.guestName ?? "", startDate: b.startDate, endDate: b.endDate ?? Date(timeInterval: 86400*7, since: b.startDate), phones: nil)
+        dbProxy.updateGuest(guestId: guestId, guestData: guestInDb)
+
+        // store barcode in memory - TODO - do it in a completion of dxproxy.updateGuest
+        UserDefaults.standard.set(barcodeString, forKey: "barcodeData")
+
         appDelegate.initHotel()
         appDelegate.transitionToHome()
-
-        return;
-
-        DispatchQueue.main.async {
-            /*
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let viewController = storyboard.instantiateViewController(withIdentifier: "MainScreen") as! UITabBarController
-            UIApplication.shared.windows.first?.rootViewController = viewController
-            UIApplication.shared.windows.first?.makeKeyAndVisible()
-            */
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            if let window = UIApplication.shared.keyWindow {
-                let viewController = storyboard.instantiateViewController(withIdentifier: "MainScreen")
-                viewController.view.frame = window.bounds
-                UIView.transition(with: window, duration: 2.0, options: .transitionCrossDissolve, animations: {
-                    window.rootViewController = viewController
-                }, completion: nil)
-            }
-        }
     }
 
     override var prefersStatusBarHidden: Bool {

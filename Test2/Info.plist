@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NFCReaderUsageDescription</key>
+	<string>Use NFC to scan the hotel card</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -53,11 +55,11 @@
 	<key>NSCameraUsageDescription</key>
 	<string>For taking photos</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Used to provide services based on the current guest's location</string>
+	<string>Used to provide services based on the current guest&apos;s location</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Used to provide services based on the current guest's location</string>
+	<string>Used to provide services based on the current guest&apos;s location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Used to provide services based on the current guest's location</string>
+	<string>Used to provide services based on the current guest&apos;s location</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

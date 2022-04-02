@@ -52,6 +52,7 @@ final class FireB: DBProxy {
     var HOTEL_DB_REF: DatabaseReference         { BASE_DB_REF }
     var INFO_DB_REF: DatabaseReference          { BASE_DB_REF }
     var GUESTS_DB_REF: DatabaseReference        { BASE_DB_REF.child("users") }
+    var GUESTSNEW_DB_REF: DatabaseReference     { BASE_DB_REF.child("guests") }
     var NEWS_DB_REF: DatabaseReference          { BASE_DB_REF.child("news") }
     var ACTIVITIES_DB_REF: DatabaseReference    { BASE_DB_REF.child("activities") }
     var RESTAURANTS_DB_REF: DatabaseReference   { BASE_DB_REF.child("restaurants") }
@@ -99,6 +100,8 @@ final class FireB: DBProxy {
                 else {return CHAT_MESSAGES_DB_REF }
             case is GuestInfo.Type:
                 return GUESTS_DB_REF
+            case is GuestInDB.Type:
+                return GUESTSNEW_DB_REF
             case is LikesPerUserInDB.Type:
                 if let child = subNode { return LIKESPERUSER_DB_REF.child(child) }
                 else { return LIKESPERUSER_DB_REF }
@@ -128,6 +131,9 @@ final class FireB: DBProxy {
                 return dbRef?.queryOrderedByKey().queryEqual(toValue: "info")
             case is GuestInfo.Type:
                 guard case .GuestInfo(let guestId) = parameter else { Log.log(errStr); return nil }
+                return dbRef?.queryOrderedByKey().queryEqual(toValue: guestId)
+            case is GuestInDB.Type:
+                guard case .GuestInDb(let guestId) = parameter else { Log.log(errStr); return nil }
                 return dbRef?.queryOrderedByKey().queryEqual(toValue: guestId)
             case is OrderInDB.Type:
                 guard case .OrderInDB(let roomNumber) = parameter else { Log.log(errStr); return nil }

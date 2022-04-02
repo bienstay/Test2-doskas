@@ -8,6 +8,17 @@
 import Foundation
 import Firebase
 
+struct GuestInDB: Codable {
+    struct PhoneInfo: Codable {
+        var language: String
+    }
+    var roomNumber: Int = 0
+    var name: String = ""
+    var startDate: Date = Date()
+    var endDate: Date = Date()
+    var phones:[String:PhoneInfo]? = [:]
+}
+
 class GuestInfo: Codable {
     var Name = ""
     var roomNumber = 0
@@ -58,9 +69,9 @@ class Guest: Codable {
         }
     }
 
-    func updateGuestDataInDB() {
+    func updatePhoneDataInDB() {
         if let phoneID: String = UIDevice.current.identifierForVendor?.uuidString, let phoneLang: String = Locale.current.languageCode {
-            dbProxy.updateGuestDataInDB(guestId: id, phoneID: phoneID, phoneLang: phoneLang)
+            dbProxy.updatePhoneData(guestId: id, phoneID: phoneID, phoneLang: phoneLang)
     /*
             dbProxy.GUESTS_DB_REF.child("/\(id)/phones/\(phoneID)/language").setValue(phoneLang) { (error, ref) in
                 if let error = error {
@@ -70,7 +81,7 @@ class Guest: Codable {
      */
         }
     }
-
+/*
     func startObserving() {
         dbProxy.subscribeForUpdates(parameter: .GuestInfo(id: self.id), completionHandler: guestUpdated)
 
@@ -89,11 +100,32 @@ class Guest: Codable {
             dbProxy.subscribeForUpdates(parameter: .ChatRoom(id: chatRoom), completionHandler: chatMessagesUpdated)
         //dbProxy.subscribeForUpdates(parameter: .ChatRoom(id: guest.chatRooms.first!), completionHandler: chatTranslationsUpdated)
         }
+*/
+    func startObserving() {
+        dbProxy.subscribeForUpdates(parameter: .GuestInDb(id: self.id), completionHandler: guestUpdated)
+
+        dbProxy.observeOrderChanges()
+    }
+
+    func guestUpdated(allGuests: [(String, GuestInDB)]) {
+        if let g = allGuests.first {
+            self.Name = g.1.name
+            self.roomNumber = g.1.roomNumber
+            //self.chatRooms = g.1.chatRooms.keys.map({$0})
+            self.chatRooms = ["AnitaMaciek_hotel"]
+        }
+        NotificationCenter.default.post(name: .guestUpdated, object: nil)
+        dbProxy.subscribeForUpdates(parameter: .OrderInDB(roomNumber: roomNumber), completionHandler: ordersUpdated)
+        if let chatRoom = guest.chatRooms.first {
+            dbProxy.subscribeForUpdates(parameter: .ChatRoom(id: chatRoom), completionHandler: chatMessagesUpdated)
+        //dbProxy.subscribeForUpdates(parameter: .ChatRoom(id: guest.chatRooms.first!), completionHandler: chatTranslationsUpdated)
+        }
 
         if guest.isAdmin() {
             dbProxy.subscribeForUpdates(completionHandler: likesUpdated)
         } else {
             dbProxy.subscribeForUpdates(subNode: guest.id, parameter: nil, completionHandler: likesPerUserUpdated)
+            guest.updatePhoneDataInDB()
         }
     }
 

@@ -162,8 +162,8 @@ extension FireB {
         CONFIG_DB_REF.child("hotels").child(hotelId).setValue(hotelName)
     }
 
-    func updateGuestDataInDB(guestId: String, phoneID: String, phoneLang: String) {
-        GUESTS_DB_REF.child("/\(guestId)/phones/\(phoneID)/language").setValue(phoneLang) { (error, ref) in
+    func updatePhoneData(guestId: String, phoneID: String, phoneLang: String) {
+        GUESTSNEW_DB_REF.child("/\(guestId)/phones/\(phoneID)/language").setValue(phoneLang) { (error, ref) in
             if let error = error {
                 Log.log(level: .ERROR, "Data could not be saved: \(error)")
             }
@@ -177,6 +177,20 @@ extension FireB {
             }
             if let data = result?.data {
                 print(data)
+            }
+        }
+    }
+
+    func updateGuest(guestId: String, guestData: GuestInDB) {
+        if let g = convertObjectToDictionary(t: guestData) {
+            let updates = [
+                "/guests/\(guestId)": g,
+                "/rooms/\(guestData.roomNumber)/currentGuest": guestId
+            ] as [String : Any]
+            HOTEL_DB_REF.updateChildValues(updates)  { (error, dbref) in
+                if let error = error {
+                    Log.log(level: .ERROR, "Error updating data \(guestData)\n\(error)")
+                }
             }
         }
     }

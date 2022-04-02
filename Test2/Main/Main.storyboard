@@ -151,6 +151,33 @@
             </objects>
             <point key="canvasLocation" x="880" y="82"/>
         </scene>
+        <!--Reader View Controller-->
+        <scene sceneID="q3N-wM-KIK">
+            <objects>
+                <viewController storyboardIdentifier="NFCReader" id="fj1-jd-6mF" customClass="NFCReaderViewController" customModule="Test2" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="2fR-LW-9cP">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Scan NFC tag" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="maT-Hk-aqQ">
+                                <rect key="frame" x="115" y="429.5" width="184.5" height="37"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="PYn-oq-hHT"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="maT-Hk-aqQ" firstAttribute="centerX" secondItem="2fR-LW-9cP" secondAttribute="centerX" id="ED8-TW-dbi"/>
+                            <constraint firstItem="maT-Hk-aqQ" firstAttribute="centerY" secondItem="2fR-LW-9cP" secondAttribute="centerY" id="Ynh-2b-e38"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bgz-Y1-SGL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1697" y="82"/>
+        </scene>
     </scenes>
     <resources>
         <image name="logoAppviator3dWithLetters" width="398.8599853515625" height="398.8599853515625"/>

@@ -18,19 +18,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        //hotel.id = "RitzKohSamui"
-        //guest.id = "AnitaMaciek"
-        //hotel.initialize()
 
-        print(UserDefaults.standard.dictionaryRepresentation())
-        
         FirebaseApp.configure()
         FirebaseConfiguration.shared.setLoggerLevel(.error)
         FireB.shared.initialize()
         dbProxy = FireB.shared
 
         UNUserNotificationCenter.current().delegate = self
-        // ask user for permission to receive notification
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
             if granted { Log.log(level: .INFO, "User notifications allowed") }
             else { Log.log("User notifications not allowed, error: " + error.debugDescription) }
@@ -46,9 +40,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             else {
                 Log.log(level: .INFO, "Signed in with user: " + authResult!.user.uid)
                 NotificationCenter.default.post(name: .dbProxyReady, object: nil)
-//                guest.updateGuestDataInDB()
-//                guest.startObserving()
-//                hotel.startObserving()
             }
         }
 
@@ -125,22 +116,47 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 
 
 extension AppDelegate: MessagingDelegate {
+    var genericTopic: String { hotel.id ?? "" }
+    var roomTopic: String { (hotel.id ?? "") + "_" + String(guest.roomNumber) }
+
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         Log.log(level: .INFO, "FCM Registration Token: " + (fcmToken ?? "empty token"))
-        Messaging.messaging().subscribe(toTopic: "tescikTopic") { error in
-            if let e = error { print(e.localizedDescription) }
-            else { print("Subscribed to weather topic") }
+    }
+
+    func subscribeForMessages() {
+        Messaging.messaging().subscribe(toTopic: genericTopic) { error in
+            if let e = error { Log.log(level: .ERROR, e.localizedDescription) }
+            else { Log.log(level: .INFO, "Subscribed to topic \(self.genericTopic)") }
+        }
+        Messaging.messaging().subscribe(toTopic: roomTopic) { error in
+            if let e = error { Log.log(level: .ERROR, e.localizedDescription) }
+            else { Log.log(level: .INFO, "Subscribed to topic \(self.roomTopic) ") }
         }
     }
 }
 
 
 extension AppDelegate {
-    
+    func formatGuestId(barcodeData: BarcodeData) -> String {
+        return String(barcodeData.roomNumber) + "_" + barcodeData.startDate.formatForDB()
+    }
+
     func initHotel() {
         hotel.initialize()
 
-        let barcodeDataFromDefaults = UserDefaults.standard.string(forKey: "barcodeData")
+        guard let barcodeString = UserDefaults.standard.string(forKey: "barcodeData") else {
+            Log.log(level: .ERROR, "Barcode data missing")
+            return
+        }
+
+        guard let b: BarcodeData = parseJSON(barcodeString) else {
+            Log.log(level: .ERROR, "Invalid barcode: \(barcodeString)")
+            return
+        }
+        Log.log(level: .INFO, "Barcode from UserDefaults: \(b)")
+
+        //guard let barcodeData: BarcodeData = parseJSON(barcodeDataFromDefaults) else { return }
+/*
         guard   let barcodeData = barcodeDataFromDefaults,
                 let params = convertJSONStringToDictionary(text: barcodeData),
                 let hotelId = params["hotelId"] as? String,
@@ -150,16 +166,17 @@ extension AppDelegate {
             Log.log(level: .ERROR, "Invalid barcode data: \(barcodeDataFromDefaults ?? "barcodeData missing")")
             return
         }
-
-        hotel.id = hotelId
-        guest.id = guestId
-        guest.updateGuestDataInDB()
+*/
+        hotel.id = b.hotelId
+        //guest.id = guestId
+        guest.id = formatGuestId(barcodeData: b)
         guest.startObserving()
         hotel.startObserving()
+        
+        subscribeForMessages()
     }
 
     func transitionToHome() {
-        
         DispatchQueue.main.async {
             if let window = UIApplication.shared.keyWindow {
                 let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MainScreen")
@@ -169,6 +186,11 @@ extension AppDelegate {
                 }, completion: nil)
             }
         }
+/*
+        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MainScreen") as! UITabBarController
+        UIApplication.shared.windows.first?.rootViewController = viewController
+        UIApplication.shared.windows.first?.makeKeyAndVisible()
+ */
     }
 
     func transitionToScanner() {
@@ -176,7 +198,7 @@ extension AppDelegate {
             if let window = UIApplication.shared.keyWindow {
                 let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Scanner")
                 viewController.view.frame = window.bounds
-                UIView.transition(with: window, duration: 1.0, options:                     .transitionCurlUp, animations: {
+                UIView.transition(with: window, duration: 1.0, options:                     .transitionCrossDissolve, animations: {
                     window.rootViewController = viewController
                 }, completion: nil)
             }

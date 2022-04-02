@@ -355,6 +355,11 @@ extension Date {
         formatter3.dateFormat = "MMM dd, HH:mm:ss"
         return formatter3.string(from: self)
     }
+    func formatForDB() -> String {
+        let formatter3 = DateFormatter()
+        formatter3.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        return formatter3.string(from: self)
+    }
     func formatTimeShort() -> String {
         let formatter3 = DateFormatter()
         formatter3.dateFormat = "HH:mm"
@@ -656,4 +661,48 @@ func convertJSONStringToDictionary(text: String) -> [String:AnyObject]? {
         }
     }
     return nil
+}
+
+func convertObjectToDictionary<T:Codable>(t: T) -> [String:Any]? {
+    if let data = try? JSONEncoder().encode(t), let json = try? JSONSerialization.jsonObject(with: data) as? [String:AnyObject] {
+        return json
+    } else {
+        print("Error converting object to dictionary: \(t)")
+        return nil
+    }
+}
+
+//func parseJSON<T:Codable>(data: Data) -> T? {
+func parseJSON<T:Codable>(_ jsonString: String) -> T? {
+    var returnValue: T?
+    let data = Data(jsonString.utf8)
+    do {
+        returnValue = try JSONDecoder().decode(T.self, from: data)
+    } catch {
+        print("Error in parseJSON: \(error.localizedDescription)")
+    }
+
+    return returnValue
+}
+
+extension DateFormatter {
+  static let dateFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "dd-MM-yyyy HH:mm"
+    return formatter
+  }()
+}
+
+class MyJSONDecoder: JSONDecoder {
+    override init() {
+        super.init()
+        dateDecodingStrategy = .formatted(.dateFormatter)
+    }
+}
+
+class MyJSONEncoder: JSONEncoder {
+    override init() {
+        super.init()
+        dateEncodingStrategy = .formatted(.dateFormatter)
+    }
 }
