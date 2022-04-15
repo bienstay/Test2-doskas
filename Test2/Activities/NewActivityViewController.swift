@@ -93,7 +93,7 @@ class NewActivityViewController: UITableViewController {
         activity.imageFileURL = ""
 
         if photoUpdated {
-            dbProxy.uploadImage(image: activityImageView.image!, forLocation: .ACTIVITIES, imageName: activity.title) { photoURL in
+            storageProxy.uploadImage(forLocation: .ACTIVITIES, image: activityImageView.image!, imageName: activity.title) { photoURL in
                 activity.imageFileURL = photoURL
                 self.updateArrayAndDB(activity: activity, dow: dow.rawValue)
             }

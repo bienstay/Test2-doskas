@@ -8,7 +8,8 @@
 import UIKit
 
 class SplashViewController: UIViewController {
-    var dbProxyReady = false
+    //var dbProxyReady = false
+    var dbProxyReady = true
     var notReadyCounter = 0
 
     override func viewDidLoad() {
@@ -39,21 +40,10 @@ class SplashViewController: UIViewController {
 
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         if !(UserDefaults.standard.string(forKey: "barcodeData")?.isEmpty ?? true) {
-            appDelegate.initHotel()
+            appDelegate.initFromBarcode()
             appDelegate.transitionToHome()
         } else {
             appDelegate.transitionToScanner()
         }
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

@@ -52,7 +52,6 @@ extension OffersViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "OffersCell", for: indexPath) as! OffersCell
         cell.configure(group: indexPath.row, title: hotel.offerGroups[indexPath.row].title, subTitle: hotel.offerGroups[indexPath.row].subTitle, dataSource: self) { offerIndex in
-            print("selected offer \(offerIndex) in group \(indexPath.row) ")
             let vc = self.pushViewController(storyBoard: "Offers", id: "Offer") as! OfferViewController
             //vc.offer = hotel.offerGroups[indexPath.row].offers![offerIndex]
             if let offerID = hotel.offerGroups[indexPath.row].offers?[offerIndex] {
@@ -60,7 +59,6 @@ extension OffersViewController: UITableViewDataSource, UITableViewDelegate {
             }
         }
         cell.cellSelectedForEditClosure = { offerIndex in
-            print("selected offer \(offerIndex) in group \(indexPath.row) ")
             let vc = self.pushViewController(storyBoard: "Offers", id: "NewOffer") as! NewOfferViewController
             if let offerID = hotel.offerGroups[indexPath.row].offers?[offerIndex] {
                 vc.offerToEdit = hotel.offers[offerID] ?? Offer()

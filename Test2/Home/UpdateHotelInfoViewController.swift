@@ -75,7 +75,7 @@ class UpdateHotelInfoViewController: UITableViewController {
         }
 
         if photoUpdated {
-            dbProxy.uploadImage(image: photoImageView.image!, forLocation: .BASE, imageName: h.name) { photoURL in
+            storageProxy.uploadImage(forLocation: .BASE, image: photoImageView.image!, imageName: h.name) { photoURL in
                 h.image = photoURL
                 self.addHotelInfoToDB(hotel: h)
             }

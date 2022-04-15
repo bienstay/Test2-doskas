@@ -9,17 +9,10 @@ import Foundation
 import Firebase
 import FirebaseStorage
 
-extension FireB {
-/*
-    enum PhotoLocation {
-        case BASE
-        case NEWS
-        case ACTIVITIES
-        case RESTAURANTS
-    }
-*/
+final class FirebaseStorage: StorageProxy {
+    static let shared: FirebaseStorage = FirebaseStorage()
     var ROOT_PHOTOS_REF: StorageReference {
-        return storage.reference().child("/photos")
+        return Storage.storage().reference().child("/photos")
     }
 
     var BASE_PHOTOS_REF: StorageReference {
@@ -34,22 +27,26 @@ extension FireB {
     var ACTIVITIES_PHOTOS_REF: StorageReference { BASE_PHOTOS_REF.child("activities") }
     var RESTAURANTS_PHOTOS_REF: StorageReference { BASE_PHOTOS_REF.child("restaurants") }
 
-    func uploadImage(image: UIImage, forLocation: PhotoLocation, imageName: String? = nil, completionHandler: @escaping (String) -> Void) {
-        // Generate a unique ID for the post and prepare the post database reference
-        var photosStorageRef = BASE_PHOTOS_REF
+    private func getPhotoStorageRef(forLocation: PhotoLocation) -> StorageReference {
+        let photosStorageRef: StorageReference
         switch forLocation {
             case .BASE: photosStorageRef = BASE_PHOTOS_REF
             case .NEWS: photosStorageRef = NEWS_PHOTOS_REF
             case .ACTIVITIES: photosStorageRef = ACTIVITIES_PHOTOS_REF
             case .RESTAURANTS: photosStorageRef = RESTAURANTS_PHOTOS_REF
         }
+        return photosStorageRef
+    }
+    
+    func uploadImage(forLocation: PhotoLocation, image: UIImage, imageName: String? = nil, completionHandler: @escaping (String) -> Void) {
+        // Generate a unique ID for the post and prepare the post database reference
 
         // Use the unique key as the image name and prepare the storage reference
         //guard let imageKey = postDatabaseRef.key else { return }
         let imageKey = (imageName != nil ? imageName! : (Auth.auth().currentUser?.uid)! + "___" + Date().formatFull())
         Log.log(level: .INFO, "Uploading image with the key: " + imageKey)
 
-        photosStorageRef = photosStorageRef.child("\(imageKey).jpg")
+        let photosStorageRef = getPhotoStorageRef(forLocation: forLocation).child("\(imageKey).jpg")
 
         // Resize the image
         let scaledImage = image.scaleTo(newWidth: 1280.0)
@@ -84,6 +81,21 @@ extension FireB {
             if let error = snapshot.error {
                 Log.log(level: .ERROR, "\(error)")
             }
+        }
+    }
+
+    func getImageURL(forLocation: PhotoLocation, imageName: String, completionHandler: @escaping (URL?, Error?) -> Void) {
+        let photosStorageRef = getPhotoStorageRef(forLocation: forLocation).child(imageName)
+        photosStorageRef.downloadURL() { url, error in
+            completionHandler(url, error)
+        }
+    }
+
+    func setImage(imageView: UIImageView, name: String) {
+        if let url = URL(string: name) {
+            imageView.kf.setImage(with: url)
+        } else {
+            imageView.image = nil
         }
     }
 

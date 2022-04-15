@@ -88,7 +88,7 @@ class NewOfferViewController: UITableViewController {
             offer.id = nil
         }
         if photoUpdated {
-            dbProxy.uploadImage(image: photoImageView.image!, forLocation: .NEWS, imageName: offer.id) { photoURL in
+            storageProxy.uploadImage(forLocation: .NEWS, image: photoImageView.image!, imageName: offer.id) { photoURL in
                 offer.imageURL = photoURL
                 let errStr = dbProxy.addRecord(key: offer.id, record: offer) { offer in self.closeMe(offer) }
                 if let s = errStr { Log.log(s) }

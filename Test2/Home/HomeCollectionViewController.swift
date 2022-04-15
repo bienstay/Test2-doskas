@@ -119,7 +119,7 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         locationManager.stopUpdatingLocation()
-        print(error)
+        Log.log(level: .ERROR, error.localizedDescription)
     }
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -367,6 +367,18 @@ class HomeHeaderCell: UICollectionViewCell {
     }
 
     func draw(title: String, imageURL: String) {
+/*
+        if let filename = URL(string: imageURL)?.lastPathComponent {
+            storageProxy.getImageURL(forLocation: .BASE, imageName: filename) { url, error in
+                if let url = url {
+                    Log.log("url for locations is \(url)")
+                    self.picture.kf.setImage(with: url)
+                } else {
+                    Log.log(level: .ERROR, error.debugDescription)
+                }
+            }
+        }
+*/
         picture.kf.setImage(with: URL(string: imageURL))
         titleLabel.text = title
         unreadChatLabel.text = String(guest.unreadChatCount)

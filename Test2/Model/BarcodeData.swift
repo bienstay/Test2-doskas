@@ -10,9 +10,13 @@ import Foundation
 struct BarcodeData: Codable {
     var roomNumber: Int
     var hotelId: String
-    var startDate: Date
+
+    var startDate: Date?
     var endDate: Date?
     var guestName: String?
+
+    var userName: String?
+    var password: String?
 
     func isValid() -> Bool { return roomNumber > 0 && !hotelId.isEmpty }
 }

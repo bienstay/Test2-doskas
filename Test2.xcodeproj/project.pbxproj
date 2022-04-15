@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		06090DD927C7AFC200B85393 /* NewOfferViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06090DD827C7AFC200B85393 /* NewOfferViewController.swift */; };
 		06137FCA27CB388700377F1B /* BuggyOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06137FC927CB388700377F1B /* BuggyOrderViewController.swift */; };
+		061630F42802B9E8007C501F /* LogInDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 061630F32802B9E8007C501F /* LogInDB.swift */; };
 		061C4E0D2734A8BA00A6D5DA /* Info.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 061C4E0C2734A8BA00A6D5DA /* Info.storyboard */; };
 		061C4E0F2734AB8C00A6D5DA /* OrderSummary.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 061C4E0E2734AB8C00A6D5DA /* OrderSummary.storyboard */; };
 		061C4E142734ACAC00A6D5DA /* Room.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 061C4E132734ACAC00A6D5DA /* Room.storyboard */; };
@@ -34,6 +35,7 @@
 		062038702641E72900B87708 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0620386F2641E72900B87708 /* MenuViewController.swift */; };
 		062038722641E81B00B87708 /* Menu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 062038712641E81B00B87708 /* Menu.storyboard */; };
 		062216402638B0B7002C0977 /* RoomItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0622163F2638B0B7002C0977 /* RoomItemCell.swift */; };
+		06293E2B2809523900226400 /* FirebaseDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06293E2A2809523900226400 /* FirebaseDatabase.swift */; };
 		062D1A0926EE247500A14FDE /* ConfigViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 062D1A0826EE247500A14FDE /* ConfigViewController.swift */; };
 		0632D44526683C9C001F7036 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0632D44426683C9C001F7036 /* GoogleService-Info.plist */; };
 		0632D4472668E3BD001F7036 /* FirebaseUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0632D4462668E3BD001F7036 /* FirebaseUtils.swift */; };
@@ -56,6 +58,9 @@
 		066BF3F82637460300EE834C /* Order.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066BF3F72637460300EE834C /* Order.swift */; };
 		066BF4032637619B00EE834C /* RoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066BF4022637619B00EE834C /* RoomViewController.swift */; };
 		0676E272264836A9002BFE80 /* MenuSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0676E271264836A9002BFE80 /* MenuSectionHeaderView.xib */; };
+		067A4D832807F4C70043F50D /* AuthProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067A4D822807F4C60043F50D /* AuthProxy.swift */; };
+		067A4D852807F64B0043F50D /* FirebaseAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067A4D842807F64B0043F50D /* FirebaseAuth.swift */; };
+		067A4D872807FBFE0043F50D /* StorageProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067A4D862807FBFE0043F50D /* StorageProxy.swift */; };
 		0683A1E1264EDB540000D122 /* CreateOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0683A1E0264EDB540000D122 /* CreateOrderViewController.swift */; };
 		0683A1EE265154250000D122 /* MenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0683A1ED265154250000D122 /* MenuCell.swift */; };
 		0683A1F026516FF50000D122 /* MenuPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0683A1EF26516FF50000D122 /* MenuPageViewController.swift */; };
@@ -118,6 +123,7 @@
 /* Begin PBXFileReference section */
 		06090DD827C7AFC200B85393 /* NewOfferViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOfferViewController.swift; sourceTree = "<group>"; };
 		06137FC927CB388700377F1B /* BuggyOrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuggyOrderViewController.swift; sourceTree = "<group>"; };
+		061630F32802B9E8007C501F /* LogInDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInDB.swift; sourceTree = "<group>"; };
 		061C4E0C2734A8BA00A6D5DA /* Info.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Info.storyboard; sourceTree = "<group>"; };
 		061C4E0E2734AB8C00A6D5DA /* OrderSummary.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = OrderSummary.storyboard; sourceTree = "<group>"; };
 		061C4E132734ACAC00A6D5DA /* Room.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Room.storyboard; sourceTree = "<group>"; };
@@ -144,6 +150,7 @@
 		0620386F2641E72900B87708 /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		062038712641E81B00B87708 /* Menu.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Menu.storyboard; sourceTree = "<group>"; };
 		0622163F2638B0B7002C0977 /* RoomItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomItemCell.swift; sourceTree = "<group>"; };
+		06293E2A2809523900226400 /* FirebaseDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseDatabase.swift; sourceTree = "<group>"; };
 		062D1A0826EE247500A14FDE /* ConfigViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigViewController.swift; sourceTree = "<group>"; };
 		0632D44426683C9C001F7036 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0632D4462668E3BD001F7036 /* FirebaseUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseUtils.swift; sourceTree = "<group>"; };
@@ -168,6 +175,9 @@
 		066BF3F72637460300EE834C /* Order.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Order.swift; sourceTree = "<group>"; };
 		066BF4022637619B00EE834C /* RoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomViewController.swift; sourceTree = "<group>"; };
 		0676E271264836A9002BFE80 /* MenuSectionHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuSectionHeaderView.xib; sourceTree = "<group>"; };
+		067A4D822807F4C60043F50D /* AuthProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthProxy.swift; sourceTree = "<group>"; };
+		067A4D842807F64B0043F50D /* FirebaseAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAuth.swift; sourceTree = "<group>"; };
+		067A4D862807FBFE0043F50D /* StorageProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageProxy.swift; sourceTree = "<group>"; };
 		0683A1E0264EDB540000D122 /* CreateOrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateOrderViewController.swift; sourceTree = "<group>"; };
 		0683A1ED265154250000D122 /* MenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCell.swift; sourceTree = "<group>"; };
 		0683A1EF26516FF50000D122 /* MenuPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuPageViewController.swift; sourceTree = "<group>"; };
@@ -355,6 +365,7 @@
 				069945A92729FC75009548AA /* Translations.swift */,
 				06882F682749644D00D643A0 /* Offer.swift */,
 				06B9776427F5809800E2ACA1 /* BarcodeData.swift */,
+				061630F32802B9E8007C501F /* LogInDB.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -528,6 +539,10 @@
 				06AC358A271B58F100D249C6 /* Firebase.swift */,
 				06882F612745BF8700D643A0 /* FirebaseStorage.swift */,
 				06AF200E27E2ED7500B9A692 /* DBProxy.swift */,
+				067A4D822807F4C60043F50D /* AuthProxy.swift */,
+				067A4D842807F64B0043F50D /* FirebaseAuth.swift */,
+				067A4D862807FBFE0043F50D /* StorageProxy.swift */,
+				06293E2A2809523900226400 /* FirebaseDatabase.swift */,
 			);
 			path = Firebase;
 			sourceTree = "<group>";
@@ -712,6 +727,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				067A4D852807F64B0043F50D /* FirebaseAuth.swift in Sources */,
 				069DB35A263B0FB800C91468 /* ReviewViewController.swift in Sources */,
 				06B9776327F16C0500E2ACA1 /* NFCReaderViewController.swift in Sources */,
 				0683A1F026516FF50000D122 /* MenuPageViewController.swift in Sources */,
@@ -727,6 +743,7 @@
 				06F5D169270B8E1B004931F7 /* Activity.swift in Sources */,
 				0683A1F2265172070000D122 /* MenuMainViewController.swift in Sources */,
 				06F7727026760FA100E64D54 /* IBPCollectionViewCompositionalLayoutInteroperability.swift in Sources */,
+				067A4D832807F4C70043F50D /* AuthProxy.swift in Sources */,
 				069945AA2729FC75009548AA /* Translations.swift in Sources */,
 				06F5D161270B516D004931F7 /* ActivitiesViewController.swift in Sources */,
 				062038662641A37500B87708 /* MapViewController.swift in Sources */,
@@ -734,7 +751,9 @@
 				06090DD927C7AFC200B85393 /* NewOfferViewController.swift in Sources */,
 				069DB35C263B0FB800C91468 /* RestaurantTableViewController.swift in Sources */,
 				06606DF3270760330023412C /* ServiceOrderViewController.swift in Sources */,
+				067A4D872807FBFE0043F50D /* StorageProxy.swift in Sources */,
 				06F7726E2673931300E64D54 /* NewsDetailViewController.swift in Sources */,
+				061630F42802B9E8007C501F /* LogInDB.swift in Sources */,
 				06882F5E2742B89C00D643A0 /* UpdateHotelInfoViewController.swift in Sources */,
 				06B9776527F5809800E2ACA1 /* BarcodeData.swift in Sources */,
 				06F5D163270B5197004931F7 /* NewActivityViewController.swift in Sources */,
@@ -763,6 +782,7 @@
 				0683A1E1264EDB540000D122 /* CreateOrderViewController.swift in Sources */,
 				06882F622745BF8700D643A0 /* FirebaseStorage.swift in Sources */,
 				069FD3D326938A150076C6FC /* OnboardingPageViewController.swift in Sources */,
+				06293E2B2809523900226400 /* FirebaseDatabase.swift in Sources */,
 				066BF4032637619B00EE834C /* RoomViewController.swift in Sources */,
 				0632D4472668E3BD001F7036 /* FirebaseUtils.swift in Sources */,
 				061DC83F26554AD900C4C794 /* SplashViewController.swift in Sources */,

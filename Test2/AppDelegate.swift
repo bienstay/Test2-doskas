@@ -7,10 +7,12 @@
 
 import UIKit
 import CoreData
-import Firebase
+//import Firebase
 import FirebaseMessaging
 
 var dbProxy: DBProxy!
+var authProxy: AuthProxy!
+var storageProxy: StorageProxy!
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -19,10 +21,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
-        FirebaseApp.configure()
-        FirebaseConfiguration.shared.setLoggerLevel(.error)
-        FireB.shared.initialize()
-        dbProxy = FireB.shared
+        Firebase.shared.initialize(useEmulator: true)
+        dbProxy = FirebaseDatabase.shared
+        authProxy = FirebaseAuthentication.shared
+        storageProxy = FirebaseStorage.shared
+        Messaging.messaging().delegate = self   // todo
+
+        Log.log("STARTING... launchOptions: \(launchOptions ?? [:])")
 
         UNUserNotificationCenter.current().delegate = self
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
@@ -32,9 +37,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // always register for notifications, user can change permission outside the app, in system settings
         UIApplication.shared.registerForRemoteNotifications()
 
-        // setup firebase messaging delegate
-        Messaging.messaging().delegate = self
 
+        //var email = "appuser@appviator.com"
+        //if let hId = hotel.id { email = "appuser@\(hId).appviator.com" }
+        //Auth.auth().signIn(withEmail: email, password: "Appviator2022!") { (authResult, error) in
+/*
         Auth.auth().signInAnonymously() { (authResult, error) in
             if let error = error { Log.log(level: .ERROR, "\(error)") }
             else {
@@ -42,6 +49,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 NotificationCenter.default.post(name: .dbProxyReady, object: nil)
             }
         }
+*/
 
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "Verdana", size: 14)!], for: .normal)
 
@@ -137,55 +145,52 @@ extension AppDelegate: MessagingDelegate {
 
 
 extension AppDelegate {
-    func formatGuestId(barcodeData: BarcodeData) -> String {
-        return String(barcodeData.roomNumber) + "_" + barcodeData.startDate.formatForDB()
-    }
-
-    func initHotel() {
-        hotel.initialize()
+    func initFromBarcode() {
 
         guard let barcodeString = UserDefaults.standard.string(forKey: "barcodeData") else {
-            Log.log(level: .ERROR, "Barcode data missing")
+            Log.log(level: .INFO, "Barcode data missing")
             return
         }
-
         guard let b: BarcodeData = parseJSON(barcodeString) else {
             Log.log(level: .ERROR, "Invalid barcode: \(barcodeString)")
             return
         }
-        Log.log(level: .INFO, "Barcode from UserDefaults: \(b)")
 
-        //guard let barcodeData: BarcodeData = parseJSON(barcodeDataFromDefaults) else { return }
-/*
-        guard   let barcodeData = barcodeDataFromDefaults,
-                let params = convertJSONStringToDictionary(text: barcodeData),
-                let hotelId = params["hotelId"] as? String,
-                let roomNumber = params["roomNumber"] as? Int,
-                let guestId = params["guestId"] as? String
-        else {
-            Log.log(level: .ERROR, "Invalid barcode data: \(barcodeDataFromDefaults ?? "barcodeData missing")")
-            return
-        }
-*/
         hotel.id = b.hotelId
-        //guest.id = guestId
-        guest.id = formatGuestId(barcodeData: b)
-        guest.startObserving()
-        hotel.startObserving()
+        Log.log(level: .INFO, "Barcode from UserDefaults: \(b)")
         
-        subscribeForMessages()
+        if b.roomNumber == 0 {
+            guest.roomNumber = 0
+            guest.id = "user"
+            guest.Name = b.userName!
+            guest.password = b.password
+        } else {
+            guest.id = Guest.formatGuestId(roomNumber: b.roomNumber, startDate: b.startDate ?? Date())
+            guest.roomNumber = b.roomNumber
+            guest.password = "Appviator2022!"
+        }
     }
 
     func transitionToHome() {
-        DispatchQueue.main.async {
-            if let window = UIApplication.shared.keyWindow {
-                let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MainScreen")
-                viewController.view.frame = window.bounds
-                UIView.transition(with: window, duration: 1.0, options: .transitionFlipFromLeft, animations: {
-                    window.rootViewController = viewController
-                }, completion: nil)
+        authProxy.login(username: guest.email, password: guest.password ?? "invalid") { (authData, error) in
+            if authData != nil {
+                NotificationCenter.default.post(name: .dbProxyReady, object: nil)
+
+                hotel.initialize()
+                hotel.startObserving()
+                guest.startObserving()
+                DispatchQueue.main.async {
+                    if let window = UIApplication.shared.keyWindow {
+                        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MainScreen")
+                        viewController.view.frame = window.bounds
+                        UIView.transition(with: window, duration: 1.0, options: .transitionFlipFromLeft, animations: {
+                            window.rootViewController = viewController
+                        }, completion: nil)
+                    }
+                }
             }
         }
+
 /*
         let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MainScreen") as! UITabBarController
         UIApplication.shared.windows.first?.rootViewController = viewController

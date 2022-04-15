@@ -16,13 +16,6 @@ enum QueryParameter {
     case GuestInDb(id: String)
 }
 
-enum PhotoLocation {
-    case BASE
-    case NEWS
-    case ACTIVITIES
-    case RESTAURANTS
-}
-
 protocol DBProxy {
     
     func addRecord<T: Encodable>(key:String?, subNode: String?, record: T, completionHandler: @ escaping (T?) -> Void) -> String?
@@ -42,9 +35,10 @@ protocol DBProxy {
     func addHotelToConfig(hotelId: String, hotelName: String)
     func updatePhoneData(guestId: String, phoneID: String, phoneLang: String)
 
-    func uploadImage(image: UIImage, forLocation: PhotoLocation, imageName: String?, completionHandler: @escaping (String) -> Void)
+    //func uploadImage(image: UIImage, forLocation: PhotoLocation, imageName: String?, completionHandler: @escaping (String) -> Void)
     
-    func updateGuest(guestId: String, guestData: GuestInDB)
+    func updateGuest(hotelId: String, guestId: String, guestData: GuestInDB, completionHandler: @ escaping () -> Void)
+    func log(level: Log.LogLevel, s: String)
 }
 
 // extensions are needed as a workaround to no default parameters in protocols
@@ -84,8 +78,10 @@ extension DBProxy {
     }
 }
 
+/*
 extension DBProxy {
     func uploadImage(image: UIImage, forLocation: PhotoLocation, completionHandler: @escaping (String) -> Void) {
         uploadImage(image: image, forLocation: forLocation, imageName: nil, completionHandler: completionHandler)
     }
 }
+*/

@@ -41,7 +41,7 @@ class BuggyOrderViewController: UIViewController {
         }
 
         if segmentedControl.selectedSegmentIndex == Order.BuggyData.LocationType.Photo.rawValue &&  backgroundPicture.image?.size.width != 0 {
-            dbProxy.uploadImage(image: backgroundPicture.image!, forLocation: .NEWS, imageName: String(roomNumber!) + " " + String(orderNumber)) { photoURL in
+            storageProxy.uploadImage(forLocation: .NEWS, image: backgroundPicture.image!, imageName: String(roomNumber!) + " " + String(orderNumber)) { photoURL in
                 self.finalizeOrderSend(roomNumber: roomNumber!, orderNumber: orderNumber, photoURL: photoURL)
             }
         } else {

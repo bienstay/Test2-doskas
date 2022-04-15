@@ -87,10 +87,10 @@ class NewNewsPostViewController: UITableViewController {
         }
         else {
             post.timestamp = Date()
-            post.postId = post.timestamp.formatForSort()
+            post.postId = post.timestamp.formatForSort().replacingOccurrences(of: " ", with: "")
         }
         if photoUpdated {
-            dbProxy.uploadImage(image: photoImageView.image!, forLocation: .NEWS, imageName: post.postId) { photoURL in
+            storageProxy.uploadImage(forLocation: .NEWS, image: photoImageView.image!, imageName: post.postId) { photoURL in
                 post.imageFileURL = photoURL
                 let errStr = dbProxy.addRecord(key: post.postId, record: post) { post in self.closeMe(post) }
                 if let s = errStr { Log.log(s) }

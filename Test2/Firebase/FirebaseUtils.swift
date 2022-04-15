@@ -8,10 +8,9 @@
 import Foundation
 import Firebase
 import FirebaseDatabase
-import FirebaseStorage
-import FirebaseFunctions
 
-extension FireB {
+
+extension FirebaseDatabase {
 
     // need a special function to know which specific order has been updated
     func observeOrderChanges() {
@@ -41,7 +40,7 @@ extension FireB {
         let hotelsRef = ROOT_DB_REF.child("config").child("hotels")
         hotelsRef.getData { (error, snapshot) in
             if let error = error {
-                Log.log("Error getting data \(error)")
+                Log.log("Error getting hotel data \(error)")
             } else {
                 if let data = snapshot.value as? [String:String] {
                     completionHandler(data)
@@ -54,7 +53,7 @@ extension FireB {
         let guestsRef = ROOT_DB_REF.child("hotels").child(hotelID).child("users")
         guestsRef.getData { (error, snapshot) in
             if let error = error {
-                Log.log("Error getting data \(error)")
+                Log.log("Error getting guest data \(error)")
             } else {
                 let data: [(String, GuestInfo)] = self.decodeSnapshot(snapshot: snapshot)
                 completionHandler(index, data)
@@ -84,7 +83,7 @@ extension FireB {
 
         orderRef.updateChildValues(childUpdates) { (error, dbref) in
             if let error = error {
-                Log.log(level: .ERROR, "Error getting data \(error)")
+                Log.log(level: .ERROR, "Error updating order status \(error.localizedDescription)")
             }
         }
     }
@@ -106,16 +105,16 @@ extension FireB {
 
         dbRef.updateChildValues(childUpdates) { (error, dbref) in
             if let error = error {
-                Log.log(level: .ERROR, "Error getting data \(error)")
+                Log.log(level: .ERROR, "Error updating likes \(error.localizedDescription)")
             }
         }
     }
 
 }
 
-extension FireB {
+extension FirebaseDatabase {
     func translate(textToTranslate: String, targetLanguage: String, completionHandler: @ escaping (String?) -> Void) {
-        functions.httpsCallable("translateTextSimple").call(["text": textToTranslate, "targetLanguage": targetLanguage]) { result, error in
+        Firebase.shared.functions.httpsCallable("translateTextSimple").call(["text": textToTranslate, "targetLanguage": targetLanguage]) { result, error in
             if let error = error as NSError? {
                 if error.domain == FunctionsErrorDomain {
                     //let code = FunctionsErrorCode(rawValue: error.code)
@@ -137,13 +136,13 @@ extension FireB {
     func translateChat(chatRoom: String, chatID: String, textToTranslate: String, targetLanguage: String, completionHandler: @ escaping (String?) -> Void) {
         let hotelId: String = hotel.id!
         let chatTranslationPath = "/hotels/\(hotelId)/chats/messages/\(chatRoom)/\(chatID)/translations"
-        functions.httpsCallable("translateAndUpdateChat").call(
+        Firebase.shared.functions.httpsCallable("translateAndUpdateChat").call(
             ["text": textToTranslate,
              "targetLanguage": targetLanguage,
              "chatPath": chatTranslationPath
             ]) { result, error in
                 if let error = error {
-                    Log.log(level: .ERROR, "Error translating... - \(error)")
+                    Log.log(level: .ERROR, "Error translating... - \(error.localizedDescription)")
                 }
                 if let data = result?.data {
                     print(data)
@@ -155,25 +154,34 @@ extension FireB {
     }
 
     func markChatAsRead(chatRoom: String, chatID: String) {
-        CHAT_MESSAGES_DB_REF.child(chatRoom).child(chatID).child("read").setValue(true)
+        CHAT_MESSAGES_DB_REF.child(chatRoom).child(chatID).child("read").setValue(true) { (error, ref) -> Void in
+            if let error = error {
+                Log.log(level: .ERROR, "Error marking chat as read - \(error.localizedDescription)")
+            }
+        }
     }
 
     func addHotelToConfig(hotelId: String, hotelName: String) {
-        CONFIG_DB_REF.child("hotels").child(hotelId).setValue(hotelName)
+        CONFIG_DB_REF.child("hotels").child(hotelId).setValue(hotelName) { (error, ref) -> Void in
+            if let error = error {
+                Log.log(level: .ERROR, "Error adding hotel to config - \(error.localizedDescription)")
+            }
+        }
     }
 
     func updatePhoneData(guestId: String, phoneID: String, phoneLang: String) {
-        GUESTSNEW_DB_REF.child("/\(guestId)/phones/\(phoneID)/language").setValue(phoneLang) { (error, ref) in
+        let phoneData = [ "guestId": guestId, "roomNumber": guest.roomNumber, "language": phoneLang] as [String : Any]
+        PHONES_DB_REF.child(phoneID).setValue(phoneData) { (error, ref) -> Void in
             if let error = error {
-                Log.log(level: .ERROR, "Data could not be saved: \(error)")
+                Log.log(level: .ERROR, "Error updating phone data - \(error.localizedDescription)")
             }
-          }
+        }
     }
 
     func t1() {
-        functions.httpsCallable("t1").call() {result, error in
+        Firebase.shared.functions.httpsCallable("t1").call() {result, error in
             if let error = error {
-                Log.log(level: .ERROR, "Error translating... - \(error)")
+                Log.log(level: .ERROR, "Error translating... - \(error.localizedDescription)")
             }
             if let data = result?.data {
                 print(data)
@@ -181,17 +189,36 @@ extension FireB {
         }
     }
 
-    func updateGuest(guestId: String, guestData: GuestInDB) {
+    func updateGuest(hotelId: String, guestId: String, guestData: GuestInDB, completionHandler: @ escaping () -> Void) {
         if let g = convertObjectToDictionary(t: guestData) {
             let updates = [
                 "/guests/\(guestId)": g,
                 "/rooms/\(guestData.roomNumber)/currentGuest": guestId
             ] as [String : Any]
-            HOTEL_DB_REF.updateChildValues(updates)  { (error, dbref) in
-                if let error = error {
-                    Log.log(level: .ERROR, "Error updating data \(guestData)\n\(error)")
+            Auth.auth().signIn(withEmail: "appuser@appviator.com", password: "Appviator2022!") { (authResult, error) in
+                self.ROOT_DB_REF.child("hotels").child(hotelId).updateChildValues(updates)  { (error, dbref) in
+                    if let error = error {
+                        Log.log(level: .ERROR, "Error updating data \(guestData)\n\(error.localizedDescription)")
+                    } else {
+                        completionHandler()
+                    }
                 }
             }
+        }
+    }
+
+    func log(level: Log.LogLevel = .INFO, s: String) {
+/*
+        Analytics.logEvent("share_image", parameters: [
+            "name": name as NSObject,
+            "full_text": text as NSObject,
+        ])
+*/
+
+        let phoneID = UIDevice.current.identifierForVendor?.uuidString
+        let e = LogInDB(text: s)
+        if let json = try? JSONEncoder().encode(e), let dictionary = try? JSONSerialization.jsonObject(with: json) {
+            LOGS_DB_REF.child(phoneID ?? "phone").child(Date().formatFull()).setValue(dictionary)
         }
     }
 }

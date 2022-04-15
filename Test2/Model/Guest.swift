@@ -25,9 +25,10 @@ class GuestInfo: Codable {
     var chatRooms: [String:Bool] = [:]
 }
 
-class Guest: Codable {
+class Guest  {
     var id: String = "MacsMaciulek" // default guest
     var Name = ""
+    var password: String?
     var roomNumber = 0
     var orders: [Order] = []
     var activeOrders: [Order] = []
@@ -52,6 +53,14 @@ class Guest: Codable {
 
     func isAdmin() -> Bool {
         return roomNumber == 0
+    }
+
+    var email: String {
+        (isAdmin() ? Name : "appuser") + "@\(hotel.id!.lowercased()).appviator.com"
+    }    
+    
+    static func formatGuestId(roomNumber: Int, startDate: Date) -> String {
+        return String(roomNumber) + "_" + startDate.formatForDB()
     }
 
     func toggleLike(group: String, key: String) {
@@ -127,6 +136,7 @@ class Guest: Codable {
             dbProxy.subscribeForUpdates(subNode: guest.id, parameter: nil, completionHandler: likesPerUserUpdated)
             guest.updatePhoneDataInDB()
         }
+        (UIApplication.shared.delegate as! AppDelegate).subscribeForMessages()
     }
 
     func likesPerUserUpdated(allLikes: [(String, LikesPerUserInDB)]) {

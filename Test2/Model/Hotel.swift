@@ -75,7 +75,7 @@ struct InfoItem {
 struct HotelInfo: Codable {
     var name: String
     var image: String
-    var socialURLs: [String:String]
+    var socialURLs: [String:String]?
 }
 
 class Hotel {

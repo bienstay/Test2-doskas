@@ -119,32 +119,49 @@
                                 <color key="textColor" systemColor="systemYellowColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GbX-QF-CLm">
-                                <rect key="frame" x="181" y="801" width="52" height="31"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Skip">
-                                    <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </buttonConfiguration>
-                                <connections>
-                                    <action selector="skipButtonPressed:" destination="6Lh-Dd-ZMj" eventType="touchUpInside" id="TGZ-4R-yg6"/>
-                                </connections>
-                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Fe2-tO-oX1">
+                                <rect key="frame" x="146" y="801" width="122" height="31"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3vE-Sw-5w6">
+                                        <rect key="frame" x="0.0" y="0.0" width="61" height="31"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Szefu">
+                                            <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </buttonConfiguration>
+                                        <connections>
+                                            <action selector="skipAdminButtonPressed:" destination="6Lh-Dd-ZMj" eventType="touchUpInside" id="xkM-zn-nfR"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GbX-QF-CLm">
+                                        <rect key="frame" x="61" y="0.0" width="61" height="31"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="9104">
+                                            <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </buttonConfiguration>
+                                        <connections>
+                                            <action selector="skipClientButtonPressed:" destination="6Lh-Dd-ZMj" eventType="touchUpInside" id="NT0-F3-2pe"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Mga-dL-ajB"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="Mga-dL-ajB" firstAttribute="bottom" secondItem="Fe2-tO-oX1" secondAttribute="bottom" constant="30" id="2cq-ks-afZ"/>
                             <constraint firstItem="LpO-mH-hFy" firstAttribute="centerY" secondItem="PjS-1C-p5H" secondAttribute="centerY" id="4gv-w8-7AQ"/>
-                            <constraint firstItem="Mga-dL-ajB" firstAttribute="bottom" secondItem="GbX-QF-CLm" secondAttribute="bottom" constant="30" id="EKy-5J-0R4"/>
                             <constraint firstItem="LpO-mH-hFy" firstAttribute="leading" secondItem="Mga-dL-ajB" secondAttribute="leading" id="PXt-2L-bCg"/>
                             <constraint firstItem="BrS-nB-vpN" firstAttribute="centerX" secondItem="PjS-1C-p5H" secondAttribute="centerX" id="T1F-ui-rgs"/>
                             <constraint firstItem="BrS-nB-vpN" firstAttribute="centerY" secondItem="PjS-1C-p5H" secondAttribute="centerY" id="T79-Wb-COZ"/>
                             <constraint firstItem="Mga-dL-ajB" firstAttribute="trailing" secondItem="LpO-mH-hFy" secondAttribute="trailing" id="UkT-aY-xq5"/>
                             <constraint firstItem="LpO-mH-hFy" firstAttribute="centerX" secondItem="PjS-1C-p5H" secondAttribute="centerX" id="dth-PU-ZPs"/>
-                            <constraint firstItem="GbX-QF-CLm" firstAttribute="centerX" secondItem="PjS-1C-p5H" secondAttribute="centerX" id="vcO-4u-WzJ"/>
+                            <constraint firstItem="Fe2-tO-oX1" firstAttribute="centerX" secondItem="PjS-1C-p5H" secondAttribute="centerX" id="z8B-5E-bVn"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="captureView" destination="LpO-mH-hFy" id="806-Lu-hoC"/>
+                        <outlet property="skipAdminButton" destination="3vE-Sw-5w6" id="Xdp-We-q9r"/>
+                        <outlet property="skipClientButton" destination="GbX-QF-CLm" id="MR2-eM-Vla"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pxk-gv-w6j" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

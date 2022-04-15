@@ -10,7 +10,8 @@ import UIKit
 
 class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     @IBOutlet var captureView: UIView!
-    @IBOutlet var skipButton: UIButton!
+    @IBOutlet var skipClientButton: UIButton!
+    @IBOutlet var skipAdminButton: UIButton!
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
 
@@ -21,12 +22,17 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         view.backgroundColor = .red
         captureSession = AVCaptureSession()
 
-        guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else { return }
+        guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else {
+            failed()
+            return
+        }
+
         let videoInput: AVCaptureDeviceInput
 
         do {
             videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
         } catch {
+            failed()
             return
         }
 
@@ -60,10 +66,12 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     }
 
     func failed() {
-        let ac = UIAlertController(title: "Scanning not supported", message: "Your device does not support scanning a code from an item. Please use a device with a camera.", preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "OK", style: .default))
-        present(ac, animated: true)
-        captureSession = nil
+        DispatchQueue.main.async {
+            let ac = UIAlertController(title: "Scanning not supported", message: "This device does not support scanning a code", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default))
+            self.present(ac, animated: true)
+            self.captureSession = nil
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -73,7 +81,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         navigationController?.navigationBar.prefersLargeTitles = false
         tabBarController?.tabBar.isHidden = true
 
-        if (captureSession?.isRunning == false) {
+        if (captureSession?.isRunning == false && !captureSession.inputs.isEmpty ) {
             captureSession.startRunning()
         }
     }
@@ -95,32 +103,22 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
             found(barcodeString: stringValue)
         }
-
-        //dismiss(animated: true)
     }
 
-    @IBAction func skipButtonPressed(_ sender: UIButton) {
+    @IBAction func skipClientButtonPressed(_ sender: UIButton) {
         found(barcodeString: """
             { "hotelId": "RitzKohSamui", "roomNumber": 9104, "guestId": "AnitaMaciek", "guestName": "Anita & Maciek", "startDate": 669364704.669543 }
         """)
     }
 
+    @IBAction func skipAdminButtonPressed(_ sender: UIButton) {
+        found(barcodeString: """
+            { "hotelId": "RitzKohSamui", "roomNumber": 0, "userName": "boss", "password": "Appviator2022!" }
+        """)
+    }
+
     func found(barcodeString: String) {
         Log.log(level: .INFO, "Barcode scanned: \(barcodeString)")
-
-/*
-        guard   let params = convertJSONStringToDictionary(text: code),
-                let hotelId = params["hotelId"] as? String,
-                let roomNumber = params["roomNumber"] as? Int,
-                let guestId = params["guestId"] as? String
-        else {
-            Log.log(level: .INFO, "Invalid barcode: \(code)")
-            showInfoDialogBox(vc: self, title: "Invalid barcode", message: "This is not a valid barcode") { _ in self.captureSession.startRunning() }
-            return
-        }
-        Log.log(level: .INFO, "Barcode: hotelId=\(hotelId), roomNumber=\(roomNumber), guestId=\(guestId)")
-        UserDefaults.standard.set(code, forKey: "barcodeData")
-*/
         guard let b: BarcodeData = parseJSON(barcodeString) else {
             Log.log(level: .INFO, "Invalid barcode: \(barcodeString)")
             showInfoDialogBox(vc: self, title: "Invalid barcode", message: "This is not a valid barcode") { _ in self.captureSession.startRunning() }
@@ -128,19 +126,34 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         }
         Log.log(level: .INFO, "Barcode parsed: \(b)")
 
-        hotel.id = b.hotelId
-
-        // store guest data in db
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let guestId = appDelegate.formatGuestId(barcodeData: b)
-        let guestInDb = GuestInDB(roomNumber: b.roomNumber, name: b.guestName ?? "", startDate: b.startDate, endDate: b.endDate ?? Date(timeInterval: 86400*7, since: b.startDate), phones: nil)
-        dbProxy.updateGuest(guestId: guestId, guestData: guestInDb)
-
-        // store barcode in memory - TODO - do it in a completion of dxproxy.updateGuest
-        UserDefaults.standard.set(barcodeString, forKey: "barcodeData")
-
-        appDelegate.initHotel()
-        appDelegate.transitionToHome()
+        if b.roomNumber == 0 {
+            guard let userName = b.userName, let password = b.password else {
+                Log.log(level: .INFO, "Invalid barcode: \(barcodeString)")
+                showInfoDialogBox(vc: self, title: "Invalid barcode", message: "This is not a valid barcode") { _ in self.captureSession.startRunning() }
+                return
+            }
+            UserDefaults.standard.set(barcodeString, forKey: "barcodeData")
+            guest.roomNumber = 0
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.initFromBarcode()
+            appDelegate.transitionToHome()
+        } else {
+            guard let startDate = b.startDate else {
+                Log.log(level: .INFO, "Invalid barcode: \(barcodeString)")
+                showInfoDialogBox(vc: self, title: "Invalid barcode", message: "This is not a valid barcode") { _ in self.captureSession.startRunning() }
+                return
+            }
+            // store guest data in db, when confirmed, store barcode in UserDefaults and init the app
+            let guestId = Guest.formatGuestId(roomNumber: b.roomNumber, startDate: startDate)
+            let guestInDb = GuestInDB(roomNumber: b.roomNumber, name: b.guestName ?? "", startDate: startDate, endDate: b.endDate ?? Date(timeInterval: 86400*7, since: startDate), phones: nil)
+            dbProxy.updateGuest(hotelId: b.hotelId, guestId: guestId, guestData: guestInDb) {
+                // store barcode in memory
+                UserDefaults.standard.set(barcodeString, forKey: "barcodeData")
+                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                appDelegate.initFromBarcode()
+                appDelegate.transitionToHome()
+            }
+        }
     }
 
     override var prefersStatusBarHidden: Bool {

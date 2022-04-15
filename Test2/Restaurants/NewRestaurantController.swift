@@ -119,7 +119,7 @@ class NewRestaurantController: UITableViewController {
         }
         
         if photoUpdated {
-            dbProxy.uploadImage(image: photoImageView.image!, forLocation: .RESTAURANTS, imageName: restaurant.name) { photoURL in
+            storageProxy.uploadImage(forLocation: .RESTAURANTS, image: photoImageView.image!, imageName: restaurant.name) { photoURL in
                     restaurant.image = photoURL
                     let errStr = dbProxy.addRecord(key: restaurant.id, record: restaurant) { restaurant in self.closeMe(restaurant) }
                     if let s = errStr { Log.log(s) }

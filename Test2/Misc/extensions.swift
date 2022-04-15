@@ -539,9 +539,11 @@ struct Log {
         case DEBUG
     }
     static var currentLevel: LogLevel = .INFO
-    static func log(level: LogLevel = .INFO, _ message: String) {
+    static var logInDB: Bool = true
+    static func log(level: LogLevel = .INFO, _ message: String, logInDb: Bool = true) {
         if level.rawValue <= currentLevel.rawValue {
             print(message)
+            if self.logInDB && logInDb { dbProxy?.log(level: level, s: message) }
         }
     }
 }
