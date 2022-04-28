@@ -10,6 +10,8 @@ import Foundation
 struct AuthData {
     var userId: String
     var userName: String
+    var displayName: String
+    var role: PhoneUser.Role
 }
 
 protocol AuthProxy {

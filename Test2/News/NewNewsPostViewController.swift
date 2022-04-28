@@ -12,6 +12,8 @@ class NewNewsPostViewController: UITableViewController {
 
     var postToEdit: NewsPost?
     var photoUpdated: Bool = false
+    let spinner = SpinnerViewController()
+
 
     @IBOutlet var photoImageView: UIImageView! {
         didSet {
@@ -67,40 +69,53 @@ class NewNewsPostViewController: UITableViewController {
     }
 
     @IBAction func savePressed(_ sender: UIBarButtonItem) {
-        var message: String?
-        if titleTextField.text == "" { message = NSLocalizedString("Title missing") } else
-        if subtitleTextField.text == "" { message = NSLocalizedString("Subtitle missing") } else
-        if textTextView.text == "" { message = NSLocalizedString("Text missing") } else
-        if photoImageView.image == nil { message = NSLocalizedString("Image missing", comment: "Image missing") }
-        if let message = message {
-            showInfoDialogBox(vc: self, title: "Oops", message: message)
+        guard let title = titleTextField.text, !title.isEmpty else {
+            showInfoDialogBox(vc: self, title: "Oops", message: NSLocalizedString("Title missing"))
+            return
+        }
+        guard let subTitle = subtitleTextField.text, !subTitle.isEmpty else {
+            showInfoDialogBox(vc: self, title: "Oops", message: NSLocalizedString("Subtitle missing"))
+            return
+        }
+        guard let text = textTextView.text, !text.isEmpty else {
+            showInfoDialogBox(vc: self, title: "Oops", message: NSLocalizedString("Text missing"))
+            return
+        }
+        guard let image = photoImageView.image else {
+            showInfoDialogBox(vc: self, title: "Oops", message: NSLocalizedString("Image missing"))
             return
         }
 
         var post = NewsPost()
-        post.title = titleTextField.text!
-        post.subtitle = subtitleTextField.text!
-        post.text = textTextView.text!
+        post.title = title
+        post.subtitle = subTitle
+        post.text = text
         if let orgPost = postToEdit {
             post.timestamp = orgPost.timestamp
             post.postId = orgPost.postId
         }
         else {
             post.timestamp = Date()
-            post.postId = post.timestamp.formatForSort().replacingOccurrences(of: " ", with: "")
+            post.postId = post.timestamp.formatForDB()
         }
         if photoUpdated {
-            storageProxy.uploadImage(forLocation: .NEWS, image: photoImageView.image!, imageName: post.postId) { photoURL in
-                post.imageFileURL = photoURL
-                let errStr = dbProxy.addRecord(key: post.postId, record: post) { post in self.closeMe(post) }
-                if let s = errStr { Log.log(s) }
+            spinner.start(vc: self)
+            storageProxy.uploadImage(forLocation: .NEWS, image: image, imageName: post.postId) { error, photoURL in
+                self.spinner.stop(vc: self)
+                if let photoURL = photoURL {
+                    post.imageFileURL = photoURL
+                    let errStr = dbProxy.addRecord(key: post.postId, record: post) { post in self.closeMe(post) }
+                    if let s = errStr { Log.log(level: .ERROR, "Error updting news \(s)") }
+                } else {
+                    Log.log(level: .ERROR, "Error uploading image - \(String(describing: error))")
+                    showInfoDialogBox(vc: self, title: "Error", message: "Error uploading image")
+                }
             }
         } else {
             post.imageFileURL = postToEdit?.imageFileURL ?? ""
             let errStr = dbProxy.addRecord(key: post.postId, record: post) { post in self.closeMe(post) }   // update only
-            if let s = errStr { Log.log(s) }
+            if let s = errStr { Log.log("Error updting news \(s)") }
         }
-
     }
 
     func closeMe(_ post:NewsPost?) {
@@ -133,37 +148,7 @@ extension NewNewsPostViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
-            let photoSourceRequestController = UIAlertController(title: "", message: NSLocalizedString("Choose your photo source", comment: "Choose your photo source"), preferredStyle: .actionSheet)
-            let cameraAction = UIAlertAction(title: NSLocalizedString("Camera", comment: "Camera"), style: .default, handler: { (action) in
-                if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                    let imagePicker = UIImagePickerController()
-                    imagePicker.allowsEditing = false
-                    imagePicker.sourceType = .camera
-                    imagePicker.delegate = self
-                    self.present(imagePicker, animated: true, completion: nil)
-                }
-            })
-            let photoLibraryAction = UIAlertAction(title: NSLocalizedString("Photo library", comment: "Photo library"), style: .default, handler: { (action) in
-                if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
-                    let imagePicker = UIImagePickerController()
-                    imagePicker.allowsEditing = false
-                    imagePicker.sourceType = .photoLibrary
-//                    imagePicker.sourceType = .savedPhotosAlbum
-                    imagePicker.delegate = self
-                    self.present(imagePicker, animated: true, completion: nil)
-                }
-            })
-            photoSourceRequestController.addAction(cameraAction)
-            photoSourceRequestController.addAction(photoLibraryAction)
-            
-            // For iPad
-            if let popoverController = photoSourceRequestController.popoverPresentationController {
-                if let cell = tableView.cellForRow(at: indexPath) {
-                    popoverController.sourceView = cell
-                    popoverController.sourceRect = cell.bounds
-                }
-            }
-            present(photoSourceRequestController, animated: true, completion: nil)
+            showImagePicker(nc: self)
         }
     }
 }

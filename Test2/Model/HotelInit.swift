@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+/*
 func initDestinationDining() {
     hotel.destinationDining.groups = [
 
@@ -42,7 +42,7 @@ func initDestinationDining() {
     hotel.destinationDining.headline.1 = "With its turquoise blue waters, tropical islands and dreamy sunsets, the Maldives have long been an inspiration to many romantics. This overview is a short guide to a curated selection of some of our most popular private culinary journeys on offer."
     hotel.destinationDining.headline.2 = "All packages, unless otherwise stated, are quoted per couple (2 adults) and are inclusive of Service Charge and GST."
     
-    
+*/
 /*
     hotel.offerGroups = [
 
@@ -59,9 +59,9 @@ func initDestinationDining() {
         ]),
 
     ]
- */
+ 
 }
-
+*/
 func initFacilities() {
     
 }

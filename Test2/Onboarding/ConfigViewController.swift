@@ -88,13 +88,13 @@ class ConfigViewController: UIViewController {
         if (!pickerData[hotelIdx].0.id.isEmpty) {
             hotel.id = pickerData[hotelIdx].0.id
             if !pickerData[hotelIdx].1.isEmpty {
-                guest.id = pickerData[hotelIdx].1[guestIdx].0
+                //guest?.id = pickerData[hotelIdx].1[guestIdx].0
             }
         } else {
             hotel = Hotel()
         }
 
-        guest.startObserving()
+        //guest?.startObserving()
         hotel.startObserving()
 
         exitHandler?()

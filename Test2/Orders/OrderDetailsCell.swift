@@ -36,7 +36,7 @@ class OrderDetailsCell: UITableViewCell {
     func draw(order: Order) {
         glossyView.setNeedsDisplay()
         self.order = order
-        if guest.isAdmin() {
+        if phoneUser.isStaff {
             statusChangeButton.isHidden = false
             if order.status == Order.Status.CREATED {
                 statusChangeButton.setTitle("Confirm", for: .normal)
@@ -64,7 +64,7 @@ class OrderDetailsCell: UITableViewCell {
             case .CANCELED: statusLabel.textColor = .black
         }
         if let date = order.created {
-            timeLabel.text = date.formatFriendly()
+            timeLabel.text = date.formatForDisplay()
         }
 
         itemNameLabel.text = ""
@@ -73,7 +73,7 @@ class OrderDetailsCell: UITableViewCell {
         for item in order.items {
             var s = ""
             //if let lang = Locale.current.languageCode, let itemList = String.roomItemsList[lang], order.category == .RoomItems {
-            if let itemList = String.roomItemsList[guest.lang], order.category == .RoomItems {
+            if let itemList = String.roomItemsList[phoneUser.lang], order.category == .RoomItems {
                 s = itemList[item.name] ?? ""
             } else {
                 s = item.name
@@ -90,10 +90,10 @@ class OrderDetailsCell: UITableViewCell {
 
     @IBAction func statusChangePressed(_ sender: Any) {
         if order?.status == Order.Status.CREATED {
-            dbProxy.updateOrderStatus(orderId: order!.id!, newStatus: .CONFIRMED, confirmedBy: guest.Name)
+            dbProxy.updateOrderStatus(orderId: order!.id!, newStatus: .CONFIRMED, confirmedBy: phoneUser.toString())
         } else
         if order?.status == Order.Status.CONFIRMED {
-            dbProxy.updateOrderStatus(orderId: order!.id!, newStatus: .DELIVERED, deliveredBy: guest.Name)
+            dbProxy.updateOrderStatus(orderId: order!.id!, newStatus: .DELIVERED, deliveredBy: phoneUser.toString())
         }
     }
 }

@@ -10,7 +10,7 @@ import Firebase
 import FirebaseStorage
 
 final class FirebaseStorage: StorageProxy {
-    static let shared: FirebaseStorage = FirebaseStorage()
+    static let shared: StorageProxy = FirebaseStorage()
     var ROOT_PHOTOS_REF: StorageReference {
         return Storage.storage().reference().child("/photos")
     }
@@ -37,8 +37,8 @@ final class FirebaseStorage: StorageProxy {
         }
         return photosStorageRef
     }
-    
-    func uploadImage(forLocation: PhotoLocation, image: UIImage, imageName: String? = nil, completionHandler: @escaping (String) -> Void) {
+
+    func uploadImage(forLocation: PhotoLocation, image: UIImage, imageName: String? = nil, completionHandler: @escaping (Error?, String?) -> Void) {
         // Generate a unique ID for the post and prepare the post database reference
 
         // Use the unique key as the image name and prepare the storage reference
@@ -58,7 +58,7 @@ final class FirebaseStorage: StorageProxy {
         // Create the file metadata
         let metadata = StorageMetadata()
         metadata.contentType = "image/jpg"
-        metadata.cacheControl = "public,max-age=3600"
+        metadata.cacheControl = "public"
 
         // Prepare the upload task
         //let uploadTask = photosStorageRef.putData(imageData, metadata: metadata) // Observe the upload status
@@ -68,7 +68,7 @@ final class FirebaseStorage: StorageProxy {
             snapshot.reference.downloadURL(completion: { (url, error) in
                 guard let url = url else { Log.log("Error getting downloadURL"); return }
                 Log.log(level: .INFO, "\(url) uploaded")
-                completionHandler(url.absoluteString)
+                completionHandler(nil, url.absoluteString)
             })
         }
 
@@ -80,6 +80,7 @@ final class FirebaseStorage: StorageProxy {
         uploadTask.observe(.failure) { (snapshot) in
             if let error = snapshot.error {
                 Log.log(level: .ERROR, "\(error)")
+                completionHandler(error, nil)
             }
         }
     }

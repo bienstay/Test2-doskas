@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Firebase
+import UIKit
 
 struct GuestInDB: Codable {
     struct PhoneInfo: Codable {
@@ -25,7 +25,7 @@ class GuestInfo: Codable {
     var chatRooms: [String:Bool] = [:]
 }
 
-class Guest  {
+class GuestOld  {
     var id: String = "MacsMaciulek" // default guest
     var Name = ""
     var password: String?
@@ -64,9 +64,11 @@ class Guest  {
     }
 
     func toggleLike(group: String, key: String) {
-        if guest.isAdmin() { return }
-        let isLiked: Bool = guest.likesPerUser[group]?.contains(key) ?? false
-        dbProxy.updateLike(node: group, key: key, user: guest.id, add: !isLiked)
+        //if guest.isAdmin() { return }
+
+        // TODO
+        //let isLiked: Bool = guest.likesPerUser[group]?.contains(key) ?? false
+        //dbProxy.updateLike(node: group, key: key, user: guest.id, add: !isLiked)
     }
 
     func numLikes(group:String, id:String) -> Int {
@@ -116,7 +118,7 @@ class Guest  {
         dbProxy.observeOrderChanges()
     }
 
-    func guestUpdated(allGuests: [(String, GuestInDB)]) {
+    func guestUpdated(allGuests: [(String, GuestInDB)], subNode: String?) {
         if let g = allGuests.first {
             self.Name = g.1.name
             self.roomNumber = g.1.roomNumber
@@ -125,28 +127,34 @@ class Guest  {
         }
         NotificationCenter.default.post(name: .guestUpdated, object: nil)
         dbProxy.subscribeForUpdates(parameter: .OrderInDB(roomNumber: roomNumber), completionHandler: ordersUpdated)
-        if let chatRoom = guest.chatRooms.first {
+        /* TODO
+        if let chatRoom = guest?.chatRooms.first {
             dbProxy.subscribeForUpdates(parameter: .ChatRoom(id: chatRoom), completionHandler: chatMessagesUpdated)
         //dbProxy.subscribeForUpdates(parameter: .ChatRoom(id: guest.chatRooms.first!), completionHandler: chatTranslationsUpdated)
         }
+         */
 
-        if guest.isAdmin() {
-            dbProxy.subscribeForUpdates(completionHandler: likesUpdated)
-        } else {
+        messagingProxy.subscribeForMessages(topic: hotel.id ?? "")
+        //if !guest.isAdmin() {
+        if let guest = phoneUser.guest {
+            messagingProxy.subscribeForMessages(topic: (hotel.id ?? "") + "_" + String(guest.roomNumber))
             dbProxy.subscribeForUpdates(subNode: guest.id, parameter: nil, completionHandler: likesPerUserUpdated)
-            guest.updatePhoneDataInDB()
+            //guest.updatePhoneDataInDB()   // TODO
+        } else {
+            dbProxy.subscribeForUpdates(completionHandler: likesUpdated)
         }
-        (UIApplication.shared.delegate as! AppDelegate).subscribeForMessages()
+        //(UIApplication.shared.delegate as! AppDelegate).subscribeForMessages()
+
     }
 
-    func likesPerUserUpdated(allLikes: [(String, LikesPerUserInDB)]) {
+    func likesPerUserUpdated(allLikes: [(String, LikesPerUserInDB)], subNode: String?) {
         likesPerUser = [:]
         // for each group create a set that contains only keys with values == True
         allLikes.forEach( { likesPerUser[$0.0] = Set($0.1.compactMap { $0.value ? $0.key : nil }) } )
         NotificationCenter.default.post(name: .likesUpdated, object: nil)
     }
 
-    func likesUpdated(allLikes: [(String, LikesInDB)]) {
+    func likesUpdated(allLikes: [(String, LikesInDB)], subNode: String?) {
         likes = [:]
         for l in allLikes {
             var countMap: [String:Int] = [:]
@@ -158,7 +166,7 @@ class Guest  {
         NotificationCenter.default.post(name: .likesUpdated, object: nil)
     }
 
-    func ordersUpdated(allOrders: [(String, OrderInDB)]) {
+    func ordersUpdated(allOrders: [(String, OrderInDB)], subNode: String?) {
         orders = []
         allOrders.forEach({
             orders.append(Order(id: $0.0, orderInDb: $0.1))
@@ -192,11 +200,11 @@ class Guest  {
         }
 */
         // translate the last message
-        if let m = chatMessages?[chatRoomId]?.last, m.senderID != guest.id {
+        if let m = chatMessages?[chatRoomId]?.last, m.senderID != phoneUser.id {
             dbProxy.translateChat(chatRoom: chatRoomId, chatID: m.id!, textToTranslate: m.content, targetLanguage: lang, completionHandler: { _ in } )
         }
         NotificationCenter.default.post(name: .chatMessagesUpdated, object: nil)
     }
 }
 
-var guest = Guest()
+//var guest: Guest? = Guest()

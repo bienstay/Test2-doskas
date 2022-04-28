@@ -9,7 +9,7 @@ import UIKit
 
 class ServiceOrderViewController: UIViewController {
 
-    var order: Order = Order(roomNumber: 0, category: .RoomItems)
+    var order: Order = Order(category: .None)
 
     @IBOutlet weak var sendButton: GlossyButton!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
@@ -19,32 +19,23 @@ class ServiceOrderViewController: UIViewController {
     @IBOutlet weak var commentTextView: UITextView!
     @IBOutlet weak var backgroundPicture: UIImageView!
 
-    var category: Order.Category = .Maintenance
+    //var category: Order.Category = .Maintenance
     var completionHandler: (() -> Void)?
 
     @IBAction func sendButtonPressed(_ sender: UIButton) {
-        // if admin then room number must be provided
-        let roomNumber = Int(roomNumberTextField.text ?? "")
-        guard roomNumber != nil || !guest.isAdmin() else {
+        guard let roomNumber = Int(roomNumberTextField.text ?? ""), roomNumber > 0 else {
             showInfoDialogBox(vc: self, title: "Room Number", message: "Room number is missing")
             return
         }
 
-        var orderNumber = guest.orders.isEmpty ? 1 : guest.orders.first!.number + 1
-        if guest.isAdmin() {
+        var orderNumber = phoneUser.orders.isEmpty ? 1 : phoneUser.orders.first!.number + 1
+        if phoneUser.isStaff {
             // filter orders for the specified room number to get the next order number
-            let guestOrders = guest.orders.filter( {$0.roomNumber == roomNumber} )
+            let guestOrders = phoneUser.orders.filter( {$0.roomNumber == roomNumber} )
             orderNumber = guestOrders.isEmpty ? 1 : guestOrders.first!.number + 1
         }
 
-        order = Order(roomNumber: guest.roomNumber, category: category)
-/*
-        let item = RoomItem()
-        item.category = requestType
-        item.name = requestType.rawValue
-        order.addItem(name: item.name, quantity: 1, price: 0)
- */
-        order.setCreated(orderNumber: orderNumber)
+        order.setCreated(orderNumber: orderNumber, roomNumber: roomNumber)
         if let comment = commentTextView.text, !comment.isEmpty {
             order.guestComment = comment
         }
@@ -82,12 +73,12 @@ class ServiceOrderViewController: UIViewController {
         view.addGestureRecognizer(t)
         t.cancelsTouchesInView = false
 
-        roomNumberTextField.isEnabled = guest.isAdmin()
+        if !phoneUser.isStaff { roomNumberTextField.text = String(phoneUser.guest?.roomNumber ?? 0) }
+        roomNumberTextField.isEnabled = phoneUser.isStaff
         roomNumberTextField.keyboardType = .numberPad
-        if !guest.isAdmin() { roomNumberTextField.text = String(guest.roomNumber) }
 
-        backgroundPicture.image = UIImage(named: category.rawValue)
-        
+        backgroundPicture.image = UIImage(named: order.category.rawValue)
+
         commentTextView.layer.borderColor = UIColor.BBseparatorColor.cgColor
         commentTextView.layer.borderWidth = 1
         commentTextView.becomeFirstResponder()
@@ -98,7 +89,7 @@ class ServiceOrderViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         setupListNavigationBar(largeTitle: false)
-        title = category.toString()
+        title = order.category.toString()
     }
 
     @objc func keyboardWillShow(sender: NSNotification) {

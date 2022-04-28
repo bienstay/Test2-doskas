@@ -22,6 +22,7 @@ extension UIColor {
     }
 
     static let darkGreen = UIColor(0, 128, 0)
+    static let darkGreenWithBlue = UIColor(0, 104, 55)
     static let darkYellow = UIColor(128, 128, 0)
 
     static var pastelRedVeryLight: UIColor = UIColor(255, 224, 224)
@@ -201,8 +202,9 @@ extension UIViewController {
         navigationController!.navigationBar.isTranslucent = true
     }
 
-    func setupListNavigationBar(tintColor: UIColor = .BBtextColor, largeTitle: Bool = true) {
+    func setupListNavigationBar(tintColor: UIColor = .BBtextColor, largeTitle: Bool = true, title: String? = nil) {
         navigationItem.backButtonTitle = ""
+        if let t = title { navigationItem.title = t }
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationController?.hidesBarsOnSwipe = false
         navigationController?.navigationBar.prefersLargeTitles = largeTitle
@@ -213,13 +215,14 @@ extension UIViewController {
 
 // MARK: - UIViewController: init
 extension UIViewController {
-    func initView(tableView: UITableView? = nil, collectionView: UICollectionView? = nil) {
+    func initView(tableView: UITableView? = nil, collectionView: UICollectionView? = nil, allowsSelection: Bool = true) {
 
         view.backgroundColor = .BBbackgroundColor
 
         var tv = tableView
         if let tableViewController = self as? UITableViewController { tv = tableViewController.tableView }
         if tv != nil {
+            tv!.allowsSelection = allowsSelection
             tv!.separatorStyle = .none
             tv!.showsVerticalScrollIndicator = false
             tv!.cellLayoutMarginsFollowReadableWidth = true
@@ -345,7 +348,7 @@ extension Date {
         formatter3.dateFormat = "yyyy-MM-dd HH:mm:ss"
         return formatter3.string(from: self)
     }
-    func formatFriendly() -> String {
+    func formatForDisplay() -> String {
         let formatter3 = DateFormatter()
         formatter3.dateFormat = "EEEE, MMM d HH:mm"
         return formatter3.string(from: self)
@@ -357,7 +360,7 @@ extension Date {
     }
     func formatForDB() -> String {
         let formatter3 = DateFormatter()
-        formatter3.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter3.dateFormat = "yyyyMMdd-HH:mm:ss"
         return formatter3.string(from: self)
     }
     func formatTimeShort() -> String {
@@ -406,6 +409,7 @@ extension Notification.Name {
     static let chatMessagesUpdated = Notification.Name("chatMessagesUpdated")
     static let guestUpdated = Notification.Name("guestUpdated")
     static let likesUpdated = Notification.Name("likesUpdated")
+    static let connectionStatusUpdated = Notification.Name("connectionStatusUpdated")
 }
 
 
@@ -708,3 +712,81 @@ class MyJSONEncoder: JSONEncoder {
         dateEncodingStrategy = .formatted(.dateFormatter)
     }
 }
+
+
+extension UIImagePickerControllerDelegate where Self: UINavigationControllerDelegate {
+//extension UIViewController where Self: UIImagePickerControllerDelegate { //}& UINavigationControllerDelegate {
+    func showImagePicker(nc: UIViewController) {
+        let photoSourceRequestController = UIAlertController(title: "", message: NSLocalizedString("Choose your photo source", comment: "Choose your photo source"), preferredStyle: .actionSheet)
+        let cameraAction = UIAlertAction(title: NSLocalizedString("Camera", comment: "Camera"), style: .default, handler: { (action) in
+            if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                let imagePicker = UIImagePickerController()
+                imagePicker.allowsEditing = false
+                imagePicker.sourceType = .camera
+                imagePicker.delegate = self
+                nc.present(imagePicker, animated: true, completion: nil)
+            }
+        })
+        let photoLibraryAction = UIAlertAction(title: NSLocalizedString("Photo library", comment: "Photo library"), style: .default, handler: { (action) in
+            if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+                let imagePicker = UIImagePickerController()
+                imagePicker.allowsEditing = false
+                imagePicker.sourceType = .photoLibrary
+//                    imagePicker.sourceType = .savedPhotosAlbum
+                imagePicker.delegate = self
+                nc.present(imagePicker, animated: true, completion: nil)
+            }
+        })
+        photoSourceRequestController.addAction(cameraAction)
+        photoSourceRequestController.addAction(photoLibraryAction)
+
+        /*
+        // For iPad
+        if let popoverController = photoSourceRequestController.popoverPresentationController {
+            if let cell = tableView.cellForRow(at: indexPath) {
+                popoverController.sourceView = cell
+                popoverController.sourceRect = cell.bounds
+            }
+        }
+        */
+
+        nc.present(photoSourceRequestController, animated: true, completion: nil)
+
+    }
+}
+
+/*
+extension UIViewController {
+    
+    func startSpinner(vc: SpinnerViewController) {
+        addChild(vc)
+        vc.view.frame = view.frame
+        view.addSubview(vc.view)
+        vc.didMove(toParent: self)
+    }
+    
+    func stopSpinner(vc: SpinnerViewController) {
+        vc.willMove(toParent: nil)
+        vc.view.removeFromSuperview()
+        vc.removeFromParent()
+    }
+
+    func createSpinnerView() {
+        let child = SpinnerViewController()
+
+        // add the spinner view controller
+        addChild(child)
+        child.view.frame = view.frame
+        view.addSubview(child.view)
+        child.didMove(toParent: self)
+
+        // wait two seconds to simulate some work happening
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            // then remove the spinner view controller
+            child.willMove(toParent: nil)
+            child.view.removeFromSuperview()
+            child.removeFromParent()
+        }
+    }
+}
+*/

@@ -40,5 +40,6 @@ final class Firebase {
             database.useEmulator(withHost: "localhost", port: 9000)
         }
         database.isPersistenceEnabled = true
+        storage.maxUploadRetryTime = 5 // seconds
     }
 }

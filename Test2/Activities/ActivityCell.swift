@@ -32,17 +32,33 @@ class ActivityCell: UITableViewCell {
         descriptionLabel.text = activity.text
 
         if expanded {
+            //imageWidthConstraint.constant = mainStackView.frame.width
+            mainStackView.axis = .vertical
+            mainStackView.alignment = .fill
+            descriptionLabel.isHidden = descriptionLabel.text?.isEmpty ?? true
+        } else {
+            //imageWidthConstraint.constant = 100
+            mainStackView.axis = .horizontal
+            mainStackView.alignment = .center
+            descriptionLabel.isHidden = true
+        }
+/*
+        let todo = expanded ?
+        { [self] in
             imageWidthConstraint.constant = mainStackView.frame.width
             mainStackView.axis = .vertical
             mainStackView.alignment = .fill
-            descriptionLabel.isHidden = (descriptionLabel.text?.isEmpty ?? true) ? true : false
-        } else {
+            descriptionLabel.isHidden = descriptionLabel.text?.isEmpty ?? true
+        } :
+        { [self] in
             imageWidthConstraint.constant = 100
             mainStackView.axis = .horizontal
             mainStackView.alignment = .center
             descriptionLabel.isHidden = true
         }
- 
+*/
+
+        mainStackView.clipsToBounds = true
         if let url = URL(string: activity.imageFileURL) {
             activityImageView.kf.setImage(with: url) { result in
                 switch result {

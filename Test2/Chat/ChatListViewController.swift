@@ -9,7 +9,6 @@ import UIKit
 
 class ChatListViewController: UIViewController, UITableViewDataSource {
     @IBOutlet weak var tableView: UITableView!
-    //var chatRooms: [String] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,20 +21,17 @@ class ChatListViewController: UIViewController, UITableViewDataSource {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        navigationItem.backButtonTitle = ""
-        navigationController?.setNavigationBarHidden(false, animated: true)
-        navigationController?.hidesBarsOnSwipe = false
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationBar.tintColor = .black
+        setupListNavigationBar(largeTitle: false, title: "Chat list")
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return guest.chatRooms.count
+        return phoneUser.user!.chatManager.chatRoomCount
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "chatRoomCell", for: indexPath)
-        cell.textLabel?.text = guest.chatRooms[indexPath.row]
+        cell.textLabel?.text = phoneUser.user!.chatManager.getChatRoom(indexPath.row).id
+        cell.detailTextLabel?.text = phoneUser.user!.chatManager.getChatRoom(indexPath.row).assignedTo
         return cell
     }
 
@@ -47,6 +43,7 @@ class ChatListViewController: UIViewController, UITableViewDataSource {
 
 extension ChatListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        _ = pushViewController(storyBoard: "Chat", id: "Chat")
+        let vc = pushViewController(storyBoard: "Chat", id: "Chat") as! ChatViewController
+        vc.chatRoomId = phoneUser.user!.chatManager.getChatRoom(indexPath.row).id
     }
 }

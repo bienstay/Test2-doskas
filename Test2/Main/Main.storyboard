@@ -107,7 +107,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LpO-mH-hFy">
-                                <rect key="frame" x="0.0" y="241" width="414" height="414"/>
+                                <rect key="frame" x="0.0" y="141" width="414" height="414"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="LpO-mH-hFy" secondAttribute="height" multiplier="1:1" id="fKQ-68-9BW" userLabel="aspect = 1:1"/>
@@ -119,27 +119,33 @@
                                 <color key="textColor" systemColor="systemYellowColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Fe2-tO-oX1">
-                                <rect key="frame" x="146" y="801" width="122" height="31"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="3oh-gV-ZSs">
+                                <rect key="frame" x="0.0" y="562" width="414" height="300"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3vE-Sw-5w6">
-                                        <rect key="frame" x="0.0" y="0.0" width="61" height="31"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Szefu">
-                                            <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </buttonConfiguration>
+                                    <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AOo-0R-QRR">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="216"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </pickerView>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="SE0-Wi-EHx">
+                                        <rect key="frame" x="0.0" y="224" width="414" height="32"/>
+                                        <segments>
+                                            <segment title="User"/>
+                                            <segment title="Guest"/>
+                                        </segments>
                                         <connections>
-                                            <action selector="skipAdminButtonPressed:" destination="6Lh-Dd-ZMj" eventType="touchUpInside" id="xkM-zn-nfR"/>
+                                            <action selector="segmentedIndexChanged:" destination="6Lh-Dd-ZMj" eventType="valueChanged" id="rz3-tG-st0"/>
                                         </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GbX-QF-CLm">
-                                        <rect key="frame" x="61" y="0.0" width="61" height="31"/>
+                                    </segmentedControl>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mKR-Ng-sZT">
+                                        <rect key="frame" x="0.0" y="263" width="414" height="37"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="9104">
+                                        <buttonConfiguration key="configuration" style="plain" title="Skip Capture">
+                                            <fontDescription key="titleFontDescription" style="UICTFontTextStyleTitle2"/>
                                             <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </buttonConfiguration>
                                         <connections>
-                                            <action selector="skipClientButtonPressed:" destination="6Lh-Dd-ZMj" eventType="touchUpInside" id="NT0-F3-2pe"/>
+                                            <action selector="skipCaptureButtonPressed:" destination="6Lh-Dd-ZMj" eventType="touchUpInside" id="AAy-Xu-lhq"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -148,25 +154,27 @@
                         <viewLayoutGuide key="safeArea" id="Mga-dL-ajB"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="Mga-dL-ajB" firstAttribute="bottom" secondItem="Fe2-tO-oX1" secondAttribute="bottom" constant="30" id="2cq-ks-afZ"/>
-                            <constraint firstItem="LpO-mH-hFy" firstAttribute="centerY" secondItem="PjS-1C-p5H" secondAttribute="centerY" id="4gv-w8-7AQ"/>
+                            <constraint firstItem="Mga-dL-ajB" firstAttribute="bottom" secondItem="3oh-gV-ZSs" secondAttribute="bottom" id="13X-jp-bbD"/>
+                            <constraint firstItem="LpO-mH-hFy" firstAttribute="centerY" secondItem="PjS-1C-p5H" secondAttribute="centerY" constant="-100" id="4gv-w8-7AQ"/>
+                            <constraint firstItem="3oh-gV-ZSs" firstAttribute="trailing" secondItem="Mga-dL-ajB" secondAttribute="trailing" id="BC9-LV-5a0"/>
                             <constraint firstItem="LpO-mH-hFy" firstAttribute="leading" secondItem="Mga-dL-ajB" secondAttribute="leading" id="PXt-2L-bCg"/>
+                            <constraint firstItem="3oh-gV-ZSs" firstAttribute="leading" secondItem="Mga-dL-ajB" secondAttribute="leading" id="R9M-vN-GNe"/>
                             <constraint firstItem="BrS-nB-vpN" firstAttribute="centerX" secondItem="PjS-1C-p5H" secondAttribute="centerX" id="T1F-ui-rgs"/>
                             <constraint firstItem="BrS-nB-vpN" firstAttribute="centerY" secondItem="PjS-1C-p5H" secondAttribute="centerY" id="T79-Wb-COZ"/>
                             <constraint firstItem="Mga-dL-ajB" firstAttribute="trailing" secondItem="LpO-mH-hFy" secondAttribute="trailing" id="UkT-aY-xq5"/>
                             <constraint firstItem="LpO-mH-hFy" firstAttribute="centerX" secondItem="PjS-1C-p5H" secondAttribute="centerX" id="dth-PU-ZPs"/>
-                            <constraint firstItem="Fe2-tO-oX1" firstAttribute="centerX" secondItem="PjS-1C-p5H" secondAttribute="centerX" id="z8B-5E-bVn"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="captureView" destination="LpO-mH-hFy" id="806-Lu-hoC"/>
-                        <outlet property="skipAdminButton" destination="3vE-Sw-5w6" id="Xdp-We-q9r"/>
-                        <outlet property="skipClientButton" destination="GbX-QF-CLm" id="MR2-eM-Vla"/>
+                        <outlet property="skipCaptureButton" destination="mKR-Ng-sZT" id="DFp-rl-veC"/>
+                        <outlet property="userFlagControl" destination="SE0-Wi-EHx" id="XfM-1E-nLc"/>
+                        <outlet property="userPicker" destination="AOo-0R-QRR" id="hEL-oQ-JLi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pxk-gv-w6j" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="880" y="82"/>
+            <point key="canvasLocation" x="879.71014492753625" y="81.696428571428569"/>
         </scene>
         <!--Reader View Controller-->
         <scene sceneID="q3N-wM-KIK">

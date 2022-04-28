@@ -32,7 +32,7 @@ struct Facility: POI, Codable {
     var geoLatitude: Double = 0.0
     var geoLongitude: Double = 0.0
 }
-
+/*
 struct DestinationDiningItem {
     var title: String = ""
     var timeLocation: String = ""
@@ -52,7 +52,7 @@ struct DestinationDining {
     var headline = ("", "", "")
     var groups: [DestinationDiningGroup] = []
 }
-
+*/
 struct NewsPost: Codable {
     var postId: String = ""
     var timestamp: Date = Date()
@@ -87,7 +87,7 @@ class Hotel {
     var restaurants: [Restaurant] = []
     var facilities: [Facility] = []
     var roomService: Restaurant = Restaurant()
-    var destinationDining: DestinationDining = DestinationDining()
+    //var destinationDining: DestinationDining = DestinationDining()
     var news: [NewsPost] = []
     var infoItems: [InfoItem] = []
     var importantNotes: [InfoItem] = []
@@ -96,6 +96,7 @@ class Hotel {
     var offerGroups: [OfferGroup] = []
     var offers: [String:Offer] = [:]
     var translations: [String: Translations] = [:]
+    var likes: Likes = [:]
 
     func initialize() {
         roomItems = loadFromJSON(fileNameNoExt: "roomItems")
@@ -112,16 +113,17 @@ class Hotel {
         dbProxy.subscribeForUpdates(completionHandler: offersUpdated)
         dbProxy.subscribeForUpdates(completionHandler: activitiesUpdated)
         dbProxy.subscribeForUpdates(completionHandler: translationsUpdated)
+        dbProxy.subscribeForUpdates(completionHandler: likesUpdated)
     }
 
-    func hotelInfoUpdated(allHotelInfo: [(String, HotelInfo)]) {
+    func hotelInfoUpdated(allHotelInfo: [(String, HotelInfo)], subNode: String?) {
         hotel.name = allHotelInfo.first?.1.name ?? "HOTEL"
         hotel.image = allHotelInfo.first?.1.image ?? ""
         hotel.socialURLs = allHotelInfo.first?.1.socialURLs ?? [:]
         NotificationCenter.default.post(name: .hotelInfoUpdated, object: nil)
     }
 
-    func newsUpdated(allNews: [(String, NewsPost)]) {
+    func newsUpdated(allNews: [(String, NewsPost)], subNode: String?) {
         news = []
         let _news = allNews.sorted(by: {$0.1.timestamp > $1.1.timestamp} )
         _news.forEach( { news.append($0.1) } )
@@ -129,13 +131,13 @@ class Hotel {
         NotificationCenter.default.post(name: .newsUpdated, object: nil)
     }
 
-    func offerGroupsUpdated(allOffers: [(String, OfferGroup)]) {
+    func offerGroupsUpdated(allOffers: [(String, OfferGroup)], subNode: String?) {
         hotel.offerGroups = allOffers.map { $0.1 }
         //applyTranslations()
         NotificationCenter.default.post(name: .offersUpdated, object: nil)
     }
 
-    func offersUpdated(allOffers: [(String, Offer)]) {
+    func offersUpdated(allOffers: [(String, Offer)], subNode: String?) {
         for pair in allOffers {
             hotel.offers[pair.0] = pair.1
             hotel.offers[pair.0]?.id = pair.0
@@ -144,7 +146,7 @@ class Hotel {
         NotificationCenter.default.post(name: .offersUpdated, object: nil)
     }
 
-    func activitiesUpdated(allActivities: [(String, DailyActivities)]) {
+    func activitiesUpdated(allActivities: [(String, DailyActivities)], subNode: String?) {
         activities = [:]
         for a in allActivities {
             let day = a.0
@@ -162,7 +164,7 @@ class Hotel {
         NotificationCenter.default.post(name: .activitiesUpdated, object: nil)
     }
 
-    func restaurantsUpdated(allRestaurants: [(String, Restaurant)]) {
+    func restaurantsUpdated(allRestaurants: [(String, Restaurant)], subNode: String?) {
         restaurants = []
         allRestaurants.forEach( {
             let r = $0.1
@@ -173,7 +175,7 @@ class Hotel {
         dbProxy.subscribeForUpdates(completionHandler: self.menusUpdated)
     }
 
-    func facilitiesUpdated(allFacilities: [(String, Facility)]) {
+    func facilitiesUpdated(allFacilities: [(String, Facility)], subNode: String?) {
         facilities = []
         allFacilities.forEach( {
             var f = $0.1
@@ -184,7 +186,7 @@ class Hotel {
     }
 
 
-    func menusUpdated(allMenus: [(String, Menu2)]) {
+    func menusUpdated(allMenus: [(String, Menu2)], subNode: String?) {
         hotel.restaurants.forEach( {$0.menus = []} )
         hotel.roomService.menus = []
         for m in allMenus {
@@ -203,7 +205,19 @@ class Hotel {
         NotificationCenter.default.post(name: .menusUpdated, object: nil)
     }
 
-    func translationsUpdated(allTranslations: [(String, Translations)]) {
+    func likesUpdated(allLikes: [(String, LikesInDB)], subNode: String?) {
+        likes = [:]
+        for l in allLikes {
+            var countMap: [String:Int] = [:]
+            for c in l.1 {
+                countMap[c.key] = c.value.count
+            }
+            likes[l.0] = countMap
+        }
+        NotificationCenter.default.post(name: .likesUpdated, object: nil)
+    }
+
+    func translationsUpdated(allTranslations: [(String, Translations)], subNode: String?) {
         for l in allTranslations { translations[l.0] = l.1 }
         //print(translations)
         applyTranslations()
@@ -218,7 +232,7 @@ class Hotel {
 //            return
 //        }
 
-        if let t = translations[guest.lang] {
+        if let t = translations[phoneUser.lang] {
             if !news.isEmpty {
                 for i in 0...news.count-1 {
                     if let nt: [String:String] = t["news"]?[news[i].postId] {

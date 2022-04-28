@@ -9,7 +9,6 @@ import Foundation
 
 class RoomItem: Hashable, Codable {
     enum ItemType: String, Codable, Hashable, CaseIterable {
-        //case Services = "Services"
         case Toiletries = "Toiletries"
         case BathAmenities = "Bath Amenities"
         case RoomAmenities = "Room Amenities"
@@ -81,14 +80,6 @@ class Order: Codable {
         var price: Double
     }
 
-/*
-    enum Status: String {
-        case CREATED  = "Created"
-        case CONFIRMED = "Confirmed"
-        case DELIVERED = "Delivered"
-        case CANCELED = "Canceled"
-    }
-*/
     enum Status {
         case CREATED
         case CONFIRMED
@@ -107,8 +98,8 @@ class Order: Codable {
     var id: String?
 
     private (set) var number: Int = 0
-    private (set) var roomNumber: Int
-    private (set) var category: Category = .RoomItems
+    private (set) var roomNumber: Int = 0
+    var category: Category = .RoomItems
 
     private (set) var created: Date?
     private (set) var confirmed: Date?
@@ -121,21 +112,19 @@ class Order: Codable {
     private (set) var canceledBy: String?
 
     private (set) var items: [OrderItem] = []
-    var buggyData: BuggyData?
 
+    var buggyData: BuggyData?
     var guestComment: String?
 
-    init(roomNumber: Int, category: Category) {
-        self.roomNumber = roomNumber
+    init(category: Category) {
         self.category = category
     }
 
-    func setCreated(orderNumber: Int) {
-        created = Date()
-        number = orderNumber
-        roomNumber = guest.roomNumber
-        createdBy = guest.isAdmin() ? guest.Name : String(guest.roomNumber)
-        //id = created!.formatFull() + "_" + String(roomNumber) + "_" + String(number)
+    func setCreated(orderNumber: Int, roomNumber: Int) {
+        self.number = orderNumber
+        self.roomNumber = roomNumber
+        self.created = Date()
+        self.createdBy = phoneUser.toString()
     }
 
     func addItem(name: String, quantity: Int, price: Double = 0.0) {
@@ -236,7 +225,7 @@ struct OrderInDB: Codable {
 
 extension Order {
     convenience init(id: String, orderInDb: OrderInDB) {
-        self.init(roomNumber: orderInDb.roomNumber, category: Order.Category(rawValue: orderInDb.description) ?? .None)
+        self.init(category: .None)
         self.id = id
         self.category = Order.Category(rawValue: orderInDb.description) ?? .None
         self.number = orderInDb.number

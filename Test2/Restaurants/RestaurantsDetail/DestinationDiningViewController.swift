@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+/*
 class DestinationDiningViewController: UIViewController {
     var ddItem = DestinationDiningItem()
 
@@ -89,3 +89,4 @@ class DestinationDiningCell: UITableViewCell {
         super.awakeFromNib()
     }
 }
+*/

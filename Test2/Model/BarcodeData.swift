@@ -8,9 +8,9 @@
 import Foundation
 
 struct BarcodeData: Codable {
-    var roomNumber: Int
     var hotelId: String
 
+    var roomNumber: Int?
     var startDate: Date?
     var endDate: Date?
     var guestName: String?
@@ -18,5 +18,10 @@ struct BarcodeData: Codable {
     var userName: String?
     var password: String?
 
-    func isValid() -> Bool { return roomNumber > 0 && !hotelId.isEmpty }
+    func isValid() -> Bool { return
+        !hotelId.isEmpty && (
+            roomNumber ?? 0 > 0 && startDate != nil ||
+            !(userName ?? "").isEmpty && !(password ?? "").isEmpty
+        )
+    }
 }

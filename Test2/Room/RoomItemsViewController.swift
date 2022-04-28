@@ -35,7 +35,7 @@ class OrderShortSummaryView: UIView {
 
 
 class RoomItemsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-    var order = Order(roomNumber: guest.roomNumber, category: .RoomItems)
+    var order = Order(category: .RoomItems)
 
     @IBOutlet weak var orderShortSummaryView: OrderShortSummaryView!
     @IBOutlet weak var orderSummaryConstraint: NSLayoutConstraint!
@@ -52,14 +52,15 @@ class RoomItemsViewController: UIViewController, UITableViewDataSource, UITableV
         tableView.dataSource = self
         tableView.delegate = self
 
-        title = "Room \(guest.roomNumber)"
+        //title = phoneUser.isStaff ? "Room \(phoneUser.guest?.roomNumber)" : phoneUser.user?.name
+        title = phoneUser.toString()
 
         tableView.tableHeaderView?.frame.size = CGSize(width: tableView.frame.width, height: UIScreen.main.bounds.height/4)
 
         orderShortSummaryView.layer.cornerRadius = 20
         orderSummaryConstraint.constant = -80
         orderShortSummaryView.setup {
-            let vc = self.pushViewController(storyBoard: "OrderSummary", id: "CreateOrder") as! CreateOrderViewController
+            let vc = self.pushViewController(storyBoard: "OrderSummary", id: "CreateOrder") as! RoomItemsOrderViewController
             vc.order = self.order
             vc.completionHandler = { self.clearOrder() }
         }
@@ -74,7 +75,8 @@ class RoomItemsViewController: UIViewController, UITableViewDataSource, UITableV
                 }
             })
  */
-        navigationItem.title = .room + " \(guest.roomNumber) - \(guest.Name)"
+        //navigationItem.title = .room + " \(guest.roomNumber) - \(guest.Name)"
+        navigationItem.title = phoneUser.toString()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -181,7 +183,7 @@ extension RoomItemsViewController {
     }
 
     func clearOrder() {
-        order = Order(roomNumber: guest.roomNumber, category: .RoomItems)
+        order = Order(category: .RoomItems)
         expandedCells = []
         orderSummaryConstraint.constant = -80
         self.view.layoutIfNeeded()

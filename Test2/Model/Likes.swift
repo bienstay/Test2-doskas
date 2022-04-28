@@ -10,7 +10,7 @@ import Foundation
 typealias LikesPerUser = [String:Set<String>]
 typealias LikesPerUserInDB = [String : Bool]
 
-typealias Likes = [String: [String:Int]]
+typealias Likes = [String: [String:Int]]    // [group: [id:count]]
 
 struct PerItem: Codable {
     var count: Int = 0

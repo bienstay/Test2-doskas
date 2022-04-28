@@ -32,12 +32,14 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
 
     // this is for test only and for future development
     @objc func didTap(_ sender: AnyObject) {
+/*
         let group = sender.view!.tag / 100
         let item = sender.view!.tag % 100
         let storyboard = UIStoryboard(name: "Restaurants", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "DestinationDining") as! DestinationDiningViewController
         vc.ddItem = hotel.destinationDining.groups[group].items[item]
         self.navigationController?.pushViewController(vc, animated: true)
+ */
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -46,8 +48,8 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
         setupListNavigationBar()
         title = .food
 
-        newRestaurantBarButton.isEnabled = guest.isAdmin() ? true: false
-        newRestaurantBarButton.title = guest.isAdmin() ? "New" : ""
+        newRestaurantBarButton.isEnabled = phoneUser.isStaff
+        newRestaurantBarButton.title = phoneUser.isStaff ? "New" : ""
     }
 
     @objc func onRestaurantsUpdated(_ notification: Notification) {
@@ -110,12 +112,14 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         //return colorsModel[collectionView.tag].count
-        return hotel.destinationDining.groups[collectionView.tag].items.count
+        //return hotel.destinationDining.groups[collectionView.tag].items.count
+        return 0
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "RestaurantDestinationDiningCell", for: indexPath) as! RestaurantDestinationDiningCollectionViewCell
         cell.backgroundColor = .BBbackgroundColor
+/*
         let dd = hotel.destinationDining.groups[collectionView.tag].items[indexPath.row]
         cell.titleLabel.text = dd.title
         //cell.timeLocationLabel.text = dd.timeLocation
@@ -127,7 +131,7 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
         cell.tag = indexPath.row + collectionView.tag * 100
         cell.isUserInteractionEnabled = true
         cell.addGestureRecognizer(tapAction)
-
+*/
         return cell
     }
 
@@ -137,7 +141,7 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
     }
 
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        if !guest.isAdmin() { return nil }
+        if !phoneUser.isStaff { return nil }
         let action1 = UIContextualAction(style: .normal, title: "Edit") { action, view, completionHandler in
             let vc = self.createViewController(storyBoard: "Restaurants", id: "NewRestaurant") as! NewRestaurantController
             vc.restaurantToEdit = hotel.restaurants[indexPath.row]
@@ -149,7 +153,7 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
     }
 
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        if !guest.isAdmin() { return nil }
+        if !phoneUser.isStaff { return nil }
         let action1 = UIContextualAction(style: .destructive, title: "Delete") { action, view, completionHandler in
             self.deleteRestaurant(restaurant: hotel.restaurants[indexPath.row])
             completionHandler(true)
@@ -179,9 +183,9 @@ extension RestaurantTableViewController {
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 0 { return UIView() }
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "HeaderTableView") as! RestaurantSectionHeaderView
-        view.sectionHeaderLabel.text = hotel.destinationDining.headline.0
-        view.descriptionLabel.text = hotel.destinationDining.headline.1
-        view.subLabel.text = hotel.destinationDining.headline.2
+//        view.sectionHeaderLabel.text = hotel.destinationDining.headline.0
+//        view.descriptionLabel.text = hotel.destinationDining.headline.1
+//        view.subLabel.text = hotel.destinationDining.headline.2
         return view
     }
 

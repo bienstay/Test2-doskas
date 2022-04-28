@@ -55,7 +55,7 @@ extension NewsDetailViewController: UITableViewDataSource, UITableViewDelegate {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: NewsDetailHeaderCell.self), for: indexPath) as! NewsDetailHeaderCell
             cell.heartPressedClosure = {
-                guest.toggleLike(group: "news", key: self.post.postId)
+                phoneUser.guest?.toggleLike(group: "news", key: self.post.postId)
             }
             cell.draw(post: post)
             return cell
@@ -82,7 +82,7 @@ class NewsDetailTextCell: UITableViewCell {
     }
     
     func draw(post: NewsPost) {
-        timestampLabel.text = post.timestamp.formatFriendly()
+        timestampLabel.text = post.timestamp.formatForDisplay()
         postTextLabel.text = post.text
     }
 }
@@ -98,7 +98,6 @@ class NewsDetailHeaderCell: UITableViewCell {
     
     @IBAction func heartPressed(_ sender: UIButton) {
         heartPressedClosure?()
-        
     }
 
     override func awakeFromNib() {
@@ -117,7 +116,7 @@ class NewsDetailHeaderCell: UITableViewCell {
             headerImageView.contentMode = .scaleAspectFit
             headerImageView.image = UIImage(named: "JaNaPlaya")
         }
-        let numLikes = guest.numLikes(group: "news", id: post.postId)
+        let numLikes = phoneUser.numLikes(group: "news", itemKey: post.postId)
         heartButton.setImage(UIImage(named: numLikes > 0 ? "heartFull" : "heartEmpty"), for: .normal)
     }
 }

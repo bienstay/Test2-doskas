@@ -7,12 +7,11 @@
 
 import UIKit
 import CoreData
-//import Firebase
-import FirebaseMessaging
 
 var dbProxy: DBProxy!
 var authProxy: AuthProxy!
 var storageProxy: StorageProxy!
+var messagingProxy: MessagingProxy!
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,13 +20,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
-        Firebase.shared.initialize(useEmulator: true)
+        // clean all defaults
+        if let bundleID = Bundle.main.bundleIdentifier {
+            UserDefaults.standard.removePersistentDomain(forName: bundleID)
+            UserDefaults.standard.synchronize()
+        }
+/*
+        let useSimulator:Bool = UserDefaults.standard.bool(forKey: "useSimulator")
+        // store just in case this was overriden by a parameter
+        UserDefaults.standard.set(useSimulator, forKey: "useSimulator")
+*/
+        let useSimulator = true
+
+        Firebase.shared.initialize(useEmulator: useSimulator)
         dbProxy = FirebaseDatabase.shared
         authProxy = FirebaseAuthentication.shared
         storageProxy = FirebaseStorage.shared
-        Messaging.messaging().delegate = self   // todo
+        messagingProxy = FirebaseMessaging.shared
 
-        Log.log("STARTING... launchOptions: \(launchOptions ?? [:])")
+        Log.log("STARTING... \(useSimulator ? "SIMULATOR" : "") launchOptions \(launchOptions ?? [:])")
+
+        FirebaseDatabase.shared.observeInfo()   // TODO move it somewhere
 
         UNUserNotificationCenter.current().delegate = self
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
@@ -36,20 +49,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         // always register for notifications, user can change permission outside the app, in system settings
         UIApplication.shared.registerForRemoteNotifications()
-
-
-        //var email = "appuser@appviator.com"
-        //if let hId = hotel.id { email = "appuser@\(hId).appviator.com" }
-        //Auth.auth().signIn(withEmail: email, password: "Appviator2022!") { (authResult, error) in
-/*
-        Auth.auth().signInAnonymously() { (authResult, error) in
-            if let error = error { Log.log(level: .ERROR, "\(error)") }
-            else {
-                Log.log(level: .INFO, "Signed in with user: " + authResult!.user.uid)
-                NotificationCenter.default.post(name: .dbProxyReady, object: nil)
-            }
-        }
-*/
 
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "Verdana", size: 14)!], for: .normal)
 
@@ -71,9 +70,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Log.log(level: .INFO, "host: \(String(describing: url.host))")
         Log.log(level: .INFO, "path: \(url.path)")
         Log.log(level: .INFO, "components: \(url.pathComponents)")
-        
-        //let message = url.host?.removingPercentEncoding
-        //pushMenuScreen(restaurantName: message!)
+
         return true
     }
 }
@@ -83,8 +80,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
 
         Log.log(level: .INFO, "In userNotificationCenter willPresent")
-        //Log.log(level: .INFO, notification.request.content.description)
-        //Log.log(level: .INFO, notification.request.content.debugDescription)
         Log.log(level: .INFO, notification.request.content.userInfo.debugDescription)
         completionHandler([.alert, .sound, .badge])
     }
@@ -92,8 +87,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
 
         Log.log(level: .INFO, "In userNotificationCenter didReceive")
-        //Log.log(level: .INFO, response.notification.request.content.description)
-        //Log.log(level: .INFO, response.debugDescription)
         Log.log(level: .INFO, response.notification.request.content.userInfo.debugDescription)
 
         completionHandler()
@@ -113,8 +106,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
         let token = tokenParts.joined()
         Log.log(level: .INFO, "Device APN Token: \(token)")
-        // setup firebase messaging
-        Messaging.messaging().apnsToken = deviceToken
+        messagingProxy.initialize(deviceToken: deviceToken)
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
@@ -122,26 +114,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
 }
 
-
-extension AppDelegate: MessagingDelegate {
-    var genericTopic: String { hotel.id ?? "" }
-    var roomTopic: String { (hotel.id ?? "") + "_" + String(guest.roomNumber) }
-
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        Log.log(level: .INFO, "FCM Registration Token: " + (fcmToken ?? "empty token"))
-    }
-
-    func subscribeForMessages() {
-        Messaging.messaging().subscribe(toTopic: genericTopic) { error in
-            if let e = error { Log.log(level: .ERROR, e.localizedDescription) }
-            else { Log.log(level: .INFO, "Subscribed to topic \(self.genericTopic)") }
-        }
-        Messaging.messaging().subscribe(toTopic: roomTopic) { error in
-            if let e = error { Log.log(level: .ERROR, e.localizedDescription) }
-            else { Log.log(level: .INFO, "Subscribed to topic \(self.roomTopic) ") }
-        }
-    }
-}
 
 
 extension AppDelegate {
@@ -151,34 +123,38 @@ extension AppDelegate {
             Log.log(level: .INFO, "Barcode data missing")
             return
         }
-        guard let b: BarcodeData = parseJSON(barcodeString) else {
+        guard let barcodeData: BarcodeData = parseJSON(barcodeString) else {
+            Log.log(level: .ERROR, "Invalid barcode json: \(barcodeString)")
+            return
+        }
+        guard barcodeData.isValid() else {
             Log.log(level: .ERROR, "Invalid barcode: \(barcodeString)")
             return
         }
 
-        hotel.id = b.hotelId
-        Log.log(level: .INFO, "Barcode from UserDefaults: \(b)")
-        
-        if b.roomNumber == 0 {
-            guest.roomNumber = 0
-            guest.id = "user"
-            guest.Name = b.userName!
-            guest.password = b.password
-        } else {
-            guest.id = Guest.formatGuestId(roomNumber: b.roomNumber, startDate: b.startDate ?? Date())
-            guest.roomNumber = b.roomNumber
-            guest.password = "Appviator2022!"
+        hotel.id = barcodeData.hotelId
+        Log.log(level: .INFO, "Barcode from UserDefaults: \(barcodeData)")
+
+        if let username = barcodeData.userName, let password = barcodeData.password {
+            phoneUser.user = User(name: username, password: password)
+        } else if let roomNumber = barcodeData.roomNumber, let startDate = barcodeData.startDate {
+            phoneUser.guest = Guest(roomNumber: roomNumber, startDate: startDate, guestName: barcodeData.guestName)
         }
     }
 
     func transitionToHome() {
-        authProxy.login(username: guest.email, password: guest.password ?? "invalid") { (authData, error) in
-            if authData != nil {
+        authProxy.login(username: phoneUser.email, password: phoneUser.password) { (authData, error) in
+            if let authData = authData {
+                Log.log("Logged in with \(authData)")
+                if let user = phoneUser.user {
+                    user.displayName = authData.displayName
+                    user.role = authData.role
+                }
                 NotificationCenter.default.post(name: .dbProxyReady, object: nil)
 
                 hotel.initialize()
                 hotel.startObserving()
-                guest.startObserving()
+                phoneUser.startObserving()
                 DispatchQueue.main.async {
                     if let window = UIApplication.shared.keyWindow {
                         let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MainScreen")
@@ -190,12 +166,6 @@ extension AppDelegate {
                 }
             }
         }
-
-/*
-        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MainScreen") as! UITabBarController
-        UIApplication.shared.windows.first?.rootViewController = viewController
-        UIApplication.shared.windows.first?.makeKeyAndVisible()
- */
     }
 
     func transitionToScanner() {

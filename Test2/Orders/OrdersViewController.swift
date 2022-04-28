@@ -36,14 +36,14 @@ class OrdersViewController: UIViewController, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if showActiveOnly { return guest.activeOrders.count }
-        else { return guest.orders.count }
+        if showActiveOnly { return phoneUser.activeOrders.count }
+        else { return phoneUser.orders.count }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "orderCell", for: indexPath) as! OrderDetailsCell
-        if showActiveOnly { cell.draw(order: guest.activeOrders[indexPath.row]) }
-        else { cell.draw(order: guest.orders[indexPath.row]) }
+        if showActiveOnly { cell.draw(order: phoneUser.activeOrders[indexPath.row]) }
+        else { cell.draw(order: phoneUser.orders[indexPath.row]) }
         return cell
     }
 
@@ -63,6 +63,6 @@ class OrdersViewController: UIViewController, UITableViewDataSource {
 extension OrdersViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vc = pushOrPresent(storyBoard: "OrderSummary", id: "OrderSummary") as! OrderSummaryViewController
-        vc.order = showActiveOnly ? guest.activeOrders[indexPath.row] : guest.orders[indexPath.row]
+        vc.order = showActiveOnly ? phoneUser.activeOrders[indexPath.row] : phoneUser.orders[indexPath.row]
     }
 }

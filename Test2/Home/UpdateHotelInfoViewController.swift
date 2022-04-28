@@ -75,9 +75,11 @@ class UpdateHotelInfoViewController: UITableViewController {
         }
 
         if photoUpdated {
-            storageProxy.uploadImage(forLocation: .BASE, image: photoImageView.image!, imageName: h.name) { photoURL in
-                h.image = photoURL
-                self.addHotelInfoToDB(hotel: h)
+            storageProxy.uploadImage(forLocation: .BASE, image: photoImageView.image!, imageName: h.name) { error, photoURL in
+                if let photoURL = photoURL {
+                    h.image = photoURL
+                    self.addHotelInfoToDB(hotel: h)
+                }
             }
         } else {
             h.image = hotelToEdit?.image ?? ""
@@ -107,8 +109,7 @@ class UpdateHotelInfoViewController: UITableViewController {
         if let nc = navigationController {
             nc.popViewController(animated: true)
 
-            guest.startObserving()
-            hotel.startObserving()
+            phoneUser.startObserving()
         }
     }
 

@@ -11,7 +11,7 @@ import MapKit
 
 class OrderSummaryViewController: UIViewController, UITableViewDataSource {
 
-    var order: Order = Order(roomNumber: 0, category: .None)
+    var order: Order = Order(category: .None)
     
     enum Sections: Int, CaseIterable {
         case Items = 0
@@ -51,21 +51,21 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
     @IBOutlet weak var statusChangeButton: UIBarButtonItem!
     @IBAction func statusChangeButtonPressed(_ sender: UIBarButtonItem) {
         if order.status == Order.Status.CREATED {
-            if guest.isAdmin() {
-                dbProxy.updateOrderStatus(orderId: order.id!, newStatus: .CONFIRMED, confirmedBy: guest.Name)
+            if phoneUser.isStaff {
+                dbProxy.updateOrderStatus(orderId: order.id!, newStatus: .CONFIRMED, confirmedBy: phoneUser.toString())
             } else {
                 askToCancel()
             }
         }
         else if order.status == Order.Status.CONFIRMED {
-            dbProxy.updateOrderStatus(orderId: order.id!, newStatus: .DELIVERED, deliveredBy: guest.Name)
+            dbProxy.updateOrderStatus(orderId: order.id!, newStatus: .DELIVERED, deliveredBy: phoneUser.toString())
         }
     }
 
     func askToCancel() {
         let cancelAlert = UIAlertController(title: .cancel.localizedUppercase, message: .confirm, preferredStyle: UIAlertController.Style.alert)
         cancelAlert.addAction(UIAlertAction(title: .yes, style: .destructive, handler: { (action: UIAlertAction!) in
-            dbProxy.updateOrderStatus(orderId: self.order.id!, newStatus: .CANCELED, canceledBy: String(guest.roomNumber))
+            dbProxy.updateOrderStatus(orderId: self.order.id!, newStatus: .CANCELED, canceledBy: phoneUser.toString())
         }))
         cancelAlert.addAction(UIAlertAction(title: .no, style: .cancel, handler: { (action: UIAlertAction!) in
         }))
@@ -129,7 +129,7 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
 
         title = .order +  " " + "\(order.number)"
         roomNumberLabel.text = .room + ": \(order.roomNumber)"
-        timeCreatedLabel.text = order.created?.formatFriendly()
+        timeCreatedLabel.text = order.created?.formatForDisplay()
         idLabel.text = .order + ": \(order.id!)"
 
         updateStatusLabelsAndButtons()
@@ -176,27 +176,27 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
         confirmedStackView.isHidden = true
         deliveredStackView.isHidden = true
         canceledStackView.isHidden = true
-        if guest.isAdmin() {
+        if phoneUser.isStaff {
             createdStackView.isHidden = false
             switch order.status {
                 case .CANCELED:
-                    canceledAtLabel.text = order.canceled?.formatFriendly()
+                    canceledAtLabel.text = order.canceled?.formatForDisplay()
                     canceledByLabel.text = order.canceledBy
                     canceledStackView.isHidden = false
-                    createdAtLabel.text = order.created?.formatFriendly()
+                    createdAtLabel.text = order.created?.formatForDisplay()
                     createdByLabel.text = order.createdBy
                 case .DELIVERED:
-                    deliveredAtLabel.text = order.delivered?.formatFriendly()
+                    deliveredAtLabel.text = order.delivered?.formatForDisplay()
                     deliveredByLabel.text = order.deliveredBy
                     deliveredStackView.isHidden = false
                     fallthrough
                 case .CONFIRMED:
-                    confirmedAtLabel.text = order.confirmed?.formatFriendly()
+                    confirmedAtLabel.text = order.confirmed?.formatForDisplay()
                     confirmedByLabel.text = order.confirmedBy
                     confirmedStackView.isHidden = false
                     fallthrough
                 case .CREATED:
-                    createdAtLabel.text = order.created?.formatFriendly()
+                    createdAtLabel.text = order.created?.formatForDisplay()
                     createdByLabel.text = order.createdBy
                 }
         }
@@ -213,7 +213,7 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
         }
 
         let button = statusChangeButton.customView as! UIButton
-        if guest.isAdmin() {
+        if phoneUser.isStaff {
             button.isHidden = false
             if order.status == Order.Status.CREATED {
                 button.setTitle(.confirm, for: .normal)
@@ -233,7 +233,7 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
     }
     
     @objc func onOrdersUpdated(_ notification: Notification) {
-        if let or = guest.orders.first(where: { $0.id == order.id }) {
+        if let or = phoneUser.orders.first(where: { $0.id == order.id }) {
             order = or
         }
         DispatchQueue.main.async { self.updateStatusLabelsAndButtons() }
@@ -290,7 +290,7 @@ class OrderSummaryItemCell: UITableViewCell {
     
     func draw(item: Order.OrderItem, category: Order.Category) {
         //if let lang = Locale.current.languageCode, let itemList = String.roomItemsList[lang], category == .RoomItems {
-        if let itemList = String.roomItemsList[guest.lang], category == .RoomItems {
+        if let itemList = String.roomItemsList[phoneUser.lang], category == .RoomItems {
             itemLabel.text = itemList[item.name]
         } else {
             itemLabel.text = item.name

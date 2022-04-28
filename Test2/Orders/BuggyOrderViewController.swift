@@ -9,7 +9,7 @@ import UIKit
 
 class BuggyOrderViewController: UIViewController {
 
-    var order: Order = Order(roomNumber: 0, category: .RoomItems)
+    var order: Order = Order(category: .Buggy)
 
     @IBOutlet weak var sendButton: GlossyButton!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
@@ -25,41 +25,24 @@ class BuggyOrderViewController: UIViewController {
     var completionHandler: (() -> Void)?
 
     @IBAction func sendButtonPressed(_ sender: UIButton) {
-        // if admin then room number must be provided
-        let roomNumber = Int(roomNumberTextField.text ?? "")
-        //guard roomNumber != nil || !guest.isAdmin() else {
-        guard roomNumber != nil else {
+        guard let roomNumber = Int(roomNumberTextField.text ?? ""), roomNumber > 0 else {
             showInfoDialogBox(vc: self, title: "Room Number", message: "Room number is missing")
             return
         }
-
-        var orderNumber = guest.orders.isEmpty ? 1 : guest.orders.first!.number + 1
-        if guest.isAdmin() {
-            // filter orders for the specified room number to get the next order number
-            let guestOrders = guest.orders.filter( {$0.roomNumber == roomNumber} )
-            orderNumber = guestOrders.isEmpty ? 1 : guestOrders.first!.number + 1
-        }
-
+        let orderNumber = phoneUser.orders.isEmpty ? 1 : phoneUser.orders.first!.number + 1
         if segmentedControl.selectedSegmentIndex == Order.BuggyData.LocationType.Photo.rawValue &&  backgroundPicture.image?.size.width != 0 {
-            storageProxy.uploadImage(forLocation: .NEWS, image: backgroundPicture.image!, imageName: String(roomNumber!) + " " + String(orderNumber)) { photoURL in
-                self.finalizeOrderSend(roomNumber: roomNumber!, orderNumber: orderNumber, photoURL: photoURL)
+            storageProxy.uploadImage(forLocation: .NEWS, image: backgroundPicture.image!, imageName: String(roomNumber) + "_" + String(orderNumber)) { error, photoURL in
+                if let photoURL = photoURL {
+                    self.finalizeOrderSend(roomNumber: roomNumber, orderNumber: orderNumber, photoURL: photoURL)
+                }
             }
         } else {
-            finalizeOrderSend(roomNumber: roomNumber!, orderNumber: orderNumber, photoURL: "")
+            finalizeOrderSend(roomNumber: roomNumber, orderNumber: orderNumber, photoURL: "")
         }
     }
 
     func finalizeOrderSend(roomNumber: Int, orderNumber: Int, photoURL: String) {
-/*
-        var orderNumber = guest.orders.isEmpty ? 1 : guest.orders.first!.number + 1
-        if guest.isAdmin() {
-            // filter orders for the specified room number to get the next order number
-            let guestOrders = guest.orders.filter( {$0.roomNumber == roomNumber} )
-            orderNumber = guestOrders.isEmpty ? 1 : guestOrders.first!.number + 1
-        }
-*/
-        order = Order(roomNumber: guest.roomNumber, category: category)
-        order.setCreated(orderNumber: orderNumber)
+        order.setCreated(orderNumber: orderNumber, roomNumber: roomNumber)
         if let comment = commentTextView.text, !comment.isEmpty {
             order.guestComment = comment
         }
@@ -69,7 +52,8 @@ class BuggyOrderViewController: UIViewController {
         switch locationType {
         case .Room: break
         //case .GPS: locationData = "9.583716,100.078701"
-        case .GPS: locationData = String(guest.currentLocationLatitude) + "," + String(guest.currentLocationLongitude)
+        //case .GPS: locationData = String(guest.currentLocationLatitude) + "," + String(guest.currentLocationLongitude)
+        case .GPS: locationData = String(0.0) + "," + String(0.0)   // TODO
         case .Other: break
         case .Photo: locationData = photoURL
         }
@@ -124,9 +108,9 @@ class BuggyOrderViewController: UIViewController {
         view.addGestureRecognizer(t)
         t.cancelsTouchesInView = false
 
-        roomNumberTextField.isEnabled = guest.isAdmin()
         roomNumberTextField.keyboardType = .numberPad
-        if !guest.isAdmin() { roomNumberTextField.text = String(guest.roomNumber) }
+        if !phoneUser.isStaff { roomNumberTextField.text = String(phoneUser.guest?.roomNumber ?? 0) }
+        roomNumberTextField.isEnabled = phoneUser.isStaff
 
         backgroundPicture.image = UIImage(named: category.rawValue)
 

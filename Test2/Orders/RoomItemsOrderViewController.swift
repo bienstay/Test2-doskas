@@ -8,9 +8,8 @@
 import UIKit
 import IBPCollectionViewCompositionalLayout
 
-class CreateOrderViewController: UIViewController, UITableViewDataSource {
-
-    var order: Order = Order(roomNumber: 0, category: .None)
+class RoomItemsOrderViewController: UIViewController, UITableViewDataSource {
+    var order: Order = Order(category: .None)
 
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var tableView: UITableView!
@@ -26,21 +25,19 @@ class CreateOrderViewController: UIViewController, UITableViewDataSource {
     var completionHandler: (() -> Void)?
 
     @IBAction func sendButtonPressed(_ sender: UIButton) {
-        // if admin then room number must be provided
-        let roomNumber = Int(roomNumberTextField.text ?? "")
-        guard roomNumber != nil || !guest.isAdmin() else {
+        guard let roomNumber = Int(roomNumberTextField.text ?? ""), roomNumber > 0 else {
             showInfoDialogBox(vc: self, title: "Room Number", message: "Room number is missing")
             return
         }
 
-        var orderNumber = guest.orders.isEmpty ? 1 : guest.orders.first!.number + 1
-        if guest.isAdmin() {
+        var orderNumber = phoneUser.orders.isEmpty ? 1 : phoneUser.orders.first!.number + 1
+        if phoneUser.isStaff {
             // filter orders for the specified room number to get the next order number
-            let guestOrders = guest.orders.filter( {$0.roomNumber == roomNumber} )
+            let guestOrders = phoneUser.orders.filter( {$0.roomNumber == roomNumber} )
             orderNumber = guestOrders.isEmpty ? 1 : guestOrders.first!.number + 1
         }
 
-        order.setCreated(orderNumber: orderNumber)
+        order.setCreated(orderNumber: orderNumber, roomNumber: roomNumber)
         if let comment = commentField.text, !comment.isEmpty {
             order.guestComment = comment
         }
@@ -91,7 +88,7 @@ class CreateOrderViewController: UIViewController, UITableViewDataSource {
         activityIndicator.hidesWhenStopped = true
 
         categoryImageView.image = UIImage(named: order.category.rawValue)
-        
+
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil) //object: self.view.window)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: nil) //object: self.view.window)
 
@@ -100,9 +97,9 @@ class CreateOrderViewController: UIViewController, UITableViewDataSource {
         t.cancelsTouchesInView = false
 
         roomNumberLabel.text = .room
-        roomNumberTextField.isEnabled = guest.isAdmin()
+        roomNumberTextField.isEnabled = phoneUser.isStaff
         roomNumberTextField.keyboardType = .numberPad
-        if !guest.isAdmin() { roomNumberTextField.text = String(guest.roomNumber) }
+        if !phoneUser.isStaff { roomNumberTextField.text = String(phoneUser.guest?.roomNumber ?? 0) }
 
         commentField.placeholder = .comment
         sendButton.setTitle(.send, for: .normal)
@@ -159,7 +156,7 @@ class CreateOrderItemCell: UITableViewCell {
 
     func draw(item: Order.OrderItem, category: Order.Category) {
         //if let lang = Locale.current.languageCode, let itemList = String.roomItemsList[lang], category == .RoomItems {
-        if let itemList = String.roomItemsList[guest.lang], category == .RoomItems {
+        if let itemList = String.roomItemsList[phoneUser.lang], category == .RoomItems {
             itemLabel.text = itemList[item.name]
         } else {
             itemLabel.text = item.name

@@ -8,17 +8,9 @@
 import UIKit
 
 class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-    var order = Order(roomNumber: guest.roomNumber, category: .RoomItems)
-
     @IBOutlet weak var orderSummaryConstraint: NSLayoutConstraint!
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var orderShortSummaryView: OrderShortSummaryView!
-
-    struct DisplayData {
-        var expanded: Bool = false
-    }
-    
-    var observer: NSKeyValueObservation?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,24 +18,12 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
         tableView.dataSource = self
         tableView.delegate = self
-
-        tableView.allowsSelection = true
-
-        // observe changes to the navigation bar size and set different title
-        self.observer = self.navigationController?.navigationBar.observe(\.bounds, options: [.new], changeHandler: { (navigationBar, changes) in
-                let heightForCollapsedNav = UINavigationController().navigationBar.frame.size.height
-                if let height = changes.newValue?.height {
-                    self.navigationItem.title = height > heightForCollapsedNav ? .room + " \(guest.roomNumber)" : .room + " \(guest.roomNumber) - \(guest.Name)"
-                }
-            })
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        setupListNavigationBar()
-        navigationController?.navigationBar.prefersLargeTitles = false
-
+        setupListNavigationBar(largeTitle: false, title: phoneUser.toString())
         tabBarController?.tabBar.isHidden = false
     }
 
@@ -65,7 +45,7 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
             vc.category = category
         case .Cleaning, .Maintenance, .LuggageService:
             let vc = pushViewController(storyBoard: "OrderSummary", id: "MaintenanceOrder") as! ServiceOrderViewController
-            vc.category = category
+            vc.order.category = category
         case .RoomItems:
             _ = pushViewController(storyBoard: "Room", id: "RoomItemsController")
         case .RoomService:

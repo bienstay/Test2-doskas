@@ -8,21 +8,27 @@
 import UIKit
 
 class ChatViewController: UIViewController {
-
     @IBOutlet var messageKitView: UIView!
+    @IBOutlet weak var assignButton: UIBarButtonItem!
+
     var messageKitChatViewController = MessageKitChatViewController()
+    var chatRoomId: String = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        messageKitChatViewController.chatRoomId = guest.chatRooms.first!
+        messageKitChatViewController.chatRoomId = phoneUser.isStaff ? chatRoomId : phoneUser.id
         embed(viewController: messageKitChatViewController, inView: messageKitView)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        setupListNavigationBar()
+        setupListNavigationBar(largeTitle: false)
         title = messageKitChatViewController.chatRoomId
+        //title = phoneUser.toString()
     }
 
+    @IBAction func assignButtonPressed(_ sender: UIBarButtonItem) {
+        _ = pushViewController(storyBoard: "Chat", id: "Assign")
+    }
 }

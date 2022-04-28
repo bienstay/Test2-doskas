@@ -24,7 +24,7 @@ extension FirebaseDatabase {
                     let orderFromDB: OrderInDB = try decoder.decode(OrderInDB.self, from: data!)
                     let order = Order(id: snapshot.key, orderInDb: orderFromDB)
                     Log.log(level: .INFO, "Order \(order.number) updated")
-                    if !guest.isAdmin() {
+                    if !phoneUser.isStaff {
                         prepareNotification(id: String(order.number), title: "ORDER", subtitle: String(order.number), body: order.status.toString(), attachmentFile: "RoomService")
                     }
                 } catch {
@@ -88,11 +88,11 @@ extension FirebaseDatabase {
         }
     }
 
-    func updateLike(node: String, key: String, user: String, add: Bool) {
+    func updateLike(group: String, userID: String, itemKey: String, add: Bool) {
         let dbRef = LIKES_DB_REF
         let childUpdates:[String : Any] = [
-            "/global/\(node)/\(key)/count" : ServerValue.increment(add ? 1 : -1),
-            "/perUser/\(user)/\(node)/\(key)" : (add ? true : false)
+            "/global/\(group)/\(itemKey)/count" : ServerValue.increment(add ? 1 : -1),
+            "/perUser/\(userID)/\(group)/\(itemKey)" : (add ? true : false)
         ]
 
 //        guard let key = ref.child("posts").childByAutoId().key else { return }
@@ -135,7 +135,7 @@ extension FirebaseDatabase {
 
     func translateChat(chatRoom: String, chatID: String, textToTranslate: String, targetLanguage: String, completionHandler: @ escaping (String?) -> Void) {
         let hotelId: String = hotel.id!
-        let chatTranslationPath = "/hotels/\(hotelId)/chats/messages/\(chatRoom)/\(chatID)/translations"
+        let chatTranslationPath = "/hotels/\(hotelId)/chats/\(chatRoom)/\(chatID)/translations"
         Firebase.shared.functions.httpsCallable("translateAndUpdateChat").call(
             ["text": textToTranslate,
              "targetLanguage": targetLanguage,
@@ -154,13 +154,13 @@ extension FirebaseDatabase {
     }
 
     func markChatAsRead(chatRoom: String, chatID: String) {
-        CHAT_MESSAGES_DB_REF.child(chatRoom).child(chatID).child("read").setValue(true) { (error, ref) -> Void in
+        CHATS_DB_REF.child(chatRoom).child(chatID).child("read").setValue(true) { (error, ref) -> Void in
             if let error = error {
                 Log.log(level: .ERROR, "Error marking chat as read - \(error.localizedDescription)")
             }
         }
     }
-
+/*
     func addHotelToConfig(hotelId: String, hotelName: String) {
         CONFIG_DB_REF.child("hotels").child(hotelId).setValue(hotelName) { (error, ref) -> Void in
             if let error = error {
@@ -168,9 +168,9 @@ extension FirebaseDatabase {
             }
         }
     }
-
+*/
     func updatePhoneData(guestId: String, phoneID: String, phoneLang: String) {
-        let phoneData = [ "guestId": guestId, "roomNumber": guest.roomNumber, "language": phoneLang] as [String : Any]
+        let phoneData = [ "guestId": guestId, "roomNumber": phoneUser.guest?.roomNumber ?? 0, "language": phoneLang] as [String : Any]
         PHONES_DB_REF.child(phoneID).setValue(phoneData) { (error, ref) -> Void in
             if let error = error {
                 Log.log(level: .ERROR, "Error updating phone data - \(error.localizedDescription)")
@@ -221,4 +221,36 @@ extension FirebaseDatabase {
             LOGS_DB_REF.child(phoneID ?? "phone").child(Date().formatFull()).setValue(dictionary)
         }
     }
+
+    func observeInfo() {
+        DBINFO_DB_REF.observe(.value, with: { snapshot in
+            if let info = snapshot.value as? NSDictionary {
+                self.isConnected = info["connected"] as? Bool ?? false
+                self.serverTimeOffet = info["serverTimeOffset"] as? Double ?? 0.0
+                NotificationCenter.default.post(name: .hotelInfoUpdated, object: nil)
+            }
+        })
+    }
+
+    func getUsers(hotelName: String, completionHandler: @ escaping ([[String:String]]) -> Void) {
+        Firebase.shared.functions.httpsCallable("getUsers").call(["forHotel": hotelName]) { result, error in
+            if let error = error as NSError? {
+                if error.domain == FunctionsErrorDomain {
+                    Log.log(level: .ERROR, error.debugDescription)
+                }
+            }
+            if let data = result?.data as? [[String: String]] {
+                print(data)
+                completionHandler(data)
+            } else {
+                completionHandler([[:]])
+            }
+        }
+    }
+
+    
+    
+    
+    
+    
 }

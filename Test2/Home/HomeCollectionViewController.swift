@@ -113,8 +113,8 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         //print(location.coordinate.longitude)
         let locValue:CLLocationCoordinate2D = manager.location!.coordinate
         //print("locations = \(locValue.latitude) \(locValue.longitude)")
-        guest.currentLocationLatitude = locValue.latitude
-        guest.currentLocationLongitude = locValue.longitude
+        phoneUser.currentLocationLatitude = locValue.latitude
+        phoneUser.currentLocationLongitude = locValue.longitude
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -173,6 +173,9 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
                 case .offers:       _ = pushViewController(storyBoard: "Offers", id: "Offers")
                 //case .map:          _ = pushViewController(storyBoard: "Main", id: "NFCReader")
                 case .map:          _ = pushViewController(storyBoard: "Map", id: "mapViewController")
+                dbProxy.getUsers(hotelName: "RitzKohSamui") { s in
+                    print(s)
+                }
                 //case .watersports:  _ = pushViewController(storyBoard: "WaterSports", id: "WaterSports")
 /*
                 case .adoptACoral:
@@ -222,7 +225,7 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
     }
 
     @IBAction func chatButtonPressed(_ sender: UIButton) {
-        _ = pushViewController(storyBoard: "Chat", id: "Chat")
+        _ = pushViewController(storyBoard: "Chat", id: phoneUser.isStaff ? "ChatList" : "Chat")
     }
 
     @IBAction func buggyButtonPressed(_ sender: UIButton) {
@@ -381,8 +384,8 @@ class HomeHeaderCell: UICollectionViewCell {
 */
         picture.kf.setImage(with: URL(string: imageURL))
         titleLabel.text = title
-        unreadChatLabel.text = String(guest.unreadChatCount)
-        unreadChatLabel.isHidden = guest.unreadChatCount < 1
+        //unreadChatLabel.text = String(guest.unreadChatCount)  // TODO
+        //unreadChatLabel.isHidden = guest.unreadChatCount < 1  // TODO
     }
 
     // width constrain for ipad is set to 100 but is still 60 in awakeFromNib() and draw()

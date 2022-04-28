@@ -12,7 +12,7 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     var restaurant: Restaurant = Restaurant()
     var menuIndex = 0
-    private var order = Order(roomNumber: guest.roomNumber, category: .RoomService)
+    private var order = Order(category: .RoomService)
 
     var isRoomService = false
 
@@ -20,7 +20,7 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     @IBAction func orderSummaryPressed(_ sender: UIButton) {
         let storyboard = UIStoryboard(name: "OrderSummary", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "CreateOrder") as! CreateOrderViewController
+        let vc = storyboard.instantiateViewController(withIdentifier: "CreateOrder") as! RoomItemsOrderViewController
         vc.order = self.order
         vc.completionHandler = { self.clearOrder() }
         self.pushOrPresent(viewController: vc)
@@ -161,7 +161,7 @@ extension MenuViewController {
     }
 
     func clearOrder() {
-        order = Order(roomNumber: guest.roomNumber, category: .RoomService)
+        order = Order(category: .RoomService)
         expandedCells = []
         orderSummaryConstraint.constant = -80
         self.view.layoutIfNeeded()

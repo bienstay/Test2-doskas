@@ -34,7 +34,7 @@ class RoomItemCell: UITableViewCell {
 
     func display(roomItem: RoomItem, order: Order, expanded: Bool) {
         //if let lang = Locale.current.languageCode, let itemList = String.roomItemsList[lang] {
-        if let itemList = String.roomItemsList[guest.lang] {
+        if let itemList = String.roomItemsList[phoneUser.lang] {
             itemLabel.text = itemList[roomItem.name]
         } else {
             itemLabel.text = roomItem.name

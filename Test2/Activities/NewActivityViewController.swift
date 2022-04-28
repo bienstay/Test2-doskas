@@ -93,9 +93,11 @@ class NewActivityViewController: UITableViewController {
         activity.imageFileURL = ""
 
         if photoUpdated {
-            storageProxy.uploadImage(forLocation: .ACTIVITIES, image: activityImageView.image!, imageName: activity.title) { photoURL in
-                activity.imageFileURL = photoURL
-                self.updateArrayAndDB(activity: activity, dow: dow.rawValue)
+            storageProxy.uploadImage(forLocation: .ACTIVITIES, image: activityImageView.image!, imageName: activity.title) { error, photoURL in
+                if let photoURL = photoURL {
+                    activity.imageFileURL = photoURL
+                    self.updateArrayAndDB(activity: activity, dow: dow.rawValue)
+                }
             }
         } else {
             if let i = activityIndexToEdit {
@@ -130,8 +132,6 @@ class NewActivityViewController: UITableViewController {
     }
 
     @IBAction func datePickerAction(sender: UIDatePicker) {
-        print(sender.date.formatFriendly())
-        print(sender.date.formatTimeShort())
     }
 }
 

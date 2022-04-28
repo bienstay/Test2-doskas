@@ -17,7 +17,8 @@ enum PhotoLocation {
 }
 
 protocol StorageProxy {
-    func uploadImage(forLocation: PhotoLocation, image: UIImage, imageName: String?, completionHandler: @escaping (String) -> Void)
+    func uploadImage(forLocation: PhotoLocation, image: UIImage, imageName: String?, completionHandler: @escaping (Error?, String?) -> Void)
+    //func uploadImage(forLocation: PhotoLocation, image: UIImage, imageName: String?, completionHandler: @escaping (String) -> Void)
     //func getImageURL(forLocation: PhotoLocation, imageName: String) -> String
     func getImageURL(forLocation: PhotoLocation, imageName: String, completionHandler: @escaping (URL?, Error?) -> Void)
     func setImage(imageView: UIImageView, name: String)

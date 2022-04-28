@@ -20,10 +20,10 @@ class NewsCell: UITableViewCell {
     var post = NewsPost()
 
     @IBAction func heartPressed(_ sender: UIButton) {
-        guest.toggleLike(group: "news", key: post.postId)
-//        let imageView = UIImage(named: "heartFull")
-//        heartButton.setImage(imageView, for: .normal)
-//        dbProxy.updateLike(node: "news", key: post.postId, user: guest.id, add: true)
+        phoneUser.guest?.toggleLike(group: "news", key: post.postId)
+        //let imageView = UIImage(named: "heartFull")
+        //heartButton.setImage(imageView, for: .normal)
+        //dbProxy.updateLike(node: "news", key: post.postId, user: guest.id, add: true)
     }
 
     override func awakeFromNib() {
@@ -48,7 +48,7 @@ class NewsCell: UITableViewCell {
 
         titleLabel.text = post.title
         subtitleLabel.text = post.subtitle
-        timestampLabel.text = post.timestamp.formatFriendly()
+        timestampLabel.text = post.timestamp.formatForDisplay()
         newsImageView.image = nil
         if let url = URL(string: post.imageFileURL) {
             newsImageView.isHidden = false
@@ -71,7 +71,7 @@ class NewsCell: UITableViewCell {
 
         heartButton.setImage(UIImage(named: numLikes > 0 ? "heartFull" : "heartEmpty"), for: .normal)
         likesLabel.text = String(numLikes)
-        likesLabel.isHidden = !guest.isAdmin()
+        likesLabel.isHidden = !phoneUser.isStaff
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
