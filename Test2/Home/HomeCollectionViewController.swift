@@ -11,8 +11,12 @@ import CoreLocation
 private let reuseIdentifier = "Cell"
 
 class HomeCollectionViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, CLLocationManagerDelegate {
-
+    
     @IBOutlet var collectionView: UICollectionView!
+    @IBOutlet weak var statusView: UIView!
+    @IBOutlet weak var emulationLabel: UILabel!
+    @IBOutlet weak var connectionLostLabel: UILabel!
+
     var squareSize: Double = 0.0
     var locationManager:CLLocationManager!
 
@@ -56,6 +60,7 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
 
         NotificationCenter.default.addObserver(self, selector: #selector(onHotelInfoUpdated(_:)), name: .hotelInfoUpdated, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onChatMessagesUpdated(_:)), name: .chatMessagesUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onConnectionStatusUpdated(_:)), name: .connectionStatusUpdated, object: nil)
 
         tabBarController?.viewControllers?[0].tabBarItem.title = .home
         tabBarController?.viewControllers?[1].tabBarItem.title = .food
@@ -78,6 +83,9 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
     override func viewWillAppear(_ animated: Bool) {
         collectionView.contentInsetAdjustmentBehavior = .never   // hides the navigation bar
         navigationController?.setNavigationBarHidden(true, animated: false)
+
+        statusView.isUserInteractionEnabled = false
+        updateStatusView()
         
         tabBarController?.tabBar.isHidden = false
     }
@@ -103,8 +111,27 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         }
     }
 
-    @objc func didTap(sender: UITapGestureRecognizer) {
-        ConfigViewController.showPopup(parentVC: self)
+    @objc func onConnectionStatusUpdated(_ notification: Notification) {
+        DispatchQueue.main.async {
+            self.updateStatusView()
+        }
+    }
+    
+    func updateStatusView() {
+        connectionLostLabel.isHidden = dbProxy.isConnected
+        emulationLabel.isHidden = !(UIApplication.shared.delegate as! AppDelegate).useEmulator
+        statusView.isHidden = connectionLostLabel.isHidden && emulationLabel.isHidden
+    }
+
+    func askToResetUserDefaults() {
+        //ConfigViewController.showPopup(parentVC: self)
+        let cancelAlert = UIAlertController(title: "Reset Memory", message: "Erase UserDefaults?", preferredStyle: UIAlertController.Style.alert)
+        cancelAlert.addAction(UIAlertAction(title: .yes, style: .destructive, handler: { (action: UIAlertAction!) in
+            UserDefaults.standard.set(true, forKey: "resetDefaults")
+        }))
+        cancelAlert.addAction(UIAlertAction(title: .no, style: .cancel, handler: { (action: UIAlertAction!) in
+        }))
+        present(cancelAlert, animated: true, completion: nil)
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -139,7 +166,8 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         switch Section(rawValue: indexPath.section) {
         case .header:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeHeaderCell", for: indexPath) as! HomeHeaderCell
-            cell.tapClosure = { ConfigViewController.showPopup(parentVC: self) }
+            cell.tapClosure = { self.askToResetUserDefaults() }
+            //cell.tapClosure = { ConfigViewController.showPopup(parentVC: self) }
             cell.swipeClosure = { _ = self.pushViewController(storyBoard: "Home", id: "NewHotel") }
             cell.draw(title:hotel.name, imageURL: hotel.image)
             return cell
@@ -384,8 +412,9 @@ class HomeHeaderCell: UICollectionViewCell {
 */
         picture.kf.setImage(with: URL(string: imageURL))
         titleLabel.text = title
-        //unreadChatLabel.text = String(guest.unreadChatCount)  // TODO
-        //unreadChatLabel.isHidden = guest.unreadChatCount < 1  // TODO
+        let unreadCount = phoneUser.unreadChatCount()
+        unreadChatLabel.text = String(unreadCount)
+        unreadChatLabel.isHidden = unreadCount < 1
     }
 
     // width constrain for ipad is set to 100 but is still 60 in awakeFromNib() and draw()

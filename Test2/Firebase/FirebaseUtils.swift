@@ -144,9 +144,8 @@ extension FirebaseDatabase {
                 if let error = error {
                     Log.log(level: .ERROR, "Error translating... - \(error.localizedDescription)")
                 }
-                if let data = result?.data {
-                    print(data)
-                    completionHandler("Ok")
+                if let data = result?.data as? String {
+                    completionHandler(data)
                 } else {
                     completionHandler(nil)
                 }
@@ -227,20 +226,18 @@ extension FirebaseDatabase {
             if let info = snapshot.value as? NSDictionary {
                 self.isConnected = info["connected"] as? Bool ?? false
                 self.serverTimeOffet = info["serverTimeOffset"] as? Double ?? 0.0
-                NotificationCenter.default.post(name: .hotelInfoUpdated, object: nil)
+                NotificationCenter.default.post(name: .connectionStatusUpdated, object: nil)
             }
         })
     }
 
     func getUsers(hotelName: String, completionHandler: @ escaping ([[String:String]]) -> Void) {
         Firebase.shared.functions.httpsCallable("getUsers").call(["forHotel": hotelName]) { result, error in
-            if let error = error as NSError? {
-                if error.domain == FunctionsErrorDomain {
-                    Log.log(level: .ERROR, error.debugDescription)
-                }
+            Log.log(error.debugDescription)
+            if let error = error {
+                Log.log(level: .ERROR, error.localizedDescription)
             }
             if let data = result?.data as? [[String: String]] {
-                print(data)
                 completionHandler(data)
             } else {
                 completionHandler([[:]])
@@ -248,9 +245,24 @@ extension FirebaseDatabase {
         }
     }
 
+    func writeChat(chatRoomID: String, message m: ChatMessage) {
+        _ = dbProxy.addRecord(key: nil, subNode: chatRoomID, record: m) { _ in }
+        if !phoneUser.isStaff, let roomNumber = phoneUser.guest?.roomNumber {
+            CHATROOMS_DB_REF.child(chatRoomID).child("roomNumber").setValue(roomNumber) { (error, ref) -> Void in
+                if let error = error {
+                    Log.log(level: .ERROR, "Error updating chat room - \(error.localizedDescription)")
+                }
+            }
+        }
+    }
     
-    
-    
-    
-    
+    func assignChat(chatRoom: String, to user: String) {
+        CHATROOMS_DB_REF.child(chatRoom).child("assignedTo").setValue(user) { (error, ref) -> Void in
+            if let error = error {
+                Log.log(level: .ERROR, "Error marking chat as read - \(error.localizedDescription)")
+            }
+        }
+    }
+
+
 }

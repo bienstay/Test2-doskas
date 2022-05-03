@@ -31,16 +31,4 @@ final class FirebaseMessaging: NSObject, MessagingDelegate, MessagingProxy {
             else { Log.log(level: .INFO, "Subscribed to topic \(topic)") }
         }
     }
-/*
-    func subscribeForMessages() {
-        Messaging.messaging().subscribe(toTopic: genericTopic) { error in
-            if let e = error { Log.log(level: .ERROR, e.localizedDescription) }
-            else { Log.log(level: .INFO, "Subscribed to topic \(self.genericTopic)") }
-        }
-        Messaging.messaging().subscribe(toTopic: roomTopic) { error in
-            if let e = error { Log.log(level: .ERROR, e.localizedDescription) }
-            else { Log.log(level: .INFO, "Subscribed to topic \(self.roomTopic) ") }
-        }
-    }
-*/
 }

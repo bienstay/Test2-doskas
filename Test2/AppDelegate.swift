@@ -17,35 +17,35 @@ var messagingProxy: MessagingProxy!
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var useEmulator: Bool = false
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
         // clean all defaults
-        if let bundleID = Bundle.main.bundleIdentifier {
+        if UserDefaults.standard.bool(forKey: "resetDefaults"), let bundleID = Bundle.main.bundleIdentifier {
             UserDefaults.standard.removePersistentDomain(forName: bundleID)
             UserDefaults.standard.synchronize()
         }
-/*
-        let useSimulator:Bool = UserDefaults.standard.bool(forKey: "useSimulator")
-        // store just in case this was overriden by a parameter
-        UserDefaults.standard.set(useSimulator, forKey: "useSimulator")
-*/
-        let useSimulator = true
 
-        Firebase.shared.initialize(useEmulator: useSimulator)
+        useEmulator = UserDefaults.standard.bool(forKey: "useEmulator")
+        if !UIDevice.current.isSimulator { useEmulator = false }
+        // store just in case this was overriden by a parameter
+        UserDefaults.standard.set(useEmulator, forKey: "useEmulator")
+
+        Firebase.shared.initialize(useEmulator: useEmulator)
         dbProxy = FirebaseDatabase.shared
         authProxy = FirebaseAuthentication.shared
         storageProxy = FirebaseStorage.shared
         messagingProxy = FirebaseMessaging.shared
 
-        Log.log("STARTING... \(useSimulator ? "SIMULATOR" : "") launchOptions \(launchOptions ?? [:])")
+        Log.log("Server is in \(useEmulator ? "EMULATOR" : "CLOUD")")
 
         FirebaseDatabase.shared.observeInfo()   // TODO move it somewhere
 
         UNUserNotificationCenter.current().delegate = self
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
             if granted { Log.log(level: .INFO, "User notifications allowed") }
-            else { Log.log("User notifications not allowed, error: " + error.debugDescription) }
+            else { Log.log("User notifications NOT allowed, error: " + error.debugDescription) }
         }
         // always register for notifications, user can change permission outside the app, in system settings
         UIApplication.shared.registerForRemoteNotifications()
@@ -178,5 +178,17 @@ extension AppDelegate {
                 }, completion: nil)
             }
         }
+    }
+}
+
+extension UIDevice {
+    var isSimulator: Bool {
+#if targetEnvironment(simulator)
+        Log.log("Running in SIMULATOR")
+        return true
+#else
+        Log.log("Running on REAL DEVICE")
+        return false
+#endif
     }
 }

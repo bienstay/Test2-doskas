@@ -407,6 +407,7 @@ extension Notification.Name {
     static let menusUpdated = Notification.Name("menusUpdated")
     static let chatRoomsUpdated = Notification.Name("chatRoomsUpdated")
     static let chatMessagesUpdated = Notification.Name("chatMessagesUpdated")
+    static let chatMessageCountUpdated = Notification.Name("chatMessageCountUpdated")
     static let guestUpdated = Notification.Name("guestUpdated")
     static let likesUpdated = Notification.Name("likesUpdated")
     static let connectionStatusUpdated = Notification.Name("connectionStatusUpdated")

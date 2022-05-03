@@ -13,19 +13,22 @@ import InputBarAccessoryView
 public struct Sender: SenderType {
     public let senderId: String
     public let displayName: String
+    public let isStaff: Bool
 }
 
 struct Message: MessageType {
     
     let senderId: String
     let senderName: String
+    let isSenderStaff: Bool
     let text: String
     let messageId: String
     let timestamp: Date
     let translations: [String:String]?
+    var read: Bool
 
     var sender: SenderType {
-        return Sender(senderId: senderId, displayName: senderName)
+        return Sender(senderId: senderId, displayName: senderName, isStaff: isSenderStaff)
     }
 
     var sentDate: Date {
@@ -130,21 +133,35 @@ class MessageKitChatViewController: MessagesViewController {
         updateMessages()
         messagesCollectionView.reloadData()
         messagesCollectionView.scrollToLastItem(animated: true)
+        //phoneUser.chatRoom(charRoom: chatRoomId)?.unreadCount = 0
     }
 
     func updateMessages() {
-        let msgs = phoneUser.chatMessages(chatRoom: chatRoomId)
+        guard let msgs = phoneUser.chatRoom(charRoom: chatRoomId)?.messages else { return }
         messages = []
         for m in msgs {
-            messages.append(Message(senderId: m.senderID, senderName: m.senderName, text: m.content, messageId: m.id!, timestamp: m.created, translations: m.translations))
-            if !(m.read ?? false) {
-                dbProxy.markChatAsRead(chatRoom: chatRoomId, chatID: m.id!)
-            }
+            messages.append(Message(senderId: m.senderID, senderName: m.senderName, isSenderStaff: m.isSenderStaff ?? false, text: m.content, messageId: m.id!, timestamp: m.created, translations: m.translations, read: m.read ?? false))
+//            if !(m.read ?? false) && m.senderID != phoneUser.id {
+//                dbProxy.markChatAsRead(chatRoom: chatRoomId, chatID: m.id!)
+//            }
         }
         messages.sort(by: {$0.sentDate < $1.sentDate})
     }
 
+    func markAsRead(m: Message) {
+        // do not mark as read if one staff member reads msg from another staff
+        let sameSource:Bool = (m.isSenderStaff == phoneUser.isStaff)
+        let sameSender = (m.sender.senderId == phoneUser.id)
+        if !m.read && !sameSender && !sameSource {
+            dbProxy.markChatAsRead(chatRoom: chatRoomId, chatID: m.messageId)
+        }
+    }
+
     func isFromCurrentUser(message: MessageType) -> Bool {
+        if let sender = message.sender as? Sender {
+            let b = message.sender.senderId == phoneUser.id || phoneUser.isStaff && sender.isStaff
+            return b
+        }
         return message.sender.senderId == phoneUser.id
     }
 
@@ -163,11 +180,13 @@ class MessageKitChatViewController: MessagesViewController {
 
 extension MessageKitChatViewController: MessagesDataSource {
     func currentSender() -> SenderType {
-        Sender(senderId: phoneUser.id, displayName: phoneUser.toString())
+        Sender(senderId: phoneUser.id, displayName: phoneUser.toString(), isStaff: phoneUser.isStaff)
     }
 
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
-        return messages[indexPath.section]
+        let m = messages[indexPath.section]
+        markAsRead(m: m)
+        return m
     }
 
     func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
@@ -205,8 +224,9 @@ extension MessageKitChatViewController: MessagesLayoutDelegate {
 
 extension MessageKitChatViewController: InputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
-        let newChatMessage = ChatMessage(created: Date(), content: text, senderID: phoneUser.id, senderName: phoneUser.toString())
-        _ = dbProxy.addRecord(key: nil, subNode: chatRoomId, record: newChatMessage) { _ in }
+        let newChatMessage = ChatMessage(created: Date(), content: text, senderID: phoneUser.id, senderName: phoneUser.toString(), isSenderStaff: phoneUser.isStaff)
+        //_ = dbProxy.addRecord(key: nil, subNode: chatRoomId, record: newChatMessage) { _ in }
+        dbProxy.writeChat(chatRoomID: chatRoomId, message: newChatMessage)
         inputBar.inputTextView.text = ""
     }
 }

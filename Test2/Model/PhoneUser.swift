@@ -39,20 +39,37 @@ class PhoneUser {
     var orders: [Order] { isStaff ? user!.orders : guest!.orders }
     var activeOrders: [Order] { isStaff ? user!.activeOrders : guest!.activeOrders }
 
+    func chatRoom(charRoom: String = "") -> ChatRoom? {
+        return isStaff ? user?.chatManager.getChatRoom(charRoom) : guest?.chatRoom
+    }
+    func unreadChatCount() -> Int {
+        var count = 0
+        if let user = user {
+            for ch in user.chatManager.myChatRooms {
+                count += ch.unreadCount
+            }
+        }
+        if let guest = guest {
+            count = guest.chatRoom.unreadCount
+        }
+        return count
+    }
+/*
     func chatMessages(chatRoom: String = "") -> [ChatMessage] {
         var msgs: [ChatMessage] = []
         if isStaff {
-            msgs = user!.chatManager.getChatRoom(chatRoom).messages
+            msgs = user?.chatManager.getChatRoom(chatRoom).messages ?? []
             /*
             if let index = user!.myChatRooms.firstIndex(where: {$0.id == chatRoom}) {
                 msgs = user?.myChatRooms[index].messages ?? []
             }
             */
         }
-        else { msgs = guest?.chatMessages ?? [] }
+        //else { msgs = guest?.chatMessages ?? [] }
+        else { msgs = guest?.chatRoom.messages ?? [] }
         return msgs
     }
-
+*/
     func toString(short: Bool = false) -> String {
         if !isStaff {
             var s = String(guest!.roomNumber)
@@ -179,9 +196,12 @@ class Guest  {
 
     var orders: [Order] = []
     var activeOrders: [Order] = []
+
     //var chatMessages: [String:[ChatMessage]] = [:]
-    var chatMessages: [ChatMessage] = []
-    var unreadChatCount: Int = 0
+    //var chatMessages: [ChatMessage] = []
+    //var unreadChatCount: Int = 0
+    lazy var chatRoom: ChatRoom = ChatRoom(id: id, assignedTo: "")
+
     var likes: LikesPerUser = [:]
 
 
@@ -195,7 +215,8 @@ class Guest  {
         dbProxy.observeOrderChanges()
         dbProxy.subscribeForUpdates(parameter: .OrderInDB(roomNumber: roomNumber), completionHandler: ordersUpdated)
         dbProxy.subscribeForUpdates(subNode: id, parameter: nil, completionHandler: likesUpdated)
-        dbProxy.subscribeForUpdates(subNode: id, parameter: nil, completionHandler: chatMessagesUpdated)
+        //dbProxy.subscribeForUpdates(subNode: id, parameter: nil, completionHandler: chatMessagesUpdated)
+        chatRoom.startObserving()
 
         messagingProxy.subscribeForMessages(topic: (hotel.id ?? "") + "_" + String(roomNumber))
     }
@@ -222,7 +243,7 @@ class Guest  {
         allLikes.forEach( { likes[$0.0] = Set($0.1.compactMap { $0.value ? $0.key : nil }) } )
         NotificationCenter.default.post(name: .likesUpdated, object: nil)
     }
-
+/*
     func chatMessagesUpdated(allChatMessages: [(String, ChatMessage)], subNode: String?) {
         //let chatRoomId = id
         //chatMessages[chatRoomId] = []
@@ -242,7 +263,7 @@ class Guest  {
 
         NotificationCenter.default.post(name: .chatMessagesUpdated, object: nil)
     }
-
+*/
 }
 
 var phoneUser = PhoneUser()

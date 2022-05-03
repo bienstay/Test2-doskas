@@ -24,7 +24,12 @@ protocol DBProxy {
     @discardableResult
     func subscribeForUpdates<T: Codable>(subNode: String?, start timestamp: Int?, limit: UInt?, parameter: QueryParameter?, completionHandler: @ escaping ([(String, T)], String?) -> Void) -> NSObject?
     func unsubscribe(handle: NSObject?)
+    func unsubscribe<T>(t: T.Type, subNode: String)
     func removeAllObservers()
+
+    func subscribeForNew<T: Codable>(subNode: String?, parameter: QueryParameter?, completionHandler: @ escaping (String, T) -> Void)
+    func subscribeForDeleted<T: Codable>(subNode: String?, parameter: QueryParameter?, completionHandler: @ escaping (String, T) -> Void)
+    func subscribeForModified<T: Codable>(subNode: String?, parameter: QueryParameter?, completionHandler: @ escaping (String, T) -> Void)
 
     func observeOrderChanges()
     func getHotels(completionHandler: @ escaping ([String:String]) -> Void)
@@ -43,6 +48,10 @@ protocol DBProxy {
 
     //func getUsers(completionHandler: @ escaping ([[String:String]]) -> Void)
     func getUsers(hotelName: String, completionHandler: @ escaping ([[String:String]]) -> Void)
+    func assignChat(chatRoom: String, to user: String)
+    func writeChat(chatRoomID: String, message m: ChatMessage)
+    
+    var isConnected: Bool { get }
 }
 
 // extensions are needed as a workaround to no default parameters in protocols

@@ -15,7 +15,7 @@ class ChatListViewController: UIViewController, UITableViewDataSource {
         initView()
         tableView.dataSource = self
         tableView.delegate = self
-        NotificationCenter.default.addObserver(self, selector: #selector(onChatRoomListUpdated(_:)), name: .guestUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onChatRoomListUpdated(_:)), name: .chatRoomsUpdated, object: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {

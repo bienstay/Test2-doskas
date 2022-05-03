@@ -9,7 +9,7 @@ import UIKit
 
 class SplashViewController: UIViewController {
     //var dbProxyReady = false
-    var dbProxyReady = true
+    var dbProxyReady = false
     var notReadyCounter = 0
 
     override func viewDidLoad() {
@@ -19,6 +19,11 @@ class SplashViewController: UIViewController {
 
         NotificationCenter.default.addObserver(self, selector: #selector(onDbProxyReady(_:)), name: .dbProxyReady, object: nil)
 
+        authProxy.login(username: "appuser@appviator.com", password: "Appviator2022!") { authData, error in
+            if authData != nil && error == nil {
+                self.dbProxyReady = true
+            }
+        }
     }
     
     @objc func onDbProxyReady(_ notification: Notification) {

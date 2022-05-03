@@ -53,7 +53,8 @@ class BuggyOrderViewController: UIViewController {
         case .Room: break
         //case .GPS: locationData = "9.583716,100.078701"
         //case .GPS: locationData = String(guest.currentLocationLatitude) + "," + String(guest.currentLocationLongitude)
-        case .GPS: locationData = String(0.0) + "," + String(0.0)   // TODO
+        case .GPS: locationData = String(phoneUser.currentLocationLatitude) + "," + String(phoneUser.currentLocationLongitude)
+        //case .GPS: locationData = String(0.0) + "," + String(0.0)   // TODO
         case .Other: break
         case .Photo: locationData = photoURL
         }

@@ -12,11 +12,11 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     @IBOutlet var captureView: UIView!
     @IBOutlet var skipCaptureButton: UIButton!
     @IBOutlet var userFlagControl: UISegmentedControl!
+    @IBOutlet weak var userPicker: UIPickerView!
+
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
-    @IBOutlet weak var userPicker: UIPickerView! {
-        didSet { userPicker.selectRow(0, inComponent: 0, animated: false) }
-    }
+
     var hotels: [String] = ["RitzKohSamui", "SheratonFullMoon", "W"]
     var users: [UserData] = []
     struct RoomSample {
@@ -86,10 +86,11 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     }
 
     func initUserList() {
+        users = []
+        userPicker.reloadComponent(1)
         let i = userPicker.selectedRow(inComponent: 0)
         let hotelName = hotels[i].lowercased()
         dbProxy.getUsers(hotelName: hotelName) { userList in
-            self.users = []
             for u in userList {
                 if let e = u["email"], let d = u["displayName"], let r = u["role"] {
                     self.users.append(UserData(email: e, displayName: d, role: .init(rawValue: r) ?? .none))
@@ -157,33 +158,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         """)
         }
     }
-/*
-    @IBAction func skipClientRitzButtonPressed(_ sender: UIButton) {
-        found(barcodeString: """
-            { "hotelId": "RitzKohSamui", "roomNumber": 9104, "startDate": 669364704.669543, "guestName": "A&M" }
-        """)
-    }
 
-    @IBAction func skipClientSheratonButtonPressed(_ sender: UIButton) {
-        found(barcodeString: """
-            { "hotelId": "SheratonFullMoon", "roomNumber": 117, "startDate": 669364704.669543, "guestName": "Anita & Maciek" }
-        """)
-    }
-
-    @IBAction func skipAdminRitzButtonPressed(_ sender: UIButton) {
-        let i = userPicker.selectedRow(inComponent: 0)
-        let username = users[i].email.components(separatedBy: "@")[0]
-        found(barcodeString: """
-            { "hotelId": "RitzKohSamui", "userName": "\(username)", "password": "Appviator2022!" }
-        """)
-    }
-
-    @IBAction func skipAdminSheratonButtonPressed(_ sender: UIButton) {
-        found(barcodeString: """
-            { "hotelId": "SheratonFullMoon", "userName": "boss", "password": "Appviator2022!" }
-        """)
-    }
-*/
     func found(barcodeString: String) {
         Log.log(level: .INFO, "Barcode scanned: \(barcodeString)")
         guard let b: BarcodeData = parseJSON(barcodeString) else {
@@ -204,26 +179,6 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         appDelegate.initFromBarcode()
         appDelegate.transitionToHome()
 
-/*
-        if b.roomNumber == 0 {
-            UserDefaults.standard.set(barcodeString, forKey: "barcodeData")
-            //guest.roomNumber = 0
-            let appDelegate = UIApplication.shared.delegate as! AppDelegate
-            appDelegate.initFromBarcode()
-            appDelegate.transitionToHome()
-        } else {
-            // store guest data in db, when confirmed, store barcode in UserDefaults and init the app
-            let guestId = Guest.formatGuestId(roomNumber: b.roomNumber, startDate: startDate)
-            let guestInDb = GuestInDB(roomNumber: b.roomNumber, name: b.guestName ?? "", startDate: startDate, endDate: b.endDate ?? Date(timeInterval: 86400*7, since: startDate), phones: nil)
-            dbProxy.updateGuest(hotelId: b.hotelId, guestId: guestId, guestData: guestInDb) {
-                // store barcode in memory
-                UserDefaults.standard.set(barcodeString, forKey: "barcodeData")
-                let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                appDelegate.initFromBarcode()
-                appDelegate.transitionToHome()
-            }
-        }
- */
     }
 
     override var prefersStatusBarHidden: Bool {
@@ -249,10 +204,15 @@ extension ScannerViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     }
 
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        if component == 0 { return hotels[row] }
-        else {
-            let hotelName = userPicker.selectedRow(inComponent: 0)
-            return userFlag ? users[row].id : rooms[hotels[hotelName]]![row].toString
+        let hotelName = userPicker.selectedRow(inComponent: 0)
+        switch component {
+        case 0: return hotels[row]
+        case 1: if userFlag {
+                    return users[row].toString
+                } else {
+                    return row < rooms[hotels[hotelName]]!.count ? rooms[hotels[hotelName]]![row].toString : ""
+                }
+        default: return ""
         }
     }
     

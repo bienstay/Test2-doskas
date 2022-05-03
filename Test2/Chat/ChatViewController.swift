@@ -29,6 +29,7 @@ class ChatViewController: UIViewController {
     }
 
     @IBAction func assignButtonPressed(_ sender: UIBarButtonItem) {
-        _ = pushViewController(storyBoard: "Chat", id: "Assign")
+        let vc = pushViewController(storyBoard: "Chat", id: "Assign") as! AssignViewController
+        vc.chatRoom = chatRoomId
     }
 }

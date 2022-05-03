@@ -44,6 +44,7 @@ final class FirebaseDatabase: DBProxy {
     var LIKES_DB_REF: DatabaseReference         { BASE_DB_REF.child("likes") }
     var LIKESGLOBAL_DB_REF: DatabaseReference   { LIKES_DB_REF.child("global") }
     var LIKESPERUSER_DB_REF: DatabaseReference  { LIKES_DB_REF.child("perUser") }
+    var CHATROOMS_DB_REF: DatabaseReference    { BASE_DB_REF.child("chatRooms") }
     var CHATS_DB_REF: DatabaseReference         { BASE_DB_REF.child("chats") }
     var TRANSLATIONS_DB_REF: DatabaseReference  { BASE_DB_REF.child("translations") }
     var PHONES_DB_REF: DatabaseReference        { BASE_DB_REF.child("phones") }
@@ -78,12 +79,10 @@ final class FirebaseDatabase: DBProxy {
             case is Menu2.Type:
                 return MENUS_DB_REF
             case is ChatRoomInDB.Type:
-                return CHATS_DB_REF
+                return CHATROOMS_DB_REF
             case is ChatMessage.Type:
                 if let child = subNode { return CHATS_DB_REF.child(child) }
-                else {return CHATS_DB_REF }
-//            case is GuestInfo.Type:
-//                return GUESTS_DB_REF
+                else { return CHATS_DB_REF }
             case is GuestInDB.Type:
                 return GUESTSNEW_DB_REF
             case is LikesPerUserInDB.Type:
@@ -217,6 +216,11 @@ final class FirebaseDatabase: DBProxy {
         })
         return query
     }
+    
+    func unsubscribe<T>(t: T.Type, subNode: String) {
+        guard let query = getQuery(type: T.self, subNode: subNode, parameter: nil) else { return }
+        query.removeAllObservers()
+    }
 
     func unsubscribe(handle: NSObject?) {
         if let ref = handle as? DatabaseReference {
@@ -230,7 +234,63 @@ final class FirebaseDatabase: DBProxy {
         }
         observed.removeAll()
     }
-    
+
+    func subscribeForNew<T: Codable>(subNode: String? = nil, parameter: QueryParameter? = nil, completionHandler: @ escaping (String, T) -> Void) {
+        //guard let ref = getDBRef(type: T.self, subNode: subNode) else { return nil }
+        guard let query = getQuery(type: T.self, subNode: subNode, parameter: parameter) else { return }
+        Log.log(level: .DEBUG, "observing for new " + query.description)
+        query.observe(.childAdded, with: { (snapshot) in
+            //Log.log(level: .DEBUG, "\(snapshot.value) of type \(T.self) added")
+            guard JSONSerialization.isValidJSONObject(snapshot.value!) else {
+                Log.log("Invalid JSON: \(snapshot.value!) in query: \(query)")
+                return
+            }
+            let data = try? JSONSerialization.data(withJSONObject: snapshot.value!)
+            do {
+                let object = try JSONDecoder().decode(T.self, from: data!)
+                completionHandler(snapshot.key, object)
+            } catch {
+                Log.log("Failed to decode JSON: " + data.debugDescription)
+                Log.log(level: .ERROR, "\(error)")
+            }
+        })
+    }
+
+    func subscribeForDeleted<T: Codable>(subNode: String? = nil, parameter: QueryParameter? = nil, completionHandler: @ escaping (String, T) -> Void) {
+        guard let query = getQuery(type: T.self, subNode: subNode, parameter: parameter) else { return }
+        Log.log(level: .DEBUG, "observing for deleted " + query.description)
+        query.observe(.childRemoved, with: { (snapshot) in
+            //Log.log(level: .DEBUG, "\(snapshot.value) of type \(T.self) added")
+            let decoder = JSONDecoder()
+            let data = try? JSONSerialization.data(withJSONObject: snapshot.value!)
+            do {
+                let object = try decoder.decode(T.self, from: data!)
+                completionHandler(snapshot.key, object)
+            } catch {
+                Log.log("Failed to decode JSON: " + data.debugDescription)
+                Log.log(level: .ERROR, "\(error)")
+            }
+        })
+    }
+
+    func subscribeForModified<T: Codable>(subNode: String? = nil, parameter: QueryParameter? = nil, completionHandler: @ escaping (String, T) -> Void) {
+        guard let query = getQuery(type: T.self, subNode: subNode, parameter: parameter) else { return }
+        Log.log(level: .DEBUG, "observing for deleted " + query.description)
+        query.observe(.childChanged, with: { (snapshot) in
+            //Log.log(level: .DEBUG, "\(snapshot.value) of type \(T.self) added")
+            let decoder = JSONDecoder()
+            let data = try? JSONSerialization.data(withJSONObject: snapshot.value!)
+            do {
+                let object = try decoder.decode(T.self, from: data!)
+                completionHandler(snapshot.key, object)
+            } catch {
+                Log.log("Failed to decode JSON: " + data.debugDescription)
+                Log.log(level: .ERROR, "\(error)")
+            }
+        })
+    }
+
+
     func decodeSnapshot<T: Codable>(snapshot: DataSnapshot) -> [(String, T)] {
         var objects: [(String, T)] = []
         Log.log(level: .DEBUG, "decoding \(snapshot.children.allObjects.count) new objects of type \(T.self)")
