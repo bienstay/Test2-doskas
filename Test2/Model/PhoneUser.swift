@@ -32,7 +32,6 @@ class PhoneUser {
         // therefore we use the preferred language
         let preferredLang = Locale.preferredLanguages.first?.components(separatedBy: "-").first
         let localeLang = Locale.current.languageCode
-        //print("LANG: \(preferredLang1)   \(preferredLang2)   \(localeLang)")
         return (preferredLang ?? localeLang ?? "en")
     }
 
@@ -54,22 +53,7 @@ class PhoneUser {
         }
         return count
     }
-/*
-    func chatMessages(chatRoom: String = "") -> [ChatMessage] {
-        var msgs: [ChatMessage] = []
-        if isStaff {
-            msgs = user?.chatManager.getChatRoom(chatRoom).messages ?? []
-            /*
-            if let index = user!.myChatRooms.firstIndex(where: {$0.id == chatRoom}) {
-                msgs = user?.myChatRooms[index].messages ?? []
-            }
-            */
-        }
-        //else { msgs = guest?.chatMessages ?? [] }
-        else { msgs = guest?.chatRoom.messages ?? [] }
-        return msgs
-    }
-*/
+
     func toString(short: Bool = false) -> String {
         if !isStaff {
             var s = String(guest!.roomNumber)
@@ -114,9 +98,6 @@ class User {
 
     var orders: [Order] = []
     var activeOrders: [Order] = []
-    //var chatMessages: [String:[ChatMessage]] = [:]
-    //var unreadChatCount: Int = 0
-    //var myChatRooms: [ChatRoom] = []
     var chatManager = ChatRoomManager()
 
     init(name: String, password: String, displayName: String? = nil) {
@@ -132,10 +113,7 @@ class User {
     func startObserving() {
         dbProxy.observeOrderChanges()
         dbProxy.subscribeForUpdates(parameter: .OrderInDB(roomNumber: 0), completionHandler: ordersUpdated)
-        //dbProxy.subscribeForUpdates(subNode: nil, parameter: .AssignedTo(id: id), completionHandler: chatRoomsUpdated)
-        //dbProxy.subscribeForUpdates(subNode: "9104--20220319-07:38:24", parameter: nil/*.AssignedTo(id: "boss")*/, completionHandler: chatMessagesUpdated)
         chatManager.startObserving(userID: id)
-
         messagingProxy.subscribeForMessages(topic: hotel.id ?? "")
     }
 
@@ -149,41 +127,6 @@ class User {
         activeOrders.sort(by: { $0.id! > $1.id! } )
         NotificationCenter.default.post(name: .ordersUpdated, object: nil)
     }
-/*
-    func chatRoomsUpdated(allChatRooms: [(String, ChatRoomInDB)], subNode: String?) {
-        print(allChatRooms)
-        for room in allChatRooms {
-            myChatRooms.append(ChatRoom(id: room.0))
-        }
-    }
-
-    func chatMessagesUpdated(allChatMessages: [(String, ChatMessage)], subNode: String?) {
-        guard let chatRoomId = subNode else {
-            Log.log(level: .ERROR, "subNode empty in chatMessagesUpdated")
-            return
-        }
-        guard let index = myChatRooms.firstIndex(where: {$0.id == chatRoomId}) else {
-            Log.log(level: .ERROR, "chatRoom \(chatRoomId) not found ")
-            return
-        }
-        myChatRooms[index].messages = []
-        //unreadChatCount = 0
-        for m in allChatMessages {
-            var chatMessage = m.1
-            chatMessage.id = m.0
-            //if !(chatMessage.read ?? false) { unreadChatCount += 1 }
-            myChatRooms[index].messages.append(chatMessage)
-        }
-        myChatRooms[index].messages.sort(by: {$0.created < $1.created})
-        // translate the last message
-
-        if let m = myChatRooms[index].messages.last, m.senderID != phoneUser.id {
-            dbProxy.translateChat(chatRoom: chatRoomId, chatID: m.id!, textToTranslate: m.content, targetLanguage: phoneUser.lang, completionHandler: { _ in } )
-        }
-
-        NotificationCenter.default.post(name: .chatMessagesUpdated, object: nil)
-    }
-*/
 }
 
 class Guest  {
@@ -197,9 +140,6 @@ class Guest  {
     var orders: [Order] = []
     var activeOrders: [Order] = []
 
-    //var chatMessages: [String:[ChatMessage]] = [:]
-    //var chatMessages: [ChatMessage] = []
-    //var unreadChatCount: Int = 0
     lazy var chatRoom: ChatRoom = ChatRoom(id: id, assignedTo: "")
 
     var likes: LikesPerUser = [:]
@@ -215,10 +155,8 @@ class Guest  {
         dbProxy.observeOrderChanges()
         dbProxy.subscribeForUpdates(parameter: .OrderInDB(roomNumber: roomNumber), completionHandler: ordersUpdated)
         dbProxy.subscribeForUpdates(subNode: id, parameter: nil, completionHandler: likesUpdated)
-        //dbProxy.subscribeForUpdates(subNode: id, parameter: nil, completionHandler: chatMessagesUpdated)
         chatRoom.startObserving()
-
-        messagingProxy.subscribeForMessages(topic: (hotel.id ?? "") + "_" + String(roomNumber))
+        messagingProxy.subscribeForMessages(topic: (hotel.id ?? "") + "_" + id)
     }
 
     func toggleLike(group: String, key: String) {
@@ -243,27 +181,6 @@ class Guest  {
         allLikes.forEach( { likes[$0.0] = Set($0.1.compactMap { $0.value ? $0.key : nil }) } )
         NotificationCenter.default.post(name: .likesUpdated, object: nil)
     }
-/*
-    func chatMessagesUpdated(allChatMessages: [(String, ChatMessage)], subNode: String?) {
-        //let chatRoomId = id
-        //chatMessages[chatRoomId] = []
-        chatMessages = []
-        unreadChatCount = 0
-        allChatMessages.forEach( {
-            var chatMessage = $0.1
-            chatMessage.id = $0.0
-            if !(chatMessage.read ?? false) { unreadChatCount += 1 }
-            chatMessages.append(chatMessage)
-        })
-        chatMessages.sort(by: {$0.created < $1.created})
-        // translate the last message
-        if let m = chatMessages.last, m.senderID != phoneUser.id {
-            dbProxy.translateChat(chatRoom: id, chatID: m.id!, textToTranslate: m.content, targetLanguage: phoneUser.lang, completionHandler: { _ in } )
-        }
-
-        NotificationCenter.default.post(name: .chatMessagesUpdated, object: nil)
-    }
-*/
 }
 
 var phoneUser = PhoneUser()

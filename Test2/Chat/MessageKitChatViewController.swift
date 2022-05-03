@@ -140,7 +140,7 @@ class MessageKitChatViewController: MessagesViewController {
         guard let msgs = phoneUser.chatRoom(charRoom: chatRoomId)?.messages else { return }
         messages = []
         for m in msgs {
-            messages.append(Message(senderId: m.senderID, senderName: m.senderName, isSenderStaff: m.isSenderStaff ?? false, text: m.content, messageId: m.id!, timestamp: m.created, translations: m.translations, read: m.read ?? false))
+            messages.append(Message(senderId: m.senderID, senderName: m.senderName, isSenderStaff: m.isSenderStaff, text: m.content, messageId: m.id!, timestamp: m.created, translations: m.translations, read: m.read ?? false))
 //            if !(m.read ?? false) && m.senderID != phoneUser.id {
 //                dbProxy.markChatAsRead(chatRoom: chatRoomId, chatID: m.id!)
 //            }
@@ -224,7 +224,7 @@ extension MessageKitChatViewController: MessagesLayoutDelegate {
 
 extension MessageKitChatViewController: InputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
-        let newChatMessage = ChatMessage(created: Date(), content: text, senderID: phoneUser.id, senderName: phoneUser.toString(), isSenderStaff: phoneUser.isStaff)
+        let newChatMessage = ChatMessage(created: Date(), content: text, senderID: phoneUser.id, senderName: phoneUser.toString(), isSenderStaff: phoneUser.isStaff, chatRoomID: chatRoomId)
         //_ = dbProxy.addRecord(key: nil, subNode: chatRoomId, record: newChatMessage) { _ in }
         dbProxy.writeChat(chatRoomID: chatRoomId, message: newChatMessage)
         inputBar.inputTextView.text = ""

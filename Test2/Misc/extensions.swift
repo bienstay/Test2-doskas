@@ -360,7 +360,7 @@ extension Date {
     }
     func formatForDB() -> String {
         let formatter3 = DateFormatter()
-        formatter3.dateFormat = "yyyyMMdd-HH:mm:ss"
+        formatter3.dateFormat = "yyyyMMdd-HHmmss"
         return formatter3.string(from: self)
     }
     func formatTimeShort() -> String {

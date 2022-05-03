@@ -76,10 +76,10 @@ class NFCReaderViewController: UIViewController, NFCNDEFReaderSessionDelegate, N
         for nfcTag in tags {
             // In this example you are searching for a MIFARE Ultralight tag (NFC Forum T2T tag platform).
             if case let .miFare(mifareTag) = nfcTag {
-                print(mifareTag.debugDescription)
+                print(mifareTag.debugDescription ?? "")
                 print(mifareTag.identifier)
                 print(mifareTag.mifareFamily)
-                print(mifareTag.historicalBytes)
+                print(mifareTag.historicalBytes ?? "")
                 if mifareTag.mifareFamily == .ultralight {
                     tag = nfcTag
                     break

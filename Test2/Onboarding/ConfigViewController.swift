@@ -83,7 +83,6 @@ class ConfigViewController: UIViewController {
         dbProxy.removeAllObservers()
 
         let hotelIdx = hotelPicker.selectedRow(inComponent: 0)
-        let guestIdx = hotelPicker.selectedRow(inComponent: 1)
 
         if (!pickerData[hotelIdx].0.id.isEmpty) {
             hotel.id = pickerData[hotelIdx].0.id
