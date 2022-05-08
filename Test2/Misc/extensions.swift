@@ -406,8 +406,10 @@ extension Notification.Name {
     static let facilitiesUpdated = Notification.Name("facilitiesUpdated")
     static let menusUpdated = Notification.Name("menusUpdated")
     static let chatRoomsUpdated = Notification.Name("chatRoomsUpdated")
-    static let chatMessagesUpdated = Notification.Name("chatMessagesUpdated")
-    static let chatMessageCountUpdated = Notification.Name("chatMessageCountUpdated")
+    static let chatMessageAdded = Notification.Name("chatMessagesAdded")
+    static let chatMessageDeleted = Notification.Name("chatMessagesDeleted")
+    static let chatMessageUpdated = Notification.Name("chatMessagesUpdated")
+    //static let chatMessageCountUpdated = Notification.Name("chatMessageCountUpdated")
     static let guestUpdated = Notification.Name("guestUpdated")
     static let likesUpdated = Notification.Name("likesUpdated")
     static let connectionStatusUpdated = Notification.Name("connectionStatusUpdated")
@@ -545,9 +547,11 @@ struct Log {
     }
     static var currentLevel: LogLevel = .INFO
     static var logInDB: Bool = true
-    static func log(level: LogLevel = .INFO, _ message: String, logInDb: Bool = true) {
+    static func log(level: LogLevel = .INFO, _ message: String, logInDb: Bool = true, function: String = #function, file: String = #file, line: Int = #line) {
         if level.rawValue <= currentLevel.rawValue {
-            print(message)
+            let url = NSURL(fileURLWithPath: file)
+            let name = (url.lastPathComponent ?? file).components(separatedBy: ".")[0]
+            print("[\(name):\(line)] " + message)
             if self.logInDB && logInDb { dbProxy?.log(level: level, s: message) }
         }
     }
@@ -625,15 +629,14 @@ extension UICollectionView {
             superview = view.superview
         }
         guard let cell = superview as? UICollectionViewCell else {
-            print("view is not contained in a collection view cell")
+            Log.log(level: .ERROR, "view is not contained in a collection view cell")
             return nil
         }
         guard let indexPath = self.indexPath(for: cell) else {
-            print("failed to get index path for cell containing button")
+            Log.log(level: .ERROR, "failed to get index path for cell containing button")
             return nil
         }
         // We've got the index path for the cell that contains the button, now do something with it.
-        print("button is in row \(indexPath.row)")
         return indexPath
     }
 }
@@ -664,7 +667,7 @@ func convertJSONStringToDictionary(text: String) -> [String:AnyObject]? {
             let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:AnyObject]
             return json
         } catch {
-            print("Error converting string to dictionary: \(text)")
+            Log.log(level: .ERROR, "Error converting string to dictionary: \(text)")
         }
     }
     return nil
@@ -674,7 +677,7 @@ func convertObjectToDictionary<T:Codable>(t: T) -> [String:Any]? {
     if let data = try? JSONEncoder().encode(t), let json = try? JSONSerialization.jsonObject(with: data) as? [String:AnyObject] {
         return json
     } else {
-        print("Error converting object to dictionary: \(t)")
+        Log.log(level: .ERROR, "Error converting object to dictionary: \(t)")
         return nil
     }
 }
@@ -686,7 +689,7 @@ func parseJSON<T:Codable>(_ jsonString: String) -> T? {
     do {
         returnValue = try JSONDecoder().decode(T.self, from: data)
     } catch {
-        print("Error in parseJSON: \(error.localizedDescription)")
+        Log.log(level: .ERROR, "Error in parseJSON: \(error.localizedDescription)")
     }
 
     return returnValue

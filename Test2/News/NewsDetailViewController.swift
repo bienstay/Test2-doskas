@@ -54,7 +54,8 @@ extension NewsDetailViewController: UITableViewDataSource, UITableViewDelegate {
         switch indexPath.row {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: NewsDetailHeaderCell.self), for: indexPath) as! NewsDetailHeaderCell
-            cell.heartPressedClosure = {
+            cell.heartPressedClosure = { [weak self] in
+                guard let self = self else { return }
                 phoneUser.guest?.toggleLike(group: "news", key: self.post.postId)
             }
             cell.draw(post: post)

@@ -15,12 +15,12 @@ class RoomItemCell: UITableViewCell {
     @IBOutlet private weak var plusButton: UIButton!
     @IBOutlet private weak var itemImage: UIImageView!
 
-    var buttonTappedClosure : ((UITableViewCell, Bool) -> Void)?
+    var buttonTappedClosure : ((Bool) -> Void)? = nil
     @IBAction func minusPressed(_ sender: UIButton) {
-        buttonTappedClosure?(self, false)
+        buttonTappedClosure?(false)
     }
     @IBAction func plusPressed(_ sender: UIButton) {
-        buttonTappedClosure?(self, true)
+        buttonTappedClosure?(true)
     }
     
     override func awakeFromNib() {

@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -13,13 +14,13 @@
         <!--Home Collection View Controller-->
         <scene sceneID="q6s-x8-Y6b">
             <objects>
-                <viewController storyboardIdentifier="HomeCollectionViewController" id="FNu-XN-8e3" customClass="HomeCollectionViewController" customModule="Test2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="FNu-XN-8e3" customClass="HomeCollectionViewController" customModule="Test2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EWK-Az-6XS">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="2Ca-uf-2X3">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="813"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="764"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="0Zw-LI-Q6S">
                                     <size key="itemSize" width="200" height="200"/>
@@ -271,7 +272,7 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c9Q-Di-gcs" userLabel="Emulated View">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c9Q-Di-gcs" userLabel="Staus View">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="134.5"/>
                                 <subviews>
                                     <view alpha="0.20000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wKW-hy-WD6">
@@ -322,7 +323,24 @@
                             <constraint firstItem="c9Q-Di-gcs" firstAttribute="top" secondItem="EWK-Az-6XS" secondAttribute="top" id="xD3-Bz-uXA"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="o3F-fb-P33"/>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="o3F-fb-P33">
+                        <barButtonItem key="leftBarButtonItem" id="hNK-h9-S0f">
+                            <imageReference key="image" image="line.3.horizontal" catalog="system" symbolScale="large"/>
+                            <color key="tintColor" systemColor="systemOrangeColor"/>
+                            <connections>
+                                <action selector="menuBarButtonPressed:" destination="FNu-XN-8e3" id="mSF-he-UI6"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Item" id="2to-Dd-5Wr">
+                            <imageReference key="image" image="text.bubble.fill.rtl" catalog="system" symbolScale="large"/>
+                            <color key="tintColor" systemColor="systemOrangeColor"/>
+                            <connections>
+                                <action selector="chatButtonPressed:" destination="FNu-XN-8e3" id="dHK-5J-pLq"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="collectionView" destination="2Ca-uf-2X3" id="E5t-Mx-Ir2"/>
                         <outlet property="connectionLostLabel" destination="lYv-Ym-qMb" id="9P7-8U-Jwa"/>
@@ -522,6 +540,8 @@
         <image name="bonvoy" width="31.420000076293945" height="31.420000076293945"/>
         <image name="facebook" width="48" height="48"/>
         <image name="instagram" width="100" height="100"/>
+        <image name="line.3.horizontal" catalog="system" width="128" height="64"/>
+        <image name="text.bubble.fill.rtl" catalog="system" width="128" height="110"/>
         <image name="tripadvisor" width="48" height="48"/>
         <image name="twitter" width="48" height="48"/>
         <systemColor name="labelColor">
@@ -532,6 +552,9 @@
         </systemColor>
         <systemColor name="systemGray6Color">
             <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemOrangeColor">
+            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemRedColor">
             <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

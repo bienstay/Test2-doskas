@@ -33,7 +33,9 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "RoomHeaderCell2", for: indexPath) as! RoomHeaderCell2
-        cell.tapClosure = { category in self.maintenancePressed(category: category) }
+        cell.tapClosure = { [weak self] category in
+            self?.maintenancePressed(category: category)
+        }
         cell.display(indexPath.row)
         return cell
     }

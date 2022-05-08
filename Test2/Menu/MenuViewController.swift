@@ -86,8 +86,9 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if menuItem.type == MenuItem2.FOODITEM {
             let cell = tableView.dequeueReusableCell(withIdentifier: "MenuFoodCell", for: indexPath) as! MenuFoodCell
             cell.display(menuItem: menuItem, order: order, expanded: expandedCells.contains(indexPath.row), orderEnabled: isRoomService)
-            cell.buttonTappedClosure = { add in
-                if add { self.addToOrder(indexPath) }
+            cell.buttonTappedClosure = { [weak self] addd in
+                guard let self = self else { return }
+                if addd { self.addToOrder(indexPath) }
                 else { self.removeFromOrder(indexPath)}
 //                self.tableView.beginUpdates()
 //                self.tableView.reloadRows(at: [indexPath], with: .none)

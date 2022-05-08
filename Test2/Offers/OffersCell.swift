@@ -74,12 +74,6 @@ class OfferCollectionViewCell: UICollectionViewCell {
 
     @objc func didPressLong(sender: UILongPressGestureRecognizer) {
         if sender.state == .began {
-            print("tap long")
-/*
-            if let indexPath = self.getCellIndex(sender) {
-                cellSelectedClosure?(indexPath.row)
-            }
-*/
             cellSelectedForEditClosure?(offer)
         }
     }

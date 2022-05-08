@@ -8,6 +8,7 @@
 import UIKit
 import MessageKit
 import InputBarAccessoryView
+import AVFoundation
 
 
 public struct Sender: SenderType {
@@ -98,9 +99,12 @@ struct Message: MessageType {
 
 
 class MessageKitChatViewController: MessagesViewController {
-
+/*
     var messages: [Message] = []
     var chatRoomId = ""
+*/
+    var chatRoom: ChatRoom?
+    var messages: [Message] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -112,8 +116,10 @@ class MessageKitChatViewController: MessagesViewController {
         
         configure()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(onMessagesUpdated(_:)), name: .chatMessagesUpdated, object: nil)
-        updateMessages()
+        NotificationCenter.default.addObserver(self, selector: #selector(onMessageAdded(_:)), name: .chatMessageAdded, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onMessageDeleted(_:)), name: .chatMessageDeleted, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onMessageUpdated(_:)), name: .chatMessageUpdated, object: nil)
+        reloadMessages()
         DispatchQueue.main.async {
             self.messagesCollectionView.reloadData()
             self.messagesCollectionView.scrollToLastItem(animated: true)
@@ -128,32 +134,56 @@ class MessageKitChatViewController: MessagesViewController {
             self.becomeFirstResponder()     // this is necessary for the input view to show up
         }
     }
-    
-    @objc func onMessagesUpdated(_ notification: Notification) {
-        updateMessages()
+
+    @objc func onMessageAdded(_ notification: Notification) {
+/* there may be a problem with desync beteen notifications and additions, especially at the start - TODO replace with closures or protocol or do reloadFrom(lastMessage)
+        if let m = notification.object as? ChatMessage {
+            messages.append(Message(senderId: m.senderID, senderName: m.senderName, isSenderStaff: m.isSenderStaff, text: m.content, messageId: m.id!, timestamp: m.created, translations: m.translations, read: m.read ?? false))
+            messagesCollectionView.insertSections([messages.count - 1])
+            messagesCollectionView.reloadSections([messages.count - 1])
+            reloadMessages()
+            messagesCollectionView.reloadData()
+        }
+*/
+        reloadMessages()
         messagesCollectionView.reloadData()
         messagesCollectionView.scrollToLastItem(animated: true)
-        //phoneUser.chatRoom(charRoom: chatRoomId)?.unreadCount = 0
+        if let m = notification.object as? ChatMessage, m.senderID != phoneUser.id {
+            let systemSoundID: SystemSoundID = 1105
+            AudioServicesPlaySystemSound(systemSoundID)
+        }
     }
 
-    func updateMessages() {
-        guard let msgs = phoneUser.chatRoom(charRoom: chatRoomId)?.messages else { return }
+    @objc func onMessageDeleted(_ notification: Notification) {
+        reloadMessages()
+        messagesCollectionView.reloadData()
+        messagesCollectionView.scrollToLastItem(animated: true)
+    }
+
+    @objc func onMessageUpdated(_ notification: Notification) {
+        if let m = notification.object as? ChatMessage, let i = messages.firstIndex(where: {m.id == $0.messageId} ) {
+            let newM = Message(senderId: m.senderID, senderName: m.senderName, isSenderStaff: m.isSenderStaff, text: m.content, messageId: m.id!, timestamp: m.created, translations: m.translations, read: m.read ?? false)
+            messages[i] = newM
+            messagesCollectionView.reloadSections([i])
+        }
+    }
+
+    func reloadMessages() {
+        guard let chatRoom = chatRoom else { return }
         messages = []
-        for m in msgs {
+        for m in chatRoom.messages {
             messages.append(Message(senderId: m.senderID, senderName: m.senderName, isSenderStaff: m.isSenderStaff, text: m.content, messageId: m.id!, timestamp: m.created, translations: m.translations, read: m.read ?? false))
-//            if !(m.read ?? false) && m.senderID != phoneUser.id {
-//                dbProxy.markChatAsRead(chatRoom: chatRoomId, chatID: m.id!)
-//            }
         }
         messages.sort(by: {$0.sentDate < $1.sentDate})
     }
 
     func markAsRead(m: Message) {
+        guard let chatRoom = chatRoom else { return }
         // do not mark as read if one staff member reads msg from another staff
         let sameSource:Bool = (m.isSenderStaff == phoneUser.isStaff)
         let sameSender = (m.sender.senderId == phoneUser.id)
         if !m.read && !sameSender && !sameSource {
-            dbProxy.markChatAsRead(chatRoom: chatRoomId, chatID: m.messageId)
+            dbProxy.markChatAsRead(chatRoom: chatRoom.id, chatID: m.messageId)
         }
     }
 
@@ -185,7 +215,7 @@ extension MessageKitChatViewController: MessagesDataSource {
 
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
         let m = messages[indexPath.section]
-        markAsRead(m: m)
+        if !(phoneUser.user?.isOperator ?? false) { markAsRead(m: m) }
         return m
     }
 
@@ -224,9 +254,15 @@ extension MessageKitChatViewController: MessagesLayoutDelegate {
 
 extension MessageKitChatViewController: InputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
-        let newChatMessage = ChatMessage(created: Date(), content: text, senderID: phoneUser.id, senderName: phoneUser.toString(), isSenderStaff: phoneUser.isStaff, chatRoomID: chatRoomId)
+        guard let chatRoom = chatRoom else { return }
+        // operator can assign so mark as read only when he writes sth (means that he replies)
+        if phoneUser.user?.isOperator ?? false {
+            for m in messages { markAsRead(m: m) }
+        }
+
+        let newChatMessage = ChatMessage(created: Date(), content: text, senderID: phoneUser.id, senderName: phoneUser.toString(), isSenderStaff: phoneUser.isStaff, chatRoomID: chatRoom.id)
         //_ = dbProxy.addRecord(key: nil, subNode: chatRoomId, record: newChatMessage) { _ in }
-        dbProxy.writeChat(chatRoomID: chatRoomId, message: newChatMessage)
+        dbProxy.writeChat(chatRoomID: chatRoom.id, message: newChatMessage)
         inputBar.inputTextView.text = ""
     }
 }

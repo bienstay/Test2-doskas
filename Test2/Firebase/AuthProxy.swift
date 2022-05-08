@@ -16,4 +16,5 @@ struct AuthData {
 
 protocol AuthProxy {
     func login(username: String, password: String, completionHandler: @ escaping (AuthData?, Error?) -> Void)
+    func logout() -> Error?
 }

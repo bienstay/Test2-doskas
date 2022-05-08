@@ -16,6 +16,8 @@ class ChatListViewController: UIViewController, UITableViewDataSource {
         tableView.dataSource = self
         tableView.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(onChatRoomListUpdated(_:)), name: .chatRoomsUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onChatRoomListUpdated(_:)), name: .chatMessageUpdated, object: nil)
+        //NotificationCenter.default.addObserver(self, selector: #selector(onChatRoomListUpdated(_:)), name: .chatMessageCountUpdated, object: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -29,9 +31,10 @@ class ChatListViewController: UIViewController, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "chatRoomCell", for: indexPath)
-        cell.textLabel?.text = phoneUser.user!.chatManager.getChatRoom(indexPath.row).id
-        cell.detailTextLabel?.text = phoneUser.user!.chatManager.getChatRoom(indexPath.row).assignedTo
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ChatListCell", for: indexPath) as! ChatListCell
+        cell.draw(chatRoom: phoneUser.user!.chatManager.getChatRoom(indexPath.row))
+        //cell.textLabel?.text = String(phoneUser.user!.chatManager.getChatRoom(indexPath.row).roomNumber)
+        //cell.detailTextLabel?.text = phoneUser.user!.chatManager.getChatRoom(indexPath.row).assignedTo
         return cell
     }
 
@@ -44,6 +47,30 @@ class ChatListViewController: UIViewController, UITableViewDataSource {
 extension ChatListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vc = pushViewController(storyBoard: "Chat", id: "Chat") as! ChatViewController
+        //vc.chatRoom = phoneUser.user!.chatManager.getChatRoom(indexPath.row)
         vc.chatRoomId = phoneUser.user!.chatManager.getChatRoom(indexPath.row).id
+    }
+}
+
+class ChatListCell: UITableViewCell {
+    @IBOutlet weak var roomNumberLabel: UILabel!
+    @IBOutlet weak var assignedToLabel: UILabel!
+    @IBOutlet weak var unreadCountLabel: UILabel!
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        backgroundColor = .clear
+        selectionStyle = .none
+        unreadCountLabel.textColor = .red
+    }
+
+    func draw(chatRoom: ChatRoom) {
+        roomNumberLabel.text = String(chatRoom.roomNumber)
+        assignedToLabel.text = chatRoom.assignedTo
+        if chatRoom.unreadCount > 0 {
+            unreadCountLabel.text = String(chatRoom.unreadCount)
+        } else {
+            unreadCountLabel.text = ""
+        }
     }
 }

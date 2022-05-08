@@ -80,14 +80,13 @@ struct HotelInfo: Codable {
 
 class Hotel {
     //var id: String = "SheratonFullMoon" // default hotel
-    var id: String? = nil
-    var name: String = ""
+    var id: String?
+    var name: String
     var socialURLs: [String:String] = [:]
     var image: String = ""
     var restaurants: [Restaurant] = []
     var facilities: [Facility] = []
     var roomService: Restaurant = Restaurant()
-    //var destinationDining: DestinationDining = DestinationDining()
     var news: [NewsPost] = []
     var infoItems: [InfoItem] = []
     var importantNotes: [InfoItem] = []
@@ -98,9 +97,19 @@ class Hotel {
     var translations: [String: Translations] = [:]
     var likes: Likes = [:]
 
+    init() {
+        Log.log("in hotel init", logInDb: false)
+        id = nil
+        name = ""
+    }
+
     func initialize() {
         roomItems = loadFromJSON(fileNameNoExt: "roomItems")
         roomService.name = "In room dining"
+    }
+
+    deinit {
+        Log.log("in hotel deinit - \(String(describing: id))", logInDb: false)
     }
 
     func startObserving() {
@@ -219,7 +228,6 @@ class Hotel {
 
     func translationsUpdated(allTranslations: [(String, Translations)], subNode: String?) {
         for l in allTranslations { translations[l.0] = l.1 }
-        //print(translations)
         applyTranslations()
         NotificationCenter.default.post(name: .newsUpdated, object: nil)
         NotificationCenter.default.post(name: .activitiesUpdated, object: nil)
@@ -227,10 +235,6 @@ class Hotel {
     }
 
     func applyTranslations() {
-//        guard let lang = Locale.current.languageCode else {
-//            Log.log(level: .ERROR, "languageCode is nil")
-//            return
-//        }
 
         if let t = translations[phoneUser.lang] {
             if !news.isEmpty {

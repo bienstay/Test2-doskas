@@ -11,11 +11,14 @@ import UIKit
 class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     @IBOutlet var captureView: UIView!
     @IBOutlet var skipCaptureButton: UIButton!
+    @IBOutlet var defaultsStackView: UIStackView!
     @IBOutlet var userFlagControl: UISegmentedControl!
     @IBOutlet weak var userPicker: UIPickerView!
+    @IBOutlet var switchButton: UIButton!
 
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
+    //var menu:MenuView = MenuView()
 
     var hotels: [String] = ["RitzKohSamui", "SheratonFullMoon", "W"]
     var users: [UserData] = []
@@ -39,11 +42,19 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         userPicker.delegate = self
         initUserList()
 
-        view.backgroundColor = .red
+        defaultsStackView.isHidden = true
+        userPicker.tintColor = .yellow
+        //menu = MenuView(parentView: view, headerText: "Przykład")
+
+        view.backgroundColor = UIColor(216, 77, 68) // rgb - taken from the color picker from log but different
+        view.backgroundColor = UIColor(234, 62, 59) // sRGB -
+
         captureSession = AVCaptureSession()
 
         guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else {
             failed()
+            switchButtonPressed(UIButton())
+            switchButton.isEnabled = false
             return
         }
 
@@ -144,6 +155,12 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         userPicker.reloadAllComponents()
     }
 
+    @IBAction func switchButtonPressed(_ sender: UIButton) {
+        captureView.isHidden = !captureView.isHidden
+        captureView.isHidden ? captureSession?.stopRunning() : captureSession?.startRunning()
+        defaultsStackView.isHidden = !defaultsStackView.isHidden
+    }
+
     @IBAction func skipCaptureButtonPressed(_ sender: UIButton) {
         let hotelId = hotels[userPicker.selectedRow(inComponent: 0)]
         if userFlag {
@@ -203,19 +220,21 @@ extension ScannerViewController: UIPickerViewDataSource, UIPickerViewDelegate {
         }
     }
 
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
         let hotelName = userPicker.selectedRow(inComponent: 0)
         switch component {
-        case 0: return hotels[row]
+        case 0: return NSAttributedString(string: hotels[row], attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
         case 1: if userFlag {
-                    return users[row].toString
+                    return NSAttributedString(string: users[row].toString, attributes: [NSAttributedString.Key.foregroundColor: UIColor.pastelGreenLight])
                 } else {
-                    return row < rooms[hotels[hotelName]]!.count ? rooms[hotels[hotelName]]![row].toString : ""
+                    return NSAttributedString(string:
+                        row < rooms[hotels[hotelName]]!.count ? rooms[hotels[hotelName]]![row].toString : "",
+                        attributes: [NSAttributedString.Key.foregroundColor: UIColor.yellow])
                 }
-        default: return ""
+        default: return NSAttributedString(string: "")
         }
     }
-    
+
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if component == 0 {
             initUserList()

@@ -125,7 +125,7 @@ extension FirebaseDatabase {
             }
             //if let data = result?.data as? [String: Any], let text = data["text"] as? String {
             if let data = result?.data as? [String: Any] {
-                print(data)
+                Log.log("translation = \(data["translation"] ?? "[empty]")")
                 completionHandler(data["translation"] as? String)
             } else {
                 completionHandler(nil)
@@ -159,15 +159,7 @@ extension FirebaseDatabase {
             }
         }
     }
-/*
-    func addHotelToConfig(hotelId: String, hotelName: String) {
-        CONFIG_DB_REF.child("hotels").child(hotelId).setValue(hotelName) { (error, ref) -> Void in
-            if let error = error {
-                Log.log(level: .ERROR, "Error adding hotel to config - \(error.localizedDescription)")
-            }
-        }
-    }
-*/
+
     func updatePhoneData(guestId: String, phoneID: String, phoneLang: String) {
         let phoneData = [ "guestId": guestId, "roomNumber": phoneUser.guest?.roomNumber ?? 0, "language": phoneLang] as [String : Any]
         PHONES_DB_REF.child(phoneID).setValue(phoneData) { (error, ref) -> Void in
@@ -183,7 +175,7 @@ extension FirebaseDatabase {
                 Log.log(level: .ERROR, "Error translating... - \(error.localizedDescription)")
             }
             if let data = result?.data {
-                print(data)
+                Log.log("\(data)")
             }
         }
     }
@@ -233,7 +225,6 @@ extension FirebaseDatabase {
 
     func getUsers(hotelName: String, completionHandler: @ escaping ([[String:String]]) -> Void) {
         Firebase.shared.functions.httpsCallable("getUsers").call(["forHotel": hotelName]) { result, error in
-            Log.log(error.debugDescription)
             if let error = error {
                 Log.log(level: .ERROR, error.localizedDescription)
             }

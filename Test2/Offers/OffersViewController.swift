@@ -58,7 +58,8 @@ extension OffersViewController: UITableViewDataSource, UITableViewDelegate {
                 vc.offer = hotel.offers[offerID] ?? Offer()
             }
         }
-        cell.cellSelectedForEditClosure = { offerIndex in
+        cell.cellSelectedForEditClosure = { [weak self] offerIndex in
+            guard let self = self else { return }
             let vc = self.pushViewController(storyBoard: "Offers", id: "NewOffer") as! NewOfferViewController
             if let offerID = hotel.offerGroups[indexPath.row].offers?[offerIndex] {
                 vc.offerToEdit = hotel.offers[offerID] ?? Offer()
@@ -100,7 +101,8 @@ extension OffersViewController: UICollectionViewDataSource {
         //cell.configure(offer: hotel.offerGroups[group].offers?[indexPath.row])
         if let offerID = hotel.offerGroups[group].offers?[indexPath.row] {
             cell.configure(offer: hotel.offers[offerID])
-            cell.cellSelectedForEditClosure = { offer in
+            cell.cellSelectedForEditClosure = { [weak self] offer in
+                guard let self = self else { return }
                 let vc = self.createViewController(storyBoard: "Offers", id: "NewOffer") as! NewOfferViewController
                 vc.offerToEdit = offer
                 self.navigationController?.pushViewController(vc, animated: true)

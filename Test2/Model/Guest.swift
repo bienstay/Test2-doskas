@@ -47,7 +47,6 @@ class GuestOld  {
         // therefore we use the preferred language
         let preferredLang = Locale.preferredLanguages.first?.components(separatedBy: "-").first
         let localeLang = Locale.current.languageCode
-        //print("LANG: \(preferredLang1)   \(preferredLang2)   \(localeLang)")
         return (preferredLang ?? localeLang ?? "en")
     }
 
@@ -188,22 +187,11 @@ class GuestOld  {
             chatMessages![chatRoomId]!.append(chatMessage)
         })
         chatMessages![chatRoomId]!.sort(by: {$0.created < $1.created})
-/*
-        for m in chatMessages![chatRoomId]! {
-            if m.translations?[guest.lang] == nil {
-                if m.senderID != guest.id {
-                    let lang = guest.lang
-                    print("translating --- \(m.content) --- to \(lang)")
-                    //dbProxy.translateChat(chatRoom: chatRoomId, chatID: m.id!, textToTranslate: m.content, targetLanguage: lang, completionHandler: { _ in } )
-                }
-            }
-        }
-*/
         // translate the last message
         if let m = chatMessages?[chatRoomId]?.last, m.senderID != phoneUser.id {
             dbProxy.translateChat(chatRoom: chatRoomId, chatID: m.id!, textToTranslate: m.content, targetLanguage: lang, completionHandler: { _ in } )
         }
-        NotificationCenter.default.post(name: .chatMessagesUpdated, object: nil)
+        NotificationCenter.default.post(name: .chatMessageUpdated, object: nil)
     }
 }
 

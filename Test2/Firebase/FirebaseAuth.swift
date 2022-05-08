@@ -35,4 +35,14 @@ final class FirebaseAuthentication: AuthProxy {
             }
         }
     }
+
+    func logout() -> Error? {
+        do {
+            try Auth.auth().signOut()
+            return nil
+        } catch {
+            Log.log(level: .ERROR, "Error in logout: \(error)")
+            return error
+        }
+    }
 }

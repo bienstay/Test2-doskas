@@ -50,9 +50,10 @@ class AssignViewController: UIViewController, UITableViewDataSource, UITableView
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "userCell", for: indexPath)
-        cell.textLabel?.text = users[indexPath.row].id
-        cell.detailTextLabel?.text = users[indexPath.row].role.rawValue
+        let cell = tableView.dequeueReusableCell(withIdentifier: "AssignCell", for: indexPath) as! AssignCell
+        cell.draw(userData: users[indexPath.row])
+        //cell.textLabel?.text = users[indexPath.row].id
+        //cell.detailTextLabel?.text = users[indexPath.row].role.rawValue
         return cell
     }
 
@@ -63,5 +64,21 @@ class AssignViewController: UIViewController, UITableViewDataSource, UITableView
         } else {
             dismiss(animated: true)
         }
+    }
+}
+
+class AssignCell: UITableViewCell {
+    @IBOutlet weak var userNameLabel: UILabel!
+    @IBOutlet weak var userRoleLabel: UILabel!
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        backgroundColor = .clear
+        selectionStyle = .none
+    }
+
+    func draw(userData: UserData) {
+        userNameLabel.text = userData.id
+        userRoleLabel.text = userData.role.rawValue
     }
 }

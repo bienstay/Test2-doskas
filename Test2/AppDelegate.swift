@@ -64,7 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        print("in open url")
+        Log.log("in open url")
         Log.log(level: .INFO, "url: \(url.absoluteURL)")
         Log.log(level: .INFO, "scheme: \(String(describing: url.scheme))")
         Log.log(level: .INFO, "host: \(String(describing: url.host))")
@@ -75,13 +75,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
+var inChatWindow: Bool = false  // TODO - put it somewhere
+
 extension AppDelegate: UNUserNotificationCenterDelegate {
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
 
         Log.log(level: .INFO, "In userNotificationCenter willPresent")
         Log.log(level: .INFO, notification.request.content.userInfo.debugDescription)
-        completionHandler([.alert, .sound, .badge])
+
+        guard let category = notification.request.content.userInfo["category"] as? String else {
+            completionHandler([.alert, .sound, .badge])
+            return
+        }
+
+        if category == "chat" && inChatWindow {
+            completionHandler([.sound])
+        } else {
+            if #available(iOS 14.0, *) {
+                completionHandler([.sound, .badge, .banner])
+            } else {
+                completionHandler([.alert, .sound, .badge])
+            }
+        }
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {

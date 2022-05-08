@@ -106,6 +106,7 @@
 		06AF200F27E2ED7600B9A692 /* DBProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AF200E27E2ED7500B9A692 /* DBProxy.swift */; };
 		06B9776327F16C0500E2ACA1 /* NFCReaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06B9776227F16C0500E2ACA1 /* NFCReaderViewController.swift */; };
 		06B9776527F5809800E2ACA1 /* BarcodeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06B9776427F5809800E2ACA1 /* BarcodeData.swift */; };
+		06C32ADD28245FF100228A40 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C32ADC28245FF100228A40 /* MenuView.swift */; };
 		06DDB8C1265874BE00A5FD84 /* sheratonFacilities.json in Resources */ = {isa = PBXBuildFile; fileRef = 06DDB8C0265874BE00A5FD84 /* sheratonFacilities.json */; };
 		06E5FC432739804A0082EFAC /* RoomService.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E5FC422739804A0082EFAC /* RoomService.png */; };
 		06F5D161270B516D004931F7 /* ActivitiesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F5D160270B516D004931F7 /* ActivitiesViewController.swift */; };
@@ -228,6 +229,7 @@
 		06AF200E27E2ED7500B9A692 /* DBProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBProxy.swift; sourceTree = "<group>"; };
 		06B9776227F16C0500E2ACA1 /* NFCReaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCReaderViewController.swift; sourceTree = "<group>"; };
 		06B9776427F5809800E2ACA1 /* BarcodeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeData.swift; sourceTree = "<group>"; };
+		06C32ADC28245FF100228A40 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		06DDB8C0265874BE00A5FD84 /* sheratonFacilities.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sheratonFacilities.json; sourceTree = "<group>"; };
 		06E5FC422739804A0082EFAC /* RoomService.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RoomService.png; sourceTree = "<group>"; };
 		06F5D160270B516D004931F7 /* ActivitiesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesViewController.swift; sourceTree = "<group>"; };
@@ -271,6 +273,7 @@
 				069FD3D6269650630076C6FC /* UIViewExtensions.swift */,
 				06882F5F27447DE800D643A0 /* NetworkStatus.swift */,
 				0601978D280D8064004532D5 /* Spinner.swift */,
+				06C32ADC28245FF100228A40 /* MenuView.swift */,
 			);
 			path = Misc;
 			sourceTree = "<group>";
@@ -491,10 +494,10 @@
 		069FDBA0269E17A8004F543F /* Chat */ = {
 			isa = PBXGroup;
 			children = (
-				069FDBA1269E17C3004F543F /* MessageKitChatViewController.swift */,
 				069FDBA3269E34CE004F543F /* Chat.storyboard */,
-				069FDBA5269E384B004F543F /* ChatViewController.swift */,
 				069FDBA926A39486004F543F /* ChatListViewController.swift */,
+				069FDBA5269E384B004F543F /* ChatViewController.swift */,
+				069FDBA1269E17C3004F543F /* MessageKitChatViewController.swift */,
 				0601978F2819B3CE004532D5 /* AssignViewController.swift */,
 			);
 			path = Chat;
@@ -767,6 +770,7 @@
 				06090DD927C7AFC200B85393 /* NewOfferViewController.swift in Sources */,
 				069DB35C263B0FB800C91468 /* RestaurantTableViewController.swift in Sources */,
 				06606DF3270760330023412C /* ServiceOrderViewController.swift in Sources */,
+				06C32ADD28245FF100228A40 /* MenuView.swift in Sources */,
 				067A4D872807FBFE0043F50D /* StorageProxy.swift in Sources */,
 				06F7726E2673931300E64D54 /* NewsDetailViewController.swift in Sources */,
 				061630F42802B9E8007C501F /* LogInDB.swift in Sources */,

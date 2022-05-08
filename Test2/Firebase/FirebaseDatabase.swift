@@ -217,7 +217,7 @@ final class FirebaseDatabase: DBProxy {
         return query
     }
     
-    func unsubscribe<T>(t: T.Type, subNode: String) {
+    func unsubscribe<T>(t: T.Type, subNode: String?) {
         guard let query = getQuery(type: T.self, subNode: subNode, parameter: nil) else { return }
         query.removeAllObservers()
     }
@@ -239,6 +239,7 @@ final class FirebaseDatabase: DBProxy {
         //guard let ref = getDBRef(type: T.self, subNode: subNode) else { return nil }
         guard let query = getQuery(type: T.self, subNode: subNode, parameter: parameter) else { return }
         Log.log(level: .DEBUG, "observing for new " + query.description)
+        observed.insert(query)
         query.observe(.childAdded, with: { (snapshot) in
             //Log.log(level: .DEBUG, "\(snapshot.value) of type \(T.self) added")
             guard JSONSerialization.isValidJSONObject(snapshot.value!) else {
@@ -259,6 +260,7 @@ final class FirebaseDatabase: DBProxy {
     func subscribeForDeleted<T: Codable>(subNode: String? = nil, parameter: QueryParameter? = nil, completionHandler: @ escaping (String, T) -> Void) {
         guard let query = getQuery(type: T.self, subNode: subNode, parameter: parameter) else { return }
         Log.log(level: .DEBUG, "observing for deleted " + query.description)
+        observed.insert(query)
         query.observe(.childRemoved, with: { (snapshot) in
             //Log.log(level: .DEBUG, "\(snapshot.value) of type \(T.self) added")
             let decoder = JSONDecoder()
@@ -276,6 +278,7 @@ final class FirebaseDatabase: DBProxy {
     func subscribeForModified<T: Codable>(subNode: String? = nil, parameter: QueryParameter? = nil, completionHandler: @ escaping (String, T) -> Void) {
         guard let query = getQuery(type: T.self, subNode: subNode, parameter: parameter) else { return }
         Log.log(level: .DEBUG, "observing for deleted " + query.description)
+        observed.insert(query)
         query.observe(.childChanged, with: { (snapshot) in
             //Log.log(level: .DEBUG, "\(snapshot.value) of type \(T.self) added")
             let decoder = JSONDecoder()

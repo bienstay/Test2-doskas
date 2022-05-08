@@ -16,8 +16,8 @@ class PhoneUser {
         case client
         case none
     }
-    var guest: Guest? = nil
-    var user: User? = nil
+    var guest: Guest?
+    var user: User?
     var isStaff: Bool { return user != nil }
     var email: String { (isStaff ? user!.name : "appuser") + "@\(hotel.id!.lowercased()).appviator.com" }
     var password: String { isStaff ? user!.password : "Appviator2022!" }
@@ -38,9 +38,20 @@ class PhoneUser {
     var orders: [Order] { isStaff ? user!.orders : guest!.orders }
     var activeOrders: [Order] { isStaff ? user!.activeOrders : guest!.activeOrders }
 
+    init() {
+        guest = nil
+        user = nil
+        Log.log("In phoneUser init")
+    }
+
+    deinit {
+        Log.log("In phoneUser deinit - \(id)", logInDb: false)
+    }
+
     func chatRoom(charRoom: String = "") -> ChatRoom? {
         return isStaff ? user?.chatManager.getChatRoom(charRoom) : guest?.chatRoom
     }
+
     func unreadChatCount() -> Int {
         var count = 0
         if let user = user {
@@ -127,6 +138,8 @@ class User {
         activeOrders.sort(by: { $0.id! > $1.id! } )
         NotificationCenter.default.post(name: .ordersUpdated, object: nil)
     }
+    
+    var isOperator: Bool { return id == "operator" }
 }
 
 class Guest  {
@@ -140,7 +153,7 @@ class Guest  {
     var orders: [Order] = []
     var activeOrders: [Order] = []
 
-    lazy var chatRoom: ChatRoom = ChatRoom(id: id, assignedTo: "")
+    lazy var chatRoom: ChatRoom = ChatRoom(id: id, roomNumber: roomNumber, assignedTo: "")
 
     var likes: LikesPerUser = [:]
 

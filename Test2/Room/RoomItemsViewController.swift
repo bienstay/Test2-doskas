@@ -12,12 +12,13 @@ import UIKit
 class OrderShortSummaryView: UIView {
     @IBOutlet private weak var quantityLabel: UILabel!
     @IBOutlet private weak var proceedButton: UIButton!
+
     private var proceedClosure: (() -> ())? = nil
     @IBAction func proceedPressed(_ sender: UIButton) {
         proceedClosure?()
     }
-    func setup(proceedClosure: @escaping () -> ()) {
-        self.proceedClosure = proceedClosure
+    func setup(proceedClosureParam: @escaping () -> ()) {
+        proceedClosure = proceedClosureParam
         let sidePadding: CGFloat = 8.0
         //proceedButton.titleEdgeInsets = UIEdgeInsets(top: 0.0, left: -sidePadding, bottom: 0.0, right: -sidePadding)
         proceedButton.contentEdgeInsets = UIEdgeInsets(top: 0.0, left: sidePadding, bottom: 0.0, right: sidePadding)
@@ -59,10 +60,11 @@ class RoomItemsViewController: UIViewController, UITableViewDataSource, UITableV
 
         orderShortSummaryView.layer.cornerRadius = 20
         orderSummaryConstraint.constant = -80
-        orderShortSummaryView.setup {
+        orderShortSummaryView.setup { [weak self] in
+            guard let self = self else { return }
             let vc = self.pushViewController(storyBoard: "OrderSummary", id: "CreateOrder") as! RoomItemsOrderViewController
             vc.order = self.order
-            vc.completionHandler = { self.clearOrder() }
+            vc.completionHandler = { [weak self] in self?.clearOrder() }
         }
 
         clearOrder()
@@ -109,14 +111,11 @@ class RoomItemsViewController: UIViewController, UITableViewDataSource, UITableV
 
         cell.display(roomItem: item, order: order, expanded: expanded)
 
-        cell.buttonTappedClosure = { (cell, add) in
-            if (add) { self.addToOrder(indexPath) }
+        cell.buttonTappedClosure = { [weak self] addd in
+            guard let self = self else { return }
+            if addd { self.addToOrder(indexPath) }
             else { self.removeFromOrder(indexPath)}
-//            self.tableView.beginUpdates()
-//            self.tableView.reloadRows(at: [indexPath], with: .none)
-//            tableView.setNeedsLayout()
-//            self.tableView.endUpdates()
-            tableView.reloadData()
+            self.tableView.reloadData()
         }
 
         return cell
@@ -161,11 +160,11 @@ extension RoomItemsViewController {
         if let item = hotel.roomItems[itemType]?[indexPath.row] {
             order.addItem(name: item.name, quantity: 1, price: 0)
         }
-        self.orderShortSummaryView.configure(quantity: self.order.totalNrOfItemsInOrder)
+        orderShortSummaryView.configure(quantity: order.totalNrOfItemsInOrder)
 
-        self.orderSummaryConstraint.constant = self.order.totalNrOfItemsInOrder <= 0 ? -80 : 24
-        UIView.animate(withDuration: 1.0, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 10, animations: {
-            self.view.layoutIfNeeded()
+        orderSummaryConstraint.constant = order.totalNrOfItemsInOrder <= 0 ? -80 : 24
+        UIView.animate(withDuration: 1.0, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 10, animations: { [weak self] in
+            self?.view.layoutIfNeeded()
         })
     }
 
@@ -176,9 +175,9 @@ extension RoomItemsViewController {
         }
         orderShortSummaryView.configure(quantity: order.totalNrOfItemsInOrder)
 
-        self.orderSummaryConstraint.constant = self.order.totalNrOfItemsInOrder <= 0 ? -80 : 24
-        UIView.animate(withDuration: 0.5, animations: {
-            self.view.layoutIfNeeded()
+        orderSummaryConstraint.constant = self.order.totalNrOfItemsInOrder <= 0 ? -80 : 24
+        UIView.animate(withDuration: 0.5, animations: { [weak self] in
+            self?.view.layoutIfNeeded()
         })
     }
 
@@ -186,7 +185,7 @@ extension RoomItemsViewController {
         order = Order(category: .RoomItems)
         expandedCells = []
         orderSummaryConstraint.constant = -80
-        self.view.layoutIfNeeded()
+        view.layoutIfNeeded()
         tableView.reloadData()
     }
 }

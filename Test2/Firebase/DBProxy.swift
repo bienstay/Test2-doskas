@@ -24,7 +24,7 @@ protocol DBProxy {
     @discardableResult
     func subscribeForUpdates<T: Codable>(subNode: String?, start timestamp: Int?, limit: UInt?, parameter: QueryParameter?, completionHandler: @ escaping ([(String, T)], String?) -> Void) -> NSObject?
     func unsubscribe(handle: NSObject?)
-    func unsubscribe<T>(t: T.Type, subNode: String)
+    func unsubscribe<T>(t: T.Type, subNode: String?)
     func removeAllObservers()
 
     func subscribeForNew<T: Codable>(subNode: String?, parameter: QueryParameter?, completionHandler: @ escaping (String, T) -> Void)

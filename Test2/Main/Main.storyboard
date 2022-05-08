@@ -106,28 +106,36 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logoAppviator3dWithLetters" translatesAutoresizingMaskIntoConstraints="NO" id="pTq-tZ-bAu">
+                                <rect key="frame" x="145" y="74" width="124" height="124"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="pTq-tZ-bAu" secondAttribute="height" multiplier="1:1" id="fkQ-kN-zMr"/>
+                                </constraints>
+                            </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LpO-mH-hFy">
-                                <rect key="frame" x="0.0" y="141" width="414" height="414"/>
+                                <rect key="frame" x="0.0" y="241" width="414" height="414"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Scan the QR code" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BrS-nB-vpN">
+                                        <rect key="frame" x="111" y="188" width="194" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                        <color key="textColor" systemColor="systemYellowColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="LpO-mH-hFy" secondAttribute="height" multiplier="1:1" id="fKQ-68-9BW" userLabel="aspect = 1:1"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Scan the QR code" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BrS-nB-vpN">
-                                <rect key="frame" x="87.5" y="429.5" width="239.5" height="37"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
-                                <color key="textColor" systemColor="systemYellowColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="3oh-gV-ZSs">
-                                <rect key="frame" x="0.0" y="562" width="414" height="300"/>
+                                <rect key="frame" x="47" y="298" width="320" height="300"/>
                                 <subviews>
                                     <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AOo-0R-QRR">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="216"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="216"/>
                                     </pickerView>
                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="SE0-Wi-EHx">
-                                        <rect key="frame" x="0.0" y="224" width="414" height="32"/>
+                                        <rect key="frame" x="0.0" y="224" width="320" height="32"/>
                                         <segments>
                                             <segment title="User"/>
                                             <segment title="Guest"/>
@@ -137,7 +145,7 @@
                                         </connections>
                                     </segmentedControl>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mKR-Ng-sZT">
-                                        <rect key="frame" x="0.0" y="263" width="414" height="37"/>
+                                        <rect key="frame" x="0.0" y="263" width="320" height="37"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Skip Capture">
@@ -150,24 +158,39 @@
                                     </button>
                                 </subviews>
                             </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nhe-93-BZs">
+                                <rect key="frame" x="314" y="0.0" width="100" height="100"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="Vbc-CL-GY3"/>
+                                    <constraint firstAttribute="height" constant="100" id="mKI-pp-5OT"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title=" "/>
+                                <connections>
+                                    <action selector="switchButtonPressed:" destination="6Lh-Dd-ZMj" eventType="touchUpInside" id="ZWc-tr-Y7N"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Mga-dL-ajB"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="Mga-dL-ajB" firstAttribute="bottom" secondItem="3oh-gV-ZSs" secondAttribute="bottom" id="13X-jp-bbD"/>
-                            <constraint firstItem="LpO-mH-hFy" firstAttribute="centerY" secondItem="PjS-1C-p5H" secondAttribute="centerY" constant="-100" id="4gv-w8-7AQ"/>
-                            <constraint firstItem="3oh-gV-ZSs" firstAttribute="trailing" secondItem="Mga-dL-ajB" secondAttribute="trailing" id="BC9-LV-5a0"/>
-                            <constraint firstItem="LpO-mH-hFy" firstAttribute="leading" secondItem="Mga-dL-ajB" secondAttribute="leading" id="PXt-2L-bCg"/>
-                            <constraint firstItem="3oh-gV-ZSs" firstAttribute="leading" secondItem="Mga-dL-ajB" secondAttribute="leading" id="R9M-vN-GNe"/>
-                            <constraint firstItem="BrS-nB-vpN" firstAttribute="centerX" secondItem="PjS-1C-p5H" secondAttribute="centerX" id="T1F-ui-rgs"/>
-                            <constraint firstItem="BrS-nB-vpN" firstAttribute="centerY" secondItem="PjS-1C-p5H" secondAttribute="centerY" id="T79-Wb-COZ"/>
-                            <constraint firstItem="Mga-dL-ajB" firstAttribute="trailing" secondItem="LpO-mH-hFy" secondAttribute="trailing" id="UkT-aY-xq5"/>
-                            <constraint firstItem="LpO-mH-hFy" firstAttribute="centerX" secondItem="PjS-1C-p5H" secondAttribute="centerX" id="dth-PU-ZPs"/>
+                            <constraint firstItem="LpO-mH-hFy" firstAttribute="trailing" secondItem="Mga-dL-ajB" secondAttribute="trailing" id="2VY-vr-kVZ"/>
+                            <constraint firstItem="3oh-gV-ZSs" firstAttribute="centerY" secondItem="PjS-1C-p5H" secondAttribute="centerY" id="9al-yc-lxA"/>
+                            <constraint firstItem="pTq-tZ-bAu" firstAttribute="width" secondItem="PjS-1C-p5H" secondAttribute="width" multiplier="0.3" id="E6k-zc-NkJ"/>
+                            <constraint firstItem="LpO-mH-hFy" firstAttribute="leading" secondItem="Mga-dL-ajB" secondAttribute="leading" id="YPJ-Qk-1Zx"/>
+                            <constraint firstItem="Mga-dL-ajB" firstAttribute="trailing" secondItem="nhe-93-BZs" secondAttribute="trailing" id="as6-4J-U0i"/>
+                            <constraint firstItem="pTq-tZ-bAu" firstAttribute="top" secondItem="Mga-dL-ajB" secondAttribute="top" constant="30" id="dPh-TI-pL2"/>
+                            <constraint firstItem="LpO-mH-hFy" firstAttribute="centerY" secondItem="PjS-1C-p5H" secondAttribute="centerY" id="fAz-wW-xko"/>
+                            <constraint firstItem="3oh-gV-ZSs" firstAttribute="centerX" secondItem="PjS-1C-p5H" secondAttribute="centerX" id="jDX-hi-lbv"/>
+                            <constraint firstItem="pTq-tZ-bAu" firstAttribute="centerX" secondItem="PjS-1C-p5H" secondAttribute="centerX" id="vQ3-2b-oLj"/>
+                            <constraint firstItem="nhe-93-BZs" firstAttribute="top" secondItem="PjS-1C-p5H" secondAttribute="top" id="vTm-x0-xJS"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="captureView" destination="LpO-mH-hFy" id="806-Lu-hoC"/>
+                        <outlet property="defaultsStackView" destination="3oh-gV-ZSs" id="p9G-bg-pyC"/>
                         <outlet property="skipCaptureButton" destination="mKR-Ng-sZT" id="DFp-rl-veC"/>
+                        <outlet property="switchButton" destination="nhe-93-BZs" id="oou-TU-XDF"/>
                         <outlet property="userFlagControl" destination="SE0-Wi-EHx" id="XfM-1E-nLc"/>
                         <outlet property="userPicker" destination="AOo-0R-QRR" id="hEL-oQ-JLi"/>
                     </connections>

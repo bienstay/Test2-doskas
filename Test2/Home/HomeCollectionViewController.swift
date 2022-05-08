@@ -12,14 +12,14 @@ private let reuseIdentifier = "Cell"
 
 class HomeCollectionViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, CLLocationManagerDelegate {
     
-    @IBOutlet var collectionView: UICollectionView!
+    @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var statusView: UIView!
     @IBOutlet weak var emulationLabel: UILabel!
     @IBOutlet weak var connectionLostLabel: UILabel!
+    var menu: MenuView!
 
     var squareSize: Double = 0.0
     var locationManager:CLLocationManager!
-
 
     private enum Section: Int, CaseIterable {
         case header = 0
@@ -51,6 +51,10 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         }
     }
 
+    @IBAction func menuBarButtonPressed(_ sender: Any) {
+        menu.toggle()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         initView(collectionView: collectionView)
@@ -59,7 +63,9 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         collectionView.delegate = self
 
         NotificationCenter.default.addObserver(self, selector: #selector(onHotelInfoUpdated(_:)), name: .hotelInfoUpdated, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(onChatMessagesUpdated(_:)), name: .chatMessagesUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onChatMessagesUpdated(_:)), name: .chatMessageAdded, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onChatMessagesUpdated(_:)), name: .chatMessageUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onChatMessagesUpdated(_:)), name: .chatMessageDeleted, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onConnectionStatusUpdated(_:)), name: .connectionStatusUpdated, object: nil)
 
         tabBarController?.viewControllers?[0].tabBarItem.title = .home
@@ -78,11 +84,27 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
             locationManager.startUpdatingLocation()
         }
+
+        menu = MenuView(parentView: view, headerText: "Menu")
+        menu.addItem(label: "Log out") { [weak self] in
+            print("Logging out...")
+            self?.logOutAndGoToScannerView()
+        }
     }
-    
+
+    func logOutAndGoToScannerView() {
+        _ = authProxy.logout()
+        dbProxy.removeAllObservers()
+        hotel = Hotel()
+        phoneUser = PhoneUser()
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.transitionToScanner()
+    }
+
     override func viewWillAppear(_ animated: Bool) {
         collectionView.contentInsetAdjustmentBehavior = .never   // hides the navigation bar
-        navigationController?.setNavigationBarHidden(true, animated: false)
+        //navigationController?.setNavigationBarHidden(true, animated: false)
+        navigationController?.setNavigationBarHidden(false, animated: false)
 
         statusView.isUserInteractionEnabled = false
         updateStatusView()
@@ -136,10 +158,10 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         //let location = locations.last! as CLLocation
-        //print(location.coordinate.latitude)
-        //print(location.coordinate.longitude)
+        //(location.coordinate.latitude)
+        //(location.coordinate.longitude)
         let locValue:CLLocationCoordinate2D = manager.location!.coordinate
-        //print("locations = \(locValue.latitude) \(locValue.longitude)")
+        //("locations = \(locValue.latitude) \(locValue.longitude)")
         phoneUser.currentLocationLatitude = locValue.latitude
         phoneUser.currentLocationLongitude = locValue.longitude
     }
@@ -166,15 +188,15 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         switch Section(rawValue: indexPath.section) {
         case .header:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeHeaderCell", for: indexPath) as! HomeHeaderCell
-            cell.tapClosure = { self.askToResetUserDefaults() }
+            cell.tapClosure = { [weak self] in self?.askToResetUserDefaults() }
             //cell.tapClosure = { ConfigViewController.showPopup(parentVC: self) }
-            cell.swipeClosure = { _ = self.pushViewController(storyBoard: "Home", id: "NewHotel") }
+            cell.swipeClosure = { [weak self] in  _ = self?.pushViewController(storyBoard: "Home", id: "NewHotel") }
             cell.draw(title:hotel.name, imageURL: hotel.image)
             return cell
         case .title:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeTitleCell", for: indexPath) as! HomeTitleCell
-            cell.tapClosure = {
-                let vc = self.pushViewController(storyBoard: "Home", id: "NewHotel") as! UpdateHotelInfoViewController
+            cell.tapClosure = { [weak self] in
+                let vc = self?.pushViewController(storyBoard: "Home", id: "NewHotel") as! UpdateHotelInfoViewController
                 vc.hotelToEdit = hotel
             }
             cell.draw(title: hotel.name)
@@ -200,53 +222,9 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
                 case .activities:   _ = pushViewController(storyBoard: "Activities", id: "Activities")
                 case .offers:       _ = pushViewController(storyBoard: "Offers", id: "Offers")
                 //case .map:          _ = pushViewController(storyBoard: "Main", id: "NFCReader")
-                case .map:          _ = pushViewController(storyBoard: "Map", id: "mapViewController")
-                dbProxy.getUsers(hotelName: "RitzKohSamui") { s in
-                    print(s)
-                }
+                case .map:          //_ = pushViewController(storyBoard: "Map", id: "mapViewController")
+                                        logOutAndGoToScannerView()
                 //case .watersports:  _ = pushViewController(storyBoard: "WaterSports", id: "WaterSports")
-/*
-                case .adoptACoral:
-                    let vc = pushOrPresent(storyBoard: "Info", id: "Info") as! InfoViewController
-                    vc.infoItem = hotel.infoItems[0]    // TODO
-*/
-                    //dbProxy.t1()
-                    //let vc = pushOrPresent(storyBoard: "Info", id: "Info") as! InfoViewController
-                    //vc.infoItem = hotel.infoItems[0]    // TODO
-                    //let net = NetworkStatus.shared
-                    //net.start() // Internet connection monitoring starts
-                    //net.stop() // Internet connection monitoring stops
-                    //let status = net.connType // Returns the connection type
-                    //print(status)
-/*
-                case .kidsClub:
-                    UIApplication.tryURL(urls: [
-                        //"fb://page/?id=ritzcarltonkohsamui" // App
-                        "fb://profile?id=ritzcarltonkohsamui" // App
-                        ,"fb://user?username=ritzcarltonkohsamui" // App
-                        ,"http://www.facebook.com/ritzcarltonkohsamui" // Website if app fails
-                        , "twitter://RitzCarlton"
-                        , "https://twitter.com/RitzCarlton"
-                        , "instagram:/ritzcarltonkohsamui"
-                        , "https://www.instagram.com/ritzcarltonkohsamui"
-                    ])
-
-                case .watersports:
-                    UIApplication.tryURL(urls: [
-                        "instagram://user?username=ritzcarltonkohsamui"
-                        , "https://www.instagram.com/ritzcarltonkohsamui"
-                        ,"https://www.tripadvisor.com/Hotel_Review-g1179396-d12504573-Reviews-The_Ritz_Carlton_Koh_Samui-Bophut_Ko_Samui_Surat_Thani_Province.html"
-                        , "twitter://RitzCarlton"
-                        , "https://twitter.com/RitzCarlton"
-                    ])
-*/
-                //_ = pushViewController(storyBoard: "Activities", id: "Activities")
-                      //Create a picker specifying file type and mode
-//                    let documentPicker = UIDocumentPickerViewController(documentTypes: ["*"], in: .import)
-//                    documentPicker.delegate = self
-//                    documentPicker.allowsMultipleSelection = false
-//                    documentPicker.modalPresentationStyle = .fullScreen
-//                    present(documentPicker, animated: true, completion: nil)
             }
         default: break
         }
@@ -313,11 +291,6 @@ extension HomeCollectionViewController: UICollectionViewDelegateFlowLayout {
             let spacing: CGFloat = HomeCollectionViewController.sectionInsets.left
             let availableWidth = width - spacing * (numberOfItemsPerRow + 1)
             let itemDimension = floor(availableWidth / numberOfItemsPerRow)
-            // calculate the height of a sample one line text and then the height of the full text
-            // let hOneLine = calculateLabelHeight(s: "bla", width: itemDimension)
-            // let h = calculateLabelHeight(s: Items.allCases[indexPath.row].rawValue, width: itemDimension)
-            // return CGSize(width: itemDimension, height: itemDimension - hOneLine + h)
-
             return CGSize(width: itemDimension, height: itemDimension)
         case .none:
             Log.log(level: .ERROR, "Invalid section in sizeFotItemAt")
@@ -379,6 +352,7 @@ class HomeHeaderCell: UICollectionViewCell {
 
         chatButton.backgroundColor = .orange
         chatButton.setBackgroundImage(UIImage(named: "Chat"), for: .normal)
+        chatButton.isHidden = true
         unreadChatLabel.layer.cornerRadius = 20
         unreadChatLabel.layer.masksToBounds = true
         unreadChatLabel.layer.backgroundColor = UIColor.red.cgColor
@@ -387,6 +361,7 @@ class HomeHeaderCell: UICollectionViewCell {
 
         buggyButton.backgroundColor = .orange
         buggyButton.setBackgroundImage(UIImage(named: "buggyIcon2"), for: .normal)
+        buggyButton.isHidden = true
     }
 
     @objc func didTap() {
@@ -398,18 +373,6 @@ class HomeHeaderCell: UICollectionViewCell {
     }
 
     func draw(title: String, imageURL: String) {
-/*
-        if let filename = URL(string: imageURL)?.lastPathComponent {
-            storageProxy.getImageURL(forLocation: .BASE, imageName: filename) { url, error in
-                if let url = url {
-                    Log.log("url for locations is \(url)")
-                    self.picture.kf.setImage(with: url)
-                } else {
-                    Log.log(level: .ERROR, error.debugDescription)
-                }
-            }
-        }
-*/
         picture.kf.setImage(with: URL(string: imageURL))
         titleLabel.text = title
         let unreadCount = phoneUser.unreadChatCount()
@@ -433,17 +396,6 @@ class HomeTitleCell: UICollectionViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-/*
-        titleLabel.isUserInteractionEnabled = true
-        let tap3 = UITapGestureRecognizer(target: self, action: #selector(didTap))
-        tap3.numberOfTapsRequired = 3
-        titleLabel.addGestureRecognizer(tap3)
-        
-        titleLabel.backgroundColor = .offWhiteVeryLight
-        contentView.backgroundColor = .offWhiteVeryLight
-        contentView.layer.borderWidth = 1
-        contentView.layer.borderColor = UIColor.lightGray.cgColor
- */
     }
 
     @objc func didTap() {
@@ -459,6 +411,7 @@ class HomeItemsCell: UICollectionViewCell {
     @IBOutlet weak var picture: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var backgroundColorView: UIView!
+
     let iconColors: [UIColor] = [.color1, .color2, .color3, .lightGray, .color2, .color1, .color3]
 
     override func awakeFromNib() {
