@@ -165,11 +165,11 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
     }
 
     func deleteRestaurant(restaurant: Restaurant) {
-        let errStr = dbProxy.removeRecord(key: restaurant.id!, record: restaurant) { record in
+        let errStr = dbProxy.removeRecord(key: restaurant.id!, record: restaurant) { [weak self] record in
             if record == nil {
-                showInfoDialogBox(vc: self, title: "Error", message: "Restaurant delete failed")
+                self?.showInfoDialogBox(title: "Error", message: "Restaurant delete failed")
             } else {
-                showInfoDialogBox(vc: self, title: "Info", message: "Restaurant deleted")
+                self?.showInfoDialogBox(title: "Info", message: "Restaurant deleted")
             }
         }
         if errStr != nil { Log.log(errStr!) }

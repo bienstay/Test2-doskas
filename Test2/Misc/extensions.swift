@@ -442,13 +442,15 @@ class PaddingLabel: UILabel {
     }
 }
 
-
+/*
 func showInfoDialogBox(vc: UIViewController, title:String, message: String, completion: ((UIAlertAction) -> Void)? = nil) {
     let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
     let OKAction = UIAlertAction(title: "Ok", style: .default, handler: completion)
     alertController.addAction(OKAction)
     vc.present(alertController, animated: true, completion: nil)
 }
+*/
+
 
 extension UIViewController {
     func pushOrPresent(viewController vc: UIViewController) {
@@ -475,7 +477,7 @@ extension UIViewController {
         return vc
     }
 
-    func pushModal(storyBoard: String, id: String) -> UIViewController {
+    func presentModal(storyBoard: String, id: String) -> UIViewController {
         let storyboard = UIStoryboard(name: storyBoard, bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: id)
         vc.modalPresentationStyle = .formSheet
@@ -488,6 +490,26 @@ extension UIViewController {
         let vc = storyboard.instantiateViewController(withIdentifier: id)
         vc.modalPresentationStyle = .formSheet
         return vc
+    }
+
+    func showInfoDialogBox(title:String, message: String, completion: ((UIAlertAction) -> Void)? = nil) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let OKAction = UIAlertAction(title: "Ok", style: .default, handler: completion)
+        alertController.addAction(OKAction)
+        present(alertController, animated: true, completion: nil)
+    }
+
+    // completion called if Yes pressed
+    func showConfirmDialogBox(title:String, message: String, completion: @escaping (() -> Void)) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let OKAction = UIAlertAction(title: .yes, style: .default) { _ in
+            completion()
+        }
+        let cancelAction = UIAlertAction(title: .no, style: .cancel) { _ in
+        }
+        alertController.addAction(OKAction)
+        alertController.addAction(cancelAction)
+        present(alertController, animated: true, completion: nil)
     }
 }
 
@@ -721,7 +743,9 @@ class MyJSONEncoder: JSONEncoder {
 extension UIImagePickerControllerDelegate where Self: UINavigationControllerDelegate {
 //extension UIViewController where Self: UIImagePickerControllerDelegate { //}& UINavigationControllerDelegate {
     func showImagePicker(nc: UIViewController) {
-        let photoSourceRequestController = UIAlertController(title: "", message: NSLocalizedString("Choose your photo source", comment: "Choose your photo source"), preferredStyle: .actionSheet)
+        let alertStyle:UIAlertController.Style = (UIDevice.current.userInterfaceIdiom == .pad) ?
+            .alert : .actionSheet
+        let photoSourceRequestController = UIAlertController(title: "", message: NSLocalizedString("Choose your photo source", comment: "Choose your photo source"), preferredStyle: alertStyle)
         let cameraAction = UIAlertAction(title: NSLocalizedString("Camera", comment: "Camera"), style: .default, handler: { (action) in
             if UIImagePickerController.isSourceTypeAvailable(.camera) {
                 let imagePicker = UIImagePickerController()
@@ -743,17 +767,13 @@ extension UIImagePickerControllerDelegate where Self: UINavigationControllerDele
         })
         photoSourceRequestController.addAction(cameraAction)
         photoSourceRequestController.addAction(photoLibraryAction)
-
-        /*
+/* did the alertStyle instead
         // For iPad
         if let popoverController = photoSourceRequestController.popoverPresentationController {
-            if let cell = tableView.cellForRow(at: indexPath) {
-                popoverController.sourceView = cell
-                popoverController.sourceRect = cell.bounds
-            }
+            popoverController.sourceView = nc.view
+            popoverController.sourceRect = nc.view.bounds
         }
-        */
-
+*/
         nc.present(photoSourceRequestController, animated: true, completion: nil)
 
     }

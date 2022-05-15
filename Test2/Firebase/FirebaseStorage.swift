@@ -16,8 +16,8 @@ final class FirebaseStorage: StorageProxy {
     }
 
     var BASE_PHOTOS_REF: StorageReference {
-        if let hotelId = hotel.id {
-            return ROOT_PHOTOS_REF.child("hotels").child(hotelId)
+        if !hotel.id.isEmpty {
+            return ROOT_PHOTOS_REF.child("hotels").child(hotel.id)
         } else {
             return ROOT_PHOTOS_REF.child("hotels")
         }

@@ -99,10 +99,6 @@ struct Message: MessageType {
 
 
 class MessageKitChatViewController: MessagesViewController {
-/*
-    var messages: [Message] = []
-    var chatRoomId = ""
-*/
     var chatRoom: ChatRoom?
     var messages: [Message] = []
 
@@ -136,17 +132,10 @@ class MessageKitChatViewController: MessagesViewController {
     }
 
     @objc func onMessageAdded(_ notification: Notification) {
-/* there may be a problem with desync beteen notifications and additions, especially at the start - TODO replace with closures or protocol or do reloadFrom(lastMessage)
-        if let m = notification.object as? ChatMessage {
-            messages.append(Message(senderId: m.senderID, senderName: m.senderName, isSenderStaff: m.isSenderStaff, text: m.content, messageId: m.id!, timestamp: m.created, translations: m.translations, read: m.read ?? false))
-            messagesCollectionView.insertSections([messages.count - 1])
-            messagesCollectionView.reloadSections([messages.count - 1])
-            reloadMessages()
-            messagesCollectionView.reloadData()
-        }
-*/
-        reloadMessages()
-        messagesCollectionView.reloadData()
+        let start = appendMessages()
+        let sections: IndexSet = IndexSet(integersIn: start...messages.count - 1)
+        messagesCollectionView.insertSections(sections)
+        messagesCollectionView.reloadSections(sections)
         messagesCollectionView.scrollToLastItem(animated: true)
         if let m = notification.object as? ChatMessage, m.senderID != phoneUser.id {
             let systemSoundID: SystemSoundID = 1105
@@ -166,6 +155,20 @@ class MessageKitChatViewController: MessagesViewController {
             messages[i] = newM
             messagesCollectionView.reloadSections([i])
         }
+    }
+
+    func appendMessages() -> Int {
+        guard let chatRoom = chatRoom else { return 0 }
+        guard messages.count <= chatRoom.messages.count else {  // sth is not right, reload
+            reloadMessages()
+            return 0
+        }
+        let start = messages.count
+        for i in start...chatRoom.messages.count-1 {
+            let m = chatRoom.messages[i]
+            messages.append(Message(senderId: m.senderID, senderName: m.senderName, isSenderStaff: m.isSenderStaff, text: m.content, messageId: m.id!, timestamp: m.created, translations: m.translations, read: m.read ?? false))
+        }
+        return start
     }
 
     func reloadMessages() {

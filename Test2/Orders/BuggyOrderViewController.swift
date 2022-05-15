@@ -26,7 +26,7 @@ class BuggyOrderViewController: UIViewController {
 
     @IBAction func sendButtonPressed(_ sender: UIButton) {
         guard let roomNumber = Int(roomNumberTextField.text ?? ""), roomNumber > 0 else {
-            showInfoDialogBox(vc: self, title: "Room Number", message: "Room number is missing")
+            showInfoDialogBox(title: "Room Number", message: "Room number is missing")
             return
         }
         let orderNumber = phoneUser.orders.isEmpty ? 1 : phoneUser.orders.first!.number + 1
@@ -50,13 +50,10 @@ class BuggyOrderViewController: UIViewController {
         let locationType = Order.BuggyData.LocationType(rawValue: segmentedControl.selectedSegmentIndex) ?? .Room
         var locationData = ""
         switch locationType {
-        case .Room: break
-        //case .GPS: locationData = "9.583716,100.078701"
-        //case .GPS: locationData = String(guest.currentLocationLatitude) + "," + String(guest.currentLocationLongitude)
-        case .GPS: locationData = String(phoneUser.currentLocationLatitude) + "," + String(phoneUser.currentLocationLongitude)
-        //case .GPS: locationData = String(0.0) + "," + String(0.0)   // TODO
-        case .Other: break
-        case .Photo: locationData = photoURL
+            case .Room: break
+            case .GPS: locationData = String(phoneUser.currentLocationLatitude) + "," + String(phoneUser.currentLocationLongitude)
+            case .Other: break
+            case .Photo: locationData = photoURL
         }
 
         order.buggyData = Order.BuggyData(locationType: locationType, locationData: locationData)
@@ -64,7 +61,7 @@ class BuggyOrderViewController: UIViewController {
         let orderInDB = OrderInDB(order: order, roomNumber: roomNumber)
         let errStr = dbProxy.addRecord(record: orderInDB) { record in
             if record == nil {
-                showInfoDialogBox(vc: self, title: "Error", message: "Order update failed")
+                self.showInfoDialogBox(title: "Error", message: "Order update failed")
             } else {
 
                     DispatchQueue.main.async {
@@ -150,61 +147,15 @@ class BuggyOrderViewController: UIViewController {
         view.endEditing(true)
     }
 
-}
-
-
-
-
-extension BuggyOrderViewController {
     @objc func photoPressed(sender: UIView) {
         guard segmentedControl.selectedSegmentIndex == Order.BuggyData.LocationType.Photo.rawValue else { return }
-        let photoSourceRequestController = UIAlertController(title: "", message: NSLocalizedString("Choose your photo source", comment: "Choose your photo source"), preferredStyle: .actionSheet)
-        let cameraAction = UIAlertAction(title: NSLocalizedString("Camera", comment: "Camera"), style: .default, handler: { (action) in
-                if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                    let imagePicker = UIImagePickerController()
-                    imagePicker.allowsEditing = false
-                    imagePicker.sourceType = .camera
-                    imagePicker.delegate = self
-                    self.present(imagePicker, animated: true, completion: nil)
-                }
-            })
-        let photoLibraryAction = UIAlertAction(title: NSLocalizedString("Photo library", comment: "Photo library"), style: .default, handler: { (action) in
-                if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
-                    let imagePicker = UIImagePickerController()
-                    imagePicker.allowsEditing = false
-                    imagePicker.sourceType = .photoLibrary
-//                    imagePicker.sourceType = .savedPhotosAlbum
-                    imagePicker.delegate = self
-                    self.present(imagePicker, animated: true, completion: nil)
-                }
-            })
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        photoSourceRequestController.addAction(cameraAction)
-        photoSourceRequestController.addAction(photoLibraryAction)
-        photoSourceRequestController.addAction(cancelAction)
-/*
-            // For iPad
-            if let popoverController = photoSourceRequestController.popoverPresentationController {
-                if let cell = tableView.cellForRow(at: indexPath) {
-                    popoverController.sourceView = cell
-                    popoverController.sourceRect = cell.bounds
-                }
-            }
-*/
-        present(photoSourceRequestController, animated: true, completion: nil)
+        showImagePicker(nc: self)
     }
 }
-
 
 extension BuggyOrderViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             if let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-/*
-                photoImageView.image = selectedImage
-                photoImageView.contentMode = .scaleAspectFill
-                photoImageView.clipsToBounds = true
-                photoUpdated = true
-*/
                 locationPicture = selectedImage
                 backgroundPicture.image = locationPicture
             }

@@ -7,14 +7,23 @@
 
 import Foundation
 
+enum Role: String {
+    case superadmin
+    case hoteladmin
+    case editor
+    case client
+    case none
+}
+
 struct AuthData {
     var userId: String
     var userName: String
     var displayName: String
-    var role: PhoneUser.Role
+    var role: Role
 }
 
 protocol AuthProxy {
     func login(username: String, password: String, completionHandler: @ escaping (AuthData?, Error?) -> Void)
+    func addUser(username: String, password: String, role:String, completionHandler: @escaping (AuthData?, Error?) -> Void)
     func logout() -> Error?
 }

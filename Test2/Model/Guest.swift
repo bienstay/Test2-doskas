@@ -55,7 +55,7 @@ class GuestOld  {
     }
 
     var email: String {
-        (isAdmin() ? Name : "appuser") + "@\(hotel.id!.lowercased()).appviator.com"
+        (isAdmin() ? Name : "appuser") + "@\(hotel.id.lowercased()).appviator.com"
     }    
     
     static func formatGuestId(roomNumber: Int, startDate: Date) -> String {
@@ -117,7 +117,7 @@ class GuestOld  {
         dbProxy.observeOrderChanges()
     }
 
-    func guestUpdated(allGuests: [(String, GuestInDB)], subNode: String?) {
+    func guestUpdated(allGuests: [String:GuestInDB]) {
         if let g = allGuests.first {
             self.Name = g.1.name
             self.roomNumber = g.1.roomNumber
@@ -133,10 +133,10 @@ class GuestOld  {
         }
          */
 
-        messagingProxy.subscribeForMessages(topic: hotel.id ?? "")
+        messagingProxy.subscribeForMessages(topic: hotel.id)
         //if !guest.isAdmin() {
         if let guest = phoneUser.guest {
-            messagingProxy.subscribeForMessages(topic: (hotel.id ?? "") + "_" + String(guest.roomNumber))
+            messagingProxy.subscribeForMessages(topic: hotel.id + "_" + String(guest.roomNumber))
             dbProxy.subscribeForUpdates(subNode: guest.id, parameter: nil, completionHandler: likesPerUserUpdated)
             //guest.updatePhoneDataInDB()   // TODO
         } else {
@@ -146,14 +146,14 @@ class GuestOld  {
 
     }
 
-    func likesPerUserUpdated(allLikes: [(String, LikesPerUserInDB)], subNode: String?) {
+    func likesPerUserUpdated(allLikes: [String:LikesPerUserInDB]) {
         likesPerUser = [:]
         // for each group create a set that contains only keys with values == True
         allLikes.forEach( { likesPerUser[$0.0] = Set($0.1.compactMap { $0.value ? $0.key : nil }) } )
         NotificationCenter.default.post(name: .likesUpdated, object: nil)
     }
 
-    func likesUpdated(allLikes: [(String, LikesInDB)], subNode: String?) {
+    func likesUpdated(allLikes: [String:LikesInDB]) {
         likes = [:]
         for l in allLikes {
             var countMap: [String:Int] = [:]
@@ -165,7 +165,7 @@ class GuestOld  {
         NotificationCenter.default.post(name: .likesUpdated, object: nil)
     }
 
-    func ordersUpdated(allOrders: [(String, OrderInDB)], subNode: String?) {
+    func ordersUpdated(allOrders: [String:OrderInDB]) {
         orders = []
         allOrders.forEach({
             orders.append(Order(id: $0.0, orderInDb: $0.1))
@@ -176,7 +176,7 @@ class GuestOld  {
         NotificationCenter.default.post(name: .ordersUpdated, object: nil)
     }
 
-    func chatMessagesUpdated(allChatMessages: [(String, ChatMessage)]) {
+    func chatMessagesUpdated(allChatMessages: [String:ChatMessage]) {
         let chatRoomId = self.chatRooms.first!
         chatMessages![chatRoomId] = []
         unreadChatCount = 0

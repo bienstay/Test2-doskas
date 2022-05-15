@@ -70,19 +70,19 @@ class NewNewsPostViewController: UITableViewController {
 
     @IBAction func savePressed(_ sender: UIBarButtonItem) {
         guard let title = titleTextField.text, !title.isEmpty else {
-            showInfoDialogBox(vc: self, title: "Oops", message: NSLocalizedString("Title missing"))
+            showInfoDialogBox(title: "Oops", message: NSLocalizedString("Title missing"))
             return
         }
         guard let subTitle = subtitleTextField.text, !subTitle.isEmpty else {
-            showInfoDialogBox(vc: self, title: "Oops", message: NSLocalizedString("Subtitle missing"))
+            showInfoDialogBox(title: "Oops", message: NSLocalizedString("Subtitle missing"))
             return
         }
         guard let text = textTextView.text, !text.isEmpty else {
-            showInfoDialogBox(vc: self, title: "Oops", message: NSLocalizedString("Text missing"))
+            showInfoDialogBox(title: "Oops", message: NSLocalizedString("Text missing"))
             return
         }
         guard let image = photoImageView.image else {
-            showInfoDialogBox(vc: self, title: "Oops", message: NSLocalizedString("Image missing"))
+            showInfoDialogBox(title: "Oops", message: NSLocalizedString("Image missing"))
             return
         }
 
@@ -108,7 +108,7 @@ class NewNewsPostViewController: UITableViewController {
                     if let s = errStr { Log.log(level: .ERROR, "Error updting news \(s)") }
                 } else {
                     Log.log(level: .ERROR, "Error uploading image - \(String(describing: error))")
-                    showInfoDialogBox(vc: self, title: "Error", message: "Error uploading image")
+                    self.showInfoDialogBox(title: "Error", message: "Error uploading image")
                 }
             }
         } else {
@@ -120,7 +120,7 @@ class NewNewsPostViewController: UITableViewController {
 
     func closeMe(_ post:NewsPost?) {
         guard post != nil else {
-            showInfoDialogBox(vc: self, title: "Error", message: "Post update failed")
+            showInfoDialogBox(title: "Error", message: "Post update failed")
             return
         }
         if let nc = navigationController {

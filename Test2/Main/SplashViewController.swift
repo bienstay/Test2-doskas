@@ -8,20 +8,31 @@
 import UIKit
 
 class SplashViewController: UIViewController {
-    //var dbProxyReady = false
     var dbProxyReady = false
     var notReadyCounter = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(dismissSplash), userInfo: nil, repeats: false)
+        //Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(dismissSplash), userInfo: nil, repeats: false)
 
         NotificationCenter.default.addObserver(self, selector: #selector(onDbProxyReady(_:)), name: .dbProxyReady, object: nil)
 
-        authProxy.login(username: "appuser@appviator.com", password: "Appviator2022!") { authData, error in
+        loginGenericUser()
+    }
+
+    func loginGenericUser() {
+        authProxy.login(username: "appuser@appviator.com", password: "Appviator2022!") { [weak self] authData, error in
             if authData != nil && error == nil {
-                self.dbProxyReady = true
+                self?.dbProxyReady = true
+                Log.log("Logged in as default user")
+                self?.dismissSplash()
+            } else {
+                Log.log("Cannot login as default user")
+                Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { [weak self] timer in
+                    Log.log("Retrying logging...")
+                    self?.loginGenericUser()
+                }
             }
         }
     }
@@ -46,7 +57,7 @@ class SplashViewController: UIViewController {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         if !(UserDefaults.standard.string(forKey: "barcodeData")?.isEmpty ?? true) {
             appDelegate.initFromBarcode()
-            appDelegate.transitionToHome()
+            appDelegate.transitionToHome(from: self)
         } else {
             appDelegate.transitionToScanner()
         }

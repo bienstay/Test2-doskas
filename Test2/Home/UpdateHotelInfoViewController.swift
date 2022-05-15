@@ -60,7 +60,7 @@ class UpdateHotelInfoViewController: UITableViewController {
         if nameTextField.text == "" { message = NSLocalizedString("Name missing") } else
         if photoImageView.image == nil { message = NSLocalizedString("Image missing", comment: "Image missing") }
         if let message = message {
-            showInfoDialogBox(vc: self, title: "Oops", message: message)
+            showInfoDialogBox(title: "Oops", message: message)
             return
         }
 
@@ -103,7 +103,7 @@ class UpdateHotelInfoViewController: UITableViewController {
 */
     func closeMe(_ h: HotelInfo?) {
         guard h != nil else {
-            showInfoDialogBox(vc: self, title: "Error", message: "Hotel update failed")
+            showInfoDialogBox(title: "Error", message: "Hotel update failed")
             return
         }
         if let nc = navigationController {
@@ -115,7 +115,7 @@ class UpdateHotelInfoViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
-            showPicturePicker(vc: self)
+            showImagePicker(nc: self)
         }
     }
 }

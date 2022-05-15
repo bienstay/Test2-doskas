@@ -73,11 +73,12 @@ class NewActivityViewController: UITableViewController {
     }
     
     @IBAction func savePressed(_ sender: UIBarButtonItem) {
-        var message: String?
-        if titleLabel.text == "" { message = NSLocalizedString("Title missing") } else
-        if locationLabel.text == "" { message = NSLocalizedString("Subtitle missing") } else
-        if let message = message {
-            showInfoDialogBox(vc: self, title: "Oops", message: message)
+        guard !(titleLabel.text?.isEmpty ?? false) else {
+            showInfoDialogBox(title: "Oops", message: "Title missing")
+            return
+        }
+        guard !(locationLabel.text?.isEmpty ?? false) else {
+            showInfoDialogBox(title: "Oops", message: "Location missing")
             return
         }
 
@@ -115,7 +116,7 @@ class NewActivityViewController: UITableViewController {
 
     func closeMe(_ a: Activity?) {
         guard a != nil else {
-            showInfoDialogBox(vc: self, title: "Error", message: "Daily activities update failed")
+            showInfoDialogBox(title: "Error", message: "Daily activities update failed")
             return
         }
         if let nc = navigationController {

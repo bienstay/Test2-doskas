@@ -9,10 +9,11 @@ import UIKit
 
 struct UserData {
     var email: String
-    var displayName: String
-    var role: PhoneUser.Role
-    var id: String { email.components(separatedBy: "@")[0] }
-    var toString: String { "\(id) \(role)" }
+    var role: Role
+    var uid: String
+    //var id: String { email.components(separatedBy: "@")[0] }
+    var displayName: String { email.components(separatedBy: "@")[0] }
+    var toString: String { "\(displayName) \(role)" }
 }
 
 class AssignViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
@@ -35,10 +36,10 @@ class AssignViewController: UIViewController, UITableViewDataSource, UITableView
     }
 
     func initUserList() {
-        dbProxy.getUsers(hotelName: hotel.id?.lowercased() ?? "") { userList in
+        dbProxy.getUsers(hotelName: hotel.id.lowercased()) { userList in
             for u in userList {
-                if let e = u["email"], let d = u["displayName"], let r = u["role"] {
-                    self.users.append(UserData(email: e, displayName: d, role: .init(rawValue: r) ?? .none))
+                if let e = u["email"], let r = u["role"], let uid = u["uid"] {
+                    self.users.append(UserData(email: e, role: .init(rawValue: r) ?? .none, uid: uid))
                 }
             }
             DispatchQueue.main.async { self.tableView.reloadData() }
@@ -58,7 +59,7 @@ class AssignViewController: UIViewController, UITableViewDataSource, UITableView
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        dbProxy.assignChat(chatRoom: chatRoom, to: users[indexPath.row].id)
+        dbProxy.assignChat(chatRoom: chatRoom, to: users[indexPath.row].displayName)
         if let nc = navigationController {
             nc.popViewController(animated: true)
         } else {
@@ -78,7 +79,7 @@ class AssignCell: UITableViewCell {
     }
 
     func draw(userData: UserData) {
-        userNameLabel.text = userData.id
+        userNameLabel.text = userData.displayName
         userRoleLabel.text = userData.role.rawValue
     }
 }

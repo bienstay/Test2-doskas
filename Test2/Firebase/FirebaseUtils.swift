@@ -48,7 +48,7 @@ extension FirebaseDatabase {
             }
         }
     }
-
+/*
     func getGuests(hotelID: String, index: Int, completionHandler: @ escaping (Int, [(String, GuestInfo)]) -> Void) {
         let guestsRef = ROOT_DB_REF.child("hotels").child(hotelID).child("users")
         guestsRef.getData { (error, snapshot) in
@@ -60,7 +60,7 @@ extension FirebaseDatabase {
             }
         }
     }
-
+*/
     func updateOrderStatus(orderId: String, newStatus: Order.Status, confirmedBy: String? = nil, deliveredBy: String? = nil, canceledBy: String? = nil) {
         let orderRef = ORDERS_DB_REF.child("/\(orderId)")
         var key = ""
@@ -114,7 +114,7 @@ extension FirebaseDatabase {
 
 extension FirebaseDatabase {
     func translate(textToTranslate: String, targetLanguage: String, completionHandler: @ escaping (String?) -> Void) {
-        Firebase.shared.functions.httpsCallable("translateTextSimple").call(["text": textToTranslate, "targetLanguage": targetLanguage]) { result, error in
+        Firebase.shared.functions.httpsCallable("httpFunctions-translateTextSimple").call(["text": textToTranslate, "targetLanguage": targetLanguage]) { result, error in
             if let error = error as NSError? {
                 if error.domain == FunctionsErrorDomain {
                     //let code = FunctionsErrorCode(rawValue: error.code)
@@ -134,9 +134,9 @@ extension FirebaseDatabase {
     }
 
     func translateChat(chatRoom: String, chatID: String, textToTranslate: String, targetLanguage: String, completionHandler: @ escaping (String?) -> Void) {
-        let hotelId: String = hotel.id!
+        let hotelId: String = hotel.id
         let chatTranslationPath = "/hotels/\(hotelId)/chats/\(chatRoom)/\(chatID)/translations"
-        Firebase.shared.functions.httpsCallable("translateAndUpdateChat").call(
+        Firebase.shared.functions.httpsCallable("httpFunctions-translateAndUpdateChat").call(
             ["text": textToTranslate,
              "targetLanguage": targetLanguage,
              "chatPath": chatTranslationPath
@@ -170,7 +170,7 @@ extension FirebaseDatabase {
     }
 
     func t1() {
-        Firebase.shared.functions.httpsCallable("t1").call() {result, error in
+        Firebase.shared.functions.httpsCallable("httpFunctions-t1").call() {result, error in
             if let error = error {
                 Log.log(level: .ERROR, "Error translating... - \(error.localizedDescription)")
             }
@@ -224,7 +224,7 @@ extension FirebaseDatabase {
     }
 
     func getUsers(hotelName: String, completionHandler: @ escaping ([[String:String]]) -> Void) {
-        Firebase.shared.functions.httpsCallable("getUsers").call(["forHotel": hotelName]) { result, error in
+        Firebase.shared.functions.httpsCallable("httpFunctions-getUsers").call(["forHotel": hotelName]) { result, error in
             if let error = error {
                 Log.log(level: .ERROR, error.localizedDescription)
             }
@@ -232,6 +232,54 @@ extension FirebaseDatabase {
                 completionHandler(data)
             } else {
                 completionHandler([[:]])
+            }
+        }
+    }
+
+    func setUserRole(uid: String, role:Role, completionHandler: @ escaping () -> Void) {
+        Firebase.shared.functions.httpsCallable("httpFunctions-setUserRole").call(["uid": uid, "role": role.rawValue]) { result, error in
+            if let error = error {
+                Log.log(level: .ERROR, error.localizedDescription)
+            }
+            if let data = result?.data {
+                Log.log("Data received: \(data)")
+                completionHandler()
+            } else {
+                completionHandler()
+            }
+        }
+    }
+
+    func deleteUser(uid: String, completionHandler: @ escaping (Error?) -> Void) {
+        Firebase.shared.functions.httpsCallable("httpFunctions-deleteUser").call(["uid": uid]) { result, error in
+            if let error = error {
+                Log.log(level: .ERROR, error.localizedDescription)
+            }
+            if let data = result?.data {
+                Log.log("Data received: \(data)")
+            }
+            completionHandler(error)
+        }
+    }
+    
+    func changePassword(oldPassword: String, newPassword: String, completionHandler: @ escaping (Error?) -> Void) {
+        guard let user = Auth.auth().currentUser else {
+            Log.log(level: .ERROR, "Invalid current user")
+            completionHandler(NSError(domain: "", code: 1, userInfo: [ NSLocalizedDescriptionKey: "User not authenticated"]))
+            return
+        }
+        let credential = EmailAuthProvider.credential(withEmail: user.email ?? "", password: oldPassword)
+        user.reauthenticate(with: credential) { authDataResult, error in
+            if let error = error {
+                Log.log(level: .ERROR, "Error re-authenticating: \(error)")
+                completionHandler(error)
+            } else {
+                user.updatePassword(to: newPassword) { error in
+                    if let error = error {
+                        Log.log(level: .ERROR, "Error updating password = \(error)")
+                    }
+                    completionHandler(error)
+                }
             }
         }
     }

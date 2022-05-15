@@ -9,12 +9,13 @@ import AVFoundation
 import UIKit
 
 class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
-    @IBOutlet var captureView: UIView!
-    @IBOutlet var skipCaptureButton: UIButton!
-    @IBOutlet var defaultsStackView: UIStackView!
-    @IBOutlet var userFlagControl: UISegmentedControl!
+    @IBOutlet weak var captureView: UIView!
+    @IBOutlet weak var skipCaptureButton: UIButton!
+    @IBOutlet weak var defaultsStackView: UIStackView!
+    @IBOutlet weak var userFlagControl: UISegmentedControl!
+    @IBOutlet weak var hotelPicker: UIPickerView!
     @IBOutlet weak var userPicker: UIPickerView!
-    @IBOutlet var switchButton: UIButton!
+    @IBOutlet weak var switchButton: UIButton!
 
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
@@ -33,20 +34,33 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         "W": [RoomSample(nr: 3, guest: "Mariola"), RoomSample(nr: 12, guest: "Anitka & Maciek")]
     ]
     var userFlag:Bool { userFlagControl.selectedSegmentIndex == 0 }
+    enum Picker:Int {
+        case Hotel = 0
+        case User = 1
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         initView()
 
+        hotelPicker.dataSource = self
+        hotelPicker.delegate = self
+        hotelPicker.tag = Picker.Hotel.rawValue
         userPicker.dataSource = self
         userPicker.delegate = self
+        userPicker.tag = Picker.User.rawValue
+        
+        //hotelPicker.setValue(UIColor.offWhiteVeryLight, forKey: "backgroundColor")
+        //userPicker.setValue(UIColor.offWhiteVeryLight, forKey: "backgroundColor")
+
+        hotelPicker.selectRow(0, inComponent: 0, animated: true)
         initUserList()
 
         defaultsStackView.isHidden = true
+        hotelPicker.tintColor = .yellow
         userPicker.tintColor = .yellow
-        //menu = MenuView(parentView: view, headerText: "Przykład")
 
-        view.backgroundColor = UIColor(216, 77, 68) // rgb - taken from the color picker from log but different
+        //view.backgroundColor = UIColor(216, 77, 68) // rgb - taken from the color picker from log but different
         view.backgroundColor = UIColor(234, 62, 59) // sRGB -
 
         captureSession = AVCaptureSession()
@@ -98,13 +112,13 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
 
     func initUserList() {
         users = []
-        userPicker.reloadComponent(1)
-        let i = userPicker.selectedRow(inComponent: 0)
+        userPicker.reloadComponent(0)
+        let i = hotelPicker.selectedRow(inComponent: 0)
         let hotelName = hotels[i].lowercased()
         dbProxy.getUsers(hotelName: hotelName) { userList in
             for u in userList {
-                if let e = u["email"], let d = u["displayName"], let r = u["role"] {
-                    self.users.append(UserData(email: e, displayName: d, role: .init(rawValue: r) ?? .none))
+                if let e = u["email"], let r = u["role"], let uid = u["uid"] {
+                    self.users.append(UserData(email: e, role: .init(rawValue: r) ?? .none, uid: uid))
                 }
             }
             DispatchQueue.main.async { self.userPicker.reloadAllComponents() }
@@ -158,18 +172,24 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     @IBAction func switchButtonPressed(_ sender: UIButton) {
         captureView.isHidden = !captureView.isHidden
         captureView.isHidden ? captureSession?.stopRunning() : captureSession?.startRunning()
+        view.backgroundColor = captureView.isHidden ? .white : UIColor(234, 62, 59) // sRGB
         defaultsStackView.isHidden = !defaultsStackView.isHidden
     }
+    
+    @IBAction func loginButtonPressed(_ sender: UIButton) {
+        _ = presentModal(storyBoard: "Main", id: "Login")
+    }
+
 
     @IBAction func skipCaptureButtonPressed(_ sender: UIButton) {
-        let hotelId = hotels[userPicker.selectedRow(inComponent: 0)]
+        let hotelId = hotels[hotelPicker.selectedRow(inComponent: 0)]
         if userFlag {
-            let userId: String = users[userPicker.selectedRow(inComponent: 1)].id
+            let userId: String = users[userPicker.selectedRow(inComponent: 0)].displayName
             found(barcodeString: """
             { "hotelId": "\(hotelId)", "userName": "\(userId)", "password": "Appviator2022!" }
         """)
         } else {
-            let room = rooms[hotelId]![userPicker.selectedRow(inComponent: 1)]
+            let room = rooms[hotelId]![userPicker.selectedRow(inComponent: 0)]
             found(barcodeString: """
             { "hotelId": "\(hotelId)", "roomNumber": \(room.nr), "startDate": 669364704.669543, "guestName": "\(room.guest)" }
         """)
@@ -180,21 +200,21 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         Log.log(level: .INFO, "Barcode scanned: \(barcodeString)")
         guard let b: BarcodeData = parseJSON(barcodeString) else {
             Log.log(level: .INFO, "Invalid barcode: \(barcodeString)")
-            showInfoDialogBox(vc: self, title: "Invalid barcode", message: "This is not a valid barcode") { _ in self.captureSession?.startRunning() }
+            showInfoDialogBox(title: "Invalid barcode", message: "This is not a valid barcode") { _ in self.captureSession?.startRunning() }
             return
         }
         Log.log(level: .INFO, "Barcode parsed: \(b)")
 
         guard b.isValid() else {
             Log.log(level: .INFO, "Invalid barcode: \(barcodeString)")
-            showInfoDialogBox(vc: self, title: "Invalid barcode", message: "This is not a valid barcode") { _ in self.captureSession.startRunning() }
+            showInfoDialogBox(title: "Invalid barcode", message: "This is not a valid barcode") { _ in self.captureSession.startRunning() }
             return
         }
 
         UserDefaults.standard.set(barcodeString, forKey: "barcodeData")
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.initFromBarcode()
-        appDelegate.transitionToHome()
+        appDelegate.transitionToHome(from: self)
 
     }
 
@@ -209,34 +229,36 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
 
 extension ScannerViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        2
+        1
     }
 
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        if component == 0 { return hotels.count }
-        else {
-            let hotelName = userPicker.selectedRow(inComponent: 0)
-            return userFlag ? users.count : rooms[hotels[hotelName]]!.count
+        switch pickerView.tag {
+            case Picker.Hotel.rawValue: return hotels.count
+            case Picker.User.rawValue:
+                let i = hotelPicker.selectedRow(inComponent: 0)
+                return userFlag ? users.count : rooms[hotels[i]]!.count
+            default: return 0
         }
     }
 
     func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        let hotelName = userPicker.selectedRow(inComponent: 0)
-        switch component {
-        case 0: return NSAttributedString(string: hotels[row], attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
-        case 1: if userFlag {
-                    return NSAttributedString(string: users[row].toString, attributes: [NSAttributedString.Key.foregroundColor: UIColor.pastelGreenLight])
+        let i = hotelPicker.selectedRow(inComponent: 0)
+        switch pickerView.tag {
+            case Picker.Hotel.rawValue:
+                return NSAttributedString(string: hotels[row], attributes: [NSAttributedString.Key.foregroundColor: UIColor.red])
+            case Picker.User.rawValue:
+                if userFlag {
+                    return NSAttributedString(string: users[row].toString, attributes: [NSAttributedString.Key.foregroundColor: UIColor.red])
                 } else {
-                    return NSAttributedString(string:
-                        row < rooms[hotels[hotelName]]!.count ? rooms[hotels[hotelName]]![row].toString : "",
-                        attributes: [NSAttributedString.Key.foregroundColor: UIColor.yellow])
+                    return NSAttributedString(string: rooms[hotels[i]]![row].toString, attributes: [NSAttributedString.Key.foregroundColor: UIColor.red])
                 }
-        default: return NSAttributedString(string: "")
+            default: return NSAttributedString(string: "")
         }
     }
 
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        if component == 0 {
+        if pickerView.tag == Picker.Hotel.rawValue {
             initUserList()
         }
     }

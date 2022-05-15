@@ -28,13 +28,13 @@ class ChatRoom {
     var id: String
     var roomNumber: Int
     var unreadCount: Int = 0
-    var assignedTo: String = "operator"
+    var assignedTo: String? = nil
     var messages:[ChatMessage]
 
-    init(id: String, roomNumber:Int, assignedTo: String?) {
+    init(id: String, roomNumber:Int, assignedTo: String? = nil) {
         self.id = id
         self.roomNumber = roomNumber
-        if let assignedTo = assignedTo { self.assignedTo = assignedTo }
+        self.assignedTo = assignedTo
         messages = []
     }
 
@@ -43,13 +43,15 @@ class ChatRoom {
     }
 
     func startObserving() {
-        dbProxy.subscribeForNew(subNode: id, parameter: nil, completionHandler: chatMessageAdded)
-        dbProxy.subscribeForDeleted(subNode: id, parameter: nil, completionHandler: chatMessageDeleted)
-        dbProxy.subscribeForModified(subNode: id, parameter: nil, completionHandler: chatMessageUpdated)
+        dbProxy.subscribe(for: .NEW, subNode: id, parameter: nil, completionHandler: chatMessageAdded)
+        dbProxy.subscribe(for: .DELETE, subNode: id, parameter: nil, completionHandler: chatMessageDeleted)
+        dbProxy.subscribe(for: .UPDATE, subNode: id, parameter: nil, completionHandler: chatMessageUpdated)
+        dbProxy.subscribeForUpdates(subNode: nil, parameter: .ChatRoom(id: id), completionHandler: chatRoomsUpdated)
     }
 
     func stopObserving() {
-        dbProxy.unsubscribe(t: ChatMessage.self, subNode: id)
+        dbProxy.unsubscribe(t: ChatMessage.self, subNode: id, parameter: nil)
+        dbProxy.unsubscribe(t: ChatMessage.self, subNode: nil, parameter: .ChatRoom(id: id))
     }
 
     func chatMessageAdded(key:String, messageInDB: ChatMessage) {
@@ -80,7 +82,14 @@ class ChatRoom {
             updateUnreadCount()
         }
     }
-    
+
+    func chatRoomsUpdated(rooms: [String:ChatRoomInDB]) { // only copy assignedTo field
+        if let chatRoom = rooms[id] {
+            assignedTo = chatRoom.assignedTo
+            NotificationCenter.default.post(name: .chatRoomsUpdated, object: nil)
+        }
+    }
+
     func updateUnreadCount() {
         unreadCount = 0
         for m in messages {
@@ -102,21 +111,17 @@ class ChatRoomManager {
         return myChatRooms[index]
     }
     func getChatRoom(_ id: String) -> ChatRoom? {
-        guard let index = myChatRooms.firstIndex(where: {$0.id == id}) else {
-            //return ChatRoom(id: "", roomNumber: 0, assignedTo: "")
-            return nil
-        }
+        guard let index = myChatRooms.firstIndex(where: {$0.id == id}) else { return nil }
         return myChatRooms[index]
     }
 
     func startObserving(userID: String) {
-        dbProxy.subscribeForNew(subNode: nil, parameter: userID == "operator" ? nil : .AssignedTo(id: userID), completionHandler: chatRoomAdded)
-        dbProxy.subscribeForDeleted(subNode: nil, parameter: userID == "operator" ? nil : .AssignedTo(id: userID), completionHandler: chatRoomRemoved)
-        dbProxy.subscribeForModified(subNode: nil, parameter: userID == "operator" ? nil : .AssignedTo(id: userID), completionHandler: chatRoomUpdated)
+        dbProxy.subscribe(for: .NEW, subNode: nil, parameter: userID == "operator" ? nil : .AssignedTo(id: userID), completionHandler: chatRoomAdded)
+        dbProxy.subscribe(for: .DELETE, subNode: nil, parameter: userID == "operator" ? nil : .AssignedTo(id: userID), completionHandler: chatRoomRemoved)
     }
     
     func stopObserving(userID: String) {
-        dbProxy.unsubscribe(t: ChatRoomInDB.self, subNode: nil)
+        dbProxy.unsubscribe(t: ChatRoomInDB.self)
     }
 
     func chatRoomAdded(key: String, chatRoom: ChatRoomInDB) {
@@ -130,13 +135,6 @@ class ChatRoomManager {
         guard let index = myChatRooms.firstIndex(where: {$0.id == key}) else { return }
         myChatRooms[index].stopObserving()
         myChatRooms.remove(at: index)
-        NotificationCenter.default.post(name: .chatRoomsUpdated, object: nil)
-    }
-
-    func chatRoomUpdated(key: String, chatRoom: ChatRoomInDB) { // only copy assignedTo field
-        if let i = myChatRooms.firstIndex(where: { $0.id == key }) {
-            myChatRooms[i].assignedTo = chatRoom.assignedTo ?? "operator"
-        }
         NotificationCenter.default.post(name: .chatRoomsUpdated, object: nil)
     }
 }

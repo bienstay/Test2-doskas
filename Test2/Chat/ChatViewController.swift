@@ -26,6 +26,8 @@ class ChatViewController: UIViewController {
         messageKitChatViewController.chatRoom = chatRoom
         //messageKitChatViewController.chatRoomId = phoneUser.isStaff ? chatRoomId : phoneUser.id
         embed(viewController: messageKitChatViewController, inView: messageKitView)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(onRoomUpdated(_:)), name: .chatRoomsUpdated, object: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -33,9 +35,8 @@ class ChatViewController: UIViewController {
         inChatWindow = true
 
         setupListNavigationBar(largeTitle: false)
-        title = String(chatRoom?.roomNumber ?? 0)
         if let chatRoom = chatRoom {
-            title = "\(chatRoom.roomNumber) - \(chatRoom.assignedTo)"
+            title = "\(chatRoom.roomNumber) - \(chatRoom.assignedTo ?? "[operator]")"
         }
         assignButton.isEnabled = phoneUser.isStaff
         assignButton.tintColor = phoneUser.isStaff ? nil : .clear
@@ -46,6 +47,12 @@ class ChatViewController: UIViewController {
         inChatWindow = false
     }
     
+    @objc func onRoomUpdated(_ notification: Notification) {
+        if let chatRoom = chatRoom {
+            title = "\(chatRoom.roomNumber) - \(chatRoom.assignedTo ?? "[operator]")"
+        }
+    }
+
     @IBAction func assignButtonPressed(_ sender: UIBarButtonItem) {
         guard let chatRoom = chatRoom else { return }
         let vc = pushViewController(storyBoard: "Chat", id: "Assign") as! AssignViewController

@@ -26,7 +26,7 @@ class RoomItemsOrderViewController: UIViewController, UITableViewDataSource {
 
     @IBAction func sendButtonPressed(_ sender: UIButton) {
         guard let roomNumber = Int(roomNumberTextField.text ?? ""), roomNumber > 0 else {
-            showInfoDialogBox(vc: self, title: "Room Number", message: "Room number is missing")
+            showInfoDialogBox(title: "Room Number", message: "Room number is missing")
             return
         }
 
@@ -46,7 +46,7 @@ class RoomItemsOrderViewController: UIViewController, UITableViewDataSource {
         let errStr = dbProxy.addRecord(record: orderInDB) { record in
             if record == nil {
                 DispatchQueue.main.async {
-                    showInfoDialogBox(vc: self, title: "Error", message: "Order update failed")
+                    self.showInfoDialogBox(title: "Error", message: "Order update failed")
                 }
             } else {
                 DispatchQueue.main.async {
@@ -66,7 +66,7 @@ class RoomItemsOrderViewController: UIViewController, UITableViewDataSource {
         }
         if errStr != nil {
             Log.log(level: .ERROR, errStr!)
-            showInfoDialogBox(vc: self, title: "Error", message: "Updating order failed")
+            showInfoDialogBox(title: "Error", message: "Updating order failed")
         }
         else {
             activityIndicator.startAnimating()

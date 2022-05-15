@@ -9,17 +9,10 @@ import Foundation
 import UIKit    // for UIDevice
 
 class PhoneUser {
-    enum Role: String {
-        case superadmin
-        case hoteladmin
-        case editor
-        case client
-        case none
-    }
     var guest: Guest?
     var user: User?
     var isStaff: Bool { return user != nil }
-    var email: String { (isStaff ? user!.name : "appuser") + "@\(hotel.id!.lowercased()).appviator.com" }
+    var email: String { (isStaff ? user!.name : "appuser") + "@\(hotel.id.lowercased()).appviator.com" }
     var password: String { isStaff ? user!.password : "Appviator2022!" }
     var role: Role { isStaff ? user!.role : .client }
     var id: String { isStaff ? user!.name : guest!.id }
@@ -104,7 +97,7 @@ class PhoneUser {
 class User {
     var name: String
     var password: String
-    var role: PhoneUser.Role = .none
+    var role: Role = .none
     var displayName: String = ""
 
     var orders: [Order] = []
@@ -125,14 +118,14 @@ class User {
         dbProxy.observeOrderChanges()
         dbProxy.subscribeForUpdates(parameter: .OrderInDB(roomNumber: 0), completionHandler: ordersUpdated)
         chatManager.startObserving(userID: id)
-        messagingProxy.subscribeForMessages(topic: hotel.id ?? "")
+        messagingProxy.subscribeForMessages(topic: hotel.id)
     }
 
-    func ordersUpdated(allOrders: [(String, OrderInDB)], subNode: String?) {
+    func ordersUpdated(allOrders: [String:OrderInDB]) {
         orders = []
-        allOrders.forEach({
-            orders.append(Order(id: $0.0, orderInDb: $0.1))
-        })
+        for o in allOrders {
+            orders.append(Order(id: o.key, orderInDb: o.value))
+        }
         activeOrders = orders.filter( {$0.delivered == nil && $0.canceled == nil} )
         orders.sort(by: { $0.id! > $1.id! } )
         activeOrders.sort(by: { $0.id! > $1.id! } )
@@ -153,7 +146,7 @@ class Guest  {
     var orders: [Order] = []
     var activeOrders: [Order] = []
 
-    lazy var chatRoom: ChatRoom = ChatRoom(id: id, roomNumber: roomNumber, assignedTo: "")
+    lazy var chatRoom: ChatRoom = ChatRoom(id: id, roomNumber: roomNumber)
 
     var likes: LikesPerUser = [:]
 
@@ -169,7 +162,7 @@ class Guest  {
         dbProxy.subscribeForUpdates(parameter: .OrderInDB(roomNumber: roomNumber), completionHandler: ordersUpdated)
         dbProxy.subscribeForUpdates(subNode: id, parameter: nil, completionHandler: likesUpdated)
         chatRoom.startObserving()
-        messagingProxy.subscribeForMessages(topic: (hotel.id ?? "") + "_" + id)
+        messagingProxy.subscribeForMessages(topic: hotel.id + "_" + id)
     }
 
     func toggleLike(group: String, key: String) {
@@ -177,7 +170,7 @@ class Guest  {
         dbProxy.updateLike(group: group, userID: self.id, itemKey: key, add: !isLiked)
     }
 
-    func ordersUpdated(allOrders: [(String, OrderInDB)], subNode: String?) {
+    func ordersUpdated(allOrders: [String:OrderInDB]) {
         orders = []
         allOrders.forEach({
             orders.append(Order(id: $0.0, orderInDb: $0.1))
@@ -188,7 +181,7 @@ class Guest  {
         NotificationCenter.default.post(name: .ordersUpdated, object: nil)
     }
     
-    func likesUpdated(allLikes: [(String, LikesPerUserInDB)], subNode: String?) {
+    func likesUpdated(allLikes: [String:LikesPerUserInDB]) {
         likes = [:]
         // for each group create a set that contains only keys with values == True
         allLikes.forEach( { likes[$0.0] = Set($0.1.compactMap { $0.value ? $0.key : nil }) } )

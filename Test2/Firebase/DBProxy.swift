@@ -17,23 +17,23 @@ enum QueryParameter {
     case GuestInDb(id: String)
 }
 
+enum QueryOperation {
+    case NEW
+    case DELETE
+    case UPDATE
+}
+
 protocol DBProxy {
-    
     func addRecord<T: Encodable>(key:String?, subNode: String?, record: T, completionHandler: @ escaping (T?) -> Void) -> String?
     func removeRecord<T: Encodable>(key:String, subNode: String?, record: T, completionHandler: @ escaping (T?) -> Void) -> String?
-    @discardableResult
-    func subscribeForUpdates<T: Codable>(subNode: String?, start timestamp: Int?, limit: UInt?, parameter: QueryParameter?, completionHandler: @ escaping ([(String, T)], String?) -> Void) -> NSObject?
-    func unsubscribe(handle: NSObject?)
-    func unsubscribe<T>(t: T.Type, subNode: String?)
+    func subscribe<T: Codable>(for operation: QueryOperation, subNode: String?, parameter: QueryParameter?, completionHandler: @ escaping (String, T) -> Void)
+    func subscribeForUpdates<T: Codable>(subNode: String?, start timestamp: Int?, limit: UInt?, parameter: QueryParameter?, completionHandler: @ escaping ([String:T]) -> Void)
+    func unsubscribe<T: Codable>(t: T.Type, subNode: String?, parameter: QueryParameter?)
     func removeAllObservers()
-
-    func subscribeForNew<T: Codable>(subNode: String?, parameter: QueryParameter?, completionHandler: @ escaping (String, T) -> Void)
-    func subscribeForDeleted<T: Codable>(subNode: String?, parameter: QueryParameter?, completionHandler: @ escaping (String, T) -> Void)
-    func subscribeForModified<T: Codable>(subNode: String?, parameter: QueryParameter?, completionHandler: @ escaping (String, T) -> Void)
 
     func observeOrderChanges()
     func getHotels(completionHandler: @ escaping ([String:String]) -> Void)
-    func getGuests(hotelID: String, index: Int, completionHandler: @ escaping (Int, [(String, GuestInfo)]) -> Void)
+    //func getGuests(hotelID: String, index: Int, completionHandler: @ escaping (Int, [(String, GuestInfo)]) -> Void)
     func updateOrderStatus(orderId: String, newStatus: Order.Status, confirmedBy: String?, deliveredBy: String?, canceledBy: String?)
     func updateLike(group: String, userID: String, itemKey: String, add: Bool)
 
@@ -48,9 +48,12 @@ protocol DBProxy {
 
     //func getUsers(completionHandler: @ escaping ([[String:String]]) -> Void)
     func getUsers(hotelName: String, completionHandler: @ escaping ([[String:String]]) -> Void)
+    func deleteUser(uid: String, completionHandler: @ escaping (Error?) -> Void)
     func assignChat(chatRoom: String, to user: String)
     func writeChat(chatRoomID: String, message m: ChatMessage)
-    
+    func setUserRole(uid: String, role: Role, completionHandler: @escaping () -> Void)
+    func changePassword(oldPassword: String, newPassword: String, completionHandler: @ escaping (Error?) -> Void)
+
     var isConnected: Bool { get }
 }
 
@@ -68,18 +71,19 @@ extension DBProxy {
     func removeRecord<T: Encodable>(record: T, completionHandler: @ escaping (T?) -> Void) -> String? {
         return addRecord(key:nil, subNode: nil, record: record, completionHandler: completionHandler)
     }
-    @discardableResult
-    func subscribeForUpdates<T: Codable>(subNode: String?, parameter: QueryParameter?, completionHandler: @ escaping ([(String, T)], String?) -> Void) -> NSObject? {
-        return subscribeForUpdates(subNode: subNode, start: nil, limit: nil, parameter: parameter, completionHandler: completionHandler)
+    func subscribeForUpdates<T: Codable>(subNode: String?, parameter: QueryParameter?, completionHandler: @ escaping ([String:T]) -> Void) {
+        subscribeForUpdates(subNode: subNode, start: nil, limit: nil, parameter: parameter, completionHandler: completionHandler)
     }
-    @discardableResult
-    func subscribeForUpdates<T: Codable>(parameter: QueryParameter?, completionHandler: @ escaping ([(String, T)], String?) -> Void) -> NSObject? {
-        return subscribeForUpdates(subNode: nil, parameter: parameter, completionHandler: completionHandler)
+    func subscribeForUpdates<T: Codable>(parameter: QueryParameter?, completionHandler: @ escaping ([String:T]) -> Void) {
+        subscribeForUpdates(subNode: nil, parameter: parameter, completionHandler: completionHandler)
     }
-    @discardableResult
-    func subscribeForUpdates<T: Codable>(completionHandler: @ escaping ([(String, T)], String?) -> Void) -> NSObject? {
-        return subscribeForUpdates(subNode: nil, parameter: nil, completionHandler: completionHandler)
+    func subscribeForUpdates<T: Codable>(completionHandler: @ escaping ([String:T]) -> Void) {
+        subscribeForUpdates(subNode: nil, parameter: nil, completionHandler: completionHandler)
     }
+    func unsubscribe<T: Codable>(t: T.Type) {
+        unsubscribe(t: t, subNode: nil, parameter: nil)
+    }
+
 }
 
 extension DBProxy {

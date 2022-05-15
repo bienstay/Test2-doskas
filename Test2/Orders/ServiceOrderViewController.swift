@@ -24,7 +24,7 @@ class ServiceOrderViewController: UIViewController {
 
     @IBAction func sendButtonPressed(_ sender: UIButton) {
         guard let roomNumber = Int(roomNumberTextField.text ?? ""), roomNumber > 0 else {
-            showInfoDialogBox(vc: self, title: "Room Number", message: "Room number is missing")
+            showInfoDialogBox(title: "Room Number", message: "Room number is missing")
             return
         }
 
@@ -43,7 +43,7 @@ class ServiceOrderViewController: UIViewController {
         let orderInDB = OrderInDB(order: order, roomNumber: roomNumber)
         let errStr = dbProxy.addRecord(record: orderInDB) { record in
             if record == nil {
-                showInfoDialogBox(vc: self, title: "Error", message: "Order update failed")
+                self.showInfoDialogBox(title: "Error", message: "Order update failed")
             } else {
 
                     DispatchQueue.main.async {

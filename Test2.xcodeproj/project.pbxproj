@@ -60,6 +60,9 @@
 		065F036A2636221100A5CDEF /* Hotel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065F03692636221100A5CDEF /* Hotel.swift */; };
 		065F036E26362E5500A5CDEF /* HotelTestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 065F036D26362E5500A5CDEF /* HotelTestData.swift */; };
 		06606DF3270760330023412C /* ServiceOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06606DF2270760330023412C /* ServiceOrderViewController.swift */; };
+		066874FA2830367600DB5604 /* UsersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066874F92830367600DB5604 /* UsersViewController.swift */; };
+		066874FC28307AE800DB5604 /* ChangePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066874FB28307AE800DB5604 /* ChangePasswordViewController.swift */; };
+		066874FE2831260600DB5604 /* EditUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066874FD2831260600DB5604 /* EditUserViewController.swift */; };
 		066BF3F82637460300EE834C /* Order.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066BF3F72637460300EE834C /* Order.swift */; };
 		066BF4032637619B00EE834C /* RoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066BF4022637619B00EE834C /* RoomViewController.swift */; };
 		0676E272264836A9002BFE80 /* MenuSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0676E271264836A9002BFE80 /* MenuSectionHeaderView.xib */; };
@@ -107,6 +110,8 @@
 		06B9776327F16C0500E2ACA1 /* NFCReaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06B9776227F16C0500E2ACA1 /* NFCReaderViewController.swift */; };
 		06B9776527F5809800E2ACA1 /* BarcodeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06B9776427F5809800E2ACA1 /* BarcodeData.swift */; };
 		06C32ADD28245FF100228A40 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C32ADC28245FF100228A40 /* MenuView.swift */; };
+		06C32ADF28287ACA00228A40 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C32ADE28287ACA00228A40 /* LoginViewController.swift */; };
+		06C32AE1282EC2F100228A40 /* AddUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C32AE0282EC2F100228A40 /* AddUserViewController.swift */; };
 		06DDB8C1265874BE00A5FD84 /* sheratonFacilities.json in Resources */ = {isa = PBXBuildFile; fileRef = 06DDB8C0265874BE00A5FD84 /* sheratonFacilities.json */; };
 		06E5FC432739804A0082EFAC /* RoomService.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E5FC422739804A0082EFAC /* RoomService.png */; };
 		06F5D161270B516D004931F7 /* ActivitiesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F5D160270B516D004931F7 /* ActivitiesViewController.swift */; };
@@ -183,6 +188,9 @@
 		065F03692636221100A5CDEF /* Hotel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hotel.swift; sourceTree = "<group>"; };
 		065F036D26362E5500A5CDEF /* HotelTestData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotelTestData.swift; sourceTree = "<group>"; };
 		06606DF2270760330023412C /* ServiceOrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceOrderViewController.swift; sourceTree = "<group>"; };
+		066874F92830367600DB5604 /* UsersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersViewController.swift; sourceTree = "<group>"; };
+		066874FB28307AE800DB5604 /* ChangePasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordViewController.swift; sourceTree = "<group>"; };
+		066874FD2831260600DB5604 /* EditUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditUserViewController.swift; sourceTree = "<group>"; };
 		066BF3F72637460300EE834C /* Order.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Order.swift; sourceTree = "<group>"; };
 		066BF4022637619B00EE834C /* RoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomViewController.swift; sourceTree = "<group>"; };
 		0676E271264836A9002BFE80 /* MenuSectionHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuSectionHeaderView.xib; sourceTree = "<group>"; };
@@ -230,6 +238,8 @@
 		06B9776227F16C0500E2ACA1 /* NFCReaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCReaderViewController.swift; sourceTree = "<group>"; };
 		06B9776427F5809800E2ACA1 /* BarcodeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeData.swift; sourceTree = "<group>"; };
 		06C32ADC28245FF100228A40 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
+		06C32ADE28287ACA00228A40 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		06C32AE0282EC2F100228A40 /* AddUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserViewController.swift; sourceTree = "<group>"; };
 		06DDB8C0265874BE00A5FD84 /* sheratonFacilities.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sheratonFacilities.json; sourceTree = "<group>"; };
 		06E5FC422739804A0082EFAC /* RoomService.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RoomService.png; sourceTree = "<group>"; };
 		06F5D160270B516D004931F7 /* ActivitiesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesViewController.swift; sourceTree = "<group>"; };
@@ -511,6 +521,11 @@
 				061C4E702736010200A6D5DA /* LaunchScreen.storyboard */,
 				061DC83E26554AD900C4C794 /* SplashViewController.swift */,
 				06B9776227F16C0500E2ACA1 /* NFCReaderViewController.swift */,
+				06C32ADE28287ACA00228A40 /* LoginViewController.swift */,
+				06C32AE0282EC2F100228A40 /* AddUserViewController.swift */,
+				066874F92830367600DB5604 /* UsersViewController.swift */,
+				066874FB28307AE800DB5604 /* ChangePasswordViewController.swift */,
+				066874FD2831260600DB5604 /* EditUserViewController.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -745,17 +760,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				06C32ADF28287ACA00228A40 /* LoginViewController.swift in Sources */,
 				067A4D852807F64B0043F50D /* FirebaseAuth.swift in Sources */,
 				069DB35A263B0FB800C91468 /* ReviewViewController.swift in Sources */,
 				06B9776327F16C0500E2ACA1 /* NFCReaderViewController.swift in Sources */,
 				0683A1F026516FF50000D122 /* MenuPageViewController.swift in Sources */,
 				062D1A0926EE247500A14FDE /* ConfigViewController.swift in Sources */,
 				0632D452266ADF66001F7036 /* OrderDetailsCell.swift in Sources */,
+				066874FA2830367600DB5604 /* UsersViewController.swift in Sources */,
 				066BF3F82637460300EE834C /* Order.swift in Sources */,
 				06293E2F28099BBB00226400 /* MessagingProxy.swift in Sources */,
 				061DE02E2731AEEF0021A37C /* RoomItemsViewController.swift in Sources */,
 				069FDBAA26A39486004F543F /* ChatListViewController.swift in Sources */,
 				06882F672749128100D643A0 /* OffersCell.swift in Sources */,
+				066874FE2831260600DB5604 /* EditUserViewController.swift in Sources */,
 				065F036A2636221100A5CDEF /* Hotel.swift in Sources */,
 				06F7726A26713DC600E64D54 /* NewsCell.swift in Sources */,
 				06882F6F274D867300D643A0 /* OfferViewController.swift in Sources */,
@@ -812,11 +830,13 @@
 				0632D4492669A1A5001F7036 /* Guest.swift in Sources */,
 				061DC8432656C57D00C4C794 /* DestinationDiningViewController.swift in Sources */,
 				06882F65274911D100D643A0 /* OffersViewController.swift in Sources */,
+				066874FC28307AE800DB5604 /* ChangePasswordViewController.swift in Sources */,
 				06137FCA27CB388700377F1B /* BuggyOrderViewController.swift in Sources */,
 				061DC839265469E700C4C794 /* WatersportsViewController.swift in Sources */,
 				061DC82726526E0E00C4C794 /* RestaurantDestinationDiningCell.swift in Sources */,
 				0632D44B266AC3A3001F7036 /* OrdersViewController.swift in Sources */,
 				065F0367263621F200A5CDEF /* Menu.swift in Sources */,
+				06C32AE1282EC2F100228A40 /* AddUserViewController.swift in Sources */,
 				06882F6027447DE800D643A0 /* NetworkStatus.swift in Sources */,
 				0683A1EE265154250000D122 /* MenuCell.swift in Sources */,
 				069FD3D7269650630076C6FC /* UIViewExtensions.swift in Sources */,

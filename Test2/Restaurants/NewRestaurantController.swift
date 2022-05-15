@@ -100,7 +100,7 @@ class NewRestaurantController: UITableViewController {
         if photoImageView.image == nil { message = NSLocalizedString("Image missing", comment: "Image missing") }
         
         if let message = message {
-            showInfoDialogBox(vc: self, title: "Oops", message: message)
+            showInfoDialogBox(title: "Oops", message: message)
             return
         }
 
@@ -135,7 +135,7 @@ class NewRestaurantController: UITableViewController {
     
     func closeMe(_ restaurant:Restaurant?) {
         guard restaurant != nil else {
-            showInfoDialogBox(vc: self, title: "Error", message: "Restaurant update failed")
+            showInfoDialogBox(title: "Error", message: "Restaurant update failed")
             return
         }
         if let nc = navigationController {
@@ -167,37 +167,7 @@ extension NewRestaurantController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
-            let photoSourceRequestController = UIAlertController(title: "", message: NSLocalizedString("Choose your photo source", comment: "Choose your photo source"), preferredStyle: .actionSheet)
-            let cameraAction = UIAlertAction(title: NSLocalizedString("Camera", comment: "Camera"), style: .default, handler: { (action) in
-                if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                    let imagePicker = UIImagePickerController()
-                    imagePicker.allowsEditing = false
-                    imagePicker.sourceType = .camera
-                    imagePicker.delegate = self
-                    self.present(imagePicker, animated: true, completion: nil)
-                }
-            })
-            let photoLibraryAction = UIAlertAction(title: NSLocalizedString("Photo library", comment: "Photo library"), style: .default, handler: { (action) in
-                if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
-                    let imagePicker = UIImagePickerController()
-                    imagePicker.allowsEditing = false
-                    imagePicker.sourceType = .photoLibrary
-//                    imagePicker.sourceType = .savedPhotosAlbum
-                    imagePicker.delegate = self
-                    self.present(imagePicker, animated: true, completion: nil)
-                }
-            })
-            photoSourceRequestController.addAction(cameraAction)
-            photoSourceRequestController.addAction(photoLibraryAction)
-            
-            // For iPad
-            if let popoverController = photoSourceRequestController.popoverPresentationController {
-                if let cell = tableView.cellForRow(at: indexPath) {
-                    popoverController.sourceView = cell
-                    popoverController.sourceRect = cell.bounds
-                }
-            }
-            present(photoSourceRequestController, animated: true, completion: nil)
+            showImagePicker(nc: self)
         }
     }
 }

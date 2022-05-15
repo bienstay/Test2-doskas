@@ -90,9 +90,9 @@ extension NewsViewController: UITableViewDataSource {
     func deletePost(post: NewsPost) {
         let errStr = dbProxy.removeRecord(key: post.postId, record: post) { record in
             if record == nil {
-                showInfoDialogBox(vc: self, title: "Error", message: "Post delete failed")
+                self.showInfoDialogBox(title: "Error", message: "Post delete failed")
             } else {
-                showInfoDialogBox(vc: self, title: "Info", message: "Post deleted")
+                self.showInfoDialogBox(title: "Info", message: "Post deleted")
             }
         }
         if errStr != nil { Log.log(errStr!) }

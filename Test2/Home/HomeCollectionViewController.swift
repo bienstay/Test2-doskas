@@ -76,19 +76,36 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         if (CLLocationManager.locationServicesEnabled())
         {
             locationManager = CLLocationManager()
-            // Ask for Authorisation from the User.
-            self.locationManager.requestAlwaysAuthorization()
-            // For use in foreground
-            self.locationManager.requestWhenInUseAuthorization()
+            locationManager.requestAlwaysAuthorization()    // result in the callback below
             locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            locationManager.startUpdatingLocation()
         }
 
         menu = MenuView(parentView: view, headerText: "Menu")
         menu.addItem(label: "Log out") { [weak self] in
             print("Logging out...")
             self?.logOutAndGoToScannerView()
+        }
+        menu.addItem(label: "Add User") { [weak self] in
+            if let self = self {
+                _ = self.presentModal(storyBoard: "Main", id: "AddUser")
+            }
+        }
+        menu.addItem(label: "Manage users") { [weak self] in
+            if let self = self {
+                _ = self.presentModal(storyBoard: "Main", id: "Users")
+            }
+        }
+        menu.addItem(label: "Change password") { [weak self] in
+            if let self = self {
+                _ = self.presentModal(storyBoard: "Main", id: "ChangePassword")
+            }
+        }
+        menu.addItem(label: "Edit User") { [weak self] in
+            if let self = self {
+                let vc = self.presentModal(storyBoard: "Main", id: "EditUser") as! EditUserViewController
+                vc.userName = "operator"
+            }
         }
     }
 
@@ -169,6 +186,29 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         locationManager.stopUpdatingLocation()
         Log.log(level: .ERROR, error.localizedDescription)
+    }
+    
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        if #available(iOS 14.0, *) {
+            switch manager.authorizationStatus {
+                case .authorizedAlways, .authorizedWhenInUse, .authorized:
+                    Log.log("Location authorization - \(manager.authorizationStatus) - granted")
+                    locationManager.startUpdatingLocation()
+                default:
+                    Log.log("Location authorization - \(manager.authorizationStatus) - denied")
+                    break
+            }
+        } else {
+            let status = CLLocationManager.authorizationStatus()
+            switch status {
+                case .authorizedAlways, .authorizedWhenInUse:
+                    Log.log("Location authorization - \(status) - granted")
+                case .notDetermined, .restricted, .denied:
+                    Log.log("Location authorization - \(status) - denied")
+                @unknown default:
+                    break
+            }
+        }
     }
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -373,7 +413,14 @@ class HomeHeaderCell: UICollectionViewCell {
     }
 
     func draw(title: String, imageURL: String) {
-        picture.kf.setImage(with: URL(string: imageURL))
+        picture.kf.setImage(with: URL(string: imageURL)) { result in
+            switch result {
+            case .success:
+                break //print("Task done for: \(value.source.url?.absoluteString ?? "")")
+            case .failure(let error):
+                print("Job failed: \(error.localizedDescription)")
+            }
+        }
         titleLabel.text = title
         let unreadCount = phoneUser.unreadChatCount()
         unreadChatLabel.text = String(unreadCount)

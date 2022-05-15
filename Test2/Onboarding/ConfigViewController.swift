@@ -55,11 +55,13 @@ class ConfigViewController: UIViewController {
                 let name = String(h.value)
                 self.pickerData.append((H(id: id, name: name), []))
                 // we need to pass i directly to the closure, otherwise a reference is used
+                /*
                 dbProxy.getGuests(hotelID: id, index: i) { i, dbGuests in
                         dbGuests.forEach({self.pickerData[i].1.append(($0.0, $0.1))})
                         self.pickerData[i].1.sort(by: { $0.1.roomNumber < $1.1.roomNumber } )
                         DispatchQueue.main.async { self.hotelPicker.reloadAllComponents() }
                 }
+                */
                 i += 1
             }
             self.pickerData.append((H(id: "", name: "New Hotel"), []))

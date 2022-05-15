@@ -158,7 +158,7 @@ extension AppDelegate {
         }
     }
 
-    func transitionToHome() {
+    func transitionToHome(from vc: UIViewController) {
         authProxy.login(username: phoneUser.email, password: phoneUser.password) { (authData, error) in
             if let authData = authData {
                 Log.log("Logged in with \(authData)")
@@ -179,6 +179,15 @@ extension AppDelegate {
                             window.rootViewController = viewController
                         }, completion: nil)
                     }
+                }
+                vc.dismiss(animated: false)
+            } else {
+                DispatchQueue.main.async {
+                    guard let error = error else {
+                        vc.showInfoDialogBox(title: "Log in error", message: "Unknown")
+                        return
+                    }
+                    vc.showInfoDialogBox(title: "Log in error", message: error.localizedDescription)
                 }
             }
         }
