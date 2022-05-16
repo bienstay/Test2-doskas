@@ -12,8 +12,11 @@ class MenuView: UIView {
     var leftConstraint: NSLayoutConstraint!
     var tableView: UITableView!
     var header: UILabel!
-    var items: [(String, MenuCallback)] = []
+    typealias Items = [(String, MenuCallback)]
+    var items: Items = []
+    var sections: [Items] = [Items()]
     var isOn: Bool = false
+    var currentSection = 0
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -58,8 +61,14 @@ class MenuView: UIView {
         present(show: !isOn)
     }
 
+    func addSeparator() {
+        sections.append(Items())
+        currentSection += 1
+    }
+
     func addItem(label: String, callback: @escaping MenuCallback) {
-        items.append((label, callback))
+        //items.append((label, callback))
+        sections[currentSection].append((label, callback))
         tableView.reloadData()
     }
 
@@ -96,13 +105,18 @@ class MenuView: UIView {
 }
 
 extension MenuView: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        items.count
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return sections.count
     }
-    
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        sections[section].count
+    }
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "menuCell", for: indexPath)
-        cell.textLabel?.text = items[indexPath.row].0
+        cell.textLabel?.text = sections[indexPath.section][indexPath.row].0
         cell.backgroundColor = .BBbackgroundColor
         return cell
     }
@@ -110,7 +124,11 @@ extension MenuView: UITableViewDataSource {
 
 extension MenuView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        items[indexPath.row].1()
+        sections[indexPath.section][indexPath.row].1()
         present(show: false)
+    }
+
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        " "
     }
 }

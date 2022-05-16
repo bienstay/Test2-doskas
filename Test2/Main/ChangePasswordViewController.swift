@@ -24,6 +24,12 @@ class ChangePasswordViewController: UIViewController {
         oldPassword.becomeFirstResponder()
         newPassword.delegate = self
         newPassword.tag = 1
+        /*
+        changeButton.backgroundColor = .clear
+        changeButton.layer.cornerRadius = 30
+        changeButton.layer.borderWidth = 1
+        changeButton.layer.borderColor = UIColor.red.cgColor
+        */
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }

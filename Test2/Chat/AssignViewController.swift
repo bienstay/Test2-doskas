@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+/*
 struct UserData {
     var email: String
     var role: Role
@@ -15,10 +15,10 @@ struct UserData {
     var displayName: String { email.components(separatedBy: "@")[0] }
     var toString: String { "\(displayName) \(role)" }
 }
-
+*/
 class AssignViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var tableView: UITableView!
-    var users: [UserData] = []
+    var users: [AuthenticationData] = []
     var chatRoom: String = ""
 
     override func viewDidLoad() {
@@ -36,13 +36,16 @@ class AssignViewController: UIViewController, UITableViewDataSource, UITableView
     }
 
     func initUserList() {
-        dbProxy.getUsers(hotelName: hotel.id.lowercased()) { userList in
+        authProxy.getUsers(hotelName: hotel.id.lowercased()) { [weak self] userList in
+            self?.users = userList
+/*
             for u in userList {
                 if let e = u["email"], let r = u["role"], let uid = u["uid"] {
                     self.users.append(UserData(email: e, role: .init(rawValue: r) ?? .none, uid: uid))
                 }
             }
-            DispatchQueue.main.async { self.tableView.reloadData() }
+*/
+            DispatchQueue.main.async { self?.tableView.reloadData() }
         }
     }
 
@@ -59,7 +62,7 @@ class AssignViewController: UIViewController, UITableViewDataSource, UITableView
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        dbProxy.assignChat(chatRoom: chatRoom, to: users[indexPath.row].displayName)
+        dbProxy.assignChat(chatRoom: chatRoom, to: users[indexPath.row].name)
         if let nc = navigationController {
             nc.popViewController(animated: true)
         } else {
@@ -78,8 +81,8 @@ class AssignCell: UITableViewCell {
         selectionStyle = .none
     }
 
-    func draw(userData: UserData) {
-        userNameLabel.text = userData.displayName
-        userRoleLabel.text = userData.role.rawValue
+    func draw(userData: AuthenticationData) {
+        userNameLabel.text = userData.name
+        userRoleLabel.text = userData.role?.rawValue
     }
 }

@@ -14,7 +14,7 @@ class PhoneUser {
     var isStaff: Bool { return user != nil }
     var email: String { (isStaff ? user!.name : "appuser") + "@\(hotel.id.lowercased()).appviator.com" }
     var password: String { isStaff ? user!.password : "Appviator2022!" }
-    var role: Role { isStaff ? user!.role : .client }
+    var role: Role? { isStaff ? user!.role : .client }
     var id: String { isStaff ? user!.name : guest!.id }
 
     var currentLocationLongitude: Double = 0.0
@@ -97,7 +97,8 @@ class PhoneUser {
 class User {
     var name: String
     var password: String
-    var role: Role = .none
+    //var role: Role = .none
+    var role: Role? = nil
     var displayName: String = ""
 
     var orders: [Order] = []

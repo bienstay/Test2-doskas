@@ -63,6 +63,7 @@
 		066874FA2830367600DB5604 /* UsersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066874F92830367600DB5604 /* UsersViewController.swift */; };
 		066874FC28307AE800DB5604 /* ChangePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066874FB28307AE800DB5604 /* ChangePasswordViewController.swift */; };
 		066874FE2831260600DB5604 /* EditUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066874FD2831260600DB5604 /* EditUserViewController.swift */; };
+		0668750028325EA400DB5604 /* FirebaseFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066874FF28325EA400DB5604 /* FirebaseFunctions.swift */; };
 		066BF3F82637460300EE834C /* Order.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066BF3F72637460300EE834C /* Order.swift */; };
 		066BF4032637619B00EE834C /* RoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066BF4022637619B00EE834C /* RoomViewController.swift */; };
 		0676E272264836A9002BFE80 /* MenuSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0676E271264836A9002BFE80 /* MenuSectionHeaderView.xib */; };
@@ -191,6 +192,7 @@
 		066874F92830367600DB5604 /* UsersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersViewController.swift; sourceTree = "<group>"; };
 		066874FB28307AE800DB5604 /* ChangePasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordViewController.swift; sourceTree = "<group>"; };
 		066874FD2831260600DB5604 /* EditUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditUserViewController.swift; sourceTree = "<group>"; };
+		066874FF28325EA400DB5604 /* FirebaseFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseFunctions.swift; sourceTree = "<group>"; };
 		066BF3F72637460300EE834C /* Order.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Order.swift; sourceTree = "<group>"; };
 		066BF4022637619B00EE834C /* RoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomViewController.swift; sourceTree = "<group>"; };
 		0676E271264836A9002BFE80 /* MenuSectionHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuSectionHeaderView.xib; sourceTree = "<group>"; };
@@ -571,6 +573,7 @@
 				06882F612745BF8700D643A0 /* FirebaseStorage.swift */,
 				067A4D842807F64B0043F50D /* FirebaseAuth.swift */,
 				06293E2C28096F0A00226400 /* FirebaseMessaging.swift */,
+				066874FF28325EA400DB5604 /* FirebaseFunctions.swift */,
 				0632D4462668E3BD001F7036 /* FirebaseUtils.swift */,
 				06AF200E27E2ED7500B9A692 /* DBProxy.swift */,
 				067A4D862807FBFE0043F50D /* StorageProxy.swift */,
@@ -832,6 +835,7 @@
 				06882F65274911D100D643A0 /* OffersViewController.swift in Sources */,
 				066874FC28307AE800DB5604 /* ChangePasswordViewController.swift in Sources */,
 				06137FCA27CB388700377F1B /* BuggyOrderViewController.swift in Sources */,
+				0668750028325EA400DB5604 /* FirebaseFunctions.swift in Sources */,
 				061DC839265469E700C4C794 /* WatersportsViewController.swift in Sources */,
 				061DC82726526E0E00C4C794 /* RestaurantDestinationDiningCell.swift in Sources */,
 				0632D44B266AC3A3001F7036 /* OrdersViewController.swift in Sources */,

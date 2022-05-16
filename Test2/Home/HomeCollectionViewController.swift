@@ -86,25 +86,15 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
             print("Logging out...")
             self?.logOutAndGoToScannerView()
         }
-        menu.addItem(label: "Add User") { [weak self] in
-            if let self = self {
-                _ = self.presentModal(storyBoard: "Main", id: "AddUser")
-            }
-        }
-        menu.addItem(label: "Manage users") { [weak self] in
-            if let self = self {
-                _ = self.presentModal(storyBoard: "Main", id: "Users")
-            }
-        }
         menu.addItem(label: "Change password") { [weak self] in
             if let self = self {
                 _ = self.presentModal(storyBoard: "Main", id: "ChangePassword")
             }
         }
-        menu.addItem(label: "Edit User") { [weak self] in
+        menu.addSeparator()
+        menu.addItem(label: "Manage users") { [weak self] in
             if let self = self {
-                let vc = self.presentModal(storyBoard: "Main", id: "EditUser") as! EditUserViewController
-                vc.userName = "operator"
+                _ = self.presentModal(storyBoard: "Main", id: "Users")
             }
         }
     }

@@ -15,7 +15,9 @@ class AddUserViewController: UIViewController {
     @IBOutlet weak var rolePicker: UIPickerView!
     @IBOutlet weak var addUserButton: UIButton!
 
-    let roles = ["hoteladmin", "editor", "operator", "none"]
+    //let roles = ["hoteladmin", "editor", "operator", "none"]
+    let roles = Role.allCases
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,10 +30,17 @@ class AddUserViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        presentingViewController?.viewWillDisappear(true)
         setupListNavigationBar(largeTitle: false, title: "Add User")
+    }
+
+    // this is to make the parent call viewWillAppear even if this modal did not cover 100% of the screen
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        presentingViewController?.viewWillAppear(true)
     }
 
     @objc func keyboardWillShow(notification: NSNotification) {
@@ -58,15 +67,12 @@ class AddUserViewController: UIViewController {
         }
         let role = roles[rolePicker.selectedRow(inComponent: 0)]
         showConfirmDialogBox(title: "Confirm adding user", message: "Username: \(user)\nRole:\(role)") {
-            authProxy.addUser(username: user, password: pass, role: role) { [weak self] (authData, error) in
+            authProxy.addUser(username: user, password: pass, role: role.rawValue) { [weak self] (authData, error) in
                 guard let self = self else { return }
                 if let a = authData {
-                    let name = a.userName.split(separator: "@")[0]
-                    let role = a.role
-                    let uid = a.userId
-                    dbProxy.setUserRole(uid: uid, role: role) { [weak self] in
+                    authProxy.setUserRole(uid: a.uid, role: role) { [weak self] error in
                         guard let self = self else { return }
-                        self.showInfoDialogBox(title: "User added", message: "User: \(name)\nRole: \(role)\nId:\(uid)") { [weak self] _ in
+                        self.showInfoDialogBox(title: "User added", message: "User: \(a.email)\nRole: \(role)\nId:\(a.uid)") { [weak self] _ in
                             if self?.navigationController != nil {
                                 _ = self?.navigationController?.popViewController(animated: true)
                             } else {
@@ -92,7 +98,7 @@ extension AddUserViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     }
 
     func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        return NSAttributedString(string: roles[row], attributes: [NSAttributedString.Key.foregroundColor: UIColor.red])
+        return NSAttributedString(string: roles[row].rawValue, attributes: [NSAttributedString.Key.foregroundColor: UIColor.red])
     }
 }
 

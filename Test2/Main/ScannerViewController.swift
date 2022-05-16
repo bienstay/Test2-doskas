@@ -22,7 +22,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     //var menu:MenuView = MenuView()
 
     var hotels: [String] = ["RitzKohSamui", "SheratonFullMoon", "W"]
-    var users: [UserData] = []
+    var users: [AuthenticationData] = []
     struct RoomSample {
         var nr: Int
         var guest: String
@@ -115,13 +115,9 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         userPicker.reloadComponent(0)
         let i = hotelPicker.selectedRow(inComponent: 0)
         let hotelName = hotels[i].lowercased()
-        dbProxy.getUsers(hotelName: hotelName) { userList in
-            for u in userList {
-                if let e = u["email"], let r = u["role"], let uid = u["uid"] {
-                    self.users.append(UserData(email: e, role: .init(rawValue: r) ?? .none, uid: uid))
-                }
-            }
-            DispatchQueue.main.async { self.userPicker.reloadAllComponents() }
+        authProxy.getUsers(hotelName: hotelName) { [weak self] userList in
+            self?.users = userList
+            DispatchQueue.main.async { self?.userPicker.reloadAllComponents() }
         }
     }
 
@@ -184,7 +180,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     @IBAction func skipCaptureButtonPressed(_ sender: UIButton) {
         let hotelId = hotels[hotelPicker.selectedRow(inComponent: 0)]
         if userFlag {
-            let userId: String = users[userPicker.selectedRow(inComponent: 0)].displayName
+            let userId: String = users[userPicker.selectedRow(inComponent: 0)].name
             found(barcodeString: """
             { "hotelId": "\(hotelId)", "userName": "\(userId)", "password": "Appviator2022!" }
         """)
@@ -249,7 +245,10 @@ extension ScannerViewController: UIPickerViewDataSource, UIPickerViewDelegate {
                 return NSAttributedString(string: hotels[row], attributes: [NSAttributedString.Key.foregroundColor: UIColor.red])
             case Picker.User.rawValue:
                 if userFlag {
-                    return NSAttributedString(string: users[row].toString, attributes: [NSAttributedString.Key.foregroundColor: UIColor.red])
+                    let paragraphStyle = NSMutableParagraphStyle()
+                    paragraphStyle.tabStops = [NSTextTab(textAlignment: NSTextAlignment.right, location: pickerView.rowSize(forComponent: 0).width - 20)]
+                    let text = users[row].name + "\t" + (users[row].role?.rawValue ?? "")
+                    return NSAttributedString(string: text, attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle, NSAttributedString.Key.foregroundColor: UIColor.red])
                 } else {
                     return NSAttributedString(string: rooms[hotels[i]]![row].toString, attributes: [NSAttributedString.Key.foregroundColor: UIColor.red])
                 }

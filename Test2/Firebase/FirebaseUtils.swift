@@ -113,45 +113,6 @@ extension FirebaseDatabase {
 }
 
 extension FirebaseDatabase {
-    func translate(textToTranslate: String, targetLanguage: String, completionHandler: @ escaping (String?) -> Void) {
-        Firebase.shared.functions.httpsCallable("httpFunctions-translateTextSimple").call(["text": textToTranslate, "targetLanguage": targetLanguage]) { result, error in
-            if let error = error as NSError? {
-                if error.domain == FunctionsErrorDomain {
-                    //let code = FunctionsErrorCode(rawValue: error.code)
-                    //let message = error.localizedDescription
-                    //let details = error.userInfo[FunctionsErrorDetailsKey]
-                    Log.log(level: .ERROR, error.debugDescription)
-                }
-            }
-            //if let data = result?.data as? [String: Any], let text = data["text"] as? String {
-            if let data = result?.data as? [String: Any] {
-                Log.log("translation = \(data["translation"] ?? "[empty]")")
-                completionHandler(data["translation"] as? String)
-            } else {
-                completionHandler(nil)
-            }
-        }
-    }
-
-    func translateChat(chatRoom: String, chatID: String, textToTranslate: String, targetLanguage: String, completionHandler: @ escaping (String?) -> Void) {
-        let hotelId: String = hotel.id
-        let chatTranslationPath = "/hotels/\(hotelId)/chats/\(chatRoom)/\(chatID)/translations"
-        Firebase.shared.functions.httpsCallable("httpFunctions-translateAndUpdateChat").call(
-            ["text": textToTranslate,
-             "targetLanguage": targetLanguage,
-             "chatPath": chatTranslationPath
-            ]) { result, error in
-                if let error = error {
-                    Log.log(level: .ERROR, "Error translating... - \(error.localizedDescription)")
-                }
-                if let data = result?.data as? String {
-                    completionHandler(data)
-                } else {
-                    completionHandler(nil)
-                }
-            }
-    }
-
     func markChatAsRead(chatRoom: String, chatID: String) {
         CHATS_DB_REF.child(chatRoom).child(chatID).child("read").setValue(true) { (error, ref) -> Void in
             if let error = error {
@@ -165,17 +126,6 @@ extension FirebaseDatabase {
         PHONES_DB_REF.child(phoneID).setValue(phoneData) { (error, ref) -> Void in
             if let error = error {
                 Log.log(level: .ERROR, "Error updating phone data - \(error.localizedDescription)")
-            }
-        }
-    }
-
-    func t1() {
-        Firebase.shared.functions.httpsCallable("httpFunctions-t1").call() {result, error in
-            if let error = error {
-                Log.log(level: .ERROR, "Error translating... - \(error.localizedDescription)")
-            }
-            if let data = result?.data {
-                Log.log("\(data)")
             }
         }
     }
@@ -198,6 +148,16 @@ extension FirebaseDatabase {
         }
     }
 
+    func observeInfo() {
+        DBINFO_DB_REF.observe(.value, with: { snapshot in
+            if let info = snapshot.value as? NSDictionary {
+                self.isConnected = info["connected"] as? Bool ?? false
+                self.serverTimeOffet = info["serverTimeOffset"] as? Double ?? 0.0
+                NotificationCenter.default.post(name: .connectionStatusUpdated, object: nil)
+            }
+        })
+    }
+
     func log(level: Log.LogLevel = .INFO, s: String) {
 /*
         Analytics.logEvent("share_image", parameters: [
@@ -210,77 +170,6 @@ extension FirebaseDatabase {
         let e = LogInDB(text: s)
         if let json = try? JSONEncoder().encode(e), let dictionary = try? JSONSerialization.jsonObject(with: json) {
             LOGS_DB_REF.child(phoneID ?? "phone").child(Date().formatFull()).setValue(dictionary)
-        }
-    }
-
-    func observeInfo() {
-        DBINFO_DB_REF.observe(.value, with: { snapshot in
-            if let info = snapshot.value as? NSDictionary {
-                self.isConnected = info["connected"] as? Bool ?? false
-                self.serverTimeOffet = info["serverTimeOffset"] as? Double ?? 0.0
-                NotificationCenter.default.post(name: .connectionStatusUpdated, object: nil)
-            }
-        })
-    }
-
-    func getUsers(hotelName: String, completionHandler: @ escaping ([[String:String]]) -> Void) {
-        Firebase.shared.functions.httpsCallable("httpFunctions-getUsers").call(["forHotel": hotelName]) { result, error in
-            if let error = error {
-                Log.log(level: .ERROR, error.localizedDescription)
-            }
-            if let data = result?.data as? [[String: String]] {
-                completionHandler(data)
-            } else {
-                completionHandler([[:]])
-            }
-        }
-    }
-
-    func setUserRole(uid: String, role:Role, completionHandler: @ escaping () -> Void) {
-        Firebase.shared.functions.httpsCallable("httpFunctions-setUserRole").call(["uid": uid, "role": role.rawValue]) { result, error in
-            if let error = error {
-                Log.log(level: .ERROR, error.localizedDescription)
-            }
-            if let data = result?.data {
-                Log.log("Data received: \(data)")
-                completionHandler()
-            } else {
-                completionHandler()
-            }
-        }
-    }
-
-    func deleteUser(uid: String, completionHandler: @ escaping (Error?) -> Void) {
-        Firebase.shared.functions.httpsCallable("httpFunctions-deleteUser").call(["uid": uid]) { result, error in
-            if let error = error {
-                Log.log(level: .ERROR, error.localizedDescription)
-            }
-            if let data = result?.data {
-                Log.log("Data received: \(data)")
-            }
-            completionHandler(error)
-        }
-    }
-    
-    func changePassword(oldPassword: String, newPassword: String, completionHandler: @ escaping (Error?) -> Void) {
-        guard let user = Auth.auth().currentUser else {
-            Log.log(level: .ERROR, "Invalid current user")
-            completionHandler(NSError(domain: "", code: 1, userInfo: [ NSLocalizedDescriptionKey: "User not authenticated"]))
-            return
-        }
-        let credential = EmailAuthProvider.credential(withEmail: user.email ?? "", password: oldPassword)
-        user.reauthenticate(with: credential) { authDataResult, error in
-            if let error = error {
-                Log.log(level: .ERROR, "Error re-authenticating: \(error)")
-                completionHandler(error)
-            } else {
-                user.updatePassword(to: newPassword) { error in
-                    if let error = error {
-                        Log.log(level: .ERROR, "Error updating password = \(error)")
-                    }
-                    completionHandler(error)
-                }
-            }
         }
     }
 
@@ -299,6 +188,28 @@ extension FirebaseDatabase {
         CHATROOMS_DB_REF.child(chatRoom).child("assignedTo").setValue(user) { (error, ref) -> Void in
             if let error = error {
                 Log.log(level: .ERROR, "Error marking chat as read - \(error.localizedDescription)")
+            }
+        }
+    }
+
+    func changePassword(oldPassword: String, newPassword: String, completionHandler: @ escaping (Error?) -> Void) {
+        guard let user = Auth.auth().currentUser else {
+            Log.log(level: .ERROR, "Invalid current user")
+            completionHandler(NSError(domain: "", code: 1, userInfo: [ NSLocalizedDescriptionKey: "User not authenticated"]))
+            return
+        }
+        let credential = EmailAuthProvider.credential(withEmail: user.email ?? "", password: oldPassword)
+        user.reauthenticate(with: credential) { authDataResult, error in
+            if let error = error {
+                Log.log(level: .ERROR, "Error re-authenticating: \(error)")
+                completionHandler(error)
+            } else {
+                user.updatePassword(to: newPassword) { error in
+                    if let error = error {
+                        Log.log(level: .ERROR, "Error updating password = \(error)")
+                    }
+                    completionHandler(error)
+                }
             }
         }
     }

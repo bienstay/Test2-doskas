@@ -46,12 +46,8 @@ protocol DBProxy {
     func updateGuest(hotelId: String, guestId: String, guestData: GuestInDB, completionHandler: @ escaping () -> Void)
     func log(level: Log.LogLevel, s: String)
 
-    //func getUsers(completionHandler: @ escaping ([[String:String]]) -> Void)
-    func getUsers(hotelName: String, completionHandler: @ escaping ([[String:String]]) -> Void)
-    func deleteUser(uid: String, completionHandler: @ escaping (Error?) -> Void)
     func assignChat(chatRoom: String, to user: String)
     func writeChat(chatRoomID: String, message m: ChatMessage)
-    func setUserRole(uid: String, role: Role, completionHandler: @escaping () -> Void)
     func changePassword(oldPassword: String, newPassword: String, completionHandler: @ escaping (Error?) -> Void)
 
     var isConnected: Bool { get }

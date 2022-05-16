@@ -163,7 +163,7 @@ extension AppDelegate {
             if let authData = authData {
                 Log.log("Logged in with \(authData)")
                 if let user = phoneUser.user {
-                    user.displayName = authData.displayName
+                    user.displayName = authData.name
                     user.role = authData.role
                 }
                 NotificationCenter.default.post(name: .dbProxyReady, object: nil)
