@@ -480,7 +480,7 @@ extension UIViewController {
     func presentModal(storyBoard: String, id: String) -> UIViewController {
         let storyboard = UIStoryboard(name: storyBoard, bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: id)
-        vc.modalPresentationStyle = .formSheet
+        //vc.modalPresentationStyle = .formSheet
         self.present(vc, animated: true, completion: nil)
         return vc
     }

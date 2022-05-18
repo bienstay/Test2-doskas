@@ -27,8 +27,10 @@ class AddUserViewController: UIViewController {
         password.delegate = self
         password.tag = 1
         rolePicker.delegate = self
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        if UIDevice.current.userInterfaceIdiom != .pad {
+            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -45,15 +47,23 @@ class AddUserViewController: UIViewController {
 
     @objc func keyboardWillShow(notification: NSNotification) {
         guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {return}
-        let contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardSize.height , right: 0.0)
-        scrollView.contentInset = contentInsets
-        scrollView.scrollIndicatorInsets = contentInsets
-      }
+        //let contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardSize.height , right: 0.0)
+        //scrollView.contentInset = contentInsets
+        //scrollView.scrollIndicatorInsets = contentInsets
+        let frame = addUserButton.convert(addUserButton.bounds, to: scrollView)  // get absolute coordinates of the button
+        let offset = keyboardSize.height - (view.frame.height - frame.maxY) + 8 // add 8 points of space
+        if self.view.frame.origin.y == 0 && offset > 0 {
+            self.view.frame.origin.y -= offset
+        }
+    }
 
     @objc func keyboardWillHide(notification: NSNotification) {
-        let contentInsets =  UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
-        scrollView.contentInset = contentInsets
-        scrollView.scrollIndicatorInsets = contentInsets
+        //let contentInsets =  UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
+        //scrollView.contentInset = contentInsets
+        //scrollView.scrollIndicatorInsets = contentInsets
+        if self.view.frame.origin.y != 0 {
+            self.view.frame.origin.y = 0
+        }
     }
 
     @IBAction func addUserPressed(_ sender: Any) {

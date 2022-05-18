@@ -88,13 +88,14 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         }
         menu.addItem(label: "Change password") { [weak self] in
             if let self = self {
-                _ = self.presentModal(storyBoard: "Main", id: "ChangePassword")
+                _ = self.presentModal(storyBoard: "Users", id: "ChangePassword")
             }
         }
         menu.addSeparator()
         menu.addItem(label: "Manage users") { [weak self] in
             if let self = self {
-                _ = self.presentModal(storyBoard: "Main", id: "Users")
+                _ = self.presentModal(storyBoard: "Users", id: "Users")
+                //_ = self.pushViewController(storyBoard: "Users", id: "Users")
             }
         }
     }

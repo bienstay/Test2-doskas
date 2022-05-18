@@ -30,8 +30,8 @@ class UsersViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
 
     @IBAction func newButtonPressed(_ sender: Any) {
-        //_ = self.pushViewController(storyBoard: "Main", id: "AddUser")
-        show(createViewController(storyBoard: "Main", id: "AddUser"), sender: self)
+        //_ = self.pushViewController(storyBoard: "Users", id: "AddUser")
+        show(createViewController(storyBoard: "Users", id: "AddUser"), sender: self)
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -59,8 +59,8 @@ extension UsersViewController {
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let action1 = UIContextualAction(style: .normal, title: "Edit") { [weak self] action, view, completionHandler in
             guard let self = self else { return }
-            //let vc = self.pushViewController(storyBoard: "Main", id: "EditUser") as! EditUserViewController
-            let vc = self.createViewController(storyBoard: "Main", id: "EditUser") as! EditUserViewController
+            //let vc = self.pushViewController(storyBoard: "Users", id: "EditUser") as! EditUserViewController
+            let vc = self.createViewController(storyBoard: "Users", id: "EditUser") as! EditUserViewController
             vc.user = self.users[indexPath.row]
             self.show(vc, sender: self)
             completionHandler(true)

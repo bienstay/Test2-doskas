@@ -173,7 +173,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     }
     
     @IBAction func loginButtonPressed(_ sender: UIButton) {
-        _ = presentModal(storyBoard: "Main", id: "Login")
+        _ = presentModal(storyBoard: "Users", id: "Login")
     }
 
 

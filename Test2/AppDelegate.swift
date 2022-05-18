@@ -198,7 +198,7 @@ extension AppDelegate {
             if let window = UIApplication.shared.keyWindow {
                 let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Scanner")
                 viewController.view.frame = window.bounds
-                UIView.transition(with: window, duration: 1.0, options:                     .transitionCrossDissolve, animations: {
+                UIView.transition(with: window, duration: 1.0, options: .transitionCrossDissolve, animations: {
                     window.rootViewController = viewController
                 }, completion: nil)
             }

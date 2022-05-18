@@ -64,6 +64,7 @@
 		066874FC28307AE800DB5604 /* ChangePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066874FB28307AE800DB5604 /* ChangePasswordViewController.swift */; };
 		066874FE2831260600DB5604 /* EditUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066874FD2831260600DB5604 /* EditUserViewController.swift */; };
 		0668750028325EA400DB5604 /* FirebaseFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066874FF28325EA400DB5604 /* FirebaseFunctions.swift */; };
+		066875022832FC5200DB5604 /* Users.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 066875012832FC5200DB5604 /* Users.storyboard */; };
 		066BF3F82637460300EE834C /* Order.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066BF3F72637460300EE834C /* Order.swift */; };
 		066BF4032637619B00EE834C /* RoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066BF4022637619B00EE834C /* RoomViewController.swift */; };
 		0676E272264836A9002BFE80 /* MenuSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0676E271264836A9002BFE80 /* MenuSectionHeaderView.xib */; };
@@ -108,7 +109,6 @@
 		06AC358B271B58F100D249C6 /* Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AC358A271B58F100D249C6 /* Firebase.swift */; };
 		06AC358D271B7FAE00D249C6 /* Likes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AC358C271B7FAE00D249C6 /* Likes.swift */; };
 		06AF200F27E2ED7600B9A692 /* DBProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AF200E27E2ED7500B9A692 /* DBProxy.swift */; };
-		06B9776327F16C0500E2ACA1 /* NFCReaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06B9776227F16C0500E2ACA1 /* NFCReaderViewController.swift */; };
 		06B9776527F5809800E2ACA1 /* BarcodeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06B9776427F5809800E2ACA1 /* BarcodeData.swift */; };
 		06C32ADD28245FF100228A40 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C32ADC28245FF100228A40 /* MenuView.swift */; };
 		06C32ADF28287ACA00228A40 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C32ADE28287ACA00228A40 /* LoginViewController.swift */; };
@@ -193,6 +193,7 @@
 		066874FB28307AE800DB5604 /* ChangePasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordViewController.swift; sourceTree = "<group>"; };
 		066874FD2831260600DB5604 /* EditUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditUserViewController.swift; sourceTree = "<group>"; };
 		066874FF28325EA400DB5604 /* FirebaseFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseFunctions.swift; sourceTree = "<group>"; };
+		066875012832FC5200DB5604 /* Users.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Users.storyboard; sourceTree = "<group>"; };
 		066BF3F72637460300EE834C /* Order.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Order.swift; sourceTree = "<group>"; };
 		066BF4022637619B00EE834C /* RoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomViewController.swift; sourceTree = "<group>"; };
 		0676E271264836A9002BFE80 /* MenuSectionHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuSectionHeaderView.xib; sourceTree = "<group>"; };
@@ -237,7 +238,6 @@
 		06AC358A271B58F100D249C6 /* Firebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firebase.swift; sourceTree = "<group>"; };
 		06AC358C271B7FAE00D249C6 /* Likes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Likes.swift; sourceTree = "<group>"; };
 		06AF200E27E2ED7500B9A692 /* DBProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBProxy.swift; sourceTree = "<group>"; };
-		06B9776227F16C0500E2ACA1 /* NFCReaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCReaderViewController.swift; sourceTree = "<group>"; };
 		06B9776427F5809800E2ACA1 /* BarcodeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeData.swift; sourceTree = "<group>"; };
 		06C32ADC28245FF100228A40 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		06C32ADE28287ACA00228A40 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -311,6 +311,7 @@
 		065F03282635D47F00A5CDEF /* Test2 */ = {
 			isa = PBXGroup;
 			children = (
+				066875032832FD7800DB5604 /* Users */,
 				06B9776127F16B3B00E2ACA1 /* Main */,
 				06882F63274911B600D643A0 /* Offers */,
 				064352A126385A2000A54BFC /* Misc */,
@@ -329,6 +330,7 @@
 				065F035A2635FCEF00A5CDEF /* Map */,
 				065F0362263621AE00A5CDEF /* Model */,
 				066BF3FA2637552500EE834C /* Resources */,
+				061C4E702736010200A6D5DA /* LaunchScreen.storyboard */,
 				065F03292635D47F00A5CDEF /* AppDelegate.swift */,
 				065F032B2635D47F00A5CDEF /* SceneDelegate.swift */,
 				065F03352635D48000A5CDEF /* Assets.xcassets */,
@@ -395,6 +397,19 @@
 				06293E30280AA68600226400 /* PhoneUser.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		066875032832FD7800DB5604 /* Users */ = {
+			isa = PBXGroup;
+			children = (
+				066875012832FC5200DB5604 /* Users.storyboard */,
+				066874F92830367600DB5604 /* UsersViewController.swift */,
+				06C32ADE28287ACA00228A40 /* LoginViewController.swift */,
+				06C32AE0282EC2F100228A40 /* AddUserViewController.swift */,
+				066874FB28307AE800DB5604 /* ChangePasswordViewController.swift */,
+				066874FD2831260600DB5604 /* EditUserViewController.swift */,
+			);
+			path = Users;
 			sourceTree = "<group>";
 		};
 		066BF3FA2637552500EE834C /* Resources */ = {
@@ -518,16 +533,9 @@
 		06B9776127F16B3B00E2ACA1 /* Main */ = {
 			isa = PBXGroup;
 			children = (
-				064C205127EF604C00DA7A4A /* ScannerViewController.swift */,
 				069DB354263AED0E00C91468 /* Main.storyboard */,
-				061C4E702736010200A6D5DA /* LaunchScreen.storyboard */,
 				061DC83E26554AD900C4C794 /* SplashViewController.swift */,
-				06B9776227F16C0500E2ACA1 /* NFCReaderViewController.swift */,
-				06C32ADE28287ACA00228A40 /* LoginViewController.swift */,
-				06C32AE0282EC2F100228A40 /* AddUserViewController.swift */,
-				066874F92830367600DB5604 /* UsersViewController.swift */,
-				066874FB28307AE800DB5604 /* ChangePasswordViewController.swift */,
-				066874FD2831260600DB5604 /* EditUserViewController.swift */,
+				064C205127EF604C00DA7A4A /* ScannerViewController.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -675,6 +683,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				066875022832FC5200DB5604 /* Users.storyboard in Resources */,
 				06882F6D274C5AF900D643A0 /* offers.json in Resources */,
 				061C4E0D2734A8BA00A6D5DA /* Info.storyboard in Resources */,
 				069FD3C6268CB4350076C6FC /* News.storyboard in Resources */,
@@ -766,7 +775,6 @@
 				06C32ADF28287ACA00228A40 /* LoginViewController.swift in Sources */,
 				067A4D852807F64B0043F50D /* FirebaseAuth.swift in Sources */,
 				069DB35A263B0FB800C91468 /* ReviewViewController.swift in Sources */,
-				06B9776327F16C0500E2ACA1 /* NFCReaderViewController.swift in Sources */,
 				0683A1F026516FF50000D122 /* MenuPageViewController.swift in Sources */,
 				062D1A0926EE247500A14FDE /* ConfigViewController.swift in Sources */,
 				0632D452266ADF66001F7036 /* OrderDetailsCell.swift in Sources */,
