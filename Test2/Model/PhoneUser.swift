@@ -8,14 +8,26 @@
 import Foundation
 import UIKit    // for UIDevice
 
+enum Priviledge: CaseIterable {
+    case manageUsers
+    case editContent
+    case confirmOrders
+    case assignChats
+}
+
 class PhoneUser {
-    var guest: Guest?
-    var user: User?
+    private var guest: Guest?
+    private var user: User?
+    
     var isStaff: Bool { return user != nil }
-    var email: String { (isStaff ? user!.name : "appuser") + "@\(hotel.id.lowercased()).appviator.com" }
-    var password: String { isStaff ? user!.password : "Appviator2022!" }
-    var role: Role? { isStaff ? user!.role : .client }
-    var id: String { isStaff ? user!.name : guest!.id }
+
+    // TODO - this is only used to log in from barcode, should be removed
+    var email: String { (isStaff ? user?.name ?? "" : "appuser") + "@\(hotel.id.lowercased()).appviator.com" }
+    var password: String { isStaff ? user?.password ?? "" : authProxy.defaultPassword }
+
+    var role: Role? { get { user?.role } set { user?.role = newValue } }
+    var id: String { isStaff ? user?.name ?? "" : guest?.id ?? "" }
+    var roomNumber: String? { return guest?.roomNumber as? String? ?? nil }
 
     var currentLocationLongitude: Double = 0.0
     var currentLocationLatitude: Double = 0.0
@@ -27,9 +39,9 @@ class PhoneUser {
         let localeLang = Locale.current.languageCode
         return (preferredLang ?? localeLang ?? "en")
     }
-
     var orders: [Order] { isStaff ? user!.orders : guest!.orders }
-    var activeOrders: [Order] { isStaff ? user!.activeOrders : guest!.activeOrders }
+    var activeOrders: [Order] { isStaff ? user?.activeOrders ?? [] : guest?.activeOrders ?? [] }
+    var chatManager: ChatRoomManager? { return user?.chatManager }
 
     init() {
         guest = nil
@@ -41,6 +53,16 @@ class PhoneUser {
         Log.log("In phoneUser deinit - \(id)", logInDb: false)
     }
 
+    func initAsUser(name: String, password: String) {
+        user = User(name: name, password: password)
+        guest = nil
+    }
+    
+    func initAsGuest(roomNumber: Int, startDate: Date, guestName: String?) {
+        guest = Guest(roomNumber: roomNumber, startDate: startDate, guestName: guestName)
+        user = nil
+    }
+    
     func chatRoom(charRoom: String = "") -> ChatRoom? {
         return isStaff ? user?.chatManager.getChatRoom(charRoom) : guest?.chatRoom
     }
@@ -58,17 +80,7 @@ class PhoneUser {
         return count
     }
 
-    func toString(short: Bool = false) -> String {
-        if !isStaff {
-            var s = String(guest!.roomNumber)
-            if !guest!.name.isEmpty && !short { s = s + " - " + guest!.name }
-            return s
-        } else {
-            var username = user!.displayName
-            if username.isEmpty { username = user!.name.components(separatedBy: ".")[0] }
-            return username
-        }
-    }
+    var displayName: String { isStaff ? user?.id ?? "" : guest?.displayName ?? "" }
 
     func startObserving() {
         user?.startObserving()
@@ -78,8 +90,12 @@ class PhoneUser {
 
     func updatePhoneDataInDB() {
         if let phoneID: String = UIDevice.current.identifierForVendor?.uuidString, let phoneLang: String = Locale.current.languageCode {
-            dbProxy.updatePhoneData(guestId: id, phoneID: phoneID, phoneLang: phoneLang)
+            dbProxy.updatePhoneData(phoneUserId: id, phoneID: phoneID, phoneLang: phoneLang)
         }
+    }
+
+    func toggleLike(group: String, key: String) {
+        guest?.toggleLike(group: group, key: key)
     }
 
     func numLikes(group: String, itemKey: String) -> Int {
@@ -92,23 +108,25 @@ class PhoneUser {
         }
         return numLikes
     }
+
+    func isAllowed(to: Priviledge) -> Bool {    // only user has privileges
+        return user?.priviliges().contains(to) ?? false
+    }
+
 }
 
 class User {
     var name: String
     var password: String
-    //var role: Role = .none
     var role: Role? = nil
-    var displayName: String = ""
 
     var orders: [Order] = []
     var activeOrders: [Order] = []
     var chatManager = ChatRoomManager()
 
-    init(name: String, password: String, displayName: String? = nil) {
+    init(name: String, password: String) {
         self.name = name
         self.password = password
-        if let dn = displayName { self.displayName = dn }
     }
 
     var id: String {
@@ -117,8 +135,14 @@ class User {
 
     func startObserving() {
         dbProxy.observeOrderChanges()
-        dbProxy.subscribeForUpdates(parameter: .OrderInDB(roomNumber: 0), completionHandler: ordersUpdated)
-        chatManager.startObserving(userID: id)
+        let parameter: QueryParameter?
+        switch role {
+            case .driver: parameter = .OrderByCategory(type: .Buggy)
+            case .housekeeping: parameter = .OrderByCategory(type: .Cleaning)
+            default: parameter = nil
+        }
+        dbProxy.subscribeForUpdates(parameter: parameter, completionHandler: ordersUpdated)
+        chatManager.startObserving(user: self)
         messagingProxy.subscribeForMessages(topic: hotel.id)
     }
 
@@ -132,8 +156,22 @@ class User {
         activeOrders.sort(by: { $0.id! > $1.id! } )
         NotificationCenter.default.post(name: .ordersUpdated, object: nil)
     }
-    
-    var isOperator: Bool { return id == "operator" }
+
+    func priviliges() -> Set<Priviledge> {
+        switch role {
+        case .admin:            return Set(Priviledge.allCases)
+        case .editor:           return [.editContent]
+        case .housekeeping:     return [.confirmOrders]
+        case .driver:           return [.confirmOrders]
+        case .hotline:          return [.confirmOrders, .assignChats]
+        case .maintenance:      return [.confirmOrders]
+        case .roomservice:      return [.confirmOrders]
+        case .none:             return []
+        }
+    }
+    func isAllowed(to: Priviledge) -> Bool {
+        return priviliges().contains(to)
+    }
 }
 
 class Guest  {
@@ -143,6 +181,7 @@ class Guest  {
     var id: String { String(roomNumber) + "--" + startDate.formatForDB() }
     var name = ""
     var endDate: Date = Date()
+    var displayName: String { String(roomNumber) + " " + name }
 
     var orders: [Order] = []
     var activeOrders: [Order] = []
@@ -150,7 +189,6 @@ class Guest  {
     lazy var chatRoom: ChatRoom = ChatRoom(id: id, roomNumber: roomNumber)
 
     var likes: LikesPerUser = [:]
-
 
     init(roomNumber: Int, startDate: Date, guestName: String? = nil) {
         self.roomNumber = roomNumber
@@ -160,7 +198,7 @@ class Guest  {
 
     func startObserving() {
         dbProxy.observeOrderChanges()
-        dbProxy.subscribeForUpdates(parameter: .OrderInDB(roomNumber: roomNumber), completionHandler: ordersUpdated)
+        dbProxy.subscribeForUpdates(parameter: .OrderByRoom(roomNumber: roomNumber), completionHandler: ordersUpdated)
         dbProxy.subscribeForUpdates(subNode: id, parameter: nil, completionHandler: likesUpdated)
         chatRoom.startObserving()
         messagingProxy.subscribeForMessages(topic: hotel.id + "_" + id)

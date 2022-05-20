@@ -23,7 +23,7 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        setupListNavigationBar(largeTitle: false, title: phoneUser.toString())
+        setupListNavigationBar(largeTitle: false, title: phoneUser.displayName + "  " + (phoneUser.role?.rawValue ?? ""))
         tabBarController?.tabBar.isHidden = false
     }
 

@@ -152,9 +152,9 @@ extension AppDelegate {
         Log.log(level: .INFO, "Barcode from UserDefaults: \(barcodeData)")
 
         if let username = barcodeData.userName, let password = barcodeData.password {
-            phoneUser.user = User(name: username, password: password)
+            phoneUser.initAsUser(name: username, password: password)
         } else if let roomNumber = barcodeData.roomNumber, let startDate = barcodeData.startDate {
-            phoneUser.guest = Guest(roomNumber: roomNumber, startDate: startDate, guestName: barcodeData.guestName)
+            phoneUser.initAsGuest(roomNumber: roomNumber, startDate: startDate, guestName: barcodeData.guestName)
         }
     }
 
@@ -162,10 +162,7 @@ extension AppDelegate {
         authProxy.login(username: phoneUser.email, password: phoneUser.password) { (authData, error) in
             if let authData = authData {
                 Log.log("Logged in with \(authData)")
-                if let user = phoneUser.user {
-                    user.displayName = authData.name
-                    user.role = authData.role
-                }
+                phoneUser.role = authData.role
                 NotificationCenter.default.post(name: .dbProxyReady, object: nil)
 
                 hotel.initialize()

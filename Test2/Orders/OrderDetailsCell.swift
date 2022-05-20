@@ -36,7 +36,7 @@ class OrderDetailsCell: UITableViewCell {
     func draw(order: Order) {
         glossyView.setNeedsDisplay()
         self.order = order
-        if phoneUser.isStaff {
+        if phoneUser.isAllowed(to: .confirmOrders) {
             statusChangeButton.isHidden = false
             if order.status == Order.Status.CREATED {
                 statusChangeButton.setTitle("Confirm", for: .normal)
@@ -90,10 +90,10 @@ class OrderDetailsCell: UITableViewCell {
 
     @IBAction func statusChangePressed(_ sender: Any) {
         if order?.status == Order.Status.CREATED {
-            dbProxy.updateOrderStatus(orderId: order!.id!, newStatus: .CONFIRMED, confirmedBy: phoneUser.toString())
+            dbProxy.updateOrderStatus(orderId: order!.id!, newStatus: .CONFIRMED, confirmedBy: phoneUser.displayName)
         } else
         if order?.status == Order.Status.CONFIRMED {
-            dbProxy.updateOrderStatus(orderId: order!.id!, newStatus: .DELIVERED, deliveredBy: phoneUser.toString())
+            dbProxy.updateOrderStatus(orderId: order!.id!, newStatus: .DELIVERED, deliveredBy: phoneUser.displayName)
         }
     }
 }

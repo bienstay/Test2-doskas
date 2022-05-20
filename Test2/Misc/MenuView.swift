@@ -11,7 +11,6 @@ class MenuView: UIView {
     typealias MenuCallback = () -> Void
     var leftConstraint: NSLayoutConstraint!
     var tableView: UITableView!
-    var header: UILabel!
     typealias Items = [(String, MenuCallback)]
     var items: Items = []
     var sections: [Items] = [Items()]
@@ -43,7 +42,7 @@ class MenuView: UIView {
         backgroundColor = .BBbackgroundColor
 
         layer.masksToBounds = false
-        layer.cornerRadius = 40
+        layer.cornerRadius = 20
         layer.shadowOffset = CGSize(width: 10, height: 10)
         layer.shadowOpacity = 0.5
         layer.shadowColor = UIColor.black.cgColor
@@ -57,7 +56,16 @@ class MenuView: UIView {
         }
         isOn = show
     }
-    
+
+    // TODO - detect a touch outside of the menu
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let touch = touches.first
+        if touch?.view != self {
+            toggle()
+        }
+    }
+
+
     func toggle() {
         present(show: !isOn)
     }
@@ -82,24 +90,43 @@ class MenuView: UIView {
         tableView.delegate = self
         tableView.backgroundColor = .BBbackgroundColor
 
-        tableView.estimatedRowHeight = 50
-        tableView.rowHeight = UITableView.automaticDimension
-
-        header = UILabel()
-        header.text = headerText
-        header.font = .preferredFont(forTextStyle: .largeTitle)
-        header.textAlignment = .center
-
+        //tableView.estimatedRowHeight = 50
+        //tableView.rowHeight = UITableView.automaticDimension
+/*
+        let header: UIView?
+        if let image = UIImage(named: "logoAppviator3dWithLetters") {
+            let image = UIImageView(image: image)
+            header = image
+        }
+        */
+        let image = UIImageView(image: UIImage(named: "logoAppviator3dWithLetters"))
+        image.translatesAutoresizingMaskIntoConstraints = false
+        image.contentMode = .scaleAspectFit
+        let version = UILabel()
+        version.text = "ver 0.1"
+        version.textAlignment = .right
+        version.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption2)
+        let info = UILabel()
+        info.numberOfLines = 0
+        info.text = phoneUser.displayName + "  " + (phoneUser.role?.rawValue ?? "")
+        info.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.headline)
+        
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
-        stackView.addArrangedSubview(header)
+        stackView.spacing = 4
+        stackView.addArrangedSubview(info)
+        stackView.addArrangedSubview(image)
+        stackView.addArrangedSubview(version)
         stackView.addArrangedSubview(tableView)
 
         addSubview(stackView)
-        
+
         NSLayoutConstraint.activate([
-        stackView.topAnchor.constraint(equalTo:topAnchor, constant: 30),
+        //    header.heightAnchor.constraint(equalToConstant: 150),
+        //    header.widthAnchor.constraint(equalToConstant: 150),
+        image.widthAnchor.constraint(equalTo: image.heightAnchor, constant: 1),
+        stackView.topAnchor.constraint(equalTo:topAnchor, constant: 10),
         stackView.leftAnchor.constraint(equalTo:leftAnchor, constant: 10),
         stackView.rightAnchor.constraint(equalTo:rightAnchor, constant: -10),
         stackView.bottomAnchor.constraint(equalTo:bottomAnchor, constant: -10)
@@ -134,7 +161,8 @@ extension MenuView: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        " "
+        if section == 0 { return nil }
+        return " "
     }
 }
 

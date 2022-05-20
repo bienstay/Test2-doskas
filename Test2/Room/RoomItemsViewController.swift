@@ -54,7 +54,7 @@ class RoomItemsViewController: UIViewController, UITableViewDataSource, UITableV
         tableView.delegate = self
 
         //title = phoneUser.isStaff ? "Room \(phoneUser.guest?.roomNumber)" : phoneUser.user?.name
-        title = phoneUser.toString()
+        title = phoneUser.displayName
 
         tableView.tableHeaderView?.frame.size = CGSize(width: tableView.frame.width, height: UIScreen.main.bounds.height/4)
 
@@ -78,7 +78,7 @@ class RoomItemsViewController: UIViewController, UITableViewDataSource, UITableV
             })
  */
         //navigationItem.title = .room + " \(guest.roomNumber) - \(guest.Name)"
-        navigationItem.title = phoneUser.toString()
+        navigationItem.title = phoneUser.displayName
     }
 
     override func viewWillAppear(_ animated: Bool) {

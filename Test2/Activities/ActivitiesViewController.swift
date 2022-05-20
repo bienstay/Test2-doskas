@@ -30,8 +30,10 @@ class ActivitiesViewController: UIViewController {
         //title = Activity.DOW.allCases[dowIndex].rawValue
         title = Calendar.current.weekdaySymbols[dowIndex]
 
-        newActivityBarButton.isEnabled = phoneUser.isStaff
-        newActivityBarButton.title = phoneUser.isStaff ? "New" : ""
+        newActivityBarButton.isEnabled = phoneUser.isAllowed(to: .editContent)
+        newActivityBarButton.title = phoneUser.isAllowed(to: .editContent) ? "New" : ""
+        //newActivityBarButton.isEnabled = phoneUser.isStaff
+        //newActivityBarButton.title = phoneUser.isStaff ? "New" : ""
     }
 
     func resetDay(forward: Bool) {
@@ -121,7 +123,7 @@ extension ActivitiesViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        if !phoneUser.isStaff { return nil }
+        if !phoneUser.isAllowed(to: .editContent) { return nil }
         let action1 = UIContextualAction(style: .normal, title: "Edit") { action, view, completionHandler in
             self.openNewActivityViewController(row: indexPath.row)
             completionHandler(true)
@@ -131,7 +133,7 @@ extension ActivitiesViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        if !phoneUser.isStaff { return nil }
+        if !phoneUser.isAllowed(to: .editContent) { return nil }
         let action1 = UIContextualAction(style: .destructive, title: "Delete") { action, view, completionHandler in
             if let activity = hotel.activities[self.dowIndex]?[indexPath.row] {
                 _ = dbProxy.removeRecord(key: activity.id!, subNode: self.title, record: activity) { _ in

@@ -107,7 +107,8 @@ class BuggyOrderViewController: UIViewController {
         t.cancelsTouchesInView = false
 
         roomNumberTextField.keyboardType = .numberPad
-        if !phoneUser.isStaff { roomNumberTextField.text = String(phoneUser.guest?.roomNumber ?? 0) }
+        //if !phoneUser.isStaff { roomNumberTextField.text = String(phoneUser.guest?.roomNumber ?? 0) }
+        roomNumberTextField.text = phoneUser.roomNumber
         roomNumberTextField.isEnabled = phoneUser.isStaff
 
         backgroundPicture.image = UIImage(named: category.rawValue)

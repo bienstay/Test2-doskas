@@ -27,14 +27,14 @@ class ChatListViewController: UIViewController, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return phoneUser.user!.chatManager.chatRoomCount
+        return phoneUser.chatManager?.chatRoomCount ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ChatListCell", for: indexPath) as! ChatListCell
-        cell.draw(chatRoom: phoneUser.user!.chatManager.getChatRoom(indexPath.row))
-        //cell.textLabel?.text = String(phoneUser.user!.chatManager.getChatRoom(indexPath.row).roomNumber)
-        //cell.detailTextLabel?.text = phoneUser.user!.chatManager.getChatRoom(indexPath.row).assignedTo
+        if let chatRoom = phoneUser.chatManager?.getChatRoom(indexPath.row) {
+            cell.draw(chatRoom: chatRoom)
+        }
         return cell
     }
 
@@ -47,8 +47,7 @@ class ChatListViewController: UIViewController, UITableViewDataSource {
 extension ChatListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vc = pushViewController(storyBoard: "Chat", id: "Chat") as! ChatViewController
-        //vc.chatRoom = phoneUser.user!.chatManager.getChatRoom(indexPath.row)
-        vc.chatRoomId = phoneUser.user!.chatManager.getChatRoom(indexPath.row).id
+        vc.chatRoomId = phoneUser.chatManager?.getChatRoom(indexPath.row).id
     }
 }
 

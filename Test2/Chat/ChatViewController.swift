@@ -36,7 +36,7 @@ class ChatViewController: UIViewController {
 
         setupListNavigationBar(largeTitle: false)
         if let chatRoom = chatRoom {
-            title = "\(chatRoom.roomNumber) - \(chatRoom.assignedTo ?? "[operator]")"
+            title = "\(chatRoom.roomNumber) - \(chatRoom.assignedTo ?? "[...]")"
         }
         assignButton.isEnabled = phoneUser.isStaff
         assignButton.tintColor = phoneUser.isStaff ? nil : .clear
@@ -49,7 +49,7 @@ class ChatViewController: UIViewController {
     
     @objc func onRoomUpdated(_ notification: Notification) {
         if let chatRoom = chatRoom {
-            title = "\(chatRoom.roomNumber) - \(chatRoom.assignedTo ?? "[operator]")"
+            title = "\(chatRoom.roomNumber) - \(chatRoom.assignedTo ?? "[...]")"
         }
     }
 

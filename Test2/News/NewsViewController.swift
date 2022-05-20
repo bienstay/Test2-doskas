@@ -25,8 +25,8 @@ class NewsViewController: UIViewController {
 
         setupListNavigationBar()
         title = .news
-        newPostBarButton.isEnabled = phoneUser.isStaff
-        newPostBarButton.title = phoneUser.isStaff ? "New" : ""
+        newPostBarButton.isEnabled = phoneUser.isAllowed(to: .editContent)
+        newPostBarButton.title = phoneUser.isAllowed(to: .editContent) ? "New" : ""
     }
 
     @objc func onNewsUpdated(_ notification: Notification) {
@@ -52,6 +52,7 @@ extension NewsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewsCell2", for: indexPath) as! NewsCell
         let post = hotel.news[indexPath.row]
+/*
         let numLikes: Int
         if phoneUser.isStaff {
             numLikes = hotel.likes["news"]?[post.postId] ?? 0
@@ -59,12 +60,13 @@ extension NewsViewController: UITableViewDataSource {
             let found = phoneUser.guest?.likes["news"]?.contains(post.postId)
             numLikes = found ?? false ? 1 : 0
         }
-        cell.draw(post: post, numLikes: numLikes)
+*/
+        cell.draw(post: post, numLikes: phoneUser.numLikes(group: "news", itemKey: post.postId))
         return cell
     }
 
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        if !phoneUser.isStaff { return nil }
+        if !phoneUser.isAllowed(to: .editContent) { return nil }
         let action1 = UIContextualAction(style: .normal, title: "Edit") { action, view, completionHandler in
             let vc = self.createViewController(storyBoard: "News", id: "NewPost") as! NewNewsPostViewController
             vc.postToEdit = hotel.news[indexPath.row]
@@ -76,7 +78,7 @@ extension NewsViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        if !phoneUser.isStaff { return nil }
+        if !phoneUser.isAllowed(to: .editContent) { return nil }
         let action1 = UIContextualAction(style: .destructive, title: "Delete") { action, view, completionHandler in
             self.deletePost(post: hotel.news[indexPath.row])
             completionHandler(true)

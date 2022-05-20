@@ -58,7 +58,7 @@ class ChangePasswordViewController: UIViewController {
     }
 
 
-    @IBAction func changeButtonPressed(_ sender: Any) {
+    @IBAction func changeButtonPressed(_ sender: UIButton) {
         guard let oldpass = oldPassword.text else {
             showInfoDialogBox(title: "Missing field", message: "Current password missing")
             return
@@ -67,7 +67,9 @@ class ChangePasswordViewController: UIViewController {
             showInfoDialogBox(title: "Missing field", message: "New password missing")
             return
         }
+        sender.isEnabled = false
         dbProxy.changePassword(oldPassword: oldpass, newPassword: newpass) { [weak self] error in
+            sender.isEnabled = true
             if let error = error {
                 self?.showInfoDialogBox(title: "Error changing password", message: "\(error)")
                 return

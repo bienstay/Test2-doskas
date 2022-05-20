@@ -36,6 +36,22 @@ extension FirebaseAuthentication {
         }
     }
 
+    func updateUser(uid: String, newPassword: String, completionHandler: @ escaping (Error?) -> Void) {
+        Firebase.shared.functions.httpsCallable("httpFunctions-updateUser").call(
+            ["uid": uid,
+             "updates": ["password": newPassword]
+            ]
+        ) { result, error in
+            if let error = error {
+                Log.log(level: .ERROR, error.localizedDescription)
+            }
+            if let data = result?.data {
+                Log.log("Data received: \(data)")
+            }
+            completionHandler(error)
+        }
+    }
+
     struct UserFromAuth: Codable {
         var uid: String
         var email: String

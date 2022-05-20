@@ -115,11 +115,12 @@ class ChatRoomManager {
         return myChatRooms[index]
     }
 
-    func startObserving(userID: String) {
-        dbProxy.subscribe(for: .NEW, subNode: nil, parameter: userID == "operator" ? nil : .AssignedTo(id: userID), completionHandler: chatRoomAdded)
-        dbProxy.subscribe(for: .DELETE, subNode: nil, parameter: userID == "operator" ? nil : .AssignedTo(id: userID), completionHandler: chatRoomRemoved)
+    func startObserving(user: User) {
+        let parameter:QueryParameter? = user.isAllowed(to: .assignChats) ? nil : .AssignedTo(id: user.id)
+        dbProxy.subscribe(for: .NEW, subNode: nil, parameter: parameter, completionHandler: chatRoomAdded)
+        dbProxy.subscribe(for: .DELETE, subNode: nil, parameter: parameter, completionHandler: chatRoomRemoved)
     }
-    
+
     func stopObserving(userID: String) {
         dbProxy.unsubscribe(t: ChatRoomInDB.self)
     }

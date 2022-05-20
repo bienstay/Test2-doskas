@@ -82,21 +82,30 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         }
 
         menu = MenuView(parentView: view, headerText: "Menu")
+        if phoneUser.isStaff {
+            menu.addItem(label: "Change password") { [weak self] in
+                if let self = self {
+                    _ = self.presentModal(storyBoard: "Users", id: "ChangePassword")
+                }
+            }
+        }
+        if phoneUser.isAllowed(to: .manageUsers) {
+            menu.addItem(label: "Manage users") { [weak self] in
+                if let self = self {
+                    _ = self.presentModal(storyBoard: "Users", id: "Users")
+                    //_ = self.pushViewController(storyBoard: "Users", id: "Users")
+                }
+            }
+        }
+        menu.addItem(label: "Show onboarding") { [weak self] in
+            let vc = OnboardingPageViewController()
+            vc.modalPresentationStyle = .fullScreen
+            self?.present(vc, animated: true, completion: nil)
+        }
+        menu.addSeparator()
         menu.addItem(label: "Log out") { [weak self] in
             print("Logging out...")
             self?.logOutAndGoToScannerView()
-        }
-        menu.addItem(label: "Change password") { [weak self] in
-            if let self = self {
-                _ = self.presentModal(storyBoard: "Users", id: "ChangePassword")
-            }
-        }
-        menu.addSeparator()
-        menu.addItem(label: "Manage users") { [weak self] in
-            if let self = self {
-                _ = self.presentModal(storyBoard: "Users", id: "Users")
-                //_ = self.pushViewController(storyBoard: "Users", id: "Users")
-            }
         }
     }
 

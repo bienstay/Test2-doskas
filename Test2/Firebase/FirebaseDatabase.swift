@@ -115,11 +115,21 @@ final class FirebaseDatabase: DBProxy {
                 guard case .GuestInDb(let guestId) = parameter else { Log.log(errStr); return nil }
                 return dbRef?.queryOrderedByKey().queryEqual(toValue: guestId)
             case is OrderInDB.Type:
+/*
                 guard case .OrderInDB(let roomNumber) = parameter else { Log.log(errStr); return nil }
                 if roomNumber > 0 {
                     return dbRef?.queryOrdered(byChild: "roomNumber").queryEqual(toValue: roomNumber)
                 } else {
                     return dbRef?.queryOrderedByKey()
+                }
+*/
+                switch parameter {
+                    case .OrderByRoom(let roomNumber):
+                        return dbRef?.queryOrdered(byChild: "roomNumber").queryEqual(toValue: roomNumber)
+                    case .OrderByCategory(let category):
+                        return dbRef?.queryOrdered(byChild: "description").queryEqual(toValue: category.rawValue)
+                    default:
+                        return dbRef?.queryOrderedByKey()
                 }
             case is ChatRoomInDB.Type:
                 switch parameter {

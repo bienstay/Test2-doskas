@@ -81,7 +81,7 @@ class GuestOld  {
 
     func updatePhoneDataInDB() {
         if let phoneID: String = UIDevice.current.identifierForVendor?.uuidString, let phoneLang: String = Locale.current.languageCode {
-            dbProxy.updatePhoneData(guestId: id, phoneID: phoneID, phoneLang: phoneLang)
+            dbProxy.updatePhoneData(phoneUserId: id, phoneID: phoneID, phoneLang: phoneLang)
     /*
             dbProxy.GUESTS_DB_REF.child("/\(id)/phones/\(phoneID)/language").setValue(phoneLang) { (error, ref) in
                 if let error = error {
@@ -125,14 +125,14 @@ class GuestOld  {
             self.chatRooms = ["AnitaMaciek_hotel"]
         }
         NotificationCenter.default.post(name: .guestUpdated, object: nil)
-        dbProxy.subscribeForUpdates(parameter: .OrderInDB(roomNumber: roomNumber), completionHandler: ordersUpdated)
+        dbProxy.subscribeForUpdates(parameter: .OrderByRoom(roomNumber: roomNumber), completionHandler: ordersUpdated)
         /* TODO
         if let chatRoom = guest?.chatRooms.first {
             dbProxy.subscribeForUpdates(parameter: .ChatRoom(id: chatRoom), completionHandler: chatMessagesUpdated)
         //dbProxy.subscribeForUpdates(parameter: .ChatRoom(id: guest.chatRooms.first!), completionHandler: chatTranslationsUpdated)
         }
          */
-
+/*
         messagingProxy.subscribeForMessages(topic: hotel.id)
         //if !guest.isAdmin() {
         if let guest = phoneUser.guest {
@@ -143,7 +143,7 @@ class GuestOld  {
             dbProxy.subscribeForUpdates(completionHandler: likesUpdated)
         }
         //(UIApplication.shared.delegate as! AppDelegate).subscribeForMessages()
-
+*/
     }
 
     func likesPerUserUpdated(allLikes: [String:LikesPerUserInDB]) {

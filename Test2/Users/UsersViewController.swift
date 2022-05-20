@@ -39,11 +39,18 @@ class UsersViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "UserCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "UserCell", for: indexPath) as! UserCell
+        cell.draw(authData: users[indexPath.row])
+    /*
         let name = users[indexPath.row].name
         cell.textLabel?.text = name
         cell.detailTextLabel?.text = users[indexPath.row].role?.rawValue
+    */
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        true
     }
 
     func initUserList() {
@@ -90,4 +97,23 @@ extension UsersViewController {
         return configuration
     }
 
+}
+
+
+class UserCell: UITableViewCell {
+    @IBOutlet private weak var nameLabel: UILabel!
+    @IBOutlet private weak var roleLabel: UILabel!
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        backgroundColor = .clear
+        selectionStyle = .none
+        nameLabel.textColor = .red
+        roleLabel.textColor = .red
+    }
+
+    func draw(authData: AuthenticationData) {
+        nameLabel.text = authData.name
+        roleLabel.text = authData.role?.rawValue
+    }
 }

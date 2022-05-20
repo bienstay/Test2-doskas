@@ -121,15 +121,15 @@ extension FirebaseDatabase {
         }
     }
 
-    func updatePhoneData(guestId: String, phoneID: String, phoneLang: String) {
-        let phoneData = [ "guestId": guestId, "roomNumber": phoneUser.guest?.roomNumber ?? 0, "language": phoneLang] as [String : Any]
+    func updatePhoneData(phoneUserId: String, phoneID: String, phoneLang: String) {
+        let phoneData = [ "phoneUserId": phoneUserId, "roomNumber": phoneUser.roomNumber ?? 0, "language": phoneLang] as [String : Any]
         PHONES_DB_REF.child(phoneID).setValue(phoneData) { (error, ref) -> Void in
             if let error = error {
                 Log.log(level: .ERROR, "Error updating phone data - \(error.localizedDescription)")
             }
         }
     }
-
+/*
     func updateGuest(hotelId: String, guestId: String, guestData: GuestInDB, completionHandler: @ escaping () -> Void) {
         if let g = convertObjectToDictionary(t: guestData) {
             let updates = [
@@ -147,7 +147,7 @@ extension FirebaseDatabase {
             }
         }
     }
-
+*/
     func observeInfo() {
         DBINFO_DB_REF.observe(.value, with: { snapshot in
             if let info = snapshot.value as? NSDictionary {
@@ -175,7 +175,7 @@ extension FirebaseDatabase {
 
     func writeChat(chatRoomID: String, message m: ChatMessage) {
         _ = dbProxy.addRecord(key: nil, subNode: chatRoomID, record: m) { _ in }
-        if !phoneUser.isStaff, let roomNumber = phoneUser.guest?.roomNumber {
+        if !phoneUser.isStaff, let roomNumber = phoneUser.roomNumber {
             CHATROOMS_DB_REF.child(chatRoomID).child("roomNumber").setValue(roomNumber) { (error, ref) -> Void in
                 if let error = error {
                     Log.log(level: .ERROR, "Error updating chat room - \(error.localizedDescription)")

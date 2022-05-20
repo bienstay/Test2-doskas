@@ -33,6 +33,7 @@ extension UIColor {
     static var pastelBlueLight: UIColor = UIColor(196, 196, 255)
     static var pastelBlue: UIColor = UIColor(128, 128, 255)
     static var pastelYellowLight: UIColor = UIColor(255, 255, 196)
+    static var pastelYellowVeryLight: UIColor = UIColor(255, 255, 224)
     static var pastelYellow: UIColor = UIColor(255, 255, 128)
     static var pastelCyanLight: UIColor = UIColor(196, 255, 255)
     static var pastelCyan: UIColor = UIColor(128, 255, 255)
@@ -76,7 +77,7 @@ extension UIColor {
                     case .dark:
                         return .black
                     default:
-                        return .offWhite
+                    return .offWhite
                 }
             }
             return c
@@ -92,7 +93,7 @@ extension UIColor {
                     case .dark:
                         return .darkGray
                     default:
-                        return .offWhiteVeryLight
+                    return .offWhiteVeryLight
                 }
             }
             return c

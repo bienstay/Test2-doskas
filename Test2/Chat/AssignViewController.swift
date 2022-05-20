@@ -6,16 +6,7 @@
 //
 
 import UIKit
-/*
-struct UserData {
-    var email: String
-    var role: Role
-    var uid: String
-    //var id: String { email.components(separatedBy: "@")[0] }
-    var displayName: String { email.components(separatedBy: "@")[0] }
-    var toString: String { "\(displayName) \(role)" }
-}
-*/
+
 class AssignViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var tableView: UITableView!
     var users: [AuthenticationData] = []

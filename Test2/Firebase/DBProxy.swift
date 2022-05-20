@@ -9,7 +9,8 @@ import Foundation
 import UIKit
 
 enum QueryParameter {
-    case OrderInDB(roomNumber: Int)
+    case OrderByRoom(roomNumber: Int)
+    case OrderByCategory(type: Order.Category)
     case ChatRoom(id: String)
     case AssignedTo(id: String)
     case ChatUser(id: String)
@@ -41,9 +42,9 @@ protocol DBProxy {
     func translateChat(chatRoom: String, chatID: String, textToTranslate: String, targetLanguage: String, completionHandler: @ escaping (String?) -> Void)
     func markChatAsRead(chatRoom: String, chatID: String)
     //func addHotelToConfig(hotelId: String, hotelName: String)
-    func updatePhoneData(guestId: String, phoneID: String, phoneLang: String)
+    func updatePhoneData(phoneUserId: String, phoneID: String, phoneLang: String)
 
-    func updateGuest(hotelId: String, guestId: String, guestData: GuestInDB, completionHandler: @ escaping () -> Void)
+    //func updateGuest(hotelId: String, guestId: String, guestData: GuestInDB, completionHandler: @ escaping () -> Void)
     func log(level: Log.LogLevel, s: String)
 
     func assignChat(chatRoom: String, to user: String)

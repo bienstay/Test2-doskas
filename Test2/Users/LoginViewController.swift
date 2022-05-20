@@ -31,7 +31,7 @@ class LoginViewController: UIViewController {
         }
     }
 
-    @IBAction func login(_ sender: Any) {
+    @IBAction func login(_ sender: UIButton) {
         guard let user = username.text, !user.isEmpty else {
             showInfoDialogBox(title: "Missing username", message: "Enter valid user name")
             return

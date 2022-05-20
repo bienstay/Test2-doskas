@@ -8,10 +8,13 @@
 import Foundation
 
 enum Role: String, CaseIterable {
-    case superadmin
-    case hoteladmin
-    case editor
-    case client
+    case admin          // can do everything
+    case editor         // can only edit the content
+    case hotline        // can manage all orders
+    case housekeeping   // only cleaning orders
+    case maintenance    // only maintenance orders
+    case driver         // only buggy orders
+    case roomservice    // only room service
 }
 
 protocol AuthenticationData {
@@ -25,12 +28,14 @@ protocol AuthenticationData {
 }
 
 protocol AuthProxy {
+    var defaultPassword: String { get }
     func login(username: String, password: String, completionHandler: @ escaping (AuthenticationData?, Error?) -> Void)
     func addUser(username: String, password: String, role:String, completionHandler: @escaping (AuthenticationData?, Error?) -> Void)
     func logout() -> Error?
 
     func setUserRole(uid: String, role: Role, completionHandler: @escaping (Error?) -> Void)
     func deleteUser(uid: String, completionHandler: @ escaping (Error?) -> Void)
+    func updateUser(uid: String, newPassword: String, completionHandler: @ escaping (Error?) -> Void)
     func getUser(uid: String, completionHandler: @ escaping (AuthenticationData?, Error?) -> Void)
     func getUsers(hotelName: String, completionHandler: @ escaping ([AuthenticationData]) -> Void)
 }

@@ -52,20 +52,20 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
     @IBAction func statusChangeButtonPressed(_ sender: UIBarButtonItem) {
         if order.status == Order.Status.CREATED {
             if phoneUser.isStaff {
-                dbProxy.updateOrderStatus(orderId: order.id!, newStatus: .CONFIRMED, confirmedBy: phoneUser.toString())
+                dbProxy.updateOrderStatus(orderId: order.id!, newStatus: .CONFIRMED, confirmedBy: phoneUser.displayName)
             } else {
                 askToCancel()
             }
         }
         else if order.status == Order.Status.CONFIRMED {
-            dbProxy.updateOrderStatus(orderId: order.id!, newStatus: .DELIVERED, deliveredBy: phoneUser.toString())
+            dbProxy.updateOrderStatus(orderId: order.id!, newStatus: .DELIVERED, deliveredBy: phoneUser.displayName)
         }
     }
 
     func askToCancel() {
         let cancelAlert = UIAlertController(title: .cancel.localizedUppercase, message: .confirm, preferredStyle: UIAlertController.Style.alert)
         cancelAlert.addAction(UIAlertAction(title: .yes, style: .destructive, handler: { (action: UIAlertAction!) in
-            dbProxy.updateOrderStatus(orderId: self.order.id!, newStatus: .CANCELED, canceledBy: phoneUser.toString())
+            dbProxy.updateOrderStatus(orderId: self.order.id!, newStatus: .CANCELED, canceledBy: phoneUser.displayName)
         }))
         cancelAlert.addAction(UIAlertAction(title: .no, style: .cancel, handler: { (action: UIAlertAction!) in
         }))
@@ -176,7 +176,7 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
         confirmedStackView.isHidden = true
         deliveredStackView.isHidden = true
         canceledStackView.isHidden = true
-        if phoneUser.isStaff {
+        if phoneUser.isAllowed(to: .confirmOrders) {
             createdStackView.isHidden = false
             switch order.status {
                 case .CANCELED:
@@ -213,7 +213,7 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
         }
 
         let button = statusChangeButton.customView as! UIButton
-        if phoneUser.isStaff {
+        if phoneUser.isAllowed(to: .confirmOrders) {
             button.isHidden = false
             if order.status == Order.Status.CREATED {
                 button.setTitle(.confirm, for: .normal)
@@ -225,13 +225,16 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
                 button.setTitle("", for: .normal)
             }
         }
-        else {
+        else if !phoneUser.isStaff {
             let title: String = order.status == Order.Status.CREATED ? .cancel : ""
             button.setTitle(title, for: .normal)
             button.isHidden = order.status != Order.Status.CREATED
         }
+        else {
+            button.isHidden = true
+        }
     }
-    
+
     @objc func onOrdersUpdated(_ notification: Notification) {
         if let or = phoneUser.orders.first(where: { $0.id == order.id }) {
             order = or

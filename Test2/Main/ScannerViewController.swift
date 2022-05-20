@@ -182,7 +182,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         if userFlag {
             let userId: String = users[userPicker.selectedRow(inComponent: 0)].name
             found(barcodeString: """
-            { "hotelId": "\(hotelId)", "userName": "\(userId)", "password": "Appviator2022!" }
+            { "hotelId": "\(hotelId)", "userName": "\(userId)", "password": "\(hotelId.lowercased())" }
         """)
         } else {
             let room = rooms[hotelId]![userPicker.selectedRow(inComponent: 0)]

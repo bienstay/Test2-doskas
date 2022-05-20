@@ -48,8 +48,10 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
         setupListNavigationBar()
         title = .food
 
-        newRestaurantBarButton.isEnabled = phoneUser.isStaff
-        newRestaurantBarButton.title = phoneUser.isStaff ? "New" : ""
+        newRestaurantBarButton.isEnabled = phoneUser.isAllowed(to: .editContent)
+        newRestaurantBarButton.title = phoneUser.isAllowed(to: .editContent) ? "New" : ""
+        //newRestaurantBarButton.isEnabled = phoneUser.isStaff
+        //newRestaurantBarButton.title = phoneUser.isStaff ? "New" : ""
     }
 
     @objc func onRestaurantsUpdated(_ notification: Notification) {
@@ -141,7 +143,7 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
     }
 
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        if !phoneUser.isStaff { return nil }
+        if !phoneUser.isAllowed(to: .editContent) { return nil }
         let action1 = UIContextualAction(style: .normal, title: "Edit") { action, view, completionHandler in
             let vc = self.createViewController(storyBoard: "Restaurants", id: "NewRestaurant") as! NewRestaurantController
             vc.restaurantToEdit = hotel.restaurants[indexPath.row]
@@ -153,7 +155,7 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
     }
 
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        if !phoneUser.isStaff { return nil }
+        if !phoneUser.isAllowed(to: .editContent) { return nil }
         let action1 = UIContextualAction(style: .destructive, title: "Delete") { action, view, completionHandler in
             self.deleteRestaurant(restaurant: hotel.restaurants[indexPath.row])
             completionHandler(true)

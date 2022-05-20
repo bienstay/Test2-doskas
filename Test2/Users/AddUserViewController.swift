@@ -15,9 +15,7 @@ class AddUserViewController: UIViewController {
     @IBOutlet weak var rolePicker: UIPickerView!
     @IBOutlet weak var addUserButton: UIButton!
 
-    //let roles = ["hoteladmin", "editor", "operator", "none"]
     let roles = Role.allCases
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,7 +64,7 @@ class AddUserViewController: UIViewController {
         }
     }
 
-    @IBAction func addUserPressed(_ sender: Any) {
+    @IBAction func addUserPressed(_ sender: UIButton) {
         guard let user = username.text, !user.isEmpty else {
             showInfoDialogBox(title: "Missing username", message: "Enter valid user name")
             return
@@ -75,24 +73,24 @@ class AddUserViewController: UIViewController {
             showInfoDialogBox(title: "Missing username", message: "Enter valid user name")
             return
         }
+        sender.isEnabled = false
         let role = roles[rolePicker.selectedRow(inComponent: 0)]
-        showConfirmDialogBox(title: "Confirm adding user", message: "Username: \(user)\nRole:\(role)") {
-            authProxy.addUser(username: user, password: pass, role: role.rawValue) { [weak self] (authData, error) in
-                guard let self = self else { return }
-                if let a = authData {
-                    authProxy.setUserRole(uid: a.uid, role: role) { [weak self] error in
-                        guard let self = self else { return }
-                        self.showInfoDialogBox(title: "User added", message: "User: \(a.email)\nRole: \(role)\nId:\(a.uid)") { [weak self] _ in
-                            if self?.navigationController != nil {
-                                _ = self?.navigationController?.popViewController(animated: true)
-                            } else {
-                                self?.dismiss(animated: true)
-                            }
+        authProxy.addUser(username: user, password: pass, role: role.rawValue) { [weak self] (authData, error) in
+            sender.isEnabled = true
+            guard let self = self else { return }
+            if let a = authData {
+                authProxy.setUserRole(uid: a.uid, role: role) { [weak self] error in
+                    guard let self = self else { return }
+                    self.showInfoDialogBox(title: "User added", message: "User: \(a.email)\nRole: \(role)\nId:\(a.uid)") { [weak self] _ in
+                        if self?.navigationController != nil {
+                            _ = self?.navigationController?.popViewController(animated: true)
+                        } else {
+                            self?.dismiss(animated: true)
                         }
                     }
-                } else {
-                    self.showInfoDialogBox(title: "Error", message: "Error adding user: \(error.debugDescription)")
                 }
+            } else {
+                self.showInfoDialogBox(title: "Error", message: "Error adding user: \(error.debugDescription)")
             }
         }
     }

@@ -135,6 +135,9 @@
                                                 <state key="normal" title="ADD USER">
                                                     <color key="titleColor" red="0.84313725490000002" green="0.30196078430000001" blue="0.23137254900000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 </state>
+                                                <state key="disabled">
+                                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
                                                 <connections>
                                                     <action selector="addUserPressed:" destination="5I2-JD-pDT" eventType="touchUpInside" id="UNc-yo-Mue"/>
                                                 </connections>
@@ -210,29 +213,54 @@
                                 <rect key="frame" x="0.0" y="150" width="414" height="746"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="UserCell" textLabel="bJC-pw-sAe" detailTextLabel="rdT-TH-ciX" style="IBUITableViewCellStyleValue1" id="lgD-Ij-ElP">
-                                        <rect key="frame" x="0.0" y="44.5" width="414" height="43.5"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="UserCell" id="lgD-Ij-ElP" customClass="UserCell" customModule="Test2" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="44.5" width="414" height="49.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="lgD-Ij-ElP" id="Vwy-0D-894">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="49.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="bJC-pw-sAe">
-                                                    <rect key="frame" x="20" y="15" width="25" height="14.5"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="rdT-TH-ciX">
-                                                    <rect key="frame" x="361" y="15" width="33" height="14.5"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JFs-2s-cGf" customClass="GlossyView" customModule="Test2" customModuleProvider="target">
+                                                    <rect key="frame" x="8" y="8" width="398" height="33.5"/>
+                                                    <subviews>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="Szx-tr-uNb">
+                                                            <rect key="frame" x="8" y="8" width="382" height="17.5"/>
+                                                            <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kpj-lC-jbJ">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="344.5" height="17.5"/>
+                                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                                    <nil key="textColor"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pwD-aR-rTX">
+                                                                    <rect key="frame" x="346.5" y="0.0" width="35.5" height="17.5"/>
+                                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                                    <nil key="textColor"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                            </subviews>
+                                                        </stackView>
+                                                    </subviews>
+                                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                    <constraints>
+                                                        <constraint firstItem="Szx-tr-uNb" firstAttribute="top" secondItem="JFs-2s-cGf" secondAttribute="top" constant="8" id="8Yt-qd-Vdc"/>
+                                                        <constraint firstItem="Szx-tr-uNb" firstAttribute="leading" secondItem="JFs-2s-cGf" secondAttribute="leading" constant="8" id="KAl-Dj-loS"/>
+                                                        <constraint firstAttribute="bottom" secondItem="Szx-tr-uNb" secondAttribute="bottom" constant="8" id="aSt-4M-bGn"/>
+                                                        <constraint firstAttribute="trailing" secondItem="Szx-tr-uNb" secondAttribute="trailing" constant="8" id="ic9-1k-kci"/>
+                                                    </constraints>
+                                                </view>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="JFs-2s-cGf" secondAttribute="trailing" constant="8" id="YnC-MJ-hMm"/>
+                                                <constraint firstItem="JFs-2s-cGf" firstAttribute="top" secondItem="Vwy-0D-894" secondAttribute="top" constant="8" id="dcK-TD-UCg"/>
+                                                <constraint firstItem="JFs-2s-cGf" firstAttribute="leading" secondItem="Vwy-0D-894" secondAttribute="leading" constant="8" id="fgv-WP-efi"/>
+                                                <constraint firstAttribute="bottom" secondItem="JFs-2s-cGf" secondAttribute="bottom" constant="8" id="zMo-5e-F9v"/>
+                                            </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="nameLabel" destination="kpj-lC-jbJ" id="fqX-zG-PTz"/>
+                                            <outlet property="roleLabel" destination="pwD-aR-rTX" id="Hnq-cg-vuL"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
@@ -278,7 +306,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="9IG-Ka-bam">
-                                <rect key="frame" x="20" y="30" width="374" height="485"/>
+                                <rect key="frame" x="20" y="30" width="374" height="540"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logoAppviator3dNoLetters" translatesAutoresizingMaskIntoConstraints="NO" id="xm1-ma-VU8">
                                         <rect key="frame" x="8" y="22" width="358" height="100"/>
@@ -292,15 +320,32 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="btx-wE-RHp" customClass="GlossyButton" customModule="Test2" customModuleProvider="target">
+                                        <rect key="frame" x="8" y="199" width="358" height="35"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="RESET PASSWORD">
+                                            <color key="titleColor" red="0.84313725490000002" green="0.30196078430000001" blue="0.27058823529999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        </state>
+                                        <state key="disabled">
+                                            <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="resetPasswordButtonPressed:" destination="J09-Ad-1Od" eventType="touchUpInside" id="Doh-vx-xaO"/>
+                                        </connections>
+                                    </button>
                                     <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QWW-tz-pUF">
-                                        <rect key="frame" x="8" y="199" width="358" height="216"/>
+                                        <rect key="frame" x="8" y="254" width="358" height="216"/>
                                     </pickerView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rqa-76-SdJ" customClass="GlossyButton" customModule="Test2" customModuleProvider="target">
-                                        <rect key="frame" x="8" y="435" width="358" height="42"/>
+                                        <rect key="frame" x="8" y="490" width="358" height="42"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                        <state key="normal" title="CHANGE">
+                                        <state key="normal" title="CHANGE ROLE">
                                             <color key="titleColor" red="0.84313725490000002" green="0.30196078430000001" blue="0.27058823529999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        </state>
+                                        <state key="disabled">
+                                            <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
                                             <action selector="confirmButtonPressed:" destination="J09-Ad-1Od" eventType="touchUpInside" id="sL5-oD-oc2"/>
@@ -320,6 +365,7 @@
                     </view>
                     <connections>
                         <outlet property="confirmButton" destination="Rqa-76-SdJ" id="3R7-Np-UMM"/>
+                        <outlet property="resetPasswordButton" destination="btx-wE-RHp" id="YIE-MT-4nJ"/>
                         <outlet property="rolePicker" destination="QWW-tz-pUF" id="fxK-mK-WcD"/>
                         <outlet property="username" destination="7rq-fc-REv" id="h6w-a6-xSs"/>
                     </connections>
@@ -370,6 +416,9 @@
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                 <state key="normal" title="CHANGE PASSWORD">
                                                     <color key="titleColor" red="0.84313725490000002" green="0.30196078430000001" blue="0.27058823529999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                </state>
+                                                <state key="disabled">
+                                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </state>
                                                 <connections>
                                                     <action selector="changeButtonPressed:" destination="8JL-ED-lqF" eventType="touchUpInside" id="d8q-zm-Aly"/>

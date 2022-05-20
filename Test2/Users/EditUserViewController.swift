@@ -12,9 +12,9 @@ class EditUserViewController: UIViewController {
     @IBOutlet weak var username: UILabel!
     @IBOutlet weak var rolePicker: UIPickerView!
     @IBOutlet weak var confirmButton: UIButton!
+    @IBOutlet weak var resetPasswordButton: UIButton!
     
     var user: AuthenticationData!
-    //let roles = ["hoteladmin", "editor", "operator", "none"]
     let roles = Role.allCases
 
     override func viewDidLoad() {
@@ -37,16 +37,36 @@ class EditUserViewController: UIViewController {
         presentingViewController?.viewWillAppear(true)
     }
 
-    @IBAction func confirmButtonPressed(_ sender: Any) {
+    @IBAction func resetPasswordButtonPressed(_ sender: UIButton) {
+        sender.isEnabled = false
+        let uid = user.uid
+        let newPassword = authProxy.defaultPassword
+        authProxy.updateUser(uid: uid, newPassword: newPassword) { [weak self] (error) in
+            sender.isEnabled = true
+            if let error = error {
+                self?.showInfoDialogBox(title: "Error", message: "Error updating the user with id \(uid)\n\(error)") { _ in
+                    self?.dismiss(animated: true)
+                }
+            } else {
+                self?.showInfoDialogBox(title: "Success", message: "User password updated") { _ in
+                    self?.dismiss(animated: true)
+                }
+            }
+        }
+    }
+
+    @IBAction func confirmButtonPressed(_ sender: UIButton) {
+        sender.isEnabled = false
         let role = roles[rolePicker.selectedRow(inComponent: 0)]
         authProxy.setUserRole(uid: user.uid, role: role) { [weak self] error in
+            sender.isEnabled = true
             guard let self = self else { return }
             if let error = error {
-                self.showInfoDialogBox(title: "Error saving user", message: "\(error)") {_ in
+                self.showInfoDialogBox(title: "Error saving user", message: "\(error)") { _ in
                     self.dismiss(animated: true)
                 }
             } else {
-                self.showInfoDialogBox(title: "\(self.user.name) updated", message: "New role: \(role.rawValue)") {_ in
+                self.showInfoDialogBox(title: "\(self.user.name) updated", message: "New role: \(role.rawValue)") { _ in
                     self.dismiss(animated: true)
                 }
             }

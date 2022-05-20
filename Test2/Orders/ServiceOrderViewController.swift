@@ -73,7 +73,8 @@ class ServiceOrderViewController: UIViewController {
         view.addGestureRecognizer(t)
         t.cancelsTouchesInView = false
 
-        if !phoneUser.isStaff { roomNumberTextField.text = String(phoneUser.guest?.roomNumber ?? 0) }
+        //if !phoneUser.isStaff { roomNumberTextField.text = String(phoneUser.guest?.roomNumber ?? 0) }
+        roomNumberTextField.text = phoneUser.roomNumber
         roomNumberTextField.isEnabled = phoneUser.isStaff
         roomNumberTextField.keyboardType = .numberPad
 

@@ -99,7 +99,8 @@ class RoomItemsOrderViewController: UIViewController, UITableViewDataSource {
         roomNumberLabel.text = .room
         roomNumberTextField.isEnabled = phoneUser.isStaff
         roomNumberTextField.keyboardType = .numberPad
-        if !phoneUser.isStaff { roomNumberTextField.text = String(phoneUser.guest?.roomNumber ?? 0) }
+        //if !phoneUser.isStaff { roomNumberTextField.text = String(phoneUser.guest?.roomNumber ?? 0) }
+        roomNumberTextField.text = phoneUser.roomNumber
 
         commentField.placeholder = .comment
         sendButton.setTitle(.send, for: .normal)

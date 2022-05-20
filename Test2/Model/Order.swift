@@ -124,7 +124,7 @@ class Order: Codable {
         self.number = orderNumber
         self.roomNumber = roomNumber
         self.created = Date()
-        self.createdBy = phoneUser.toString()
+        self.createdBy = phoneUser.displayName
     }
 
     func addItem(name: String, quantity: Int, price: Double = 0.0) {

@@ -20,7 +20,7 @@ class NewsCell: UITableViewCell {
     var post = NewsPost()
 
     @IBAction func heartPressed(_ sender: UIButton) {
-        phoneUser.guest?.toggleLike(group: "news", key: post.postId)
+        phoneUser.toggleLike(group: "news", key: post.postId)
     }
 
     override func awakeFromNib() {

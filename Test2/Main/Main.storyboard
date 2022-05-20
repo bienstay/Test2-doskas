@@ -107,8 +107,9 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logoAppviator3dWithLetters" translatesAutoresizingMaskIntoConstraints="NO" id="pTq-tZ-bAu">
-                                <rect key="frame" x="145" y="74" width="124" height="124"/>
+                                <rect key="frame" x="157" y="74" width="100" height="100"/>
                                 <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="fVa-Yi-TJz"/>
                                     <constraint firstAttribute="width" secondItem="pTq-tZ-bAu" secondAttribute="height" multiplier="1:1" id="fkQ-kN-zMr"/>
                                 </constraints>
                             </imageView>
@@ -137,7 +138,7 @@
                                             <constraint firstAttribute="height" constant="180" id="aUo-4O-CSA"/>
                                         </constraints>
                                     </pickerView>
-                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="SE0-Wi-EHx">
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="SE0-Wi-EHx">
                                         <rect key="frame" x="8" y="198" width="320" height="32"/>
                                         <segments>
                                             <segment title="User"/>
@@ -199,7 +200,6 @@
                             <constraint firstItem="LpO-mH-hFy" firstAttribute="trailing" secondItem="Mga-dL-ajB" secondAttribute="trailing" id="2VY-vr-kVZ"/>
                             <constraint firstItem="AcQ-dq-oCy" firstAttribute="leading" secondItem="PjS-1C-p5H" secondAttribute="leadingMargin" id="7lo-SF-Pau"/>
                             <constraint firstItem="3oh-gV-ZSs" firstAttribute="centerY" secondItem="PjS-1C-p5H" secondAttribute="centerY" id="9al-yc-lxA"/>
-                            <constraint firstItem="pTq-tZ-bAu" firstAttribute="width" secondItem="PjS-1C-p5H" secondAttribute="width" multiplier="0.3" id="E6k-zc-NkJ"/>
                             <constraint firstItem="LpO-mH-hFy" firstAttribute="leading" secondItem="Mga-dL-ajB" secondAttribute="leading" id="YPJ-Qk-1Zx"/>
                             <constraint firstItem="Mga-dL-ajB" firstAttribute="trailing" secondItem="nhe-93-BZs" secondAttribute="trailing" id="as6-4J-U0i"/>
                             <constraint firstItem="pTq-tZ-bAu" firstAttribute="top" secondItem="Mga-dL-ajB" secondAttribute="top" constant="30" id="dPh-TI-pL2"/>

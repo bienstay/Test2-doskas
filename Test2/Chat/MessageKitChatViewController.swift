@@ -213,12 +213,12 @@ class MessageKitChatViewController: MessagesViewController {
 
 extension MessageKitChatViewController: MessagesDataSource {
     func currentSender() -> SenderType {
-        Sender(senderId: phoneUser.id, displayName: phoneUser.toString(), isStaff: phoneUser.isStaff)
+        Sender(senderId: phoneUser.id, displayName: phoneUser.displayName, isStaff: phoneUser.isStaff)
     }
 
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
         let m = messages[indexPath.section]
-        if !(phoneUser.user?.isOperator ?? false) { markAsRead(m: m) }
+        if phoneUser.role != .hotline { markAsRead(m: m) }  // hotline operator can reassign, so keep message unread
         return m
     }
 
@@ -258,12 +258,12 @@ extension MessageKitChatViewController: MessagesLayoutDelegate {
 extension MessageKitChatViewController: InputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
         guard let chatRoom = chatRoom else { return }
-        // operator can assign so mark as read only when he writes sth (means that he replies)
-        if phoneUser.user?.isOperator ?? false {
+        // hotline operator can assign so mark as read only when he writes sth (means that he replies)
+        if phoneUser.isAllowed(to: .assignChats) {
             for m in messages { markAsRead(m: m) }
         }
 
-        let newChatMessage = ChatMessage(created: Date(), content: text, senderID: phoneUser.id, senderName: phoneUser.toString(), isSenderStaff: phoneUser.isStaff, chatRoomID: chatRoom.id)
+        let newChatMessage = ChatMessage(created: Date(), content: text, senderID: phoneUser.id, senderName: phoneUser.displayName, isSenderStaff: phoneUser.isStaff, chatRoomID: chatRoom.id)
         //_ = dbProxy.addRecord(key: nil, subNode: chatRoomId, record: newChatMessage) { _ in }
         dbProxy.writeChat(chatRoomID: chatRoom.id, message: newChatMessage)
         inputBar.inputTextView.text = ""
