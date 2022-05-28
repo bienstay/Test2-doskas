@@ -29,7 +29,7 @@ class RestaurantDetailViewController: UIViewController {
 
         // Configure header view
         headerView.nameLabel.text = restaurant.name
-        headerView.typeLabel.text = restaurant.cuisines
+        headerView.typeLabel.text = restaurant._cuisines
         headerView.headerImageView.kf.setImage(with: URL(string: restaurant.image))
     }
 
@@ -79,7 +79,7 @@ extension RestaurantDetailViewController: UITableViewDataSource, UITableViewDele
         switch indexPath.row {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: RestaurantDetailTextCell.self), for: indexPath) as! RestaurantDetailTextCell
-            cell.draw(text: restaurant.description)
+            cell.draw(text: restaurant._description)
             return cell
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "MenuCell", for: indexPath)

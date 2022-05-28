@@ -175,8 +175,8 @@ extension FirebaseDatabase {
 
     func writeChat(chatRoomID: String, message m: ChatMessage) {
         _ = dbProxy.addRecord(key: nil, subNode: chatRoomID, record: m) { _ in }
-        if !phoneUser.isStaff, let roomNumber = phoneUser.roomNumber {
-            CHATROOMS_DB_REF.child(chatRoomID).child("roomNumber").setValue(roomNumber) { (error, ref) -> Void in
+        if !phoneUser.isStaff, let roomNumber = phoneUser.roomNumber, let roomNumberAsInt = Int(roomNumber) {
+            CHATROOMS_DB_REF.child(chatRoomID).child("roomNumber").setValue(roomNumberAsInt) { (error, ref) -> Void in
                 if let error = error {
                     Log.log(level: .ERROR, "Error updating chat room - \(error.localizedDescription)")
                 }

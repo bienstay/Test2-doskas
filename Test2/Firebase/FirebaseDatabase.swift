@@ -21,32 +21,39 @@ final class FirebaseDatabase: DBProxy {
 
     var BASE_DB_REF: DatabaseReference          {
         if hotel.id != "" {
-            return ROOT_DB_REF.child("hotels").child(hotel.id)
+            return ROOT_DB_REF.child("v2").child("hotels").child(hotel.id)
         } else {
-            return ROOT_DB_REF.child("hotels")
+            return ROOT_DB_REF.child("v2").child("hotels")
         }
     }
+    
+    var DBINFO_DB_REF: DatabaseReference        { ROOT_DB_REF.child(".info") }      // internal Firebase status
 
-    //var CONFIG_DB_REF: DatabaseReference        { ROOT_DB_REF.child("config") }
-    var DBINFO_DB_REF: DatabaseReference        { ROOT_DB_REF.child(".info") }
     var HOTEL_DB_REF: DatabaseReference         { BASE_DB_REF }
-    var INFO_DB_REF: DatabaseReference          { BASE_DB_REF }
-    //var GUESTS_DB_REF: DatabaseReference        { BASE_DB_REF.child("users") }
-    var GUESTSNEW_DB_REF: DatabaseReference     { BASE_DB_REF.child("guests") }
-    var NEWS_DB_REF: DatabaseReference          { BASE_DB_REF.child("news") }
-    var ACTIVITIES_DB_REF: DatabaseReference    { BASE_DB_REF.child("activities") }
-    var RESTAURANTS_DB_REF: DatabaseReference   { BASE_DB_REF.child("restaurants") }
-    var FACILITIES_DB_REF: DatabaseReference    { BASE_DB_REF.child("facilities") }
-    var MENUS_DB_REF: DatabaseReference         { BASE_DB_REF.child("menus2") }
-    var ORDERS_DB_REF: DatabaseReference        { BASE_DB_REF.child("orders") }
-    var OFFERGROUPS_DB_REF: DatabaseReference   { BASE_DB_REF.child("offerGroups") }
-    var OFFERS_DB_REF: DatabaseReference        { BASE_DB_REF.child("offers") }
+    var CONFIG_DB_REF: DatabaseReference        { BASE_DB_REF }
+
+    var CONTENT_DB_REF: DatabaseReference       { BASE_DB_REF.child("content") }
+    var NEWS_DB_REF: DatabaseReference          { CONTENT_DB_REF.child("news") }
+    var ACTIVITIES_DB_REF: DatabaseReference    { CONTENT_DB_REF.child("activities") }
+    var RESTAURANTS_DB_REF: DatabaseReference   { CONTENT_DB_REF.child("restaurants") }
+    var INFO_DB_REF: DatabaseReference          { CONTENT_DB_REF.child("info") }
+    var MENUS_DB_REF: DatabaseReference         { CONTENT_DB_REF.child("menus2") }
+    var OFFERGROUPS_DB_REF: DatabaseReference   { CONTENT_DB_REF.child("offerGroups") }
+    var OFFERS_DB_REF: DatabaseReference        { CONTENT_DB_REF.child("offers") }
+    var TRANSLATIONS_DB_REF: DatabaseReference  { CONTENT_DB_REF.child("translations") }
+
     var LIKES_DB_REF: DatabaseReference         { BASE_DB_REF.child("likes") }
     var LIKESGLOBAL_DB_REF: DatabaseReference   { LIKES_DB_REF.child("global") }
     var LIKESPERUSER_DB_REF: DatabaseReference  { LIKES_DB_REF.child("perUser") }
-    var CHATROOMS_DB_REF: DatabaseReference    { BASE_DB_REF.child("chatRooms") }
-    var CHATS_DB_REF: DatabaseReference         { BASE_DB_REF.child("chats") }
-    var TRANSLATIONS_DB_REF: DatabaseReference  { BASE_DB_REF.child("translations") }
+
+    var CHAT_DB_REF: DatabaseReference          { BASE_DB_REF.child("chat") }
+    var CHATROOMS_DB_REF: DatabaseReference     { CHAT_DB_REF.child("chatRooms") }
+    var CHATS_DB_REF: DatabaseReference         { CHAT_DB_REF.child("chats") }
+
+    var GUESTS_DB_REF: DatabaseReference        { BASE_DB_REF.child("guests") }
+    var FACILITIES_DB_REF: DatabaseReference    { BASE_DB_REF.child("facilities") }
+    var ORDERS_DB_REF: DatabaseReference        { BASE_DB_REF.child("orders") }
+
     var PHONES_DB_REF: DatabaseReference        { BASE_DB_REF.child("phones") }
     var LOGS_DB_REF: DatabaseReference          { BASE_DB_REF.child("logs") }
 
@@ -57,6 +64,8 @@ final class FirebaseDatabase: DBProxy {
             case is HotelInDB.Type:
                 return ROOT_DB_REF.child("hotels")
             case is HotelInfo.Type:
+                return CONFIG_DB_REF
+            case is InfoItem.Type:
                 return INFO_DB_REF
             case is NewsPost.Type:
                 return NEWS_DB_REF
@@ -84,7 +93,7 @@ final class FirebaseDatabase: DBProxy {
                 if let child = subNode { return CHATS_DB_REF.child(child) }
                 else { return CHATS_DB_REF }
             case is GuestInDB.Type:
-                return GUESTSNEW_DB_REF
+                return GUESTS_DB_REF
             case is LikesPerUserInDB.Type:
                 if let child = subNode { return LIKESPERUSER_DB_REF.child(child) }
                 else { return LIKESPERUSER_DB_REF }
@@ -107,7 +116,7 @@ final class FirebaseDatabase: DBProxy {
         let errStr = "Invalid parameter in getQuery for \(T.Type.self): \(String(describing: parameter))"
         switch type {
             case is HotelInfo.Type:
-                return dbRef?.queryOrderedByKey().queryEqual(toValue: "info")
+                return dbRef?.queryOrderedByKey().queryEqual(toValue: "config")
             case is GuestInfo.Type:
                 guard case .GuestInfo(let guestId) = parameter else { Log.log(errStr); return nil }
                 return dbRef?.queryOrderedByKey().queryEqual(toValue: guestId)
@@ -115,19 +124,13 @@ final class FirebaseDatabase: DBProxy {
                 guard case .GuestInDb(let guestId) = parameter else { Log.log(errStr); return nil }
                 return dbRef?.queryOrderedByKey().queryEqual(toValue: guestId)
             case is OrderInDB.Type:
-/*
-                guard case .OrderInDB(let roomNumber) = parameter else { Log.log(errStr); return nil }
-                if roomNumber > 0 {
-                    return dbRef?.queryOrdered(byChild: "roomNumber").queryEqual(toValue: roomNumber)
-                } else {
-                    return dbRef?.queryOrderedByKey()
-                }
-*/
                 switch parameter {
                     case .OrderByRoom(let roomNumber):
                         return dbRef?.queryOrdered(byChild: "roomNumber").queryEqual(toValue: roomNumber)
                     case .OrderByCategory(let category):
                         return dbRef?.queryOrdered(byChild: "description").queryEqual(toValue: category.rawValue)
+                    case .OrderByAssignment(let assignedTo):
+                        return dbRef?.queryOrdered(byChild: "assignedTo").queryEqual(toValue: assignedTo)
                     default:
                         return dbRef?.queryOrderedByKey()
                 }
@@ -249,10 +252,11 @@ final class FirebaseDatabase: DBProxy {
                     Log.log(level:.ERROR, "Invalid JSON: \(child) in query: \(query)")
                     return
                 }
+                let key = item.key
                 if let data = try? JSONSerialization.data(withJSONObject: value) {
                     do {
                         let object = try JSONDecoder().decode(T.self, from: data)
-                        objects[item.key] = object
+                        objects[key] = object
                     } catch {
                         Log.log(level: .ERROR, "Failed to decode JSON for type \(T.self): \(item) - \(error)")
                     }
@@ -261,6 +265,26 @@ final class FirebaseDatabase: DBProxy {
                 }
             }
             Log.log(level: .DEBUG, "\(objects.count) new objects of type \(T.self) added")
+            completionHandler(objects)
+        })
+    }
+
+    func subscribeForUpdates(path: String, completionHandler: @ escaping ([String:Any]) -> Void) {
+        let dbRef = BASE_DB_REF.child(path)
+        Log.log(level: .DEBUG, "Observing \(dbRef.description)")
+        observed.insert(dbRef)
+        dbRef.observe(.value, with: { (snapshot) in
+            var objects: [String:Any] = [:]
+            Log.log(level: .DEBUG, "Adding \(snapshot.children.allObjects.count) new objects")
+            for child in snapshot.children {
+                guard let item = child as? DataSnapshot, let value = item.value, JSONSerialization.isValidJSONObject(value) else {
+                    Log.log(level:.ERROR, "Invalid JSON: \(child) in query: \(dbRef)")
+                    return
+                }
+                let key = item.key
+                objects[key] = value
+            }
+            Log.log(level: .DEBUG, "\(objects.count) new objects of type added")
             completionHandler(objects)
         })
     }

@@ -6,5 +6,11 @@
 //
 
 import Foundation
-
+/*
+// lang, item, key, value
 typealias Translations = [String: [String: [String: String]]]
+
+// lang, item, key, value
+//typealias InfoTranslations = [String: [String: [String: InfoItem]]]
+typealias InfoTranslations = [String: InfoItem]
+*/

@@ -84,7 +84,7 @@ class NewsDetailTextCell: UITableViewCell {
     
     func draw(post: NewsPost) {
         timestampLabel.text = post.timestamp.formatForDisplay()
-        postTextLabel.text = post.text
+        postTextLabel.text = post._text
     }
 }
 
@@ -106,8 +106,8 @@ class NewsDetailHeaderCell: UITableViewCell {
     }
 
     func draw(post: NewsPost) {
-        titleLabel.text = post.title
-        subtitleLabel.text = post.subtitle
+        titleLabel.text = post._title
+        subtitleLabel.text = post._subtitle
         if let url = URL(string: post.imageFileURL) {
             headerImageView.isHidden = false
             headerDimmedView.isHidden = false

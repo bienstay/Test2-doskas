@@ -21,6 +21,10 @@ extension UIColor {
         self.init((rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, rgb & 0xFF)
     }
 
+    
+    //UIColor(216, 77, 68) // rgb - taken from the color picker from log but different
+    static let appviator = UIColor(234, 62, 59) // sRGB -
+    
     static let darkGreen = UIColor(0, 128, 0)
     static let darkGreenWithBlue = UIColor(0, 104, 55)
     static let darkYellow = UIColor(128, 128, 0)
@@ -364,6 +368,11 @@ extension Date {
         formatter3.dateFormat = "yyyyMMdd-HHmmss"
         return formatter3.string(from: self)
     }
+    func formatForDBFull() -> String {
+        let formatter3 = DateFormatter()
+        formatter3.dateFormat = "yyyyMMdd-HHmmssSSS"
+        return formatter3.string(from: self)
+    }
     func formatTimeShort() -> String {
         let formatter3 = DateFormatter()
         formatter3.dateFormat = "HH:mm"
@@ -401,6 +410,7 @@ extension Notification.Name {
     static let hotelInfoUpdated = Notification.Name("hotelInfoUpdated")
     static let ordersUpdated = Notification.Name("ordersUpdated")
     static let offersUpdated = Notification.Name("offersUpdated")
+    static let informationUpdated = Notification.Name("informationUpdated")
     static let newsUpdated = Notification.Name("newsUpdated")
     static let activitiesUpdated = Notification.Name("activitiesUpdated")
     static let restaurantsUpdated = Notification.Name("restarantsUpdated")
@@ -569,7 +579,7 @@ struct Log {
         case DEBUG
     }
     static var currentLevel: LogLevel = .INFO
-    static var logInDB: Bool = true
+    static var logInDB: Bool = false
     static func log(level: LogLevel = .INFO, _ message: String, logInDb: Bool = true, function: String = #function, file: String = #file, line: Int = #line) {
         if level.rawValue <= currentLevel.rawValue {
             let url = NSURL(fileURLWithPath: file)
@@ -766,8 +776,11 @@ extension UIImagePickerControllerDelegate where Self: UINavigationControllerDele
                 nc.present(imagePicker, animated: true, completion: nil)
             }
         })
+        let cancelAction = UIAlertAction(title: .cancel, style: .cancel) { _ in
+        }
         photoSourceRequestController.addAction(cameraAction)
         photoSourceRequestController.addAction(photoLibraryAction)
+        photoSourceRequestController.addAction(cancelAction)
 /* did the alertStyle instead
         // For iPad
         if let popoverController = photoSourceRequestController.popoverPresentationController {

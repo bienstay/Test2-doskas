@@ -11,6 +11,7 @@ import UIKit
 enum QueryParameter {
     case OrderByRoom(roomNumber: Int)
     case OrderByCategory(type: Order.Category)
+    case OrderByAssignment(id: String)
     case ChatRoom(id: String)
     case AssignedTo(id: String)
     case ChatUser(id: String)
@@ -29,6 +30,7 @@ protocol DBProxy {
     func removeRecord<T: Encodable>(key:String, subNode: String?, record: T, completionHandler: @ escaping (T?) -> Void) -> String?
     func subscribe<T: Codable>(for operation: QueryOperation, subNode: String?, parameter: QueryParameter?, completionHandler: @ escaping (String, T) -> Void)
     func subscribeForUpdates<T: Codable>(subNode: String?, start timestamp: Int?, limit: UInt?, parameter: QueryParameter?, completionHandler: @ escaping ([String:T]) -> Void)
+    func subscribeForUpdates(path: String, completionHandler: @ escaping ([String:Any]) -> Void)
     func unsubscribe<T: Codable>(t: T.Type, subNode: String?, parameter: QueryParameter?)
     func removeAllObservers()
 
@@ -62,11 +64,8 @@ extension DBProxy {
     func addRecord<T: Encodable>(record: T, completionHandler: @ escaping (T?) -> Void) -> String? {
         return addRecord(key:nil, subNode: nil, record: record, completionHandler: completionHandler)
     }
-    func removeRecord<T: Encodable>(key:String?, record: T, completionHandler: @ escaping (T?) -> Void) -> String? {
-        return addRecord(key:key, subNode: nil, record: record, completionHandler: completionHandler)
-    }
-    func removeRecord<T: Encodable>(record: T, completionHandler: @ escaping (T?) -> Void) -> String? {
-        return addRecord(key:nil, subNode: nil, record: record, completionHandler: completionHandler)
+    func removeRecord<T: Encodable>(key:String, record: T, completionHandler: @ escaping (T?) -> Void) -> String? {
+        return removeRecord(key:key, subNode: nil, record: record, completionHandler: completionHandler)
     }
     func subscribeForUpdates<T: Codable>(subNode: String?, parameter: QueryParameter?, completionHandler: @ escaping ([String:T]) -> Void) {
         subscribeForUpdates(subNode: subNode, start: nil, limit: nil, parameter: parameter, completionHandler: completionHandler)

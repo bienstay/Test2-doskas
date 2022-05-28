@@ -34,8 +34,8 @@ class NewsCell: UITableViewCell {
     func draw(post: NewsPost, numLikes: Int) {
         self.post = post
 
-        titleLabel.text = post.title
-        subtitleLabel.text = post.subtitle
+        titleLabel.text = post._title
+        subtitleLabel.text = post._subtitle
         timestampLabel.text = post.timestamp.formatForDisplay()
         newsImageView.image = nil
         if let url = URL(string: post.imageFileURL) {

@@ -7,6 +7,158 @@
 
 import UIKit
 
+
+
+
+
+
+class MenuView: UIView {
+    typealias MenuCallback = () -> Void
+    @IBOutlet weak var userLabel: UILabel!
+    @IBOutlet weak var roleLabel: UILabel!
+    @IBOutlet weak var versionLabel: UILabel!
+    @IBOutlet weak var tableView: ContentWrappingTableView!
+    @IBOutlet weak var image: UIImageView!
+
+    var leftConstraint: NSLayoutConstraint!
+    typealias Items = [(String, MenuCallback)]
+    var items: Items = []
+    var sections: [Items] = [Items()]
+    var isOn: Bool = false
+    let width = 200.0
+    var currentSection = 0
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        customInit()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        customInit()
+    }
+
+    private func customInit() {
+        let nib = UINib(nibName: "MenuView", bundle: nil)
+        if let contentView = nib.instantiate(withOwner: self, options: nil).first as? UIView {
+            addSubview(contentView)
+            contentView.frame = self.bounds
+
+            contentView.layer.masksToBounds = false
+            contentView.layer.cornerRadius = 20
+            contentView.layer.shadowOffset = CGSize(width: 10, height: 10)
+            contentView.layer.shadowOpacity = 0.5
+            contentView.layer.shadowColor = UIColor.black.cgColor
+        }
+    }
+
+    func initialize(parentView: UIView) {
+        parentView.addSubview(self)
+
+        translatesAutoresizingMaskIntoConstraints = false
+        widthAnchor.constraint(equalToConstant: width).isActive = true
+        topAnchor.constraint(equalTo: superview!.topAnchor, constant: 90).isActive = true
+        leftConstraint = leftAnchor.constraint(equalTo: superview!.leftAnchor, constant: 0)
+        leftConstraint.constant = -width
+        leftConstraint.isActive = true
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        
+        userLabel.text = phoneUser.displayName
+        roleLabel.text = phoneUser.role?.rawValue
+        versionLabel.text = "version 0.1"
+    }
+
+    func present(show: Bool) {
+        leftConstraint.constant = show ? 0 : -width
+        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: [.curveEaseIn]) {
+            self.superview!.layoutIfNeeded()
+        }
+        isOn = show
+    }
+/*
+    // TODO - detect a touch outside of the menu
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let touch = touches.first
+        if touch?.view != self {
+            toggle()
+        }
+    }
+*/
+    func toggle() {
+        present(show: !isOn)
+    }
+
+    func addSeparator() {
+        sections.append(Items())
+        currentSection += 1
+    }
+
+    func addItem(label: String, callback: @escaping MenuCallback) {
+        sections[currentSection].append((label, callback))
+        tableView.reloadData()
+    }
+
+}
+
+extension MenuView: UITableViewDataSource {
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return sections.count
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        sections[section].count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        cell.textLabel?.text = sections[indexPath.section][indexPath.row].0
+        cell.backgroundColor = .clear
+        return cell
+    }
+}
+
+extension MenuView: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        sections[indexPath.section][indexPath.row].1()
+        present(show: false)
+    }
+
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 0 { return nil }
+        return " "
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 class MenuView: UIView {
     typealias MenuCallback = () -> Void
     var leftConstraint: NSLayoutConstraint!
@@ -165,7 +317,7 @@ extension MenuView: UITableViewDelegate {
         return " "
     }
 }
-
+*/
 
 
 class ContentWrappingTableView: UITableView {

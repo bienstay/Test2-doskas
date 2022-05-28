@@ -1,6 +1,6 @@
 //
 //  OffersCell.swift
-//  Test2
+
 //
 //  Created by maciulek on 20/11/2021.
 //

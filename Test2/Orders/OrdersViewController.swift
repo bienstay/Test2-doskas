@@ -30,6 +30,11 @@ class OrdersViewController: UIViewController, UITableViewDataSource {
         tabBarController?.tabBar.isHidden = false
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        // clean the title to eliminate bad effect of the large title staying after transition
+        title = ""
+    }
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         tableView.reloadData()

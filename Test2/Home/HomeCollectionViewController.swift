@@ -81,7 +81,8 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
         }
 
-        menu = MenuView(parentView: view, headerText: "Menu")
+        menu = MenuView()
+        menu.initialize(parentView: view)
         if phoneUser.isStaff {
             menu.addItem(label: "Change password") { [weak self] in
                 if let self = self {
@@ -262,8 +263,8 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
                 case .activities:   _ = pushViewController(storyBoard: "Activities", id: "Activities")
                 case .offers:       _ = pushViewController(storyBoard: "Offers", id: "Offers")
                 //case .map:          _ = pushViewController(storyBoard: "Main", id: "NFCReader")
-                case .map:          //_ = pushViewController(storyBoard: "Map", id: "mapViewController")
-                                        logOutAndGoToScannerView()
+                //case .map:            _ = pushViewController(storyBoard: "Map", id: "mapViewController")
+                case .map:            _ = pushViewController(storyBoard: "Info", id: "Info")
                 //case .watersports:  _ = pushViewController(storyBoard: "WaterSports", id: "WaterSports")
             }
         default: break
@@ -503,6 +504,7 @@ extension String {
     static let adoptACoral = NSLocalizedString("Adopt a Coral", comment: "Adopt a Coral")
     static let kidsClub = NSLocalizedString("Kids Club", comment: "Kids Club")
     static let offers = NSLocalizedString("Offers", comment: "Offers")
+    static let info = NSLocalizedString("Info", comment: "Info")
 }
 
 extension String {

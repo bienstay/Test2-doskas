@@ -10,10 +10,10 @@ import UIKit
 class ActivityCell: UITableViewCell {
 
     @IBOutlet var titleLabel: UILabel!
-    @IBOutlet var locationLabel: UILabel!
+    @IBOutlet var subtitleLabel: UILabel!
     @IBOutlet var timeLabel: UILabel!
     @IBOutlet var activityImageView: UIImageView!
-    @IBOutlet var descriptionLabel: UILabel!
+    @IBOutlet var activityTextLabel: UILabel!
     @IBOutlet weak var imageWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var mainStackView: UIStackView!
 
@@ -26,21 +26,21 @@ class ActivityCell: UITableViewCell {
     }
 
     func draw(activity: Activity, expanded: Bool) {
-        titleLabel.text = activity.title
-        locationLabel.text = activity.location
+        titleLabel.text = activity._title
+        subtitleLabel.text = activity._subtitle
         timeLabel.text = (activity.start.formatTimeShort()) + " - " + (activity.end.formatTimeShort())
-        descriptionLabel.text = activity.text
+        activityTextLabel.text = activity._text
 
         if expanded {
             //imageWidthConstraint.constant = mainStackView.frame.width
             mainStackView.axis = .vertical
             mainStackView.alignment = .fill
-            descriptionLabel.isHidden = descriptionLabel.text?.isEmpty ?? true
+            activityTextLabel.isHidden = activityTextLabel.text?.isEmpty ?? true
         } else {
             //imageWidthConstraint.constant = 100
             mainStackView.axis = .horizontal
             mainStackView.alignment = .center
-            descriptionLabel.isHidden = true
+            activityTextLabel.isHidden = true
         }
 /*
         let todo = expanded ?

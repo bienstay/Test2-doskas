@@ -128,7 +128,7 @@ extension FirebaseDatabase {
 
     func translateChat(chatRoom: String, chatID: String, textToTranslate: String, targetLanguage: String, completionHandler: @ escaping (String?) -> Void) {
         let hotelId: String = hotel.id
-        let chatTranslationPath = "/hotels/\(hotelId)/chats/\(chatRoom)/\(chatID)/translations"
+        let chatTranslationPath = "/v2/hotels/\(hotelId)/chat/chats/\(chatRoom)/\(chatID)/translations"
         Firebase.shared.functions.httpsCallable("httpFunctions-translateAndUpdateChat").call(
             ["text": textToTranslate,
              "targetLanguage": targetLanguage,

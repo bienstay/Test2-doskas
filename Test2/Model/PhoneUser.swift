@@ -27,7 +27,10 @@ class PhoneUser {
 
     var role: Role? { get { user?.role } set { user?.role = newValue } }
     var id: String { isStaff ? user?.name ?? "" : guest?.id ?? "" }
-    var roomNumber: String? { return guest?.roomNumber as? String? ?? nil }
+    var roomNumber: String? {
+        if let nr = guest?.roomNumber { return String(nr) }
+        else { return nil }
+    }
 
     var currentLocationLongitude: Double = 0.0
     var currentLocationLatitude: Double = 0.0

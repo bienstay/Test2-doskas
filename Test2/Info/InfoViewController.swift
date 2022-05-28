@@ -2,145 +2,149 @@
 //  InfoViewController.swift
 //  Test2
 //
-//  Created by maciulek on 13/06/2021.
+//  Created by maciulek on 21/05/2022.
 //
 
 import UIKit
+import Kingfisher
 
-class InfoViewController: UIViewController, UICollectionViewDelegate, UIScrollViewDelegate {
 
-    @IBOutlet var backgroundImageView: UIImageView!
-    @IBOutlet var collectionView: UICollectionView!
-    @IBOutlet var pageControl: UIPageControl!
-    @IBOutlet var titleLabel: UILabel!
-    @IBOutlet var subtitleLabel: UILabel!
-    @IBOutlet var textLabel: UILabel!
-
-    var infoItem:InfoItem = InfoItem()
-    var blurEffectView: UIView = UIView()
-
-    enum Section {
-        case all
-    }
+class InfoViewController: UIViewController, UITableViewDataSource {
+    @IBOutlet weak var tableView: UITableView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        initView()
-
-        titleLabel.text = infoItem.title
-        subtitleLabel.text = infoItem.subtitle
-        textLabel.text = infoItem.text
-        
-        // Apply blurring effect
-        backgroundImageView.image = UIImage(named: "cloud")
-        backgroundImageView.blur(withStyle: .dark)
-/*
-        let blurEffect = UIBlurEffect(style: .dark)
-        blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = backgroundImageView.bounds
-        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight] // for supporting device rotation
-        backgroundImageView.addSubview(blurEffectView)
-*/
-        collectionView.dataSource = self
-        collectionView.collectionViewLayout = createLayout()
-        collectionView.backgroundColor = UIColor.clear
-        
-        collectionView.contentInsetAdjustmentBehavior = .never
-        
-        collectionView.delegate = self
-        if infoItem.images.count <= 1 {
-            pageControl.isHidden = true
-        } else {
-            pageControl.isHidden = false
-        }
-
-        //navigationController?.navigationBar.barStyle = UIBarStyle.black
-        //navigationController?.navigationBar.tintColor = UIColor.yellow
-        //navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.orange]
-        //navigationController?.navigationBar.barTintColor = .red
-}
-
-/*  // not needed after setting blurEffectView.frame = backgroundImageView.bounds (not view.bounds)
-    // resize blurEffectView after rotation
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        coordinator.animate(alongsideTransition: nil) { _ in
-            self.blurEffectView.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: size)
-        }
+        initView(tableView: tableView)
+        tableView.dataSource = self
+        tableView.delegate = self
+        NotificationCenter.default.addObserver(self, selector: #selector(onInformationUpdated(_:)), name: .informationUpdated, object: nil)
     }
-*/
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        navigationController?.setNavigationBarHidden(false, animated: true)
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationBar.tintColor = .white
-
-        navigationController?.hidesBarsOnSwipe = false
+        setupListNavigationBar()
+        title = .info
     }
 
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        pageControl.currentPage = indexPath.row
+    override func viewWillDisappear(_ animated: Bool) {
+        // clean the title to eliminate bad effect of the large title staying after transition
+        title = ""
     }
 
-    private func createLayout() -> UICollectionViewLayout {
-        
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),heightDimension: .fractionalHeight(1.0))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
-        
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),heightDimension: .fractionalHeight(1.0))
-        
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        
-        let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .paging
-        
-        let layout = UICollectionViewCompositionalLayout(section: section)
-        
-        return layout
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        tableView.reloadData()
     }
 
-}
-
-
-extension InfoViewController: UICollectionViewDataSource {
-
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return hotel.infoItems.count
     }
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return infoItem.images.count
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as! InfoPictureCell
-        cell.backgroundColor = .black
-        cell.draw(infoItem: infoItem, pictureNumber: indexPath.row)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "infoCell", for: indexPath) as! InfoCell
+        cell.draw(info: hotel.infoItems[indexPath.row])
         return cell
     }
+
+    @objc func onInformationUpdated(_ notification: Notification) {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    
+    @IBAction func newInfoPressed(_ sender: Any) {
+        _ = pushViewController(storyBoard: "Info", id: "NewInfo")
+    }
 }
 
-class InfoPictureCell: UICollectionViewCell {
-    @IBOutlet var imageView: UIImageView!
-    @IBOutlet var imageTextLabel: UILabel!
-    let bgColor: UIColor = .lightGray
+extension InfoViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = pushOrPresent(storyBoard: "Info", id: "InfoDetail") as! InfoDetailViewController
+        vc.infoItem = hotel.infoItems[indexPath.row]
+    }
+}
+
+extension InfoViewController {
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        if !phoneUser.isAllowed(to: .editContent) { return nil }
+        let action1 = UIContextualAction(style: .normal, title: "Edit") { action, view, completionHandler in
+            let vc = self.createViewController(storyBoard: "Info", id: "NewInfo") as! NewInfoViewController
+            vc.infoToEdit = hotel.infoItems[indexPath.row]
+            self.navigationController?.pushViewController(vc, animated: true)
+            completionHandler(true)
+        }
+        action1.backgroundColor = .orange
+        return UISwipeActionsConfiguration(actions: [action1])
+    }
+
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        if !phoneUser.isAllowed(to: .editContent) { return nil }
+        let action1 = UIContextualAction(style: .destructive, title: "Delete") { action, view, completionHandler in
+            self.deleteInfo(info: hotel.infoItems[indexPath.row])
+            completionHandler(true)
+        }
+        action1.backgroundColor = .red
+        let configuration = UISwipeActionsConfiguration(actions: [action1])
+        configuration.performsFirstActionWithFullSwipe = false
+        return configuration
+    }
+
+    func deleteInfo(info: InfoItem) {
+        guard let id = info.id else { return }
+        let errStr = dbProxy.removeRecord(key: id, record: info) { record in
+            if record == nil {
+                self.showInfoDialogBox(title: "Error", message: "Info delete failed")
+            } else {
+                self.showInfoDialogBox(title: "Info", message: "Info deleted")
+            }
+        }
+        if errStr != nil { Log.log(errStr!) }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class InfoCell: UITableViewCell {
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var subtitleLabel: UILabel!
+    @IBOutlet var infoImageView: UIImageView!
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        backgroundColor = bgColor
-        contentView.backgroundColor = bgColor
-        imageTextLabel.backgroundColor = bgColor
+        selectionStyle = UITableViewCell.SelectionStyle.none
+        backgroundColor = .clear
+        infoImageView.layer.cornerRadius = 15
+        infoImageView.layer.masksToBounds = true
     }
 
-    func draw(infoItem: InfoItem, pictureNumber: Int) {
-        layer.cornerRadius = 10.0
-        imageView.image = nil
-        imageView.image = UIImage(named: infoItem.images[pictureNumber].url) // TODO remove
-//        if let url = URL(string: infoItem.imageFileURLs[pictureNumber]) {
-//            imageView.kf.setImage(with: url)
-//        }
-        imageTextLabel.text = infoItem.images[pictureNumber].text
+    func draw(info: InfoItem) {
+        titleLabel.text = info._title
+        subtitleLabel.text = info._subtitle
+        infoImageView.image = nil
+        //infoImageView.image = UIImage(named: info.images[0].url) // TODO remove
+        if let url = URL(string: info.images[0].url) {
+            infoImageView.isHidden = false
+            infoImageView.kf.setImage(with: url)
+        }
+        else { infoImageView.isHidden = true }
+    }
+
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
     }
 }

@@ -40,22 +40,71 @@ struct NewsPost: Codable {
     var title: String = ""
     var subtitle: String = ""
     var text: String = ""
-    mutating func setText(s: String) { text = s }
+    var _title: String {
+        if let t = hotel.translations.news[phoneUser.lang]?[postId]?["title"] { return t }
+        else { return title }
+    }
+    var _subtitle: String {
+        if let t = hotel.translations.news[phoneUser.lang]?[postId]?["subtitle"] { return t }
+        else { return subtitle }
+    }
+    var _text: String {
+        if let t = hotel.translations.news[phoneUser.lang]?[postId]?["text"] { return t }
+        else { return text }
+    }
 }
 
-struct InfoItem {
-    var itemId: String = ""
-    var timestamp: Date = Date()
-    var images: [(url: String, text: String)] = []
+struct InfoItem: Codable {
+    struct ImageData: Codable {
+        var url: String
+        var text: String
+    }
+    var id: String? = ""
     var title: String = ""
     var subtitle: String = ""
     var text: String = ""
+    var timestamp: Date = Date()
+    var images: [ImageData] = []
+    var _title: String {
+        if let id = id, let t = hotel.translations.info[phoneUser.lang]?[id]?["title"] as? String { return t }
+        else { return title }
+    }
+    var _subtitle: String {
+        if let id = id, let t = hotel.translations.info[phoneUser.lang]?[id]?["subtitle"] as? String { return t }
+        else { return subtitle }
+    }
+    var _text: String {
+        if let id = id, let t = hotel.translations.info[phoneUser.lang]?[id]?["text"] as? String { return t }
+        else { return text }
+    }
+    func _imageText(i: Int) -> String {
+        if let id = id, let t = hotel.translations.info[phoneUser.lang]?[id]?["images"] as? [String] { return t[i] }
+        else { return images[i].text }
+    }
 }
 
 struct HotelInfo: Codable {
     var name: String
     var image: String
     var socialURLs: [String:String]?
+}
+
+struct Translations {
+    // lang, id, key, value
+    var news: [String:[String:[String:String]]] = [:]
+    // lang, id, key, value
+    var activities: [String:[String:[String:String]]] = [:]
+    // lang, id, key, value
+    var restaurants: [String:[String:[String:String]]] = [:]
+    struct InfoItemTranslated: Codable {
+        var title: String = ""
+        var subtitle: String = ""
+        var text: String = ""
+        var imageTexts: [String] = []
+    }
+    // lang, id, key, value
+    //var info: [String:[String:[String:InfoItemTranslated]]] = [:]
+    var info: [String:[String:[String:Any]]] = [:]
 }
 
 class Hotel {
@@ -74,7 +123,8 @@ class Hotel {
     var activities: [Int: [Activity]] = [:]
     var offerGroups: [OfferGroup] = []
     var offers: [String:Offer] = [:]
-    var translations: [String: Translations] = [:]
+    //var translations: [String: Translations] = [:]
+    var translations: Translations = Translations()
     var likes: Likes = [:]
 
     init() {
@@ -86,6 +136,7 @@ class Hotel {
     func initialize() {
         roomItems = loadFromJSON(fileNameNoExt: "roomItems")
         roomService.name = "In room dining"
+        //initInfoItems()
     }
 
     deinit {
@@ -96,13 +147,50 @@ class Hotel {
         dbProxy.subscribeForUpdates(completionHandler: hotelInfoUpdated)
         dbProxy.subscribeForUpdates(completionHandler: restaurantsUpdated)
         dbProxy.subscribeForUpdates(completionHandler: facilitiesUpdated)
+        dbProxy.subscribeForUpdates(completionHandler: informationUpdated)
         dbProxy.subscribeForUpdates(completionHandler: newsUpdated)
         dbProxy.subscribeForUpdates(completionHandler: offersUpdated)
         dbProxy.subscribeForUpdates(completionHandler: offerGroupsUpdated)
         dbProxy.subscribeForUpdates(completionHandler: offersUpdated)
         dbProxy.subscribeForUpdates(completionHandler: activitiesUpdated)
-        dbProxy.subscribeForUpdates(completionHandler: translationsUpdated)
+        //dbProxy.subscribeForUpdates(completionHandler: translationsUpdated)
+        //dbProxy.subscribeForUpdates(completionHandler: infoTranslationsUpdated)
         dbProxy.subscribeForUpdates(completionHandler: likesUpdated)
+
+        dbProxy.subscribeForUpdates(path: "content/translations/news", completionHandler: newsTranslationsUpdated)
+        dbProxy.subscribeForUpdates(path: "content/translations/activities", completionHandler: activitiesTranslationsUpdated)
+        dbProxy.subscribeForUpdates(path: "content/translations/restaurants", completionHandler: restaurantsTranslationsUpdated)
+        dbProxy.subscribeForUpdates(path: "content/translations/info", completionHandler: informationTranslationsUpdated)
+    }
+
+    func newsTranslationsUpdated(newTranslations: [String:Any]) {
+        if let newTranslations = newTranslations as? [String:[String:[String:String]]] {
+            self.translations.news = newTranslations
+            NotificationCenter.default.post(name: .newsUpdated, object: nil)
+        }
+    }
+
+    func activitiesTranslationsUpdated(newTranslations: [String:Any]) {
+        if let newTranslations = newTranslations as? [String:[String:[String:String]]] {
+            self.translations.activities = newTranslations
+            NotificationCenter.default.post(name: .activitiesUpdated, object: nil)
+
+        }
+    }
+
+    func restaurantsTranslationsUpdated(newTranslations: [String:Any]) {
+        if let newTranslations = newTranslations as? [String:[String:[String:String]]] {
+            self.translations.restaurants = newTranslations
+            NotificationCenter.default.post(name: .restaurantsUpdated, object: nil)
+        }
+    }
+
+    func informationTranslationsUpdated(newTranslations: [String:Any]) {
+        //if let newTranslations = newTranslations as? [String:[String:[String:Translations.InfoItemTranslated]]] {
+        if let newTranslations = newTranslations as? [String:[String:[String:Any]]] {
+            self.translations.info = newTranslations
+            NotificationCenter.default.post(name: .informationUpdated, object: nil)
+        }
     }
 
     func hotelInfoUpdated(allHotelInfo: [String:HotelInfo]) {
@@ -112,11 +200,22 @@ class Hotel {
         NotificationCenter.default.post(name: .hotelInfoUpdated, object: nil)
     }
 
+    func informationUpdated(allInfo: [String:InfoItem]) {
+        infoItems = []
+        for i in allInfo {
+            var ii = i.value
+            ii.id = i.key
+            infoItems.append(ii)
+        }
+        //applyTranslations()
+        NotificationCenter.default.post(name: .informationUpdated, object: nil)
+    }
+
     func newsUpdated(allNews: [String:NewsPost]) {
         news = []
         let _news = allNews.sorted(by: {$0.1.timestamp > $1.1.timestamp} )
         _news.forEach( { news.append($0.1) } )
-        applyTranslations()
+        //applyTranslations()
         NotificationCenter.default.post(name: .newsUpdated, object: nil)
     }
 
@@ -205,18 +304,27 @@ class Hotel {
         }
         NotificationCenter.default.post(name: .likesUpdated, object: nil)
     }
-
+/*
     func translationsUpdated(allTranslations: [String:Translations]) {
         for l in allTranslations { translations[l.0] = l.1 }
         applyTranslations()
         NotificationCenter.default.post(name: .newsUpdated, object: nil)
         NotificationCenter.default.post(name: .activitiesUpdated, object: nil)
         NotificationCenter.default.post(name: .restaurantsUpdated, object: nil)
+        NotificationCenter.default.post(name: .informationUpdated, object: nil)
     }
 
+    func infoTranslationsUpdated(allTranslations: [String:InfoTranslations]) {
+        //for l in allTranslations { translations[l.0] = l.1 }
+        //applyTranslations()
+        NotificationCenter.default.post(name: .informationUpdated, object: nil)
+    }
+*/
+/*
     func applyTranslations() {
 
         if let t = translations[phoneUser.lang] {
+
             if !news.isEmpty {
                 for i in 0...news.count-1 {
                     if let nt: [String:String] = t["news"]?[news[i].postId] {
@@ -247,8 +355,21 @@ class Hotel {
                     }
                 }
             }
+
+            if !infoItems.isEmpty {
+                for i in 0...infoItems.count-1 {
+                    if let nt: [String:String] = t["information"]?[infoItems[i].id!] {
+                        //if let name = nt["name"] { restaurants[i].name = name }
+                        if let title = nt["title"] { infoItems[i].title = title }
+                        if let subtitle = nt["subtitle"] { infoItems[i].subtitle = subtitle }
+                        if let text = nt["text"] { infoItems[i].text = text }
+                    }
+                }
+            }
+
         }
     }
+*/
 }
 
 struct HotelInDB: Codable {
@@ -258,13 +379,13 @@ struct HotelInDB: Codable {
         var image: String = ""
     }
     private (set) var info: Info = Info()
-    private (set) var languages: [String:Bool] = [:]
+    //private (set) var languages: [String:Bool] = [:]
 
     init(hotel: Hotel) {
         self.id = hotel.id
         self.info.name = hotel.name
         self.info.image = hotel.image
-        self.languages = ["pl":true, "fr":true]
+        //self.languages = ["pl":true, "fr":true]
     }
 }
 

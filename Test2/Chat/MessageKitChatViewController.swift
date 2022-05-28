@@ -218,7 +218,8 @@ extension MessageKitChatViewController: MessagesDataSource {
 
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
         let m = messages[indexPath.section]
-        if phoneUser.role != .hotline { markAsRead(m: m) }  // hotline operator can reassign, so keep message unread
+        //if phoneUser.role != .hotline { markAsRead(m: m) }  // hotline operator can reassign, so keep message unread
+        if !phoneUser.isAllowed(to: .assignChats) { markAsRead(m: m) }  // hotline operator can reassign, so keep message unread
         return m
     }
 

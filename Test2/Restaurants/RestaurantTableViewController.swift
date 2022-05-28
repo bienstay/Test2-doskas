@@ -94,8 +94,8 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
             cell.nameLabel?.text = restaurant.name
             //cell.thumbnailImageView?.image = UIImage(data: restaurant.image)
             cell.thumbnailImageView?.kf.setImage(with: URL(string: restaurant.image))
-            cell.locationLabel.text = restaurant.location
-            cell.typeLabel.text = restaurant.cuisines
+            cell.locationLabel.text = restaurant._location
+            cell.typeLabel.text = restaurant._cuisines
             //cell.accessoryType = restaurant.isFavorite ? .checkmark : .none
             return cell
         default:

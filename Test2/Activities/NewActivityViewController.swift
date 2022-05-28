@@ -17,7 +17,7 @@ class NewActivityViewController: UITableViewController {
     @IBOutlet private weak var startDatePickerView: UIDatePicker!
     @IBOutlet private weak var endDatePickerView: UIDatePicker!
     @IBOutlet private weak var activityImageView: UIImageView!
-    @IBOutlet private weak var locationLabel: RoundedTextField!
+    @IBOutlet private weak var subtitleLabel: RoundedTextField!
     @IBOutlet private weak var activityText: UITextView!
     @IBOutlet private weak var titleLabel: RoundedTextField!
 
@@ -25,10 +25,10 @@ class NewActivityViewController: UITableViewController {
         super.viewDidLoad()
 
         titleLabel.delegate = self
-        locationLabel.delegate = self
+        subtitleLabel.delegate = self
 
         titleLabel.tag = 1
-        locationLabel.tag = 2
+        subtitleLabel.tag = 2
         activityText.tag = 3
         titleLabel.becomeFirstResponder()
 
@@ -42,7 +42,7 @@ class NewActivityViewController: UITableViewController {
         if let activityIndex = activityIndexToEdit {
             if let activity = hotel.activities[dowIndex]?[activityIndex] {
                 titleLabel.text = activity.title
-                locationLabel.text = activity.location
+                subtitleLabel.text = activity.subtitle
                 startDatePickerView.date = activity.start
                 endDatePickerView.date = activity.end
                 activityText.text = activity.text
@@ -77,7 +77,7 @@ class NewActivityViewController: UITableViewController {
             showInfoDialogBox(title: "Oops", message: "Title missing")
             return
         }
-        guard !(locationLabel.text?.isEmpty ?? false) else {
+        guard !(subtitleLabel.text?.isEmpty ?? false) else {
             showInfoDialogBox(title: "Oops", message: "Location missing")
             return
         }
@@ -87,7 +87,7 @@ class NewActivityViewController: UITableViewController {
         var activity = Activity()
         if let i = activityIndexToEdit { activity.id = hotel.activities[dowIndex]?[i].id }
         activity.title = titleLabel.text!
-        activity.location = locationLabel.text!
+        activity.subtitle = subtitleLabel.text!
         activity.text = activityText.text!
         activity.start = startDatePickerView.date
         activity.end = endDatePickerView.date
