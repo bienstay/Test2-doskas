@@ -30,13 +30,14 @@ struct Activity: Codable, Hashable {
         }
     }
     var id: String? = nil
+    var timestamp: Date? = nil
     var title: String = ""
     var subtitle: String? = ""
+    var text: String? = ""
     var dayOfTheWeek: Int? = 0
     var start: Date = Date()
     var end: Date = Date()
     var imageFileURL: String = ""
-    var text: String? = ""
     var _title: String {
         if let id = id,  let t = hotel.translations.activities[phoneUser.lang]?[id]?["title"] { return t }
         else { return title }

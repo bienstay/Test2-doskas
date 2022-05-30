@@ -13,8 +13,6 @@ class OfferViewController: UIViewController {
     @IBOutlet var tableView: UITableView!
     @IBOutlet var headerView: OfferHeaderView!
     @IBOutlet var requestBookingButton: UIButton!
-    //@IBOutlet var titleLabel: UILabel!
-    //@IBOutlet var subTitleLabel: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,8 +20,8 @@ class OfferViewController: UIViewController {
         tableView.contentInsetAdjustmentBehavior = .never
 
         // Configure header view
-        headerView.titleLabel.text = offer.title
-        headerView.subTitleLabel.text = offer.subTitle
+        headerView.titleLabel.text = offer._title
+        headerView.subTitleLabel.text = offer._subtitle
         //headerView.headerImageView.image = UIImage(named: offer.imageURL)
         
         if let url = URL(string: offer.imageURL) {
@@ -67,7 +65,7 @@ extension OfferViewController: UITableViewDataSource, UITableViewDelegate {
         switch indexPath.row {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: String("DetailsCell"), for: indexPath) as! OfferCell
-            cell.offerTextLabel.text = offer.text
+            cell.offerTextLabel.text = offer._text
             cell.priceLabel.text = offer.price
             return cell
         default:

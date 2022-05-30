@@ -143,7 +143,7 @@ class NewInfoViewController: UITableViewController {
             for i in self.imageData {
                 if !i.url.isEmpty { info.images.append(InfoItem.ImageData(url: i.url, text: i.text)) }
             }
-            let errStr = dbProxy.addRecord(key: info.id, record: info) { [weak self] info in self?.closeMe(info) }
+            let errStr = dbProxy.addRecord(key: info.id, record: info) { [weak self] _, info in self?.closeMe(info) }
             if let s = errStr { Log.log("Error updting news \(s)") }
         }
     }
@@ -178,9 +178,10 @@ class NewInfoViewController: UITableViewController {
             showInfoDialogBox(title: "Error", message: "Info update failed")
             return
         }
-        if let nc = navigationController {
-            nc.popViewController(animated: true)
-        }
+        navigationController?.popViewController(animated: true)
+//        if let nc = navigationController {
+//            nc.popViewController(animated: true)
+//        }
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

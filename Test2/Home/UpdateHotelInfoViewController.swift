@@ -89,7 +89,7 @@ class UpdateHotelInfoViewController: UITableViewController {
 
     func addHotelInfoToDB(hotel h: Hotel) {
         let hotelInfo = HotelInfo(name: h.name, image: h.image, socialURLs: [:])
-        let errStr = dbProxy.addRecord(key: "info", record: hotelInfo) { h in self.closeMe(h) }
+        let errStr = dbProxy.addRecord(key: "info", record: hotelInfo) { _, h in self.closeMe(h) }
         if let s = errStr { Log.log(s) }
         //dbProxy.addHotelToConfig(hotelId: h.id!, hotelName: h.name)
     }

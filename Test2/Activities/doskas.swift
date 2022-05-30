@@ -1,4 +1,18 @@
 //
+//  doskas.swift
+//  Test2
+//
+//  Created by maciulek on 28/05/2022.
+//
+
+import Foundation
+
+
+
+
+
+/*
+//
 //  NewActivityViewController.swift
 //  Test2
 //
@@ -9,10 +23,9 @@ import UIKit
 
 class NewActivityViewController: UITableViewController {
 
-    var activityToEdit: Activity?
-    var dowIndex: Int?   // must be set before creating this controller!
+    var activityIndexToEdit: Int?
+    var dowIndex: Int = 0   // must be set before creating this controller!
     private var photoUpdated: Bool = false
-    let spinner = SpinnerViewController()
 
     @IBOutlet private weak var dowLabel: UILabel!
     @IBOutlet private weak var titleText: RoundedTextField!
@@ -38,26 +51,26 @@ class NewActivityViewController: UITableViewController {
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
 
-        if let dowIndex = dowIndex {
-            dowLabel.text = Activity.DOW.allCases[dowIndex].rawValue
-        }
+        dowLabel.text = Activity.DOW.allCases[dowIndex].rawValue
         // if the activity index is not null then we are editing the existing activity
-        if let activity = activityToEdit {
-            titleText.text = activity.title
-            subtitleText.text = activity.subtitle
-            activityText.text = activity.text
-            startDatePickerView.date = activity.start
-            endDatePickerView.date = activity.end
-            if let url = URL(string: activity.imageFileURL) {
-                imageView.kf.setImage(with: url)
+        if let activityIndex = activityIndexToEdit {
+            if let activity = hotel.activities[dowIndex]?[activityIndex] {
+                titleText.text = activity.title
+                subtitleText.text = activity.subtitle
+                activityText.text = activity.text
+                startDatePickerView.date = activity.start
+                endDatePickerView.date = activity.end
+                if let url = URL(string: activity.imageFileURL) {
+                    imageView.kf.setImage(with: url)
+                }
+                title = activity.title
             }
-            title = activity.title
         } else {
             title = "New Activity"
         }
-
-//        startDatePickerView.addTarget(self, action: #selector(datePickerAction), for: .allEditingEvents)
-//        endDatePickerView.addTarget(self, action: #selector(datePickerAction), for: .allEditingEvents)
+        
+        startDatePickerView.addTarget(self, action: #selector(datePickerAction), for: .allEditingEvents)
+        endDatePickerView.addTarget(self, action: #selector(datePickerAction), for: .allEditingEvents)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -74,56 +87,44 @@ class NewActivityViewController: UITableViewController {
     }
     
     @IBAction func savePressed(_ sender: UIBarButtonItem) {
-        guard let title = titleText.text, !title.isEmpty else {
+        guard !(titleText.text?.isEmpty ?? false) else {
             showInfoDialogBox(title: "Oops", message: "Title missing")
             return
         }
-        guard let subtitle = subtitleText.text, !subtitle.isEmpty else {
-            showInfoDialogBox(title: "Oops", message: "Subtitle missing")
+        guard !(subtitleText.text?.isEmpty ?? false) else {
+            showInfoDialogBox(title: "Oops", message: "Location missing")
             return
         }
-        guard let dowIndex = dowIndex else {
-            showInfoDialogBox(title: "Oops", message: "Day of the week not set")
-            return
-        }
-        
+
         let dow = Activity.DOW.allCases[dowIndex]
 
         var activity = Activity()
+        if let i = activityIndexToEdit { activity.id = hotel.activities[dowIndex]?[i].id }
         activity.title = titleText.text!
         activity.subtitle = subtitleText.text!
         activity.text = activityText.text!
         activity.start = startDatePickerView.date
         activity.end = endDatePickerView.date
         activity.imageFileURL = ""
-        if let orgActivity = activityToEdit {
-            activity.timestamp = orgActivity.timestamp
-            activity.id = orgActivity.id
-        }
-        else {
-            activity.timestamp = Date()
-            activity.id = nil
-        }
+
         if photoUpdated {
-            spinner.start(vc: self)
-            storageProxy.uploadImage(forLocation: .ACTIVITIES, image: imageView.image!, imageName: activity.title) { [weak self] error, photoURL in
-                self?.spinner.stop(vc: self!)
+            storageProxy.uploadImage(forLocation: .ACTIVITIES, image: imageView.image!, imageName: activity.title) { error, photoURL in
                 if let photoURL = photoURL {
                     activity.imageFileURL = photoURL
-                    self?.updateDB(activity: activity, dow: dow.rawValue)
+                    self.updateArrayAndDB(activity: activity, dow: dow.rawValue)
                 }
             }
         } else {
-            if let orgActivity = activityToEdit {
-                activity.imageFileURL = orgActivity.imageFileURL
+            if let i = activityIndexToEdit {
+                activity.imageFileURL = hotel.activities[dowIndex]![i].imageFileURL
             }
-            updateDB(activity: activity, dow: dow.rawValue)
+            self.updateArrayAndDB(activity: activity, dow: dow.rawValue)
         }
 
     }
 
-    func updateDB(activity: Activity, dow: String) {
-        let errStr = dbProxy.addRecord(key: activity.id, subNode: dow, record: activity) { _, activity in self.closeMe(activity) }
+    func updateArrayAndDB(activity: Activity, dow: String) {
+        let errStr = dbProxy.addRecord(key: activity.id, subNode: dow, record: activity) { activity in self.closeMe(activity) }
         if let s = errStr { Log.log(s) }
     }
 
@@ -132,9 +133,11 @@ class NewActivityViewController: UITableViewController {
             showInfoDialogBox(title: "Error", message: "Daily activities update failed")
             return
         }
-        let parent = navigationController?.topViewController as? ActivitiesViewController
-        DispatchQueue.main.async { parent?.resetDay(forward: true) }
-        navigationController?.popViewController(animated: true)
+        if let nc = navigationController {
+            nc.popViewController(animated: true)
+            let parent = nc.topViewController as! ActivitiesViewController
+            DispatchQueue.main.async { parent.resetDay(forward: true) }
+        }
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -143,8 +146,8 @@ class NewActivityViewController: UITableViewController {
         }
     }
 
-//    @IBAction func datePickerAction(sender: UIDatePicker) {
-//    }
+    @IBAction func datePickerAction(sender: UIDatePicker) {
+    }
 }
 
 
@@ -169,3 +172,7 @@ extension NewActivityViewController: UITextFieldDelegate {
         return true
     }
 }
+
+*/
+
+

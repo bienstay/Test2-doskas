@@ -11,6 +11,7 @@ import Kingfisher
 class NewOfferViewController: UITableViewController {
 
     var offerToEdit: Offer?
+    var groupIndex: Int?    // must be set
     var photoUpdated: Bool = false
 
     @IBOutlet var photoImageView: UIImageView! {
@@ -91,22 +92,29 @@ class NewOfferViewController: UITableViewController {
             storageProxy.uploadImage(forLocation: .NEWS, image: photoImageView.image!, imageName: offer.id) { error, photoURL in
                 if let photoURL = photoURL {
                     offer.imageURL = photoURL
-                    let errStr = dbProxy.addRecord(key: offer.id, record: offer) { offer in self.closeMe(offer) }
+                    let errStr = dbProxy.addRecord(key: offer.id, record: offer) { key, offer in self.closeMe(key, offer) }
                     if let s = errStr { Log.log(s) }
                 }
             }
         } else {
             offer.imageURL = offerToEdit?.imageURL ?? ""
-            let errStr = dbProxy.addRecord(key: offer.id, record: offer) { offer in self.closeMe(offer) }   // update only
+            let errStr = dbProxy.addRecord(key: offer.id, record: offer) { key, offer in self.closeMe(key, offer) }   // update only
             if let s = errStr { Log.log(s) }
         }
 
     }
 
-    func closeMe(_ offer:Offer?) {
+    func closeMe(_ key:String?, _ offer:Offer?) {
         guard offer != nil else {
             showInfoDialogBox(title: "Error", message: "Offer update failed")
             return
+        }
+        if let groupIndex = groupIndex, let offerId = key  {
+            var group = hotel.offerGroups[groupIndex]
+            if group.offers == nil { group.offers = [] }
+            group.offers?.append(offerId)
+            let errStr = dbProxy.addRecord(key: group.id, record: group) { _, group in }   // update only
+            if let s = errStr { Log.log(s) }
         }
         if let nc = navigationController {
             nc.popViewController(animated: true)

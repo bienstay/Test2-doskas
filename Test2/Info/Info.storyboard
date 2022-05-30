@@ -179,7 +179,7 @@
                                 <color key="currentPageIndicatorTintColor" red="0.84313725490000002" green="0.30196078430000001" blue="0.27058823529999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </pageControl>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yJq-vw-eNP">
-                                <rect key="frame" x="0.0" y="510" width="414" height="386"/>
+                                <rect key="frame" x="0.0" y="510" width="414" height="352"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="e5I-HB-E4I">
                                         <rect key="frame" x="10" y="0.0" width="393.5" height="48"/>
@@ -225,7 +225,7 @@
                             <constraint firstItem="dev-bq-bIz" firstAttribute="height" secondItem="FwA-jN-0bF" secondAttribute="width" id="TSU-rC-l2n"/>
                             <constraint firstItem="o2j-Tu-vdP" firstAttribute="bottom" secondItem="dev-bq-bIz" secondAttribute="bottom" constant="8" id="Tor-rb-b2f"/>
                             <constraint firstItem="RA6-IM-iBw" firstAttribute="leading" secondItem="FwA-jN-0bF" secondAttribute="leading" id="eM5-CG-Jty"/>
-                            <constraint firstAttribute="bottom" secondItem="yJq-vw-eNP" secondAttribute="bottom" id="gJR-Gu-vUR"/>
+                            <constraint firstItem="a0o-mK-6HM" firstAttribute="bottom" secondItem="yJq-vw-eNP" secondAttribute="bottom" id="gJR-Gu-vUR"/>
                             <constraint firstItem="RA6-IM-iBw" firstAttribute="top" secondItem="FwA-jN-0bF" secondAttribute="top" id="knb-0G-wJv"/>
                         </constraints>
                     </view>

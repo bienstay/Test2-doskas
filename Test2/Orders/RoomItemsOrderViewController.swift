@@ -43,7 +43,7 @@ class RoomItemsOrderViewController: UIViewController, UITableViewDataSource {
         }
 
         let orderInDB = OrderInDB(order: order, roomNumber: roomNumber)
-        let errStr = dbProxy.addRecord(record: orderInDB) { record in
+        let errStr = dbProxy.addRecord(record: orderInDB) { _, record in
             if record == nil {
                 DispatchQueue.main.async {
                     self.showInfoDialogBox(title: "Error", message: "Order update failed")

@@ -89,24 +89,6 @@ struct HotelInfo: Codable {
     var socialURLs: [String:String]?
 }
 
-struct Translations {
-    // lang, id, key, value
-    var news: [String:[String:[String:String]]] = [:]
-    // lang, id, key, value
-    var activities: [String:[String:[String:String]]] = [:]
-    // lang, id, key, value
-    var restaurants: [String:[String:[String:String]]] = [:]
-    struct InfoItemTranslated: Codable {
-        var title: String = ""
-        var subtitle: String = ""
-        var text: String = ""
-        var imageTexts: [String] = []
-    }
-    // lang, id, key, value
-    //var info: [String:[String:[String:InfoItemTranslated]]] = [:]
-    var info: [String:[String:[String:Any]]] = [:]
-}
-
 class Hotel {
     //var id: String = "SheratonFullMoon" // default hotel
     var id: String
@@ -123,7 +105,6 @@ class Hotel {
     var activities: [Int: [Activity]] = [:]
     var offerGroups: [OfferGroup] = []
     var offers: [String:Offer] = [:]
-    //var translations: [String: Translations] = [:]
     var translations: Translations = Translations()
     var likes: Likes = [:]
 
@@ -136,7 +117,6 @@ class Hotel {
     func initialize() {
         roomItems = loadFromJSON(fileNameNoExt: "roomItems")
         roomService.name = "In room dining"
-        //initInfoItems()
     }
 
     deinit {
@@ -153,26 +133,26 @@ class Hotel {
         dbProxy.subscribeForUpdates(completionHandler: offerGroupsUpdated)
         dbProxy.subscribeForUpdates(completionHandler: offersUpdated)
         dbProxy.subscribeForUpdates(completionHandler: activitiesUpdated)
-        //dbProxy.subscribeForUpdates(completionHandler: translationsUpdated)
-        //dbProxy.subscribeForUpdates(completionHandler: infoTranslationsUpdated)
         dbProxy.subscribeForUpdates(completionHandler: likesUpdated)
 
         dbProxy.subscribeForUpdates(path: "content/translations/news", completionHandler: newsTranslationsUpdated)
         dbProxy.subscribeForUpdates(path: "content/translations/activities", completionHandler: activitiesTranslationsUpdated)
         dbProxy.subscribeForUpdates(path: "content/translations/restaurants", completionHandler: restaurantsTranslationsUpdated)
+        dbProxy.subscribeForUpdates(path: "content/translations/offerGroups", completionHandler: offerGroupsTranslationsUpdated)
+        dbProxy.subscribeForUpdates(path: "content/translations/offers", completionHandler: offersTranslationsUpdated)
         dbProxy.subscribeForUpdates(path: "content/translations/info", completionHandler: informationTranslationsUpdated)
     }
 
     func newsTranslationsUpdated(newTranslations: [String:Any]) {
         if let newTranslations = newTranslations as? [String:[String:[String:String]]] {
-            self.translations.news = newTranslations
+            translations.news = newTranslations
             NotificationCenter.default.post(name: .newsUpdated, object: nil)
         }
     }
 
     func activitiesTranslationsUpdated(newTranslations: [String:Any]) {
         if let newTranslations = newTranslations as? [String:[String:[String:String]]] {
-            self.translations.activities = newTranslations
+            translations.activities = newTranslations
             NotificationCenter.default.post(name: .activitiesUpdated, object: nil)
 
         }
@@ -180,15 +160,29 @@ class Hotel {
 
     func restaurantsTranslationsUpdated(newTranslations: [String:Any]) {
         if let newTranslations = newTranslations as? [String:[String:[String:String]]] {
-            self.translations.restaurants = newTranslations
+            translations.restaurants = newTranslations
             NotificationCenter.default.post(name: .restaurantsUpdated, object: nil)
+        }
+    }
+
+    func offerGroupsTranslationsUpdated(newTranslations: [String:Any]) {
+        if let newTranslations = newTranslations as? [String:[String:[String:String]]] {
+            translations.offerGroups = newTranslations
+            NotificationCenter.default.post(name: .offersUpdated, object: nil)
+        }
+    }
+
+    func offersTranslationsUpdated(newTranslations: [String:Any]) {
+        if let newTranslations = newTranslations as? [String:[String:[String:String]]] {
+            translations.offers = newTranslations
+            NotificationCenter.default.post(name: .offersUpdated, object: nil)
         }
     }
 
     func informationTranslationsUpdated(newTranslations: [String:Any]) {
         //if let newTranslations = newTranslations as? [String:[String:[String:Translations.InfoItemTranslated]]] {
         if let newTranslations = newTranslations as? [String:[String:[String:Any]]] {
-            self.translations.info = newTranslations
+            translations.info = newTranslations
             NotificationCenter.default.post(name: .informationUpdated, object: nil)
         }
     }
@@ -219,9 +213,13 @@ class Hotel {
         NotificationCenter.default.post(name: .newsUpdated, object: nil)
     }
 
-    func offerGroupsUpdated(allOffers: [String:OfferGroup]) {
-        hotel.offerGroups = allOffers.map { $0.1 }
-        //applyTranslations()
+    func offerGroupsUpdated(allOfferGroups: [String:OfferGroup]) {
+        offerGroups = []
+        allOfferGroups.forEach( {
+            var o = $0.1
+            o.id = $0.0
+            offerGroups.append(o)
+        } )
         NotificationCenter.default.post(name: .offersUpdated, object: nil)
     }
 

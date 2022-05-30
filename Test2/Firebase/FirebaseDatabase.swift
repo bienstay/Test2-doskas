@@ -155,7 +155,7 @@ final class FirebaseDatabase: DBProxy {
         }
     }
 
-    func addRecord<T: Encodable>(key:String? = nil, subNode: String? = nil, record: T, completionHandler: @ escaping (T?) -> Void) -> String? {
+    func addRecord<T: Encodable>(key:String? = nil, subNode: String? = nil, record: T, completionHandler: @ escaping (String?, T?) -> Void) -> String? {
 
         var errString:String? = nil
         if let jsonData = try? JSONEncoder().encode(record) {
@@ -170,12 +170,12 @@ final class FirebaseDatabase: DBProxy {
                     if let err = error {
                         Log.log(level: .ERROR, "error uploading key \(String(describing: key)) for record \(T.self) - \(err.localizedDescription)",
                                 logInDb: T.Type.self != LogInDB.self)
-                        completionHandler(nil)
+                        completionHandler(nil, nil)
                     } else {
-                        if T.Type.self != LogInDB.Type.self {
+                        if T.Type.self != LogInDB.Type.self {   // do not log records added by Log itself
                             Log.log(level: .INFO, "Record with key \(String(describing: key)) added to \(dbRef.url)")
                         }
-                        completionHandler(record)
+                        completionHandler(dbRef.key, record)
                     }
                 }
             } else {

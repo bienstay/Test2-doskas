@@ -148,9 +148,10 @@ extension ActivitiesViewController: UITableViewDelegate {
     }
 
     func openNewActivityViewController(row: Int) {
-        let vc = self.createViewController(storyBoard: "Activities", id: "NewActivity") as! NewActivityViewController
-        vc.activityIndexToEdit = row
-        vc.dowIndex = dowIndex
-        self.navigationController?.pushViewController(vc, animated: true)
+        if let vc = createViewController(storyBoard: "Activities", id: "NewActivity") as? NewActivityViewController {
+            vc.activityToEdit = hotel.activities[dowIndex]?[row]
+            vc.dowIndex = dowIndex
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
 }

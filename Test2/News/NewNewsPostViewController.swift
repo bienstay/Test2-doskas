@@ -14,7 +14,6 @@ class NewNewsPostViewController: UITableViewController {
     var photoUpdated: Bool = false
     let spinner = SpinnerViewController()
 
-
     @IBOutlet var photoImageView: UIImageView! {
         didSet {
             photoImageView.layer.cornerRadius = 10.0
@@ -100,20 +99,20 @@ class NewNewsPostViewController: UITableViewController {
         }
         if photoUpdated {
             spinner.start(vc: self)
-            storageProxy.uploadImage(forLocation: .NEWS, image: image, imageName: post.postId) { error, photoURL in
-                self.spinner.stop(vc: self)
+            storageProxy.uploadImage(forLocation: .NEWS, image: image, imageName: post.postId) { [weak self] error, photoURL in
+                self?.spinner.stop(vc: self!)
                 if let photoURL = photoURL {
                     post.imageFileURL = photoURL
-                    let errStr = dbProxy.addRecord(key: post.postId, record: post) { post in self.closeMe(post) }
+                    let errStr = dbProxy.addRecord(key: post.postId, record: post) { _, post in self?.closeMe(post) }
                     if let s = errStr { Log.log(level: .ERROR, "Error updting news \(s)") }
                 } else {
                     Log.log(level: .ERROR, "Error uploading image - \(String(describing: error))")
-                    self.showInfoDialogBox(title: "Error", message: "Error uploading image")
+                    self?.showInfoDialogBox(title: "Error", message: "Error uploading image")
                 }
             }
         } else {
             post.imageFileURL = postToEdit?.imageFileURL ?? ""
-            let errStr = dbProxy.addRecord(key: post.postId, record: post) { post in self.closeMe(post) }   // update only
+            let errStr = dbProxy.addRecord(key: post.postId, record: post) { _, post in self.closeMe(post) }   // update only
             if let s = errStr { Log.log("Error updting news \(s)") }
         }
     }
@@ -137,15 +136,9 @@ extension NewNewsPostViewController: UITextFieldDelegate {
         }
         return true
     }
-/*
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        textField.text = ""
-    }
-*/
 }
 
 extension NewNewsPostViewController {
-
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
             showImagePicker(nc: self)
@@ -157,8 +150,8 @@ extension NewNewsPostViewController: UIImagePickerControllerDelegate, UINavigati
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             if let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
                 photoImageView.image = selectedImage
-                photoImageView.contentMode = .scaleAspectFill
-                photoImageView.clipsToBounds = true
+//                photoImageView.contentMode = .scaleAspectFill
+//                photoImageView.clipsToBounds = true
                 photoUpdated = true
             }
         dismiss(animated: true, completion: nil)

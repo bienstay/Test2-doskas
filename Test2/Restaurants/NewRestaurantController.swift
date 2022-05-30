@@ -122,13 +122,13 @@ class NewRestaurantController: UITableViewController {
             storageProxy.uploadImage(forLocation: .RESTAURANTS, image: photoImageView.image!, imageName: restaurant.name) { error, photoURL in
                 if let photoURL = photoURL {
                     restaurant.image = photoURL
-                    let errStr = dbProxy.addRecord(key: restaurant.id, record: restaurant) { restaurant in self.closeMe(restaurant) }
+                    let errStr = dbProxy.addRecord(key: restaurant.id, record: restaurant) { _, restaurant in self.closeMe(restaurant) }
                     if let s = errStr { Log.log(s) }
                 }
             }
         } else {
             restaurant.image = restaurantToEdit?.image ?? ""
-            let errStr = dbProxy.addRecord(key: restaurant.id, record: restaurant) { restaurant in self.closeMe(restaurant) }   // update only
+            let errStr = dbProxy.addRecord(key: restaurant.id, record: restaurant) { _, restaurant in self.closeMe(restaurant) }   // update only
             if let s = errStr { Log.log(s) }
         }
     }

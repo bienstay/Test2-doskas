@@ -59,7 +59,7 @@ class BuggyOrderViewController: UIViewController {
         order.buggyData = Order.BuggyData(locationType: locationType, locationData: locationData)
 
         let orderInDB = OrderInDB(order: order, roomNumber: roomNumber)
-        let errStr = dbProxy.addRecord(record: orderInDB) { record in
+        let errStr = dbProxy.addRecord(record: orderInDB) { _, record in
             if record == nil {
                 self.showInfoDialogBox(title: "Error", message: "Order update failed")
             } else {

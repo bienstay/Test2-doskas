@@ -6,11 +6,20 @@
 //
 
 import Foundation
-/*
-// lang, item, key, value
-typealias Translations = [String: [String: [String: String]]]
 
-// lang, item, key, value
-//typealias InfoTranslations = [String: [String: [String: InfoItem]]]
-typealias InfoTranslations = [String: InfoItem]
-*/
+struct Translations {
+    // lang, id, key, value
+    var news:           [String:[String:[String:String]]] = [:]
+    var activities:     [String:[String:[String:String]]] = [:]
+    var restaurants:    [String:[String:[String:String]]] = [:]
+    var offerGroups:    [String:[String:[String:String]]] = [:]
+    var offers:         [String:[String:[String:String]]] = [:]
+
+    struct InfoItemTranslated: Codable {
+        var title: String = ""
+        var subtitle: String = ""
+        var text: String = ""
+        var imageTexts: [String] = []
+    }
+    var info: [String:[String:[String:Any]]] = [:]
+}

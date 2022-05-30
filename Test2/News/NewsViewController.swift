@@ -37,7 +37,7 @@ class NewsViewController: UIViewController {
             self.tableView.endUpdates()
         }
     }
-    
+
     @IBAction func newPostPressed(_ sender: Any) {
         _ = pushViewController(storyBoard: "News", id: "NewPost")
     }

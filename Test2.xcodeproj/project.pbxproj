@@ -119,7 +119,8 @@
 		06E5FC432739804A0082EFAC /* RoomService.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E5FC422739804A0082EFAC /* RoomService.png */; };
 		06F551DD283D7189007AB4DB /* NewInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F551DC283D7189007AB4DB /* NewInfoViewController.swift */; };
 		06F551DF283D8CC2007AB4DB /* NewInfoImagesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F551DE283D8CC2007AB4DB /* NewInfoImagesTableViewCell.swift */; };
-		06F551E1284016FF007AB4DB /* doskas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F551E0284016FF007AB4DB /* doskas.swift */; };
+		06F551E32842A813007AB4DB /* doskas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F551E22842A813007AB4DB /* doskas.swift */; };
+		06F551E52842D2E3007AB4DB /* NewOfferGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F551E42842D2E3007AB4DB /* NewOfferGroupViewController.swift */; };
 		06F5D161270B516D004931F7 /* ActivitiesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F5D160270B516D004931F7 /* ActivitiesViewController.swift */; };
 		06F5D163270B5197004931F7 /* NewActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F5D162270B5197004931F7 /* NewActivityViewController.swift */; };
 		06F5D167270B52A4004931F7 /* Activities.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 06F5D166270B52A4004931F7 /* Activities.storyboard */; };
@@ -253,7 +254,8 @@
 		06E5FC422739804A0082EFAC /* RoomService.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RoomService.png; sourceTree = "<group>"; };
 		06F551DC283D7189007AB4DB /* NewInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewInfoViewController.swift; sourceTree = "<group>"; };
 		06F551DE283D8CC2007AB4DB /* NewInfoImagesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewInfoImagesTableViewCell.swift; sourceTree = "<group>"; };
-		06F551E0284016FF007AB4DB /* doskas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = doskas.swift; sourceTree = "<group>"; };
+		06F551E22842A813007AB4DB /* doskas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = doskas.swift; sourceTree = "<group>"; };
+		06F551E42842D2E3007AB4DB /* NewOfferGroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewOfferGroupViewController.swift; sourceTree = "<group>"; };
 		06F5D160270B516D004931F7 /* ActivitiesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitiesViewController.swift; sourceTree = "<group>"; };
 		06F5D162270B5197004931F7 /* NewActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewActivityViewController.swift; sourceTree = "<group>"; };
 		06F5D166270B52A4004931F7 /* Activities.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Activities.storyboard; sourceTree = "<group>"; };
@@ -493,6 +495,7 @@
 				06882F6C274C5AF900D643A0 /* offers.json */,
 				06882F6E274D867300D643A0 /* OfferViewController.swift */,
 				06090DD827C7AFC200B85393 /* NewOfferViewController.swift */,
+				06F551E42842D2E3007AB4DB /* NewOfferGroupViewController.swift */,
 			);
 			path = Offers;
 			sourceTree = "<group>";
@@ -517,7 +520,6 @@
 				06A47DCD2839775F002D32B5 /* InfoViewController.swift */,
 				06F551DC283D7189007AB4DB /* NewInfoViewController.swift */,
 				06F551DE283D8CC2007AB4DB /* NewInfoImagesTableViewCell.swift */,
-				06F551E0284016FF007AB4DB /* doskas.swift */,
 			);
 			path = Info;
 			sourceTree = "<group>";
@@ -584,6 +586,7 @@
 				06F5D160270B516D004931F7 /* ActivitiesViewController.swift */,
 				06F5D16A270BC7D4004931F7 /* ActivityCell.swift */,
 				06F5D162270B5197004931F7 /* NewActivityViewController.swift */,
+				06F551E22842A813007AB4DB /* doskas.swift */,
 			);
 			path = Activities;
 			sourceTree = "<group>";
@@ -788,6 +791,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				06F551E52842D2E3007AB4DB /* NewOfferGroupViewController.swift in Sources */,
 				06C32ADF28287ACA00228A40 /* LoginViewController.swift in Sources */,
 				067A4D852807F64B0043F50D /* FirebaseAuth.swift in Sources */,
 				069DB35A263B0FB800C91468 /* ReviewViewController.swift in Sources */,
@@ -799,7 +803,7 @@
 				06293E2F28099BBB00226400 /* MessagingProxy.swift in Sources */,
 				061DE02E2731AEEF0021A37C /* RoomItemsViewController.swift in Sources */,
 				069FDBAA26A39486004F543F /* ChatListViewController.swift in Sources */,
-				06F551E1284016FF007AB4DB /* doskas.swift in Sources */,
+				06F551E32842A813007AB4DB /* doskas.swift in Sources */,
 				06882F672749128100D643A0 /* OffersCell.swift in Sources */,
 				066874FE2831260600DB5604 /* EditUserViewController.swift in Sources */,
 				065F036A2636221100A5CDEF /* Hotel.swift in Sources */,

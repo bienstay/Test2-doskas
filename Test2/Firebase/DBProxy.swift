@@ -26,7 +26,7 @@ enum QueryOperation {
 }
 
 protocol DBProxy {
-    func addRecord<T: Encodable>(key:String?, subNode: String?, record: T, completionHandler: @ escaping (T?) -> Void) -> String?
+    func addRecord<T: Encodable>(key:String?, subNode: String?, record: T, completionHandler: @ escaping (String?, T?) -> Void) -> String?
     func removeRecord<T: Encodable>(key:String, subNode: String?, record: T, completionHandler: @ escaping (T?) -> Void) -> String?
     func subscribe<T: Codable>(for operation: QueryOperation, subNode: String?, parameter: QueryParameter?, completionHandler: @ escaping (String, T) -> Void)
     func subscribeForUpdates<T: Codable>(subNode: String?, start timestamp: Int?, limit: UInt?, parameter: QueryParameter?, completionHandler: @ escaping ([String:T]) -> Void)
@@ -58,10 +58,10 @@ protocol DBProxy {
 
 // extensions are needed as a workaround to no default parameters in protocols
 extension DBProxy {
-    func addRecord<T: Encodable>(key:String?, record: T, completionHandler: @ escaping (T?) -> Void) -> String? {
+    func addRecord<T: Encodable>(key:String?, record: T, completionHandler: @ escaping (String?, T?) -> Void) -> String? {
         return addRecord(key:key, subNode: nil, record: record, completionHandler: completionHandler)
     }
-    func addRecord<T: Encodable>(record: T, completionHandler: @ escaping (T?) -> Void) -> String? {
+    func addRecord<T: Encodable>(record: T, completionHandler: @ escaping (String?, T?) -> Void) -> String? {
         return addRecord(key:nil, subNode: nil, record: record, completionHandler: completionHandler)
     }
     func removeRecord<T: Encodable>(key:String, record: T, completionHandler: @ escaping (T?) -> Void) -> String? {

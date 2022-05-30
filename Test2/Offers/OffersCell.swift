@@ -10,11 +10,11 @@ import Kingfisher
 
 class OffersCell: UITableViewCell, UICollectionViewDelegate {
 
+    @IBOutlet weak var newOfferButton: UIButton!
     @IBOutlet private weak var groupTitleLabel: UILabel!
     @IBOutlet private weak var groupSubLabel: UILabel!
     @IBOutlet private var collectionView: UICollectionView!
     private var cellSelectedClosure: ((Int) -> ())? = nil
-    var cellSelectedForEditClosure: ((Int) -> ())? = nil
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -22,7 +22,7 @@ class OffersCell: UITableViewCell, UICollectionViewDelegate {
         collectionView.backgroundColor = .BBbackgroundColor
     }
 
-    func configure(group: Int, title: String, subTitle: String, dataSource: UICollectionViewDataSource, selectionClosure: @escaping (Int) -> () ) {
+    func configure(group: Int, title: String, subTitle: String, dataSource: UICollectionViewDataSource, selectionClosure: @escaping (Int) -> ()) {
         groupTitleLabel.text = title
         groupSubLabel.text = subTitle
         collectionView.dataSource = dataSource
@@ -53,23 +53,29 @@ extension OffersCell: UICollectionViewDelegateFlowLayout {
     }
 }
 
+
+
+
 class OfferCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var picture: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var subtitleLabel: UILabel!
-    @IBOutlet weak var textLabel: UILabel!
+    @IBOutlet weak var deleteButton: UIButton!
     var cellSelectedForEditClosure: ((Offer) -> ())? = nil
+    var cellSelectedForDeleteClosure: ((Offer) -> ())? = nil
     var offer: Offer = Offer()
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        subtitleLabel.textColor = .red
         picture.layer.cornerRadius = 10
 
         contentView.isUserInteractionEnabled = true
         let longPress = UILongPressGestureRecognizer(target: self, action: #selector(didPressLong))
         longPress.minimumPressDuration = 1
         contentView.addGestureRecognizer(longPress)
+    }
+
+    @IBAction func deleteButtonPressed(_ sender: UIButton) {
+        cellSelectedForDeleteClosure?(offer)
     }
 
     @objc func didPressLong(sender: UILongPressGestureRecognizer) {
@@ -81,8 +87,7 @@ class OfferCollectionViewCell: UICollectionViewCell {
     func configure(offer: Offer?) {
         if let offer = offer {
             self.offer = offer
-            titleLabel.text = offer.title
-            subtitleLabel.text = offer.subTitle
+            titleLabel.text = offer._title
             if let url = URL(string: offer.imageURL) {
                 picture.kf.setImage(with: url)
             } else {
