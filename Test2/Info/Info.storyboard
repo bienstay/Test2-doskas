@@ -104,6 +104,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="newInfoBarButton" destination="e4r-NK-9t6" id="IjK-RH-FkD"/>
                         <outlet property="tableView" destination="GHZ-Vq-ghG" id="hbT-mK-IdN"/>
                     </connections>
                 </viewController>

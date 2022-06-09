@@ -24,7 +24,7 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
         super.viewWillAppear(animated)
         
         setupListNavigationBar(largeTitle: false, title: phoneUser.displayName + "  " + (phoneUser.role?.rawValue ?? ""))
-        tabBarController?.tabBar.isHidden = false
+        //tabBarController?.tabBar.isHidden = false
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

@@ -12,7 +12,7 @@
         <!--Room Items Order View Controller-->
         <scene sceneID="fg2-wR-IFL">
             <objects>
-                <viewController storyboardIdentifier="CreateOrder" id="Jed-sZ-pN8" customClass="RoomItemsOrderViewController" customModule="Test2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CreateOrder" hidesBottomBarWhenPushed="YES" id="Jed-sZ-pN8" customClass="RoomItemsOrderViewController" customModule="Test2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="cE2-Er-kBC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -530,7 +530,7 @@
         <!--Service Order View Controller-->
         <scene sceneID="6SE-fl-Yas">
             <objects>
-                <viewController storyboardIdentifier="MaintenanceOrder" id="amZ-KE-mRF" customClass="ServiceOrderViewController" customModule="Test2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MaintenanceOrder" hidesBottomBarWhenPushed="YES" id="amZ-KE-mRF" customClass="ServiceOrderViewController" customModule="Test2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8ib-e8-xVz">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -632,7 +632,7 @@
         <!--Buggy Order View Controller-->
         <scene sceneID="MWU-j4-xgg">
             <objects>
-                <viewController storyboardIdentifier="BuggyOrder" id="BV6-MK-JT5" customClass="BuggyOrderViewController" customModule="Test2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="BuggyOrder" hidesBottomBarWhenPushed="YES" id="BV6-MK-JT5" customClass="BuggyOrderViewController" customModule="Test2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="BcH-2d-FSg">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

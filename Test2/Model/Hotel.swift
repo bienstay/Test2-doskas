@@ -83,6 +83,15 @@ struct InfoItem: Codable {
     }
 }
 
+struct Review: Codable {
+    var id: String?
+    var timestamp: Date
+    var rating: Int
+    var review: String
+    var roomNumber: Int?
+    var userId: String?
+}
+
 struct HotelInfo: Codable {
     var name: String
     var image: String
@@ -154,7 +163,6 @@ class Hotel {
         if let newTranslations = newTranslations as? [String:[String:[String:String]]] {
             translations.activities = newTranslations
             NotificationCenter.default.post(name: .activitiesUpdated, object: nil)
-
         }
     }
 
@@ -302,7 +310,8 @@ class Hotel {
         }
         NotificationCenter.default.post(name: .likesUpdated, object: nil)
     }
-/*
+    
+    /*
     func translationsUpdated(allTranslations: [String:Translations]) {
         for l in allTranslations { translations[l.0] = l.1 }
         applyTranslations()

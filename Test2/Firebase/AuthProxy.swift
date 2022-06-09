@@ -18,9 +18,6 @@ enum Role: String, CaseIterable {
 }
 
 protocol AuthenticationData {
-    //var userId: String
-    //var userName: String
-    //var displayName: String
     var uid: String { get }
     var name: String { get }
     var email: String { get }

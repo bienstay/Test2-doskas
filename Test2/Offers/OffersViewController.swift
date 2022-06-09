@@ -10,7 +10,7 @@ import UIKit
 class OffersViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var newOfferGroupButton: UIBarButtonItem!
+    @IBOutlet weak var newOfferGroupBarButton: UIBarButtonItem!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,12 +22,15 @@ class OffersViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        setupListNavigationBar(largeTitle: false)
-
+        setupListNavigationBar()
+        //tabBarController?.tabBar.isHidden = true
         title = .offers
-        //newOfferGroupButton.isEnabled = guest.isAdmin() ? true: false
-        //newOfferGroupButton.title = guest.isAdmin() ? "New" : ""
+        newOfferGroupBarButton.isEnabled = phoneUser.isAllowed(to: .editContent)
+        newOfferGroupBarButton.title = phoneUser.isAllowed(to: .editContent) ? "New" : ""
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        title = ""
     }
 
     @objc func onOffersUpdated(_ notification: Notification) {
@@ -60,20 +63,11 @@ extension OffersViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "OffersCell", for: indexPath) as! OffersCell
         cell.configure(group: indexPath.row, title: hotel.offerGroups[indexPath.row]._title, subTitle: hotel.offerGroups[indexPath.row]._subtitle, dataSource: self) { offerIndex in
             let vc = self.pushViewController(storyBoard: "Offers", id: "Offer") as! OfferViewController
-            //vc.offer = hotel.offerGroups[indexPath.row].offers![offerIndex]
             if let offerID = hotel.offerGroups[indexPath.row].offers?[offerIndex] {
                 vc.offer = hotel.offers[offerID] ?? Offer()
             }
         }
         cell.newOfferButton.tag = indexPath.row
-        /*
-        cell.cellSelectedForEditClosure = { [weak self] offerIndex in
-            guard let self = self else { return }
-            if let vc = self.pushViewController(storyBoard: "Offers", id: "NewOffer") as? NewOfferViewController, let offerID = hotel.offerGroups[indexPath.row].offers?[offerIndex] {
-                vc.offerToEdit = hotel.offers[offerID] ?? Offer()
-            }
-        }
-         */
         return cell
     }
 
@@ -101,7 +95,6 @@ extension OffersViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "OfferCell", for: indexPath) as! OfferCollectionViewCell
         let group = collectionView.tag
-        //cell.configure(offer: hotel.offerGroups[group].offers?[indexPath.row])
         if let offerID = hotel.offerGroups[group].offers?[indexPath.row] {
             cell.configure(offer: hotel.offers[offerID])
             cell.cellSelectedForEditClosure = { [weak self] offer in

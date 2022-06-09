@@ -59,7 +59,7 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationController?.navigationBar.tintColor = .black
 
-        tabBarController?.tabBar.isHidden = true
+        //tabBarController?.tabBar.isHidden = true
         
         title = isRoomService ? .roomService : restaurant.name
         if restaurant.menus.count > 0 { headerLabel.text = restaurant.menus[menuIndex].title }

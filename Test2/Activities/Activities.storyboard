@@ -369,9 +369,167 @@
             </objects>
             <point key="canvasLocation" x="204" y="64"/>
         </scene>
+        <!--Rate Review View Controller-->
+        <scene sceneID="v1T-Vt-iiz">
+            <objects>
+                <viewController storyboardIdentifier="RateReview" id="5tw-jh-gpV" customClass="RateReviewViewController" customModule="Test2" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Lyx-Gs-TUj">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="W85-GH-oH3">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="546"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="5Pb-bF-3VR">
+                                        <rect key="frame" x="32" y="16" width="350" height="514"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rate" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OfI-RE-mwq">
+                                                <rect key="frame" x="0.0" y="0.0" width="350" height="37"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="K5k-k4-z5g">
+                                                <rect key="frame" x="0.0" y="53" width="350" height="207"/>
+                                                <subviews>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gs9-6W-HYf">
+                                                        <rect key="frame" x="71.5" y="0.0" width="207" height="207"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" secondItem="gs9-6W-HYf" secondAttribute="height" multiplier="1:1" id="bcG-Bx-A8k"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                <integer key="value" value="30"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </imageView>
+                                                </subviews>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="X7s-3b-NIn">
+                                                <rect key="frame" x="0.0" y="276" width="350" height="22"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D6V-Ow-s3V" userLabel="Button1">
+                                                        <rect key="frame" x="0.0" y="0.0" width="63.5" height="22"/>
+                                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                        <state key="normal" image="star" catalog="system"/>
+                                                        <connections>
+                                                            <action selector="rateButtonPressed:" destination="5tw-jh-gpV" eventType="touchUpInside" id="lNv-ed-Xo6"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Evf-L7-xce" userLabel="Button2">
+                                                        <rect key="frame" x="71.5" y="0.0" width="63.5" height="22"/>
+                                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                        <state key="normal" image="star" catalog="system"/>
+                                                        <connections>
+                                                            <action selector="rateButtonPressed:" destination="5tw-jh-gpV" eventType="touchUpInside" id="dlb-xe-8cr"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ECt-YP-FJR" userLabel="Button3">
+                                                        <rect key="frame" x="143" y="0.0" width="64" height="22"/>
+                                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                        <state key="normal" image="star" catalog="system"/>
+                                                        <connections>
+                                                            <action selector="rateButtonPressed:" destination="5tw-jh-gpV" eventType="touchUpInside" id="0AK-AM-3VL"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3dA-6y-b9u" userLabel="Button4">
+                                                        <rect key="frame" x="215" y="0.0" width="63.5" height="22"/>
+                                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                        <state key="normal" image="star" catalog="system"/>
+                                                        <connections>
+                                                            <action selector="rateButtonPressed:" destination="5tw-jh-gpV" eventType="touchUpInside" id="Hmw-Ab-OKW"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IwQ-QI-bgk" userLabel="Button5">
+                                                        <rect key="frame" x="286.5" y="0.0" width="63.5" height="22"/>
+                                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                        <state key="normal" image="star" catalog="system"/>
+                                                        <connections>
+                                                            <action selector="rateButtonPressed:" destination="5tw-jh-gpV" eventType="touchUpInside" id="Dfw-q2-K12"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                            </stackView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Review" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l5I-WL-4Ir">
+                                                <rect key="frame" x="0.0" y="314" width="350" height="37"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="wWX-8D-1tY">
+                                                <rect key="frame" x="0.0" y="367" width="350" height="100"/>
+                                                <color key="backgroundColor" systemColor="systemGray6Color"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="100" id="rmo-4B-lNQ">
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                <integer key="value" value="20"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </constraint>
+                                                </constraints>
+                                                <color key="textColor" systemColor="labelColor"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                        <integer key="value" value="10"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                        <integer key="value" value="1"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </textView>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MnX-CZ-nmy" customClass="GlossyButton" customModule="Test2" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="483" width="350" height="31"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Send"/>
+                                                <connections>
+                                                    <action selector="sendButtonPressed:" destination="5tw-jh-gpV" eventType="touchUpInside" id="Pqx-qd-DbV"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="5Pb-bF-3VR" secondAttribute="bottom" constant="16" id="Jhs-ZW-hHf"/>
+                                    <constraint firstAttribute="trailing" secondItem="5Pb-bF-3VR" secondAttribute="trailing" constant="32" id="Oiw-PA-ANA"/>
+                                    <constraint firstItem="5Pb-bF-3VR" firstAttribute="leading" secondItem="W85-GH-oH3" secondAttribute="leading" constant="32" id="PQD-d0-FMW"/>
+                                    <constraint firstItem="5Pb-bF-3VR" firstAttribute="top" secondItem="W85-GH-oH3" secondAttribute="top" constant="16" id="X5U-Yw-98T"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="78Y-qu-1gr"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="gs9-6W-HYf" firstAttribute="width" secondItem="Lyx-Gs-TUj" secondAttribute="width" multiplier="0.5" id="H7F-iN-8cd"/>
+                            <constraint firstAttribute="trailing" secondItem="W85-GH-oH3" secondAttribute="trailing" id="KII-4i-ksF"/>
+                            <constraint firstItem="W85-GH-oH3" firstAttribute="top" secondItem="Lyx-Gs-TUj" secondAttribute="top" id="pWn-ds-okw"/>
+                            <constraint firstItem="W85-GH-oH3" firstAttribute="leading" secondItem="Lyx-Gs-TUj" secondAttribute="leading" id="yEt-2f-Cvm"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="image" destination="gs9-6W-HYf" id="FKY-jw-SDB"/>
+                        <outlet property="rateLabel" destination="OfI-RE-mwq" id="Elz-1Q-8pN"/>
+                        <outlet property="reviewLabel" destination="l5I-WL-4Ir" id="bik-ia-aJ0"/>
+                        <outlet property="reviewTextView" destination="wWX-8D-1tY" id="wGo-ae-qDD"/>
+                        <outlet property="sendButton" destination="MnX-CZ-nmy" id="8pp-Uc-6I2"/>
+                        <outletCollection property="rateButtons" destination="D6V-Ow-s3V" collectionClass="NSMutableArray" id="8vr-8q-J5o"/>
+                        <outletCollection property="rateButtons" destination="Evf-L7-xce" collectionClass="NSMutableArray" id="3JD-sx-4oh"/>
+                        <outletCollection property="rateButtons" destination="ECt-YP-FJR" collectionClass="NSMutableArray" id="j6M-sJ-DFb"/>
+                        <outletCollection property="rateButtons" destination="3dA-6y-b9u" collectionClass="NSMutableArray" id="mrZ-jH-BtJ"/>
+                        <outletCollection property="rateButtons" destination="IwQ-QI-bgk" collectionClass="NSMutableArray" id="sRf-iP-8hF"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5rD-LU-8y3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1093" y="64"/>
+        </scene>
     </scenes>
     <resources>
         <image name="JaNaPlaya" width="871.469970703125" height="999.8499755859375"/>
+        <image name="star" catalog="system" width="128" height="116"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

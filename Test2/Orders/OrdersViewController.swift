@@ -24,10 +24,9 @@ class OrdersViewController: UIViewController, UITableViewDataSource {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
         setupListNavigationBar()
+        //tabBarController?.tabBar.isHidden = false
         title = .orders
-        tabBarController?.tabBar.isHidden = false
     }
 
     override func viewWillDisappear(_ animated: Bool) {

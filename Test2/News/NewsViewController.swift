@@ -22,8 +22,8 @@ class NewsViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
         setupListNavigationBar()
+        //tabBarController?.tabBar.isHidden = true
         title = .news
         newPostBarButton.isEnabled = phoneUser.isAllowed(to: .editContent)
         newPostBarButton.title = phoneUser.isAllowed(to: .editContent) ? "New" : ""

@@ -42,6 +42,8 @@ final class FirebaseDatabase: DBProxy {
     var OFFERS_DB_REF: DatabaseReference        { CONTENT_DB_REF.child("offers") }
     var TRANSLATIONS_DB_REF: DatabaseReference  { CONTENT_DB_REF.child("translations") }
 
+    var FEEDBACK_DB_REF: DatabaseReference      { BASE_DB_REF.child("feedback") }
+    var REVIEWS_DB_REF: DatabaseReference       { FEEDBACK_DB_REF.child("reviews") }
     var LIKES_DB_REF: DatabaseReference         { BASE_DB_REF.child("likes") }
     var LIKESGLOBAL_DB_REF: DatabaseReference   { LIKES_DB_REF.child("global") }
     var LIKESPERUSER_DB_REF: DatabaseReference  { LIKES_DB_REF.child("perUser") }
@@ -97,6 +99,9 @@ final class FirebaseDatabase: DBProxy {
             case is LikesPerUserInDB.Type:
                 if let child = subNode { return LIKESPERUSER_DB_REF.child(child) }
                 else { return LIKESPERUSER_DB_REF }
+            case is Review.Type:
+                if let child = subNode { return REVIEWS_DB_REF.child(child) }
+                else { return REVIEWS_DB_REF }
             case is LikesInDB.Type:
                 if let child = subNode { return LIKESGLOBAL_DB_REF.child(child) }
                 else { return LIKESGLOBAL_DB_REF }
@@ -143,13 +148,10 @@ final class FirebaseDatabase: DBProxy {
                     default:
                         return dbRef
                 }
-/*
-            case is ChatRoomInDB.Type:
-                guard case .AssignedTo(let id) = parameter else {
-                    return dbRef
-                }
-                return dbRef?.queryOrdered(byChild: "assignedTo").queryEqual(toValue: id)
-*/
+            case is Review.Type:
+                guard case .Review(let id) = parameter else { return dbRef }
+                return dbRef?.queryOrderedByKey().queryEqual(toValue: id)
+                //return dbRef?.queryOrdered(byChild: id).queryEqual(toValue: id)
             default:
                 return dbRef
         }
@@ -269,11 +271,11 @@ final class FirebaseDatabase: DBProxy {
         })
     }
 
-    func subscribeForUpdates(path: String, completionHandler: @ escaping ([String:Any]) -> Void) {
+    func subscribeForUpdates(path: String, completionHandler: @ escaping ([String:Any]) -> Void) -> Any? {
         let dbRef = BASE_DB_REF.child(path)
         Log.log(level: .DEBUG, "Observing \(dbRef.description)")
         observed.insert(dbRef)
-        dbRef.observe(.value, with: { (snapshot) in
+        return dbRef.observe(.value, with: { (snapshot) in
             var objects: [String:Any] = [:]
             Log.log(level: .DEBUG, "Adding \(snapshot.children.allObjects.count) new objects")
             for child in snapshot.children {
@@ -292,6 +294,16 @@ final class FirebaseDatabase: DBProxy {
     func unsubscribe<T: Codable>(t: T.Type, subNode: String? = nil, parameter: QueryParameter? = nil) {
         guard let query = getQuery(type: T.self, subNode: subNode, parameter: parameter) else { return }
         query.removeAllObservers()
+    }
+    
+    func unsubscribe(path: String/*handle: Any?*/) {
+        let dbRef = BASE_DB_REF.child(path)
+        dbRef.removeAllObservers()
+        /*
+        if let handle = handle as? UInt {
+            dbRef.removeObserver(withHandle: handle)
+        }
+         */
     }
 
     func removeAllObservers() {

@@ -175,8 +175,8 @@ extension FirebaseDatabase {
 
     func writeChat(chatRoomID: String, message m: ChatMessage) {
         _ = dbProxy.addRecord(key: nil, subNode: chatRoomID, record: m) { _, _ in }
-        if !phoneUser.isStaff, let roomNumber = phoneUser.roomNumber, let roomNumberAsInt = Int(roomNumber) {
-            CHATROOMS_DB_REF.child(chatRoomID).child("roomNumber").setValue(roomNumberAsInt) { (error, ref) -> Void in
+        if !phoneUser.isStaff, let roomNumber = phoneUser.roomNumber {
+            CHATROOMS_DB_REF.child(chatRoomID).child("roomNumber").setValue(roomNumber) { (error, ref) -> Void in
                 if let error = error {
                     Log.log(level: .ERROR, "Error updating chat room - \(error.localizedDescription)")
                 }
@@ -214,5 +214,18 @@ extension FirebaseDatabase {
         }
     }
 
+    func writeReview(group: String, id: String, rating: Int, review: String, completionHandler: @ escaping () -> Void) {
+        let updates = [
+            "/global/\(group)/\(id)": ["rating": rating, "review": review],
+            "/perUser/\(phoneUser.id)/\(group)/\(id)": ["rating": rating, "review": review]
+        ] as [String : Any]
+        REVIEWS_DB_REF.updateChildValues(updates)  { (error, dbref) in
+            if let error = error {
+                Log.log(level: .ERROR, "Error updating review\n\(error.localizedDescription)")
+            } else {
+                completionHandler()
+            }
+        }
+    }
 
 }

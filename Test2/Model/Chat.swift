@@ -59,7 +59,7 @@ class ChatRoom {
         m.id = key
         messages.append(m)
         NotificationCenter.default.post(name: .chatMessageAdded, object: m)
-        if m.senderID != phoneUser.id {
+        if m.senderID != phoneUser.id, m.translations?[phoneUser.lang] == nil { // could have been already translated if we restarted the app
             dbProxy.translateChat(chatRoom: id, chatID: m.id!, textToTranslate: m.content, targetLanguage: phoneUser.lang, completionHandler: { _ in } )
             updateUnreadCount()
         }

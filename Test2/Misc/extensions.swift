@@ -214,6 +214,7 @@ extension UIViewController {
         navigationController?.hidesBarsOnSwipe = false
         navigationController?.navigationBar.prefersLargeTitles = largeTitle
         navigationController?.navigationBar.tintColor = tintColor
+        navigationController?.navigationBar.isTranslucent = true
     }
 
 }
@@ -423,6 +424,7 @@ extension Notification.Name {
     //static let chatMessageCountUpdated = Notification.Name("chatMessageCountUpdated")
     static let guestUpdated = Notification.Name("guestUpdated")
     static let likesUpdated = Notification.Name("likesUpdated")
+    static let reviewsUpdated = Notification.Name("reviewsUpdated")
     static let connectionStatusUpdated = Notification.Name("connectionStatusUpdated")
 }
 
@@ -491,11 +493,16 @@ extension UIViewController {
     func presentModal(storyBoard: String, id: String) -> UIViewController {
         let storyboard = UIStoryboard(name: storyBoard, bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: id)
-        //vc.modalPresentationStyle = .formSheet
         self.present(vc, animated: true, completion: nil)
         return vc
     }
-    
+
+    func prepareModal(storyBoard: String, id: String) -> UIViewController {
+        let storyboard = UIStoryboard(name: storyBoard, bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: id)
+        return vc
+    }
+
     func createViewController(storyBoard: String, id: String) -> UIViewController {
         let storyboard = UIStoryboard(name: storyBoard, bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: id)
@@ -828,3 +835,9 @@ extension UIViewController {
     }
 }
 */
+
+extension Int {
+    var toString:String {
+        return "\(self)"
+    }
+}

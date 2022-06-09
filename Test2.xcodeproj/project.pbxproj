@@ -107,6 +107,7 @@
 		069FDBAA26A39486004F543F /* ChatListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069FDBA926A39486004F543F /* ChatListViewController.swift */; };
 		069FDBAC26AEF0A6004F543F /* roomItems.json in Resources */ = {isa = PBXBuildFile; fileRef = 069FDBAB26AEF0A6004F543F /* roomItems.json */; };
 		06A47DCE2839775F002D32B5 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06A47DCD2839775F002D32B5 /* InfoViewController.swift */; };
+		06A8C7E1284BFD4B000406F9 /* RateReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06A8C7E0284BFD4B000406F9 /* RateReviewViewController.swift */; };
 		06AC358B271B58F100D249C6 /* Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AC358A271B58F100D249C6 /* Firebase.swift */; };
 		06AC358D271B7FAE00D249C6 /* Likes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AC358C271B7FAE00D249C6 /* Likes.swift */; };
 		06AF200F27E2ED7600B9A692 /* DBProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AF200E27E2ED7500B9A692 /* DBProxy.swift */; };
@@ -242,6 +243,7 @@
 		069FDBA926A39486004F543F /* ChatListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListViewController.swift; sourceTree = "<group>"; };
 		069FDBAB26AEF0A6004F543F /* roomItems.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = roomItems.json; sourceTree = "<group>"; };
 		06A47DCD2839775F002D32B5 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
+		06A8C7E0284BFD4B000406F9 /* RateReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateReviewViewController.swift; sourceTree = "<group>"; };
 		06AC358A271B58F100D249C6 /* Firebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firebase.swift; sourceTree = "<group>"; };
 		06AC358C271B7FAE00D249C6 /* Likes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Likes.swift; sourceTree = "<group>"; };
 		06AF200E27E2ED7500B9A692 /* DBProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBProxy.swift; sourceTree = "<group>"; };
@@ -587,6 +589,7 @@
 				06F5D16A270BC7D4004931F7 /* ActivityCell.swift */,
 				06F5D162270B5197004931F7 /* NewActivityViewController.swift */,
 				06F551E22842A813007AB4DB /* doskas.swift */,
+				06A8C7E0284BFD4B000406F9 /* RateReviewViewController.swift */,
 			);
 			path = Activities;
 			sourceTree = "<group>";
@@ -874,6 +877,7 @@
 				065F0367263621F200A5CDEF /* Menu.swift in Sources */,
 				06C32AE1282EC2F100228A40 /* AddUserViewController.swift in Sources */,
 				06882F6027447DE800D643A0 /* NetworkStatus.swift in Sources */,
+				06A8C7E1284BFD4B000406F9 /* RateReviewViewController.swift in Sources */,
 				0683A1EE265154250000D122 /* MenuCell.swift in Sources */,
 				069FD3D7269650630076C6FC /* UIViewExtensions.swift in Sources */,
 				062216402638B0B7002C0977 /* RoomItemCell.swift in Sources */,

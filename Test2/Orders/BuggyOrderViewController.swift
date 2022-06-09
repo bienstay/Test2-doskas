@@ -97,7 +97,7 @@ class BuggyOrderViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         initView()
-        tabBarController?.tabBar.isHidden = true
+        //tabBarController?.tabBar.isHidden = true
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil) //object: self.view.window)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: nil) //object: self.view.window)
@@ -108,7 +108,7 @@ class BuggyOrderViewController: UIViewController {
 
         roomNumberTextField.keyboardType = .numberPad
         //if !phoneUser.isStaff { roomNumberTextField.text = String(phoneUser.guest?.roomNumber ?? 0) }
-        roomNumberTextField.text = phoneUser.roomNumber
+        roomNumberTextField.text = phoneUser.roomNumber?.toString
         roomNumberTextField.isEnabled = phoneUser.isStaff
 
         backgroundPicture.image = UIImage(named: category.rawValue)

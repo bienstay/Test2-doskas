@@ -115,9 +115,6 @@ class GlossyButton: UIButton {
     }
 }
 
-
-
-
 // for tableView do this in viewDidLoad:
 //  let backgroundView = UIView(frame: tableView.bounds)
 //  backgroundView.setGradientBackground()

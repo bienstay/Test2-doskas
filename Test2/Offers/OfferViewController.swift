@@ -22,7 +22,6 @@ class OfferViewController: UIViewController {
         // Configure header view
         headerView.titleLabel.text = offer._title
         headerView.subTitleLabel.text = offer._subtitle
-        //headerView.headerImageView.image = UIImage(named: offer.imageURL)
         
         if let url = URL(string: offer.imageURL) {
             headerView.headerImageView.isHidden = false
@@ -48,6 +47,7 @@ class OfferViewController: UIViewController {
     }
 
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         endTransparentNavigationBar()
     }
 
@@ -78,7 +78,6 @@ extension OfferViewController: UITableViewDataSource, UITableViewDelegate {
 class OfferHeaderView: UIView {
 
     @IBOutlet var headerImageView: UIImageView!
-    @IBOutlet var heartButton: UIButton!
     @IBOutlet var titleLabel: UILabel! {
         didSet {
             titleLabel.numberOfLines = 0
@@ -94,7 +93,6 @@ class OfferHeaderView: UIView {
             }
         }
     }
-    @IBOutlet var ratingImageView: UIImageView!
 }
 
 

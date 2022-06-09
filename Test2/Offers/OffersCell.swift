@@ -20,6 +20,8 @@ class OffersCell: UITableViewCell, UICollectionViewDelegate {
         super.awakeFromNib()
         backgroundColor = .BBbackgroundColor
         collectionView.backgroundColor = .BBbackgroundColor
+        newOfferButton.isEnabled = phoneUser.isAllowed(to: .editContent)
+        newOfferButton.isHidden = !phoneUser.isAllowed(to: .editContent)
     }
 
     func configure(group: Int, title: String, subTitle: String, dataSource: UICollectionViewDataSource, selectionClosure: @escaping (Int) -> ()) {
@@ -67,11 +69,16 @@ class OfferCollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         picture.layer.cornerRadius = 10
+        deleteButton.layer.cornerRadius = 5
+        deleteButton.isEnabled = phoneUser.isAllowed(to: .editContent)
+        deleteButton.isHidden = !phoneUser.isAllowed(to: .editContent)
 
-        contentView.isUserInteractionEnabled = true
-        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(didPressLong))
-        longPress.minimumPressDuration = 1
-        contentView.addGestureRecognizer(longPress)
+        if phoneUser.isAllowed(to: .editContent) {
+            contentView.isUserInteractionEnabled = true
+            let longPress = UILongPressGestureRecognizer(target: self, action: #selector(didPressLong))
+            longPress.minimumPressDuration = 1
+            contentView.addGestureRecognizer(longPress)
+        }
     }
 
     @IBAction func deleteButtonPressed(_ sender: UIButton) {

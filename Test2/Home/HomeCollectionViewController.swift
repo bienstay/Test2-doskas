@@ -103,6 +103,11 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
             vc.modalPresentationStyle = .fullScreen
             self?.present(vc, animated: true, completion: nil)
         }
+        menu.addItem(label: "Rate review") { [weak self] in
+            if let self = self {
+                _ = self.presentModal(storyBoard: "Activities", id: "RateReview")
+            }
+        }
         menu.addSeparator()
         menu.addItem(label: "Log out") { [weak self] in
             print("Logging out...")
@@ -120,14 +125,20 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
     }
 
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setupTransparentNavigationBar()
         collectionView.contentInsetAdjustmentBehavior = .never   // hides the navigation bar
-        //navigationController?.setNavigationBarHidden(true, animated: false)
         navigationController?.setNavigationBarHidden(false, animated: false)
 
         statusView.isUserInteractionEnabled = false
         updateStatusView()
         
-        tabBarController?.tabBar.isHidden = false
+        //tabBarController?.tabBar.isHidden = false
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        endTransparentNavigationBar()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -215,7 +226,7 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return Section.numberOfSections
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch Section(rawValue: section) {
         case .header: return 1
@@ -253,7 +264,7 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
             return UICollectionViewCell()
         }
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         switch Section(rawValue: indexPath.section) {
         case .items:

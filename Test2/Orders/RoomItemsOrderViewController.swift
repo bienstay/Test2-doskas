@@ -84,7 +84,7 @@ class RoomItemsOrderViewController: UIViewController, UITableViewDataSource {
         tableView.separatorStyle = .singleLine
         tableView.separatorColor = .BBseparatorColor
 
-        tabBarController?.tabBar.isHidden = true
+        //tabBarController?.tabBar.isHidden = true
         activityIndicator.hidesWhenStopped = true
 
         categoryImageView.image = UIImage(named: order.category.rawValue)
@@ -100,7 +100,7 @@ class RoomItemsOrderViewController: UIViewController, UITableViewDataSource {
         roomNumberTextField.isEnabled = phoneUser.isStaff
         roomNumberTextField.keyboardType = .numberPad
         //if !phoneUser.isStaff { roomNumberTextField.text = String(phoneUser.guest?.roomNumber ?? 0) }
-        roomNumberTextField.text = phoneUser.roomNumber
+        roomNumberTextField.text = phoneUser.roomNumber?.toString
 
         commentField.placeholder = .comment
         sendButton.setTitle(.send, for: .normal)

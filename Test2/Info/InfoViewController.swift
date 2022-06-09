@@ -11,6 +11,7 @@ import Kingfisher
 
 class InfoViewController: UIViewController, UITableViewDataSource {
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var newInfoBarButton: UIBarButtonItem!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,13 +23,14 @@ class InfoViewController: UIViewController, UITableViewDataSource {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
         setupListNavigationBar()
+        //tabBarController?.tabBar.isHidden = true
         title = .info
+        newInfoBarButton.isEnabled = phoneUser.isAllowed(to: .editContent)
+        newInfoBarButton.title = phoneUser.isAllowed(to: .editContent) ? "New" : ""
     }
 
     override func viewWillDisappear(_ animated: Bool) {
-        // clean the title to eliminate bad effect of the large title staying after transition
         title = ""
     }
 

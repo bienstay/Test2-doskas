@@ -25,15 +25,11 @@ class ActivitiesViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         setupListNavigationBar()
-        //title = Activity.DOW.allCases[dowIndex].rawValue
+        //tabBarController?.tabBar.isHidden = true
         title = Calendar.current.weekdaySymbols[dowIndex]
-
         newActivityBarButton.isEnabled = phoneUser.isAllowed(to: .editContent)
         newActivityBarButton.title = phoneUser.isAllowed(to: .editContent) ? "New" : ""
-        //newActivityBarButton.isEnabled = phoneUser.isStaff
-        //newActivityBarButton.title = phoneUser.isStaff ? "New" : ""
     }
 
     func resetDay(forward: Bool) {

@@ -57,6 +57,11 @@ class InfoDetailViewController: UIViewController, UICollectionViewDelegate, UISc
         title = infoItem._title
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        endTransparentNavigationBar()
+    }
+
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         pageControl.currentPage = indexPath.row
     }

@@ -17,6 +17,7 @@ enum QueryParameter {
     case ChatUser(id: String)
     case GuestInfo(id: String)
     case GuestInDb(id: String)
+    case Review(id: String)
 }
 
 enum QueryOperation {
@@ -30,8 +31,9 @@ protocol DBProxy {
     func removeRecord<T: Encodable>(key:String, subNode: String?, record: T, completionHandler: @ escaping (T?) -> Void) -> String?
     func subscribe<T: Codable>(for operation: QueryOperation, subNode: String?, parameter: QueryParameter?, completionHandler: @ escaping (String, T) -> Void)
     func subscribeForUpdates<T: Codable>(subNode: String?, start timestamp: Int?, limit: UInt?, parameter: QueryParameter?, completionHandler: @ escaping ([String:T]) -> Void)
-    func subscribeForUpdates(path: String, completionHandler: @ escaping ([String:Any]) -> Void)
+    func subscribeForUpdates(path: String, completionHandler: @ escaping ([String:Any]) -> Void) -> Any?
     func unsubscribe<T: Codable>(t: T.Type, subNode: String?, parameter: QueryParameter?)
+    func unsubscribe(path: String)
     func removeAllObservers()
 
     func observeOrderChanges()
@@ -45,6 +47,7 @@ protocol DBProxy {
     func markChatAsRead(chatRoom: String, chatID: String)
     //func addHotelToConfig(hotelId: String, hotelName: String)
     func updatePhoneData(phoneUserId: String, phoneID: String, phoneLang: String)
+    func writeReview(group: String, id: String, rating: Int, review: String, completionHandler: @ escaping () -> Void)
 
     //func updateGuest(hotelId: String, guestId: String, guestData: GuestInDB, completionHandler: @ escaping () -> Void)
     func log(level: Log.LogLevel, s: String)

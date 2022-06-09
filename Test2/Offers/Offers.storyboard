@@ -183,6 +183,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="newOfferGroupBarButton" destination="SPR-fS-3Dm" id="mYT-mw-LwY"/>
                         <outlet property="tableView" destination="Ma0-L5-fyV" id="1Rz-19-0Yy"/>
                     </connections>
                 </viewController>
@@ -199,7 +200,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="CtR-Ag-cu6">
-                                <rect key="frame" x="0.0" y="0.0" width="390" height="1200"/>
+                                <rect key="frame" x="0.0" y="0.0" width="390" height="1166"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="yLb-BK-3J8" userLabel="Header View" customClass="OfferHeaderView" customModule="Test2" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="390" height="445"/>
@@ -336,7 +337,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="CtR-Ag-cu6" firstAttribute="top" secondItem="aAx-fW-i1W" secondAttribute="top" id="I6t-Km-66v"/>
-                            <constraint firstAttribute="bottom" secondItem="CtR-Ag-cu6" secondAttribute="bottom" id="MGJ-ds-njR"/>
+                            <constraint firstItem="J57-jb-XZr" firstAttribute="bottom" secondItem="CtR-Ag-cu6" secondAttribute="bottom" id="MGJ-ds-njR"/>
                             <constraint firstItem="CtR-Ag-cu6" firstAttribute="leading" secondItem="J57-jb-XZr" secondAttribute="leading" id="ZLK-yD-ar2"/>
                             <constraint firstItem="CtR-Ag-cu6" firstAttribute="trailing" secondItem="J57-jb-XZr" secondAttribute="trailing" id="xLf-5G-rOU"/>
                         </constraints>

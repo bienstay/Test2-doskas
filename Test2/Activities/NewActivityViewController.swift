@@ -139,7 +139,7 @@ class NewActivityViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
-            showPicturePicker(vc: self)
+            showImagePicker(nc: self)
         }
     }
 
