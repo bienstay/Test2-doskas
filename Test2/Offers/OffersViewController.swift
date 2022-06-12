@@ -34,11 +34,11 @@ class OffersViewController: UIViewController {
     }
 
     @objc func onOffersUpdated(_ notification: Notification) {
-        DispatchQueue.main.async {
-            self.tableView.beginUpdates()
-            self.tableView.reloadSections([0], with: .none)
-            self.tableView.setNeedsLayout()
-            self.tableView.endUpdates()
+        DispatchQueue.main.async { [weak self] in
+            self?.tableView.beginUpdates()
+            self?.tableView.reloadSections([0], with: .none)
+            self?.tableView.setNeedsLayout()
+            self?.tableView.endUpdates()
         }
     }
 
@@ -61,10 +61,11 @@ extension OffersViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "OffersCell", for: indexPath) as! OffersCell
-        cell.configure(group: indexPath.row, title: hotel.offerGroups[indexPath.row]._title, subTitle: hotel.offerGroups[indexPath.row]._subtitle, dataSource: self) { offerIndex in
-            let vc = self.pushViewController(storyBoard: "Offers", id: "Offer") as! OfferViewController
-            if let offerID = hotel.offerGroups[indexPath.row].offers?[offerIndex] {
-                vc.offer = hotel.offers[offerID] ?? Offer()
+        cell.configure(group: indexPath.row, title: hotel.offerGroups[indexPath.row]._title, subTitle: hotel.offerGroups[indexPath.row]._subtitle, dataSource: self) { [weak self] offerIndex in
+            if let vc = self?.pushViewController(storyBoard: "Offers", id: "Offer") as? OfferViewController {
+                if let offerID = hotel.offerGroups[indexPath.row].offers?[offerIndex] {
+                    vc.offer = hotel.offers[offerID] ?? Offer()
+                }
             }
         }
         cell.newOfferButton.tag = indexPath.row
@@ -120,8 +121,8 @@ extension OffersViewController: UICollectionViewDataSource {
 extension OffersViewController {
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         if !phoneUser.isAllowed(to: .editContent) { return nil }
-        let action1 = UIContextualAction(style: .normal, title: "Edit") { action, view, completionHandler in
-            if let vc = self.pushViewController(storyBoard: "Offers", id: "NewOfferGroup") as? NewOfferGroupViewController {
+        let action1 = UIContextualAction(style: .normal, title: "Edit") { [weak self] action, view, completionHandler in
+            if let vc = self?.pushViewController(storyBoard: "Offers", id: "NewOfferGroup") as? NewOfferGroupViewController {
                 vc.groupToEdit = hotel.offerGroups[indexPath.row]
             }
         }
@@ -143,11 +144,11 @@ extension OffersViewController {
 
     func deleteOfferGroup(group: OfferGroup) {
         guard let id = group.id else { return }
-        let errStr = dbProxy.removeRecord(key: id, record: group) { record in
+        let errStr = dbProxy.removeRecord(key: id, record: group) { [weak self] record in
             if record == nil {
-                self.showInfoDialogBox(title: "Error", message: "Group delete failed")
+                self?.showInfoDialogBox(title: "Error", message: "Group delete failed")
             } else {
-                self.showInfoDialogBox(title: "Info", message: "Offer group deleted")
+                self?.showInfoDialogBox(title: "Info", message: "Offer group deleted")
             }
         }
         if errStr != nil { Log.log(errStr!) }

@@ -9,11 +9,12 @@ import UIKit
 
 class InfoDetailViewController: UIViewController, UICollectionViewDelegate, UIScrollViewDelegate {
 
-    @IBOutlet var backgroundImageView: UIImageView!
-    @IBOutlet var collectionView: UICollectionView!
-    @IBOutlet var pageControl: UIPageControl!
-    @IBOutlet var subtitleLabel: UILabel!
-    @IBOutlet var textLabel: UILabel!
+    @IBOutlet weak var backgroundImageView: UIImageView!
+    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var pageControl: UIPageControl!
+    @IBOutlet weak var subtitleLabel: UILabel!
+    @IBOutlet weak var textLabel: UILabel!
+    @IBOutlet weak var tableView: UITableView!
 
     var reviewsManager = ReviewsManager()
     //var infoItem:InfoItem = initInfoItems()
@@ -26,10 +27,11 @@ class InfoDetailViewController: UIViewController, UICollectionViewDelegate, UISc
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        initView()
-
-        //reviewsManager.delegate = self
+        initView(tableView: tableView)
+        tableView.register(UINib(nibName: "ReviewTableViewCell", bundle: nil), forCellReuseIdentifier: "ReviewCell")
+        reviewsManager.delegate = self
         reviewsManager.start(group: "info", id: infoItem.id ?? "")
+
 
         subtitleLabel.text = infoItem._subtitle
         textLabel.text = infoItem._text
@@ -50,6 +52,9 @@ class InfoDetailViewController: UIViewController, UICollectionViewDelegate, UISc
         collectionView.contentInsetAdjustmentBehavior = .never
         collectionView.delegate = self
 
+        tableView.dataSource = self
+        tableView.delegate = self
+        
         pageControl.numberOfPages = infoItem.images.count
         pageControl.isHidden = infoItem.images.count <= 1
     }
@@ -118,12 +123,12 @@ extension InfoDetailViewController: UICollectionViewDataSource {
         return cell
     }
 }
-/*
+
 extension InfoDetailViewController: ReviewsManagerDelegate {
     func reviewsUpdated(reviewManager: ReviewsManager) {
         DispatchQueue.main.async {
             self.tableView.beginUpdates()
-            self.tableView.reloadSections([Sections.Reviews.rawValue], with: .right)
+            self.tableView.reloadSections([0], with: .right)
             self.tableView.endUpdates()
         }
     }
@@ -131,12 +136,24 @@ extension InfoDetailViewController: ReviewsManagerDelegate {
     func reviewsTranslationsUpdated(reviewManager: ReviewsManager) {
         DispatchQueue.main.async {
             self.tableView.beginUpdates()
-            self.tableView.reloadSections([Sections.Reviews.rawValue], with: .fade)
+            self.tableView.reloadSections([0], with: .fade)
             self.tableView.endUpdates()
         }
     }
 }
-*/
+
+
+extension InfoDetailViewController: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        reviewsManager.reviews.count
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ReviewCell", for: indexPath) as! ReviewTableViewCell
+        let r = reviewsManager.reviews[indexPath.row]
+        cell.draw(timestamp: r.timestamp, rating: r.rating, review: r.review, roomNumber: r.roomNumber, translation: reviewsManager.translations[r.id ?? ""])
+        return cell
+    }
+}
 
 
 class InfoPictureCell: UICollectionViewCell {

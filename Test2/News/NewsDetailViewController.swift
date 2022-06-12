@@ -8,7 +8,7 @@
 import UIKit
 
 class NewsDetailViewController: UIViewController {
-    @IBOutlet var tableView: UITableView!
+    @IBOutlet weak var tableView: UITableView!
 
     var post = NewsPost()
     var reviewsManager = ReviewsManager()
@@ -28,8 +28,8 @@ class NewsDetailViewController: UIViewController {
 
         NotificationCenter.default.addObserver(self, selector: #selector(onLikesUpdated(_:)), name: .likesUpdated, object: nil)
 
-        reviewsManager.delegate = self
         reviewsManager.start(group: "news", id: post.postId)
+        reviewsManager.delegate = self
     }
 
     deinit {
@@ -47,10 +47,10 @@ class NewsDetailViewController: UIViewController {
     }
 
     @objc func onLikesUpdated(_ notification: Notification) {
-        DispatchQueue.main.async {
-            self.tableView.beginUpdates()
-            self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
-            self.tableView.endUpdates()
+        DispatchQueue.main.async { [weak self] in
+            self?.tableView.beginUpdates()
+            self?.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
+            self?.tableView.endUpdates()
         }
         //DispatchQueue.main.async { self.tableView.reloadData() }
     }
@@ -64,10 +64,10 @@ extension NewsDetailViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section : Int) -> Int {
         switch Sections(rawValue: section) {
-        case .Details : return 2
-        case .ReviewButton: return phoneUser.isStaff ? 0 : 1
-        case .Reviews: return reviewsManager.reviews.count
-        default: return 0
+            case .Details : return 2
+            case .ReviewButton: return phoneUser.isStaff ? 0 : 1
+            case .Reviews: return reviewsManager.reviews.count
+            default: return 0
         }
     }
 
@@ -108,12 +108,12 @@ extension NewsDetailViewController: UITableViewDataSource, UITableViewDelegate {
         if section != Sections.Reviews.rawValue || reviewsManager.reviews.isEmpty { return nil }
         return "Reviews"
     }
-/*
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 { return 0 }
-        return 50
-    }
-*/
+
+//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//        if section == 0 { return 0 }
+//        return 50
+//    }
+
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         guard let headerView = view as? UITableViewHeaderFooterView, !reviewsManager.reviews.isEmpty else { return }
         headerView.tintColor = .orange
@@ -134,18 +134,18 @@ extension NewsDetailViewController: UITableViewDataSource, UITableViewDelegate {
 
 extension NewsDetailViewController: ReviewsManagerDelegate {
     func reviewsUpdated(reviewManager: ReviewsManager) {
-        DispatchQueue.main.async {
-            self.tableView.beginUpdates()
-            self.tableView.reloadSections([Sections.Reviews.rawValue], with: .right)
-            self.tableView.endUpdates()
+        DispatchQueue.main.async { [weak self] in
+            self?.tableView.beginUpdates()
+            self?.tableView.reloadSections([Sections.Reviews.rawValue], with: .right)
+            self?.tableView.endUpdates()
         }
     }
     
     func reviewsTranslationsUpdated(reviewManager: ReviewsManager) {
-        DispatchQueue.main.async {
-            self.tableView.beginUpdates()
-            self.tableView.reloadSections([Sections.Reviews.rawValue], with: .fade)
-            self.tableView.endUpdates()
+        DispatchQueue.main.async { [weak self] in
+            self?.tableView.beginUpdates()
+            self?.tableView.reloadSections([Sections.Reviews.rawValue], with: .fade)
+            self?.tableView.endUpdates()
         }
     }
 }

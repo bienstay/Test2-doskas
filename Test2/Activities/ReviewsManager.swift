@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol ReviewsManagerDelegate {
+protocol ReviewsManagerDelegate: AnyObject {
     func reviewsUpdated(reviewManager: ReviewsManager)
     func reviewsTranslationsUpdated(reviewManager: ReviewsManager)
 }
@@ -16,7 +16,7 @@ class ReviewsManager {
     private var group: String = ""
     private var id: String = ""
 
-    var delegate: ReviewsManagerDelegate? = nil
+    weak var delegate: ReviewsManagerDelegate? = nil
     var reviews: [Review] = []
     var translations: [String:String] = [:]
 

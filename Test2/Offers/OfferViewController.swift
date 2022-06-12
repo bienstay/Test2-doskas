@@ -12,9 +12,9 @@ class OfferViewController: UIViewController {
     var reviewsManager = ReviewsManager()
 
     // reviews protocol variables
-    var group: String = "offer"
-    var itemId: String { offer.id ?? "" }
-    var nonReviewSectionCount: Int = 1
+    //var group: String = "offer"
+    //var itemId: String { offer.id ?? "" }
+    //var nonReviewSectionCount: Int = 1
 
     @IBOutlet var tableView: UITableView!
     @IBOutlet var headerView: OfferHeaderView!
