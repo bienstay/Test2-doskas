@@ -48,9 +48,4 @@ class NewsCell: UITableViewCell {
         likesLabel.text = String(numLikes)
         likesLabel.isHidden = !phoneUser.isStaff
     }
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-    }
-
 }

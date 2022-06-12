@@ -57,9 +57,4 @@ class RoomItemCell: UITableViewCell {
         plusButton.isHidden = !expanded
         quantityLabel.isHidden = !expanded
     }
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-    }
-
 }

@@ -14,6 +14,11 @@ final class FirebaseDatabase: DBProxy {
 
     var isConnected: Bool = false
     var serverTimeOffet:Double = 0.0
+    
+    struct SubscriptionHandle {
+        var dbRef: DatabaseQuery
+        var handle: UInt
+    }
 
     var ROOT_DB_REF: DatabaseReference {
         return Firebase.shared.database.reference()
@@ -213,10 +218,10 @@ final class FirebaseDatabase: DBProxy {
         return errString
     }
 
-    func subscribe<T: Codable>(for operation: QueryOperation, subNode: String? = nil, parameter: QueryParameter? = nil, completionHandler: @ escaping (String, T) -> Void) {
+    func subscribe<T: Codable>(for operation: QueryOperation, subNode: String? = nil, parameter: QueryParameter? = nil, completionHandler: @ escaping (String, T) -> Void) -> Any? {
         guard let query = getQuery(type: T.self, subNode: subNode, parameter: parameter) else {
             Log.log(level: .ERROR, "Invalid subscription: \(operation) \(String(describing: subNode)) \(String(describing: parameter))")
-            return
+            return nil
         }
         Log.log(level: .DEBUG, "observing for \(operation) " + query.description)
         observed.insert(query)
@@ -226,7 +231,7 @@ final class FirebaseDatabase: DBProxy {
             case .DELETE: det = .childRemoved
             case .UPDATE: det = .childChanged
         }
-        query.observe(det, with: { (snapshot) in
+        let handle = query.observe(det, with: { (snapshot) in
             guard JSONSerialization.isValidJSONObject(snapshot.value!) else {
                 Log.log("Invalid JSON: \(snapshot.value!) in query: \(query)")
                 return
@@ -239,14 +244,15 @@ final class FirebaseDatabase: DBProxy {
                 Log.log(level: .ERROR, "Failed to decode JSON for query \(query) : \(data.debugDescription)\n \(error)")
             }
         })
+        return SubscriptionHandle(dbRef: query, handle: handle)
     }
 
-    func subscribeForUpdates<T: Codable>(subNode: String? = nil, start timestamp: Int? = nil, limit: UInt? = nil, parameter: QueryParameter? = nil, completionHandler: @ escaping ([String:T]) -> Void) {
+    func subscribeForUpdates<T: Codable>(subNode: String? = nil, start timestamp: Int? = nil, limit: UInt? = nil, parameter: QueryParameter? = nil, completionHandler: @ escaping ([String:T]) -> Void) -> Any? {
 
-        guard let query = getQuery(type: T.self, subNode: subNode, parameter: parameter) else { return }
+        guard let query = getQuery(type: T.self, subNode: subNode, parameter: parameter) else { return nil }
         Log.log(level: .DEBUG, "Observing \(query.description)")
         observed.insert(query)
-        query.observe(.value, with: { (snapshot) in
+        let handle = query.observe(.value, with: { (snapshot) in
             var objects: [String:T] = [:]
             Log.log(level: .DEBUG, "Adding \(snapshot.children.allObjects.count) new objects of type \(T.self)")
             for child in snapshot.children {
@@ -269,13 +275,14 @@ final class FirebaseDatabase: DBProxy {
             Log.log(level: .DEBUG, "\(objects.count) new objects of type \(T.self) added")
             completionHandler(objects)
         })
+        return SubscriptionHandle(dbRef: query, handle: handle)
     }
 
     func subscribeForUpdates(path: String, completionHandler: @ escaping ([String:Any]) -> Void) -> Any? {
         let dbRef = BASE_DB_REF.child(path)
         Log.log(level: .DEBUG, "Observing \(dbRef.description)")
         observed.insert(dbRef)
-        return dbRef.observe(.value, with: { (snapshot) in
+        let handle =  dbRef.observe(.value, with: { (snapshot) in
             var objects: [String:Any] = [:]
             Log.log(level: .DEBUG, "Adding \(snapshot.children.allObjects.count) new objects")
             for child in snapshot.children {
@@ -289,21 +296,18 @@ final class FirebaseDatabase: DBProxy {
             Log.log(level: .DEBUG, "\(objects.count) new objects of type added")
             completionHandler(objects)
         })
+        return SubscriptionHandle(dbRef: dbRef, handle: handle)
     }
 
     func unsubscribe<T: Codable>(t: T.Type, subNode: String? = nil, parameter: QueryParameter? = nil) {
         guard let query = getQuery(type: T.self, subNode: subNode, parameter: parameter) else { return }
         query.removeAllObservers()
     }
-    
-    func unsubscribe(path: String/*handle: Any?*/) {
-        let dbRef = BASE_DB_REF.child(path)
-        dbRef.removeAllObservers()
-        /*
-        if let handle = handle as? UInt {
-            dbRef.removeObserver(withHandle: handle)
+
+    func unsubscribe(from handle: Any?) {
+        if let handle = handle as? SubscriptionHandle {
+            handle.dbRef.removeObserver(withHandle: handle.handle)
         }
-         */
     }
 
     func removeAllObservers() {

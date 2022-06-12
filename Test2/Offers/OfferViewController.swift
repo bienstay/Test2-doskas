@@ -9,16 +9,28 @@ import UIKit
 
 class OfferViewController: UIViewController {
     var offer = Offer()
+    var reviewsManager = ReviewsManager()
+
+    // reviews protocol variables
+    var group: String = "offer"
+    var itemId: String { offer.id ?? "" }
+    var nonReviewSectionCount: Int = 1
 
     @IBOutlet var tableView: UITableView!
     @IBOutlet var headerView: OfferHeaderView!
     @IBOutlet var requestBookingButton: UIButton!
 
+    enum Sections: Int, CaseIterable {
+        case Details = 0
+        case ReviewButton = 1
+        case Reviews = 2
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         initView(tableView: tableView)
         tableView.contentInsetAdjustmentBehavior = .never
-
+        
         // Configure header view
         headerView.titleLabel.text = offer._title
         headerView.subTitleLabel.text = offer._subtitle
@@ -32,17 +44,21 @@ class OfferViewController: UIViewController {
             headerView.headerImageView.image = UIImage(named: "JaNaPlaya")
         }
 
-        
-
         tableView.delegate = self
         tableView.dataSource = self
 
-        //requestBookingButton.superview?.backgroundColor = .BBbackgroundColor
+        tableView.register(UINib(nibName: "ReviewTableViewCell", bundle: nil), forCellReuseIdentifier: "ReviewCell")
+        tableView.register(UINib(nibName: "ReviewButtonTableViewCell", bundle: nil), forCellReuseIdentifier: "ReviewButtonCell")
+        reviewsManager.delegate = self
+        reviewsManager.start(group: "offer", id: offer.id ?? "")
     }
 
+    deinit {
+        reviewsManager.stop()
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
         setupTransparentNavigationBar()
     }
 
@@ -57,22 +73,74 @@ class OfferViewController: UIViewController {
 
 extension OfferViewController: UITableViewDataSource, UITableViewDelegate {
 
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return Sections.allCases.count
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section : Int) -> Int {
-        return 1
+        switch Sections(rawValue: section) {
+            case .Details : return 1
+            case .ReviewButton: return phoneUser.isStaff ? 0 : 1
+            case .Reviews: return reviewsManager.reviews.count
+            default: return 0
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch indexPath.row {
-        case 0:
-            let cell = tableView.dequeueReusableCell(withIdentifier: String("DetailsCell"), for: indexPath) as! OfferCell
-            cell.offerTextLabel.text = offer._text
-            cell.priceLabel.text = offer.price
+        switch Sections(rawValue: indexPath.section) {
+        case .Details:
+            switch indexPath.row {
+            case 0:
+                let cell = tableView.dequeueReusableCell(withIdentifier: String("DetailsCell"), for: indexPath) as! OfferCell
+                cell.offerTextLabel.text = offer._text
+                cell.priceLabel.text = offer.price
+                return cell
+            default:
+                //fatalError("Failed to instantiate the table view cell for detail view controller")
+                return UITableViewCell()
+            }
+        case .ReviewButton:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ReviewButtonCell", for: indexPath) as! ReviewButtonTableViewCell
+            return cell
+        case .Reviews:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ReviewCell", for: indexPath) as! ReviewTableViewCell
+            let r = reviewsManager.reviews[indexPath.row]
+            cell.draw(timestamp: r.timestamp, rating: r.rating, review: r.review, roomNumber: r.roomNumber, translation: reviewsManager.translations[r.id ?? ""])
             return cell
         default:
-            //fatalError("Failed to instantiate the table view cell for detail view controller")
             return UITableViewCell()
         }
     }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard indexPath.section == Sections.ReviewButton.rawValue else { return }
+        if let vc = self.prepareModal(storyBoard: "Activities", id: "RateReview") as? RateReviewViewController {
+            vc.group = "offer"
+            vc.id = offer.id ?? ""
+            vc.reviewTitle = offer.title
+            vc.reviewedImage = UIImage(named: "JaNaPlaya")
+            present(vc, animated: true)
+        }
+    }
+}
+
+extension OfferViewController: ReviewsManagerDelegate {
+    func reviewsUpdated(reviewManager: ReviewsManager) {
+        DispatchQueue.main.async {
+            self.tableView.beginUpdates()
+            self.tableView.reloadSections([Sections.Reviews.rawValue], with: .right)
+            self.tableView.endUpdates()
+        }
+    }
+    
+    func reviewsTranslationsUpdated(reviewManager: ReviewsManager) {
+        DispatchQueue.main.async {
+            self.tableView.beginUpdates()
+            self.tableView.reloadSections([Sections.Reviews.rawValue], with: .fade)
+            self.tableView.endUpdates()
+        }
+    }
+
 }
 
 class OfferHeaderView: UIView {
@@ -103,5 +171,6 @@ class OfferCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
+        selectionStyle = .none
     }
 }

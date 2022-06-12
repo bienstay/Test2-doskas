@@ -8,19 +8,15 @@
 import UIKit
 
 class NewsDetailViewController: UIViewController {
+    @IBOutlet var tableView: UITableView!
 
     var post = NewsPost()
-    var reviews: [Review] = []
-    var translations: [String:String] = [:]
-    var handle: Any? = nil
-
+    var reviewsManager = ReviewsManager()
     enum Sections: Int, CaseIterable {
         case Details = 0
         case ReviewButton = 1
         case Reviews = 2
     }
-
-    @IBOutlet var tableView: UITableView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,20 +27,18 @@ class NewsDetailViewController: UIViewController {
         tableView.dataSource = self
 
         NotificationCenter.default.addObserver(self, selector: #selector(onLikesUpdated(_:)), name: .likesUpdated, object: nil)
-        dbProxy.subscribeForUpdates(subNode: "news/\(post.postId)", parameter: nil, completionHandler: reviewsUpdated)
-        handle = dbProxy.subscribeForUpdates(path: "content/translations/reviews/pl/\(post.postId)", completionHandler: reviewsTranslationsUpdated)
+
+        reviewsManager.delegate = self
+        reviewsManager.start(group: "news", id: post.postId)
     }
 
     deinit {
-        dbProxy.unsubscribe(t: Review.self, subNode: "news/\(post.postId)", parameter: nil)
-        dbProxy.unsubscribe(path: "content/translations/reviews/pl/\(post.postId)")
+        reviewsManager.stop()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupTransparentNavigationBar(tableView: tableView)
-        //dbProxy.subscribeForUpdates(subNode: "news", parameter: .Review(id: post.postId), completionHandler: reviewsUpdated)
-        //dbProxy.subscribeForUpdates(path: "content/translations/reviews/\(phoneUser.lang)/\(post.postId)", completionHandler: reviewsTranslationsUpdated)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -60,32 +54,6 @@ class NewsDetailViewController: UIViewController {
         }
         //DispatchQueue.main.async { self.tableView.reloadData() }
     }
-
-    func reviewsUpdated(allReviews: [String:Review]) {
-        reviews = []
-        for r in allReviews {
-            reviews.append(Review(id: r.key, timestamp: r.value.timestamp, rating: r.value.rating, review: r.value.review, roomNumber: r.value.roomNumber, userId: r.value.userId))
-        }
-        reviews.sort(by: { $0.id! < $1.id! })
-        DispatchQueue.main.async {
-            self.tableView.beginUpdates()
-            self.tableView.reloadSections([Sections.Reviews.rawValue], with: .none)
-            self.tableView.endUpdates()
-        }
-    }
-    
-    func reviewsTranslationsUpdated(newTranslations: [String:Any]) {
-        if let newTranslations = newTranslations as? [String:[String:String]] {
-            for t in newTranslations {
-                if let v = t.value["review"] { translations[t.key] = v }
-            }
-        }
-        DispatchQueue.main.async {
-            self.tableView.beginUpdates()
-            self.tableView.reloadSections([Sections.Reviews.rawValue], with: .none)
-            self.tableView.endUpdates()
-        }
-    }
 }
 
 extension NewsDetailViewController: UITableViewDataSource, UITableViewDelegate {
@@ -98,7 +66,7 @@ extension NewsDetailViewController: UITableViewDataSource, UITableViewDelegate {
         switch Sections(rawValue: section) {
         case .Details : return 2
         case .ReviewButton: return phoneUser.isStaff ? 0 : 1
-        case .Reviews: return reviews.count
+        case .Reviews: return reviewsManager.reviews.count
         default: return 0
         }
     }
@@ -128,8 +96,8 @@ extension NewsDetailViewController: UITableViewDataSource, UITableViewDelegate {
             return cell
         case .Reviews:
             let cell = tableView.dequeueReusableCell(withIdentifier: "NewsReviewCell", for: indexPath) as! NewsDetailReviewCell
-            let r = reviews[indexPath.row]
-            cell.draw(timestamp: r.timestamp, rating: r.rating, review: r.review, roomNumber: r.roomNumber, translation: translations[r.id ?? ""])
+            let r = reviewsManager.reviews[indexPath.row]
+            cell.draw(timestamp: r.timestamp, rating: r.rating, review: r.review, roomNumber: r.roomNumber, translation: reviewsManager.translations[r.id ?? ""])
             return cell
         default:
             return UITableViewCell()
@@ -137,7 +105,7 @@ extension NewsDetailViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section != Sections.Reviews.rawValue || reviews.isEmpty { return nil }
+        if section != Sections.Reviews.rawValue || reviewsManager.reviews.isEmpty { return nil }
         return "Reviews"
     }
 /*
@@ -147,11 +115,11 @@ extension NewsDetailViewController: UITableViewDataSource, UITableViewDelegate {
     }
 */
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        guard let headerView = view as? UITableViewHeaderFooterView, !reviews.isEmpty else { return }
+        guard let headerView = view as? UITableViewHeaderFooterView, !reviewsManager.reviews.isEmpty else { return }
         headerView.tintColor = .orange
         headerView.textLabel?.textColor = .black
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard indexPath.section == Sections.ReviewButton.rawValue else { return }
         if let vc = self.prepareModal(storyBoard: "Activities", id: "RateReview") as? RateReviewViewController {
@@ -164,6 +132,23 @@ extension NewsDetailViewController: UITableViewDataSource, UITableViewDelegate {
     }
 }
 
+extension NewsDetailViewController: ReviewsManagerDelegate {
+    func reviewsUpdated(reviewManager: ReviewsManager) {
+        DispatchQueue.main.async {
+            self.tableView.beginUpdates()
+            self.tableView.reloadSections([Sections.Reviews.rawValue], with: .right)
+            self.tableView.endUpdates()
+        }
+    }
+    
+    func reviewsTranslationsUpdated(reviewManager: ReviewsManager) {
+        DispatchQueue.main.async {
+            self.tableView.beginUpdates()
+            self.tableView.reloadSections([Sections.Reviews.rawValue], with: .fade)
+            self.tableView.endUpdates()
+        }
+    }
+}
 
 class NewsDetailTextCell: UITableViewCell {
 

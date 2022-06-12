@@ -41,15 +41,15 @@ struct NewsPost: Codable {
     var subtitle: String = ""
     var text: String = ""
     var _title: String {
-        if let t = hotel.translations.news[phoneUser.lang]?[postId]?["title"] { return t }
+        if let t = hotel.translations.news[postId]?[phoneUser.lang]?["title"] { return t }
         else { return title }
     }
     var _subtitle: String {
-        if let t = hotel.translations.news[phoneUser.lang]?[postId]?["subtitle"] { return t }
+        if let t = hotel.translations.news[postId]?[phoneUser.lang]?["subtitle"] { return t }
         else { return subtitle }
     }
     var _text: String {
-        if let t = hotel.translations.news[phoneUser.lang]?[postId]?["text"] { return t }
+        if let t = hotel.translations.news[postId]?[phoneUser.lang]?["text"] { return t }
         else { return text }
     }
 }
@@ -66,19 +66,19 @@ struct InfoItem: Codable {
     var timestamp: Date = Date()
     var images: [ImageData] = []
     var _title: String {
-        if let id = id, let t = hotel.translations.info[phoneUser.lang]?[id]?["title"] as? String { return t }
+        if let id = id, let t = hotel.translations.info[id]?[phoneUser.lang]?["title"] as? String { return t }
         else { return title }
     }
     var _subtitle: String {
-        if let id = id, let t = hotel.translations.info[phoneUser.lang]?[id]?["subtitle"] as? String { return t }
+        if let id = id, let t = hotel.translations.info[id]?[phoneUser.lang]?["subtitle"] as? String { return t }
         else { return subtitle }
     }
     var _text: String {
-        if let id = id, let t = hotel.translations.info[phoneUser.lang]?[id]?["text"] as? String { return t }
+        if let id = id, let t = hotel.translations.info[id]?[phoneUser.lang]?["text"] as? String { return t }
         else { return text }
     }
     func _imageText(i: Int) -> String {
-        if let id = id, let t = hotel.translations.info[phoneUser.lang]?[id]?["images"] as? [String] { return t[i] }
+        if let id = id, let t = hotel.translations.info[id]?["images"]?[phoneUser.lang] as? [String] { return t[i] }
         else { return images[i].text }
     }
 }

@@ -29,11 +29,14 @@ enum QueryOperation {
 protocol DBProxy {
     func addRecord<T: Encodable>(key:String?, subNode: String?, record: T, completionHandler: @ escaping (String?, T?) -> Void) -> String?
     func removeRecord<T: Encodable>(key:String, subNode: String?, record: T, completionHandler: @ escaping (T?) -> Void) -> String?
-    func subscribe<T: Codable>(for operation: QueryOperation, subNode: String?, parameter: QueryParameter?, completionHandler: @ escaping (String, T) -> Void)
-    func subscribeForUpdates<T: Codable>(subNode: String?, start timestamp: Int?, limit: UInt?, parameter: QueryParameter?, completionHandler: @ escaping ([String:T]) -> Void)
+    @discardableResult
+    func subscribe<T: Codable>(for operation: QueryOperation, subNode: String?, parameter: QueryParameter?, completionHandler: @ escaping (String, T) -> Void)  -> Any?
+    @discardableResult
+    func subscribeForUpdates<T: Codable>(subNode: String?, start timestamp: Int?, limit: UInt?, parameter: QueryParameter?, completionHandler: @ escaping ([String:T]) -> Void) -> Any?
+    @discardableResult
     func subscribeForUpdates(path: String, completionHandler: @ escaping ([String:Any]) -> Void) -> Any?
     func unsubscribe<T: Codable>(t: T.Type, subNode: String?, parameter: QueryParameter?)
-    func unsubscribe(path: String)
+    func unsubscribe(from handle: Any?)
     func removeAllObservers()
 
     func observeOrderChanges()
@@ -70,19 +73,22 @@ extension DBProxy {
     func removeRecord<T: Encodable>(key:String, record: T, completionHandler: @ escaping (T?) -> Void) -> String? {
         return removeRecord(key:key, subNode: nil, record: record, completionHandler: completionHandler)
     }
-    func subscribeForUpdates<T: Codable>(subNode: String?, parameter: QueryParameter?, completionHandler: @ escaping ([String:T]) -> Void) {
-        subscribeForUpdates(subNode: subNode, start: nil, limit: nil, parameter: parameter, completionHandler: completionHandler)
+    @discardableResult
+    func subscribeForUpdates<T: Codable>(subNode: String?, parameter: QueryParameter?, completionHandler: @ escaping ([String:T]) -> Void) -> Any? {
+        return subscribeForUpdates(subNode: subNode, start: nil, limit: nil, parameter: parameter, completionHandler: completionHandler)
     }
-    func subscribeForUpdates<T: Codable>(parameter: QueryParameter?, completionHandler: @ escaping ([String:T]) -> Void) {
-        subscribeForUpdates(subNode: nil, parameter: parameter, completionHandler: completionHandler)
+    @discardableResult
+    func subscribeForUpdates<T: Codable>(parameter: QueryParameter?, completionHandler: @ escaping ([String:T]) -> Void) -> Any? {
+        return subscribeForUpdates(subNode: nil, parameter: parameter, completionHandler: completionHandler)
     }
-    func subscribeForUpdates<T: Codable>(completionHandler: @ escaping ([String:T]) -> Void) {
-        subscribeForUpdates(subNode: nil, parameter: nil, completionHandler: completionHandler)
+    @discardableResult
+    func subscribeForUpdates<T: Codable>(completionHandler: @ escaping ([String:T]) -> Void) -> Any? {
+        return subscribeForUpdates(subNode: nil, parameter: nil, completionHandler: completionHandler)
     }
+
     func unsubscribe<T: Codable>(t: T.Type) {
         unsubscribe(t: t, subNode: nil, parameter: nil)
     }
-
 }
 
 extension DBProxy {

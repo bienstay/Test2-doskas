@@ -18,15 +18,15 @@ struct Offer: Codable {
     var text: String = ""
 
     var _title: String {
-        if let id = id,  let t = hotel.translations.offers[phoneUser.lang]?[id]?["title"] { return t }
+        if let id = id,  let t = hotel.translations.offers[id]?[phoneUser.lang]?["title"] { return t }
         else { return title }
     }
     var _subtitle: String {
-        if let id = id,  let t = hotel.translations.offers[phoneUser.lang]?[id]?["subtitle"] { return t }
+        if let id = id,  let t = hotel.translations.offers[id]?[phoneUser.lang]?["subtitle"] { return t }
         else { return subTitle }
     }
     var _text: String {
-        if let id = id,  let t = hotel.translations.offers[phoneUser.lang]?[id]?["text"] { return t }
+        if let id = id,  let t = hotel.translations.offers[id]?[phoneUser.lang]?["text"] { return t }
         else { return text }
     }
 }
@@ -39,11 +39,11 @@ struct OfferGroup: Codable {
     var offers: [String]?
 
     var _title: String {
-        if let id = id,  let t = hotel.translations.offerGroups[phoneUser.lang]?[id]?["title"] { return t }
+        if let id = id,  let t = hotel.translations.offerGroups[id]?[phoneUser.lang]?["title"] { return t }
         else { return title }
     }
     var _subtitle: String {
-        if let id = id,  let t = hotel.translations.offerGroups[phoneUser.lang]?[id]?["subtitle"] { return t }
+        if let id = id,  let t = hotel.translations.offerGroups[id]?[phoneUser.lang]?["subtitle"] { return t }
         else { return subTitle }
     }
 }

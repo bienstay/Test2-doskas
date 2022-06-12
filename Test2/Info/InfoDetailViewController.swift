@@ -15,6 +15,7 @@ class InfoDetailViewController: UIViewController, UICollectionViewDelegate, UISc
     @IBOutlet var subtitleLabel: UILabel!
     @IBOutlet var textLabel: UILabel!
 
+    var reviewsManager = ReviewsManager()
     //var infoItem:InfoItem = initInfoItems()
     var infoItem:InfoItem = InfoItem()
     var blurEffectView: UIView = UIView()
@@ -26,6 +27,9 @@ class InfoDetailViewController: UIViewController, UICollectionViewDelegate, UISc
     override func viewDidLoad() {
         super.viewDidLoad()
         initView()
+
+        //reviewsManager.delegate = self
+        reviewsManager.start(group: "info", id: infoItem.id ?? "")
 
         subtitleLabel.text = infoItem._subtitle
         textLabel.text = infoItem._text
@@ -48,7 +52,11 @@ class InfoDetailViewController: UIViewController, UICollectionViewDelegate, UISc
 
         pageControl.numberOfPages = infoItem.images.count
         pageControl.isHidden = infoItem.images.count <= 1
-}
+    }
+
+    deinit {
+        reviewsManager.stop()
+    }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -83,6 +91,15 @@ class InfoDetailViewController: UIViewController, UICollectionViewDelegate, UISc
         return layout
     }
 
+    @IBAction func newButtonPressed(_ sender: Any) {
+        if let vc = self.prepareModal(storyBoard: "Activities", id: "RateReview") as? RateReviewViewController {
+            vc.group = "info"
+            vc.id = infoItem.id
+            vc.reviewTitle = infoItem.title
+            vc.reviewedImage = UIImage(named: "JaNaPlaya")
+            present(vc, animated: true)
+        }
+    }
 }
 
 extension InfoDetailViewController: UICollectionViewDataSource {
@@ -101,6 +118,26 @@ extension InfoDetailViewController: UICollectionViewDataSource {
         return cell
     }
 }
+/*
+extension InfoDetailViewController: ReviewsManagerDelegate {
+    func reviewsUpdated(reviewManager: ReviewsManager) {
+        DispatchQueue.main.async {
+            self.tableView.beginUpdates()
+            self.tableView.reloadSections([Sections.Reviews.rawValue], with: .right)
+            self.tableView.endUpdates()
+        }
+    }
+    
+    func reviewsTranslationsUpdated(reviewManager: ReviewsManager) {
+        DispatchQueue.main.async {
+            self.tableView.beginUpdates()
+            self.tableView.reloadSections([Sections.Reviews.rawValue], with: .fade)
+            self.tableView.endUpdates()
+        }
+    }
+}
+*/
+
 
 class InfoPictureCell: UICollectionViewCell {
     @IBOutlet var imageView: UIImageView!

@@ -20,19 +20,19 @@ class Restaurant: POI, Codable {
     var geoLongitude: Double = 0.0
 
     var _name: String {
-        if let id = id,  let t = hotel.translations.restaurants[phoneUser.lang]?[id]?["name"] { return t }
+        if let id = id,  let t = hotel.translations.restaurants[id]?[phoneUser.lang]?["name"] { return t }
         else { return name }
     }
     var _cuisines: String {
-        if let id = id,  let t = hotel.translations.restaurants[phoneUser.lang]?[id]?["cuisines"] { return t }
+        if let id = id,  let t = hotel.translations.restaurants[id]?[phoneUser.lang]?["cuisines"] { return t }
         else { return cuisines }
     }
     var _location: String {
-        if let id = id,  let t = hotel.translations.restaurants[phoneUser.lang]?[id]?["location"] { return t }
+        if let id = id,  let t = hotel.translations.restaurants[id]?[phoneUser.lang]?["location"] { return t }
         else { return location }
     }
     var _description: String {
-        if let id = id,  let t = hotel.translations.restaurants[phoneUser.lang]?[id]?["description"] { return t }
+        if let id = id,  let t = hotel.translations.restaurants[id]?[phoneUser.lang]?["description"] { return t }
         else { return description }
     }
 

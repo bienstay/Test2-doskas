@@ -108,6 +108,11 @@
 		069FDBAC26AEF0A6004F543F /* roomItems.json in Resources */ = {isa = PBXBuildFile; fileRef = 069FDBAB26AEF0A6004F543F /* roomItems.json */; };
 		06A47DCE2839775F002D32B5 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06A47DCD2839775F002D32B5 /* InfoViewController.swift */; };
 		06A8C7E1284BFD4B000406F9 /* RateReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06A8C7E0284BFD4B000406F9 /* RateReviewViewController.swift */; };
+		06A8C7E328528841000406F9 /* ReviewsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06A8C7E228528841000406F9 /* ReviewsManager.swift */; };
+		06A8C7E728548BAD000406F9 /* ReviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06A8C7E528548BAD000406F9 /* ReviewTableViewCell.swift */; };
+		06A8C7E828548BAD000406F9 /* ReviewTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06A8C7E628548BAD000406F9 /* ReviewTableViewCell.xib */; };
+		06A8C7EF2855475E000406F9 /* ReviewButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06A8C7ED2855475E000406F9 /* ReviewButtonTableViewCell.swift */; };
+		06A8C7F02855475E000406F9 /* ReviewButtonTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06A8C7EE2855475E000406F9 /* ReviewButtonTableViewCell.xib */; };
 		06AC358B271B58F100D249C6 /* Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AC358A271B58F100D249C6 /* Firebase.swift */; };
 		06AC358D271B7FAE00D249C6 /* Likes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AC358C271B7FAE00D249C6 /* Likes.swift */; };
 		06AF200F27E2ED7600B9A692 /* DBProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AF200E27E2ED7500B9A692 /* DBProxy.swift */; };
@@ -244,6 +249,11 @@
 		069FDBAB26AEF0A6004F543F /* roomItems.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = roomItems.json; sourceTree = "<group>"; };
 		06A47DCD2839775F002D32B5 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		06A8C7E0284BFD4B000406F9 /* RateReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateReviewViewController.swift; sourceTree = "<group>"; };
+		06A8C7E228528841000406F9 /* ReviewsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewsManager.swift; sourceTree = "<group>"; };
+		06A8C7E528548BAD000406F9 /* ReviewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewTableViewCell.swift; sourceTree = "<group>"; };
+		06A8C7E628548BAD000406F9 /* ReviewTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReviewTableViewCell.xib; sourceTree = "<group>"; };
+		06A8C7ED2855475E000406F9 /* ReviewButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewButtonTableViewCell.swift; sourceTree = "<group>"; };
+		06A8C7EE2855475E000406F9 /* ReviewButtonTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReviewButtonTableViewCell.xib; sourceTree = "<group>"; };
 		06AC358A271B58F100D249C6 /* Firebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firebase.swift; sourceTree = "<group>"; };
 		06AC358C271B7FAE00D249C6 /* Likes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Likes.swift; sourceTree = "<group>"; };
 		06AF200E27E2ED7500B9A692 /* DBProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBProxy.swift; sourceTree = "<group>"; };
@@ -326,21 +336,22 @@
 		065F03282635D47F00A5CDEF /* Test2 */ = {
 			isa = PBXGroup;
 			children = (
-				066875032832FD7800DB5604 /* Users */,
-				06B9776127F16B3B00E2ACA1 /* Main */,
-				06882F63274911B600D643A0 /* Offers */,
-				064352A126385A2000A54BFC /* Misc */,
+				06A8C7E428548B69000406F9 /* Reviews */,
 				06F5D16C2713283A004931F7 /* Firebase */,
+				064352A126385A2000A54BFC /* Misc */,
+				06B9776127F16B3B00E2ACA1 /* Main */,
 				065F034D2635EB6300A5CDEF /* Home */,
+				066875032832FD7800DB5604 /* Users */,
 				069FD3CD2691DB3A0076C6FC /* Onboarding */,
 				069FD3C4268CB4210076C6FC /* News */,
 				06F5D15F270B4E6A004931F7 /* Activities */,
-				065F03522635ED8C00A5CDEF /* Restaurants */,
-				0683A1E5264F33A40000D122 /* Room */,
-				069FDBA0269E17A8004F543F /* Chat */,
-				0683A1DF264ED6670000D122 /* Orders */,
+				06882F63274911B600D643A0 /* Offers */,
 				069FD3C7268CB4BC0076C6FC /* Info */,
+				065F03522635ED8C00A5CDEF /* Restaurants */,
 				0683A1DE264DC75D0000D122 /* Menu */,
+				0683A1E5264F33A40000D122 /* Room */,
+				0683A1DF264ED6670000D122 /* Orders */,
+				069FDBA0269E17A8004F543F /* Chat */,
 				0683A1F52651D5EE0000D122 /* Watersports */,
 				065F035A2635FCEF00A5CDEF /* Map */,
 				065F0362263621AE00A5CDEF /* Model */,
@@ -549,6 +560,17 @@
 			path = Chat;
 			sourceTree = "<group>";
 		};
+		06A8C7E428548B69000406F9 /* Reviews */ = {
+			isa = PBXGroup;
+			children = (
+				06A8C7E628548BAD000406F9 /* ReviewTableViewCell.xib */,
+				06A8C7EE2855475E000406F9 /* ReviewButtonTableViewCell.xib */,
+				06A8C7E528548BAD000406F9 /* ReviewTableViewCell.swift */,
+				06A8C7ED2855475E000406F9 /* ReviewButtonTableViewCell.swift */,
+			);
+			path = Reviews;
+			sourceTree = "<group>";
+		};
 		06B9776127F16B3B00E2ACA1 /* Main */ = {
 			isa = PBXGroup;
 			children = (
@@ -590,6 +612,7 @@
 				06F5D162270B5197004931F7 /* NewActivityViewController.swift */,
 				06F551E22842A813007AB4DB /* doskas.swift */,
 				06A8C7E0284BFD4B000406F9 /* RateReviewViewController.swift */,
+				06A8C7E228528841000406F9 /* ReviewsManager.swift */,
 			);
 			path = Activities;
 			sourceTree = "<group>";
@@ -711,8 +734,10 @@
 				06882F6B27499BBD00D643A0 /* Offers.storyboard in Resources */,
 				0632D450266ACB22001F7036 /* Orders.storyboard in Resources */,
 				061DC82B2654244700C4C794 /* RestaurantSectionHeaderView.xib in Resources */,
+				06A8C7F02855475E000406F9 /* ReviewButtonTableViewCell.xib in Resources */,
 				061C4E162734AED700A6D5DA /* Home.storyboard in Resources */,
 				061DC8322654334D00C4C794 /* DestinationDiningPrivateEvents.jpg in Resources */,
+				06A8C7E828548BAD000406F9 /* ReviewTableViewCell.xib in Resources */,
 				061DC8362654334D00C4C794 /* DestinationDiningBubblesUnderTheStars.jpg in Resources */,
 				065F035C2635FD0B00A5CDEF /* Map.storyboard in Resources */,
 				06F5D167270B52A4004931F7 /* Activities.storyboard in Resources */,
@@ -805,6 +830,7 @@
 				066BF3F82637460300EE834C /* Order.swift in Sources */,
 				06293E2F28099BBB00226400 /* MessagingProxy.swift in Sources */,
 				061DE02E2731AEEF0021A37C /* RoomItemsViewController.swift in Sources */,
+				06A8C7EF2855475E000406F9 /* ReviewButtonTableViewCell.swift in Sources */,
 				069FDBAA26A39486004F543F /* ChatListViewController.swift in Sources */,
 				06F551E32842A813007AB4DB /* doskas.swift in Sources */,
 				06882F672749128100D643A0 /* OffersCell.swift in Sources */,
@@ -852,6 +878,7 @@
 				064C205227EF604C00DA7A4A /* ScannerViewController.swift in Sources */,
 				061DC83D26547BC300C4C794 /* HotelInit.swift in Sources */,
 				06F7726C2671755800E64D54 /* NewNewsPostViewController.swift in Sources */,
+				06A8C7E728548BAD000406F9 /* ReviewTableViewCell.swift in Sources */,
 				06AC358D271B7FAE00D249C6 /* Likes.swift in Sources */,
 				069FDBA2269E17C3004F543F /* MessageKitChatViewController.swift in Sources */,
 				065F032A2635D47F00A5CDEF /* AppDelegate.swift in Sources */,
@@ -881,6 +908,7 @@
 				0683A1EE265154250000D122 /* MenuCell.swift in Sources */,
 				069FD3D7269650630076C6FC /* UIViewExtensions.swift in Sources */,
 				062216402638B0B7002C0977 /* RoomItemCell.swift in Sources */,
+				06A8C7E328528841000406F9 /* ReviewsManager.swift in Sources */,
 				06F7727B267E8A6D00E64D54 /* NewsViewController.swift in Sources */,
 				060197902819B3CE004532D5 /* AssignViewController.swift in Sources */,
 				069DB35D263B0FB800C91468 /* NewRestaurantController.swift in Sources */,

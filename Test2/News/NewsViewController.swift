@@ -10,7 +10,7 @@ import UIKit
 class NewsViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var newPostBarButton: UIBarButtonItem!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         initView(tableView: tableView)
