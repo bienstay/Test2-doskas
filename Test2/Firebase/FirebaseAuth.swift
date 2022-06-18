@@ -21,7 +21,7 @@ struct FirebaseAuthenticationData: AuthenticationData {
 
 final class FirebaseAuthentication: AuthProxy {
     static let shared: AuthProxy = FirebaseAuthentication()
-    var defaultPassword:String  { hotel.id.lowercased() }
+    var defaultPassword:String  { hotel.id.lowercased().padding(toLength: 6, withPad: "_", startingAt: 0) }
 
     func login(username: String, password: String, completionHandler: @escaping (AuthenticationData?, Error?) -> Void) {
         Auth.auth().signIn(withEmail: username, password: password) { (authResult, error) in
@@ -45,20 +45,28 @@ final class FirebaseAuthentication: AuthProxy {
             }
         }
     }
-
-    func addUser(username: String, password: String, role:String, completionHandler: @escaping (AuthenticationData?, Error?) -> Void) {
-        let username = username + "@\(hotel.id).appviator.com"
-        Auth.auth().createUser(withEmail: username, password: password) { (authDataResult, error) in
+/*
+    func addUser(hotelId: String, username: String, password: String, role:Role?, completionHandler: @escaping (AuthenticationData?, Error?) -> Void) {
+        let username = username + "@\(hotelId).appviator.com"
+        Auth.auth().createUser(withEmail: username, password: password) {[weak self] (authDataResult, error) in
             guard let a = authDataResult else {
-                Log.log(level: .ERROR, "Error logging in with user \(username) - \(error.debugDescription)")
+                Log.log(level: .ERROR, "Error adding user \(username) - \(error.debugDescription)")
                 completionHandler(nil, error)
                 return
             }
             Log.log("User added: \(a.user)")
-            completionHandler(FirebaseAuthenticationData(uid: a.user.uid, email: a.user.email ?? "", role: Role(rawValue: role) ?? .none), nil)
+            if let role = role {
+                self?.setUserRole(uid: a.user.uid, role:role) { error in
+                    if let error = error {
+                        Log.log(level: .ERROR, "Error setting role for user \(username) - \(error)")
+                        completionHandler(nil, error)
+                    }
+                    completionHandler(FirebaseAuthenticationData(uid: a.user.uid, email: a.user.email ?? "", role: role), nil)
+                }
+            }
         }
     }
-
+*/
     func logout() -> Error? {
         do {
             try Auth.auth().signOut()

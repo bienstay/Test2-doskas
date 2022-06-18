@@ -8,6 +8,7 @@
 import Foundation
 
 enum Role: String, CaseIterable {
+    case superadmin     // can do everything and modify hotels
     case admin          // can do everything
     case editor         // can only edit the content
     case hotline        // can manage all orders
@@ -27,9 +28,10 @@ protocol AuthenticationData {
 protocol AuthProxy {
     var defaultPassword: String { get }
     func login(username: String, password: String, completionHandler: @ escaping (AuthenticationData?, Error?) -> Void)
-    func addUser(username: String, password: String, role:String, completionHandler: @escaping (AuthenticationData?, Error?) -> Void)
+    //func addUser(hotelId: String, username: String, password: String, role:Role?, completionHandler: @escaping (AuthenticationData?, Error?) -> Void)
     func logout() -> Error?
 
+    func addUserWithRole(hotelId: String, username: String, password: String, role:Role?, completionHandler: @ escaping (AuthenticationData?, Error?) -> Void)
     func setUserRole(uid: String, role: Role, completionHandler: @escaping (Error?) -> Void)
     func deleteUser(uid: String, completionHandler: @ escaping (Error?) -> Void)
     func updateUser(uid: String, newPassword: String, completionHandler: @ escaping (Error?) -> Void)

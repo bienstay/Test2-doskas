@@ -29,6 +29,7 @@ enum QueryOperation {
 protocol DBProxy {
     func addRecord<T: Encodable>(key:String?, subNode: String?, record: T, completionHandler: @ escaping (String?, T?) -> Void) -> String?
     func removeRecord<T: Encodable>(key:String, subNode: String?, record: T, completionHandler: @ escaping (T?) -> Void) -> String?
+    func removeRecord(path:String, key:String, completionHandler: @ escaping (Error?) -> Void)
     @discardableResult
     func subscribe<T: Codable>(for operation: QueryOperation, subNode: String?, parameter: QueryParameter?, completionHandler: @ escaping (String, T) -> Void)  -> Any?
     @discardableResult
@@ -51,6 +52,7 @@ protocol DBProxy {
     //func addHotelToConfig(hotelId: String, hotelName: String)
     func updatePhoneData(phoneUserId: String, phoneID: String, phoneLang: String)
     func writeReview(group: String, id: String, rating: Int, review: String, completionHandler: @ escaping () -> Void)
+    func addHotel(hotelId: String, hotelName: String, completionHandler: @ escaping (Error?) -> Void)
 
     //func updateGuest(hotelId: String, guestId: String, guestData: GuestInDB, completionHandler: @ escaping () -> Void)
     func log(level: Log.LogLevel, s: String)
@@ -58,6 +60,9 @@ protocol DBProxy {
     func assignChat(chatRoom: String, to user: String)
     func writeChat(chatRoomID: String, message m: ChatMessage)
     func changePassword(oldPassword: String, newPassword: String, completionHandler: @ escaping (Error?) -> Void)
+    
+    func getRoomList(hotelId: String, completionHandler: @ escaping ([Int]) -> Void)
+    func getHotelList(completionHandler: @ escaping ([String:String]) -> Void)
 
     var isConnected: Bool { get }
 }

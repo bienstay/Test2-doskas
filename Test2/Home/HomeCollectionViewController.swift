@@ -62,7 +62,7 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         collectionView.dataSource = self
         collectionView.delegate = self
 
-        NotificationCenter.default.addObserver(self, selector: #selector(onHotelInfoUpdated(_:)), name: .hotelInfoUpdated, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onHotelInfoUpdated(_:)), name: .hotelConfigUpdated, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onChatMessagesUpdated(_:)), name: .chatMessageAdded, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onChatMessagesUpdated(_:)), name: .chatMessageUpdated, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onChatMessagesUpdated(_:)), name: .chatMessageDeleted, object: nil)
@@ -87,6 +87,13 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
             menu.addItem(label: "Change password") { [weak self] in
                 if let self = self {
                     _ = self.presentModal(storyBoard: "Users", id: "ChangePassword")
+                }
+            }
+        }
+        if phoneUser.isAllowed(to: .manageHotels) {
+            menu.addItem(label: "Manage hotels") { [weak self] in
+                if let self = self {
+                    _ = self.presentModal(storyBoard: "Home", id: "Hotels")
                 }
             }
         }
@@ -243,15 +250,14 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
             cell.tapClosure = { [weak self] in self?.askToResetUserDefaults() }
             //cell.tapClosure = { ConfigViewController.showPopup(parentVC: self) }
             cell.swipeClosure = { [weak self] in  _ = self?.pushViewController(storyBoard: "Home", id: "NewHotel") }
-            cell.draw(title:hotel.name, imageURL: hotel.image)
+            cell.draw(title:hotel.config.name, imageURL: hotel.config.image)
             return cell
         case .title:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeTitleCell", for: indexPath) as! HomeTitleCell
             cell.tapClosure = { [weak self] in
-                let vc = self?.pushViewController(storyBoard: "Home", id: "NewHotel") as! UpdateHotelInfoViewController
-                vc.hotelToEdit = hotel
+                _ = self?.pushViewController(storyBoard: "Home", id: "NewHotel") as! NewHotelConfigViewController
             }
-            cell.draw(title: hotel.name)
+            cell.draw(title: hotel.config.name)
             return cell
         case .items:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeItemsCell", for: indexPath) as! HomeItemsCell
@@ -294,31 +300,31 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
     @IBAction func socialButtonPressed(_ sender: UIButton) {
         switch sender.tag {
         case 0: UIApplication.tryURL(urls: [
-            hotel.socialURLs["instagram"] ?? "",
-            hotel.socialURLs["instagramweb"] ?? ""
+            hotel.config.socialURLs["instagram"] ?? "",
+            hotel.config.socialURLs["instagramweb"] ?? ""
             //"instagram://user?username=ritzcarltonkohsamui",
             //"https://www.instagram.com/ritzcarltonkohsamui"
         ])
         case 1: UIApplication.tryURL(urls: [
-            hotel.socialURLs["facebook"] ?? "",
-            hotel.socialURLs["facebookweb"] ?? ""
+            hotel.config.socialURLs["facebook"] ?? "",
+            hotel.config.socialURLs["facebookweb"] ?? ""
 //            "fb://profile?id=ritzcarltonkohsamui", // App
 //            "https://www.facebook.com/ritzcarltonkohsamui" // Website if app fails
             ])
         case 2: UIApplication.tryURL(urls: [
-            hotel.socialURLs["twitter"] ?? "",
-            hotel.socialURLs["twitterweb"] ?? ""
+            hotel.config.socialURLs["twitter"] ?? "",
+            hotel.config.socialURLs["twitterweb"] ?? ""
 //            "twitter:///user?screen_name=RitzCarlton",
 //            "https://twitter.com/RitzCarlton"
             ])
         case 3: UIApplication.tryURL(urls: [
-            hotel.socialURLs["tripadvisor"] ?? "",
-            hotel.socialURLs["tripadvisorweb"] ?? ""
+            hotel.config.socialURLs["tripadvisor"] ?? "",
+            hotel.config.socialURLs["tripadvisorweb"] ?? ""
             //"https://www.tripadvisor.com/Hotel_Review-g1179396-d12504573-Reviews-The_Ritz_Carlton_Koh_Samui-Bophut_Ko_Samui_Surat_Thani_Province.html"
         ])
         case 4: UIApplication.tryURL(urls: [
-            hotel.socialURLs["bonvoy"] ?? "",
-            hotel.socialURLs["bonvoyweb"] ?? ""
+            hotel.config.socialURLs["bonvoy"] ?? "",
+            hotel.config.socialURLs["bonvoyweb"] ?? ""
             //"https://www.ritzcarlton.com/en/hotels/koh-samui"
             ])
         default: break
@@ -394,13 +400,15 @@ class HomeHeaderCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        picture.isUserInteractionEnabled = true
-        let tap3 = UITapGestureRecognizer(target: self, action: #selector(didTap))
-        tap3.numberOfTapsRequired = 3
-        picture.addGestureRecognizer(tap3)
-        let swipe = UISwipeGestureRecognizer(target: self, action: #selector(didSwipe))
-        swipe.direction = .right
-        picture.addGestureRecognizer(swipe)
+        if phoneUser.isAllowed(to: .manageHotel) {
+            picture.isUserInteractionEnabled = true
+            let tap3 = UITapGestureRecognizer(target: self, action: #selector(didTap))
+            tap3.numberOfTapsRequired = 3
+            picture.addGestureRecognizer(tap3)
+            let swipe = UISwipeGestureRecognizer(target: self, action: #selector(didSwipe))
+            swipe.direction = .right
+            picture.addGestureRecognizer(swipe)
+        }
 
         chatButton.backgroundColor = .orange
         chatButton.setBackgroundImage(UIImage(named: "Chat"), for: .normal)
@@ -424,13 +432,15 @@ class HomeHeaderCell: UICollectionViewCell {
         swipeClosure?()
     }
 
-    func draw(title: String, imageURL: String) {
-        picture.kf.setImage(with: URL(string: imageURL)) { result in
-            switch result {
-            case .success:
-                break //print("Task done for: \(value.source.url?.absoluteString ?? "")")
-            case .failure(let error):
-                print("Job failed: \(error.localizedDescription)")
+    func draw(title: String, imageURL: String?) {
+        if let imageURL = imageURL {
+            picture.kf.setImage(with: URL(string: imageURL)) { result in
+                switch result {
+                case .success:
+                    break //print("Task done for: \(value.source.url?.absoluteString ?? "")")
+                case .failure(let error):
+                    print("Job failed: \(error.localizedDescription)")
+                }
             }
         }
         titleLabel.text = title

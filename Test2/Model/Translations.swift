@@ -23,3 +23,4 @@ struct Translations {
     }
     var info: [String:[String:[String:Any]]] = [:]
 }
+

@@ -35,7 +35,7 @@ class MapViewController: UIViewController {
             title = r.name
         }
         else {
-            title = hotel.name
+            title = hotel.config.name
         }
 
     }

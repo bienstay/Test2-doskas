@@ -15,7 +15,7 @@ class EditUserViewController: UIViewController {
     @IBOutlet weak var resetPasswordButton: UIButton!
     
     var user: AuthenticationData!
-    let roles = Role.allCases
+    let roles = Role.allCases.filter( {$0 != .superadmin} )
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,6 +84,11 @@ extension EditUserViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     }
 
     func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        return NSAttributedString(string: roles[row].rawValue, attributes: [NSAttributedString.Key.foregroundColor: UIColor.red])
+        let textColor: UIColor = (row == pickerView.selectedRow(inComponent: component)) ? .appviator : .black
+        return NSAttributedString(string: roles[row].rawValue, attributes: [NSAttributedString.Key.foregroundColor: textColor])
+    }
+
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        pickerView.reloadAllComponents()
     }
 }

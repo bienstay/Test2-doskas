@@ -14,7 +14,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var loginButton: UIButton!
 
-    var hotels: [String] = ["RitzKohSamui", "SheratonFullMoon", "W"]
+    var hotels: [String] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +29,17 @@ class LoginViewController: UIViewController {
             NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
             NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         }
+        initHotelList()
+    }
+
+    func initHotelList() {
+        hotels = []
+        dbProxy.getHotelList() { [weak self] hotelList in
+            self?.hotels = hotelList.keys.sorted()
+            DispatchQueue.main.async {
+                self?.hotelPicker.reloadAllComponents()
+            }
+        }
     }
 
     @IBAction func login(_ sender: UIButton) {
@@ -40,7 +51,7 @@ class LoginViewController: UIViewController {
             showInfoDialogBox(title: "Missing username", message: "Enter valid user name")
             return
         }
-        let hotelId = "RitzKohSamui"
+        let hotelId = hotels[hotelPicker.selectedRow(inComponent: 0)]
         let barcodeString = """
         { "hotelId": "\(hotelId)", "userName": "\(user)", "password": "\(pass)" }
         """

@@ -153,5 +153,4 @@ extension OffersViewController {
         }
         if errStr != nil { Log.log(errStr!) }
     }
-
 }

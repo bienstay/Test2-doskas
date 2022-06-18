@@ -92,18 +92,62 @@ struct Review: Codable {
     var userId: String?
 }
 
+struct HotelConfigInDB: Codable {
+    var name: String?
+    var image: String?
+    var socialURLs: [String:String]?
+    var languages: [String:Bool]?
+    var rooms: [String:Bool]? = [:]
+    init(h: HotelConfig) {
+        name = h.name
+        image = h.image
+        socialURLs = h.socialURLs
+        var langs: [String:Bool] = [:]
+        for l in h.languages { langs[l] = true }
+        languages = langs
+        var rr: [String:Bool] = [:]
+        for r in h.rooms { rr[String(r)] = true }
+        rooms = rr
+    }
+}
+
+struct HotelConfig: Codable {
+    var name: String = ""
+    var image: String?
+    var socialURLs: [String:String] = [:]
+    var languages: Set<String> = []
+    var rooms: Set<Int> = []
+    init() {}
+    init(c: HotelConfigInDB) {
+        name = c.name ?? "Hotel"
+        image = c.image
+        socialURLs = c.socialURLs ?? [:]
+        if let keys = c.languages?.keys {
+            languages = Set(keys)
+        }
+        if let crooms = c.rooms {
+            rooms = Set(crooms.keys.compactMap({ Int($0) }))
+        }
+    }
+}
+
+
+/*
 struct HotelInfo: Codable {
     var name: String
     var image: String
     var socialURLs: [String:String]?
 }
-
+*/
 class Hotel {
     //var id: String = "SheratonFullMoon" // default hotel
     var id: String
+    var config: HotelConfig = HotelConfig()
+    /*
     var name: String
     var socialURLs: [String:String] = [:]
     var image: String = ""
+     */
     var restaurants: [Restaurant] = []
     var facilities: [Facility] = []
     var roomService: Restaurant = Restaurant()
@@ -120,7 +164,7 @@ class Hotel {
     init() {
         Log.log("in hotel init", logInDb: false)
         id = ""
-        name = "Appviator"
+        //name = "Appviator"
     }
 
     func initialize() {
@@ -133,7 +177,8 @@ class Hotel {
     }
 
     func startObserving() {
-        dbProxy.subscribeForUpdates(completionHandler: hotelInfoUpdated)
+        //dbProxy.subscribeForUpdates(completionHandler: hotelInfoUpdated)
+        dbProxy.subscribeForUpdates(completionHandler: hotelConfigUpdated)
         dbProxy.subscribeForUpdates(completionHandler: restaurantsUpdated)
         dbProxy.subscribeForUpdates(completionHandler: facilitiesUpdated)
         dbProxy.subscribeForUpdates(completionHandler: informationUpdated)
@@ -195,11 +240,11 @@ class Hotel {
         }
     }
 
-    func hotelInfoUpdated(allHotelInfo: [String:HotelInfo]) {
-        hotel.name = allHotelInfo.first?.1.name ?? "HOTEL"
-        hotel.image = allHotelInfo.first?.1.image ?? ""
-        hotel.socialURLs = allHotelInfo.first?.1.socialURLs ?? [:]
-        NotificationCenter.default.post(name: .hotelInfoUpdated, object: nil)
+    func hotelConfigUpdated(allHotelConfig: [String:HotelConfigInDB]) {
+        if let configInDB = allHotelConfig["config"] {
+            config = HotelConfig(c: configInDB)
+            NotificationCenter.default.post(name: .hotelConfigUpdated, object: nil)
+        }
     }
 
     func informationUpdated(allInfo: [String:InfoItem]) {
@@ -378,7 +423,7 @@ class Hotel {
     }
 */
 }
-
+/*
 struct HotelInDB: Codable {
     var id: String? = nil
     struct Info: Codable {
@@ -404,6 +449,6 @@ extension Hotel {
         self.image = hotelInDb.info.image
     }
 }
-
+*/
 
 var hotel = Hotel()

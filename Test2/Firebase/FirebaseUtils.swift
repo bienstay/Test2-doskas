@@ -228,4 +228,68 @@ extension FirebaseDatabase {
         }
     }
 
+/*
+    func addHotel(hotelId: String, hotelName: String, completionHandler: @ escaping (Error?) -> Void) {
+        let updates = [
+            "/v2/config/hotels/\(hotelId)": hotelName,
+            "/v2/hotels/\(hotelId)/config": ["name": hotelName]
+        ] as [String : Any]
+        ROOT_DB_REF.updateChildValues(updates)  { (error, dbref) in
+            if let error = error {
+                Log.log(level: .ERROR, "Error updating hotel\n\(error.localizedDescription)")
+                completionHandler(error)
+            } else {
+                completionHandler(nil)
+            }
+        }
+        authProxy.addUserWithRole(hotelId: hotelId, username: "appuser", password: hotelId, role: nil) { _,_  in }
+        authProxy.addUserWithRole(hotelId: hotelId, username: "admin", password: hotelId, role: .admin) { _,_  in }
+    }
+*/
+}
+
+
+extension FirebaseDatabase {
+    func getConfig(forHotelId hotelId: String, completionHandler: @ escaping ([Int]) -> Void) {
+        var roomList: [Int] = []
+        let dbRef:DatabaseQuery = ROOT_DB_REF.child("v2").child("hotels").child(hotelId).child("config")
+        //dbRef.observeSingleEvent(of: .value) {snapshot in
+        dbRef.getData() { error, snapshot in
+            if let rooms = snapshot.value as? [String:Bool] {
+                roomList = rooms.keys.compactMap({Int($0)}).sorted()
+            }
+            completionHandler(roomList)
+        }
+    }
+
+    func getRoomList(hotelId: String, completionHandler: @ escaping ([Int]) -> Void) {
+        var roomList: [Int] = []
+        let dbRef:DatabaseQuery = ROOT_DB_REF.child("v2").child("hotels").child(hotelId).child("config").child("rooms")
+        //dbRef.observeSingleEvent(of: .value) {snapshot in
+        dbRef.getData() { error, snapshot in
+            if let rooms = snapshot.value as? [String:Bool] {
+                roomList = rooms.keys.compactMap({Int($0)}).sorted()
+            }
+            completionHandler(roomList)
+        }
+    }
+
+    func getHotelList(completionHandler: @ escaping ([String:String]) -> Void) {
+        var hotelList: [String:String] = [:]
+        let dbRef:DatabaseQuery = ROOT_DB_REF.child("v2").child("config").child("hotels")
+        dbRef.getData() { error, snapshot in
+            if let hotels = snapshot.value as? [String:String] {
+                hotelList = hotels
+            }
+            completionHandler(hotelList)
+        }
+        /*
+        dbRef.observeSingleEvent(of: .value) {snapshot in
+            if let hotels = snapshot.value as? [String:String] {
+                hotelList = hotels
+            }
+            completionHandler(hotelList)
+        }
+         */
+    }
 }

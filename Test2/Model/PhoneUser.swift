@@ -9,10 +9,12 @@ import Foundation
 import UIKit    // for UIDevice
 
 enum Priviledge: CaseIterable {
+    case manageHotels
+    case manageHotel
     case manageUsers
     case editContent
-    case confirmOrders
-    case assignChats
+    case manageOrders
+    case manageChats
 }
 
 class PhoneUser {
@@ -164,13 +166,14 @@ class User {
 
     func priviliges() -> Set<Priviledge> {
         switch role {
-        case .admin:            return Set(Priviledge.allCases)
+        case .superadmin:       return Set(Priviledge.allCases)
+        case .admin:            return Set(Priviledge.allCases).subtracting([.manageHotels])
         case .editor:           return [.editContent]
-        case .housekeeping:     return [.confirmOrders]
-        case .driver:           return [.confirmOrders]
-        case .hotline:          return [.confirmOrders, .assignChats]
-        case .maintenance:      return [.confirmOrders]
-        case .roomservice:      return [.confirmOrders]
+        case .housekeeping:     return [.manageOrders]
+        case .driver:           return [.manageOrders]
+        case .hotline:          return [.manageOrders, .manageChats]
+        case .maintenance:      return [.manageOrders]
+        case .roomservice:      return [.manageOrders]
         case .none:             return []
         }
     }

@@ -19,20 +19,11 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
 
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
-    //var menu:MenuView = MenuView()
 
-    var hotels: [String] = ["RitzKohSamui", "SheratonFullMoon", "W"]
+    var hotels: [String] = []
     var users: [AuthenticationData] = []
-    struct RoomSample {
-        var nr: Int
-        var guest: String
-        var toString: String { "\(nr) \(guest)" }
-    }
-    var rooms = [
-        "RitzKohSamui" : [RoomSample(nr: 9104, guest: "A&M"), RoomSample(nr: 9205, guest: "Johnny Bravo"), RoomSample(nr: 9304, guest: "Elvis")],
-        "SheratonFullMoon": [RoomSample(nr: 117, guest: "A&M"), RoomSample(nr: 223, guest: "Lola")],
-        "W": [RoomSample(nr: 3, guest: "Mariola"), RoomSample(nr: 12, guest: "Anitka & Maciek")]
-    ]
+    var rooms: [Int] = []
+
     var userFlag:Bool { userFlagControl.selectedSegmentIndex == 0 }
     enum Picker:Int {
         case Hotel = 0
@@ -49,12 +40,10 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         userPicker.dataSource = self
         userPicker.delegate = self
         userPicker.tag = Picker.User.rawValue
-        
-        //hotelPicker.setValue(UIColor.offWhiteVeryLight, forKey: "backgroundColor")
-        //userPicker.setValue(UIColor.offWhiteVeryLight, forKey: "backgroundColor")
 
         hotelPicker.selectRow(0, inComponent: 0, animated: true)
         initUserList()
+        initRoomList()
 
         defaultsStackView.isHidden = true
         hotelPicker.tintColor = .yellow
@@ -110,13 +99,38 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         captureSession.startRunning()
     }
 
+    func initHotelList() {
+        hotels = []
+        dbProxy.getHotelList() { [weak self] hotelList in
+            self?.hotels = hotelList.keys.sorted()
+            self?.initUserList()
+            self?.initRoomList()
+            DispatchQueue.main.async {
+                self?.hotelPicker.reloadAllComponents()
+            }
+        }
+    }
+
     func initUserList() {
+        guard !hotels.isEmpty else { return }
         users = []
         userPicker.reloadComponent(0)
         let i = hotelPicker.selectedRow(inComponent: 0)
-        let hotelName = hotels[i].lowercased()
-        authProxy.getUsers(hotelName: hotelName) { [weak self] userList in
+        let hotelId = hotels[i].lowercased()
+        authProxy.getUsers(hotelName: hotelId) { [weak self] userList in
             self?.users = userList
+            DispatchQueue.main.async { self?.userPicker.reloadAllComponents() }
+        }
+    }
+    
+    func initRoomList() {
+        guard !hotels.isEmpty else { return }
+        users = []
+        userPicker.reloadComponent(0)
+        let i = hotelPicker.selectedRow(inComponent: 0)
+        let hotelId = hotels[i]
+        dbProxy.getRoomList(hotelId: hotelId) { [weak self] roomList in
+            self?.rooms = roomList
             DispatchQueue.main.async { self?.userPicker.reloadAllComponents() }
         }
     }
@@ -140,6 +154,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         if (captureSession?.isRunning == false && !captureSession.inputs.isEmpty ) {
             captureSession.startRunning()
         }
+        initHotelList()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -162,6 +177,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     }
 
     @IBAction func segmentedIndexChanged(_ sender: UISegmentedControl) {
+        userPicker.selectRow(0, inComponent: 0, animated: false)
         userPicker.reloadAllComponents()
     }
 
@@ -171,11 +187,10 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         view.backgroundColor = captureView.isHidden ? .white : UIColor(234, 62, 59) // sRGB
         defaultsStackView.isHidden = !defaultsStackView.isHidden
     }
-    
+
     @IBAction func loginButtonPressed(_ sender: UIButton) {
         _ = presentModal(storyBoard: "Users", id: "Login")
     }
-
 
     @IBAction func skipCaptureButtonPressed(_ sender: UIButton) {
         let hotelId = hotels[hotelPicker.selectedRow(inComponent: 0)]
@@ -185,9 +200,9 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             { "hotelId": "\(hotelId)", "userName": "\(userId)", "password": "\(hotelId.lowercased())" }
         """)
         } else {
-            let room = rooms[hotelId]![userPicker.selectedRow(inComponent: 0)]
+            let room = rooms[userPicker.selectedRow(inComponent: 0)]
             found(barcodeString: """
-            { "hotelId": "\(hotelId)", "roomNumber": \(room.nr), "startDate": 669364704.669543, "guestName": "\(room.guest)" }
+            { "hotelId": "\(hotelId)", "roomNumber": \(room), "startDate": 669364704.669543, "guestName": "" }
         """)
         }
     }
@@ -207,11 +222,14 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             return
         }
 
+        goToHome(barcodeString: barcodeString)
+    }
+
+    func goToHome(barcodeString: String) {
         UserDefaults.standard.set(barcodeString, forKey: "barcodeData")
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.initFromBarcode()
         appDelegate.transitionToHome(from: self)
-
     }
 
     override var prefersStatusBarHidden: Bool {
@@ -232,25 +250,27 @@ extension ScannerViewController: UIPickerViewDataSource, UIPickerViewDelegate {
         switch pickerView.tag {
             case Picker.Hotel.rawValue: return hotels.count
             case Picker.User.rawValue:
-                let i = hotelPicker.selectedRow(inComponent: 0)
-                return userFlag ? users.count : rooms[hotels[i]]!.count
+                return userFlag ? users.count : rooms.count
             default: return 0
         }
     }
 
     func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        let i = hotelPicker.selectedRow(inComponent: 0)
+        let textColor: UIColor = (row == pickerView.selectedRow(inComponent: component)) ? .appviator : .black
         switch pickerView.tag {
             case Picker.Hotel.rawValue:
-                return NSAttributedString(string: hotels[row], attributes: [NSAttributedString.Key.foregroundColor: UIColor.red])
+                guard !hotels.isEmpty else { return NSAttributedString(string: "") }
+                return NSAttributedString(string: hotels[row], attributes: [NSAttributedString.Key.foregroundColor: textColor])
             case Picker.User.rawValue:
                 if userFlag {
+                    guard !users.isEmpty else { return NSAttributedString(string: "") }
                     let paragraphStyle = NSMutableParagraphStyle()
                     paragraphStyle.tabStops = [NSTextTab(textAlignment: NSTextAlignment.right, location: pickerView.rowSize(forComponent: 0).width - 20)]
                     let text = users[row].name + "\t" + (users[row].role?.rawValue ?? "")
-                    return NSAttributedString(string: text, attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle, NSAttributedString.Key.foregroundColor: UIColor.red])
+                    return NSAttributedString(string: text, attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle, NSAttributedString.Key.foregroundColor: textColor])
                 } else {
-                    return NSAttributedString(string: rooms[hotels[i]]![row].toString, attributes: [NSAttributedString.Key.foregroundColor: UIColor.red])
+                    guard !rooms.isEmpty else { return NSAttributedString(string: "") }
+                    return NSAttributedString(string: rooms[row].toString, attributes: [NSAttributedString.Key.foregroundColor: textColor])
                 }
             default: return NSAttributedString(string: "")
         }
@@ -259,6 +279,11 @@ extension ScannerViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if pickerView.tag == Picker.Hotel.rawValue {
             initUserList()
+            initRoomList()
+            userPicker.selectRow(0, inComponent: 0, animated: false)
+            userPicker.reloadAllComponents()
         }
+        pickerView.reloadComponent(component)
     }
+
 }

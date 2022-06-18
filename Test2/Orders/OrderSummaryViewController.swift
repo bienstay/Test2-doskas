@@ -176,7 +176,7 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
         confirmedStackView.isHidden = true
         deliveredStackView.isHidden = true
         canceledStackView.isHidden = true
-        if phoneUser.isAllowed(to: .confirmOrders) {
+        if phoneUser.isAllowed(to: .manageOrders) {
             createdStackView.isHidden = false
             switch order.status {
                 case .CANCELED:
@@ -213,7 +213,7 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
         }
 
         let button = statusChangeButton.customView as! UIButton
-        if phoneUser.isAllowed(to: .confirmOrders) {
+        if phoneUser.isAllowed(to: .manageOrders) {
             button.isHidden = false
             if order.status == Order.Status.CREATED {
                 button.setTitle(.confirm, for: .normal)

@@ -24,14 +24,18 @@ final class FirebaseDatabase: DBProxy {
         return Firebase.shared.database.reference()
     }
 
+    var ROOTVER_DB_REF: DatabaseReference {
+        return ROOT_DB_REF.child("v2")
+    }
+
     var BASE_DB_REF: DatabaseReference          {
         if hotel.id != "" {
-            return ROOT_DB_REF.child("v2").child("hotels").child(hotel.id)
+            return ROOTVER_DB_REF.child("hotels").child(hotel.id)
         } else {
-            return ROOT_DB_REF.child("v2").child("hotels")
+            return ROOTVER_DB_REF.child("hotels")
         }
     }
-    
+
     var DBINFO_DB_REF: DatabaseReference        { ROOT_DB_REF.child(".info") }      // internal Firebase status
 
     var HOTEL_DB_REF: DatabaseReference         { BASE_DB_REF }
@@ -68,9 +72,7 @@ final class FirebaseDatabase: DBProxy {
 
     func getDBRef<T>(type: T.Type, subNode: String? = nil) -> DatabaseReference? {
         switch type {
-            case is HotelInDB.Type:
-                return ROOT_DB_REF.child("hotels")
-            case is HotelInfo.Type:
+            case is HotelConfigInDB.Type:
                 return CONFIG_DB_REF
             case is InfoItem.Type:
                 return INFO_DB_REF
@@ -125,8 +127,10 @@ final class FirebaseDatabase: DBProxy {
         let dbRef = getDBRef(type: type.self, subNode: subNode)
         let errStr = "Invalid parameter in getQuery for \(T.Type.self): \(String(describing: parameter))"
         switch type {
-            case is HotelInfo.Type:
+            case is HotelConfigInDB.Type:
                 return dbRef?.queryOrderedByKey().queryEqual(toValue: "config")
+//            case is HotelInfo.Type:
+//                return dbRef?.queryOrderedByKey().queryEqual(toValue: "config")
             case is GuestInfo.Type:
                 guard case .GuestInfo(let guestId) = parameter else { Log.log(errStr); return nil }
                 return dbRef?.queryOrderedByKey().queryEqual(toValue: guestId)
@@ -216,6 +220,20 @@ final class FirebaseDatabase: DBProxy {
             errString = "dbRef nil for type \(T.self) and key \(String(describing: key))"
         }
         return errString
+    }
+
+    func removeRecord(path:String, key:String, completionHandler: @ escaping (Error?) -> Void) {
+        let dbRef = ROOTVER_DB_REF.child(path).child(key)
+        dbRef.removeValue() { error, dbRef in
+            if let err = error {
+                    Log.log("Error removing key \(String(describing: key)) from \(dbRef)")
+                    Log.log(level: .ERROR, "\(err.localizedDescription)")
+                    completionHandler(err)
+            } else {
+                Log.log(level: .INFO, "Key \(key) removed from \(dbRef)")
+                completionHandler(nil)
+            }
+        }
     }
 
     func subscribe<T: Codable>(for operation: QueryOperation, subNode: String? = nil, parameter: QueryParameter? = nil, completionHandler: @ escaping (String, T) -> Void) -> Any? {

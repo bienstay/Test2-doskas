@@ -219,7 +219,7 @@ extension MessageKitChatViewController: MessagesDataSource {
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
         let m = messages[indexPath.section]
         //if phoneUser.role != .hotline { markAsRead(m: m) }  // hotline operator can reassign, so keep message unread
-        if !phoneUser.isAllowed(to: .assignChats) { markAsRead(m: m) }  // hotline operator can reassign, so keep message unread
+        if !phoneUser.isAllowed(to: .manageChats) { markAsRead(m: m) }  // hotline operator can reassign, so keep message unread
         return m
     }
 
@@ -260,7 +260,7 @@ extension MessageKitChatViewController: InputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
         guard let chatRoom = chatRoom else { return }
         // hotline operator can assign so mark as read only when he writes sth (means that he replies)
-        if phoneUser.isAllowed(to: .assignChats) {
+        if phoneUser.isAllowed(to: .manageChats) {
             for m in messages { markAsRead(m: m) }
         }
 

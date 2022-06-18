@@ -7,10 +7,10 @@
 
 import UIKit
 
-class UpdateHotelInfoViewController: UITableViewController {
+class NewHotelConfigViewController: UITableViewController {
 
     private var photoUpdated: Bool = false
-    var hotelToEdit: Hotel? = nil
+    var configToEdit: HotelConfig = hotel.config
 
     @IBOutlet private weak var photoImageView: UIImageView!
     @IBOutlet private weak var nameTextField: RoundedTextField!
@@ -31,15 +31,11 @@ class UpdateHotelInfoViewController: UITableViewController {
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
 
-        if let hotel = hotelToEdit {  // if hotelToEdit is not null then we are editing the existing hotel
-            nameTextField.text = hotel.name
-            if let url = URL(string: hotel.image) {
-                photoImageView.kf.setImage(with: url)
-            }
-            title = hotel.name
-        } else {
-            title = "New Hotel"
+        nameTextField.text = configToEdit.name
+        if let fileName = configToEdit.image, let url = URL(string: fileName) {
+            photoImageView.kf.setImage(with: url)
         }
+        title = configToEdit.name
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -64,45 +60,32 @@ class UpdateHotelInfoViewController: UITableViewController {
             return
         }
 
-        // TODO - instead of substituting the global, set only the ID and read the rest from DB
-        // need to add sync of the hotel info
-        let h = Hotel()
-        h.name = nameTextField.text!
-        if let orgHotel = hotelToEdit {
-            h.id = orgHotel.id
-        } else {
-            h.id = h.name.filter { !$0.isWhitespace }
-        }
+        var hc = HotelConfig()
+        hc.name = nameTextField.text!
+        hc.socialURLs = configToEdit.socialURLs // TODO
+        hc.rooms = configToEdit.rooms   // TODO
 
         if photoUpdated {
-            storageProxy.uploadImage(forLocation: .BASE, image: photoImageView.image!, imageName: h.name) { error, photoURL in
+            storageProxy.uploadImage(forLocation: .BASE, image: photoImageView.image!, imageName: hc.name) { error, photoURL in
                 if let photoURL = photoURL {
-                    h.image = photoURL
-                    self.addHotelInfoToDB(hotel: h)
+                    hc.image = photoURL
+                    self.addHotelConfigToDB(config: hc)
                 }
             }
         } else {
-            h.image = hotelToEdit?.image ?? ""
-            addHotelInfoToDB(hotel: h)
+            hc.image = configToEdit.image ?? ""
+            addHotelConfigToDB(config: hc)
         }
     }
 
-    func addHotelInfoToDB(hotel h: Hotel) {
-        let hotelInfo = HotelInfo(name: h.name, image: h.image, socialURLs: [:])
-        let errStr = dbProxy.addRecord(key: "info", record: hotelInfo) { _, h in self.closeMe(h) }
+    func addHotelConfigToDB(config hc: HotelConfig) {
+        let configInDB = HotelConfigInDB(h: hc)
+        let errStr = dbProxy.addRecord(key: "config", record: configInDB) { _, hc in self.closeMe(hc) }
         if let s = errStr { Log.log(s) }
-        //dbProxy.addHotelToConfig(hotelId: h.id!, hotelName: h.name)
     }
-/*
-    func addHotelToDB(hotel h: Hotel) {
-        let hotelInDB = HotelInDB(hotel: h)
-        let errStr = dbProxy.addRecord(key: h.id, record: hotelInDB) { h in self.closeMe(h) }
-        if let s = errStr { Log.log(s) }
-        dbProxy.addHotelToConfig(hotelId: h.id!, hotelName: h.name)
-    }
-*/
-    func closeMe(_ h: HotelInfo?) {
-        guard h != nil else {
+
+    func closeMe(_ hc: HotelConfigInDB?) {
+        guard hc != nil else {
             showInfoDialogBox(title: "Error", message: "Hotel update failed")
             return
         }
@@ -121,7 +104,7 @@ class UpdateHotelInfoViewController: UITableViewController {
 }
 
 
-extension UpdateHotelInfoViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+extension NewHotelConfigViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             photoImageView.image = selectedImage
@@ -131,7 +114,7 @@ extension UpdateHotelInfoViewController: UIImagePickerControllerDelegate, UINavi
     }
 }
 
-extension UpdateHotelInfoViewController: UITextFieldDelegate {
+extension NewHotelConfigViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if let nextTextField = view.viewWithTag(textField.tag + 1) {
             textField.resignFirstResponder()

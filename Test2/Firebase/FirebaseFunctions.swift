@@ -24,6 +24,29 @@ extension FirebaseAuthentication {
         }
     }
 
+    func addUserWithRole(hotelId: String, username: String, password: String, role:Role?, completionHandler: @ escaping (AuthenticationData?, Error?) -> Void) {
+        let email = username + "@\(hotelId).appviator.com"
+        var params = ["email": email, "password": password]
+        if let role = role { params["role"] = role.rawValue }
+        Firebase.shared.functions.httpsCallable("httpFunctions-addUserWithRole").call(params) { result, error in
+            if let error = error {
+                Log.log(level: .ERROR, error.localizedDescription)
+            }
+            if let data = result?.data as? NSMutableDictionary, JSONSerialization.isValidJSONObject(data) { // could also be [String:Any]
+                do {
+                    let jsonData = try JSONSerialization.data(withJSONObject: data)
+                    let u = try JSONDecoder().decode(UserFromAuth.self, from: jsonData)
+                    let ad = FirebaseAuthenticationData(uid: u.uid, email: u.email, role: Role(rawValue: u.customClaims?.role ?? ""))
+                    completionHandler(ad, nil)
+                } catch {
+                    completionHandler(nil, error)
+                }
+            } else {
+                completionHandler(nil, nil)
+            }
+        }
+    }
+
     func deleteUser(uid: String, completionHandler: @ escaping (Error?) -> Void) {
         Firebase.shared.functions.httpsCallable("httpFunctions-deleteUser").call(["uid": uid]) { result, error in
             if let error = error {
@@ -106,6 +129,18 @@ extension FirebaseAuthentication {
 
 
 extension FirebaseDatabase {
+    
+    func addHotel(hotelId: String, hotelName: String, completionHandler: @ escaping (Error?) -> Void) {
+        Firebase.shared.functions.httpsCallable("httpFunctions-addHotel").call(["hotelId": hotelId, "hotelName": hotelName]) { result, error in
+            if let error = error {
+                Log.log(level: .ERROR, error.localizedDescription)
+                completionHandler(error)
+            } else {
+                completionHandler(nil)
+            }
+        }
+    }
+    
     func translate(textToTranslate: String, targetLanguage: String, completionHandler: @ escaping (String?) -> Void) {
         Firebase.shared.functions.httpsCallable("httpFunctions-translateTextSimple").call(["text": textToTranslate, "targetLanguage": targetLanguage]) { result, error in
             if let error = error as NSError? {
@@ -145,3 +180,5 @@ extension FirebaseDatabase {
         }
     }
 }
+
+

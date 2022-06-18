@@ -36,7 +36,7 @@ class OrderDetailsCell: UITableViewCell {
     func draw(order: Order) {
         glossyView.setNeedsDisplay()
         self.order = order
-        if phoneUser.isAllowed(to: .confirmOrders) {
+        if phoneUser.isAllowed(to: .manageOrders) {
             statusChangeButton.isHidden = false
             if order.status == Order.Status.CREATED {
                 statusChangeButton.setTitle("Confirm", for: .normal)

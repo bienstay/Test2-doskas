@@ -15,7 +15,7 @@ class AddUserViewController: UIViewController {
     @IBOutlet weak var rolePicker: UIPickerView!
     @IBOutlet weak var addUserButton: UIButton!
 
-    let roles = Role.allCases
+    let roles = Role.allCases.filter( {$0 != .superadmin} )
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -75,7 +75,18 @@ class AddUserViewController: UIViewController {
         }
         sender.isEnabled = false
         let role = roles[rolePicker.selectedRow(inComponent: 0)]
-        authProxy.addUser(username: user, password: pass, role: role.rawValue) { [weak self] (authData, error) in
+        authProxy.addUserWithRole(hotelId: hotel.id, username: user, password: pass, role: role) { [weak self] authData, error in
+            sender.isEnabled = true
+            if let a = authData {
+                self?.showInfoDialogBox(title: "User added", message: "User: \(a.email)\nRole: \(a.role?.rawValue ?? "-")\nId:\(a.uid)") { [weak self] _ in
+                    self?.dismiss(animated: true)
+                }
+            } else {
+                self?.showInfoDialogBox(title: "Error", message: "Error adding user: \(error.debugDescription)")
+            }
+        }
+/*
+        authProxy.addUser(hotelId: hotel.id, username: user, password: pass, role: role) { [weak self] (authData, error) in
             sender.isEnabled = true
             guard let self = self else { return }
             if let a = authData {
@@ -93,6 +104,7 @@ class AddUserViewController: UIViewController {
                 self.showInfoDialogBox(title: "Error", message: "Error adding user: \(error.debugDescription)")
             }
         }
+*/
     }
 }
 
@@ -106,7 +118,12 @@ extension AddUserViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     }
 
     func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        return NSAttributedString(string: roles[row].rawValue, attributes: [NSAttributedString.Key.foregroundColor: UIColor.red])
+        let textColor: UIColor = (row == pickerView.selectedRow(inComponent: component)) ? .appviator : .black
+        return NSAttributedString(string: roles[row].rawValue, attributes: [NSAttributedString.Key.foregroundColor: textColor])
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        pickerView.reloadAllComponents()
     }
 }
 

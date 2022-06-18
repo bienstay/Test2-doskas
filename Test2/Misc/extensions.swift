@@ -408,7 +408,7 @@ func prepareNotification(id: String, title: String, subtitle:String, body: Strin
 extension Notification.Name {
     static let dbProxyReady = Notification.Name("dbProxyReady")
 
-    static let hotelInfoUpdated = Notification.Name("hotelInfoUpdated")
+    static let hotelConfigUpdated = Notification.Name("hotelConfigUpdated")
     static let ordersUpdated = Notification.Name("ordersUpdated")
     static let offersUpdated = Notification.Name("offersUpdated")
     static let informationUpdated = Notification.Name("informationUpdated")

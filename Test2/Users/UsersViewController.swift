@@ -108,8 +108,8 @@ class UserCell: UITableViewCell {
         super.awakeFromNib()
         backgroundColor = .clear
         selectionStyle = .none
-        nameLabel.textColor = .red
-        roleLabel.textColor = .red
+//        nameLabel.textColor = .red
+//        roleLabel.textColor = .red
     }
 
     func draw(authData: AuthenticationData) {

@@ -116,7 +116,7 @@ class ChatRoomManager {
     }
 
     func startObserving(user: User) {
-        let parameter:QueryParameter? = user.isAllowed(to: .assignChats) ? nil : .AssignedTo(id: user.id)
+        let parameter:QueryParameter? = user.isAllowed(to: .manageChats) ? nil : .AssignedTo(id: user.id)
         dbProxy.subscribe(for: .NEW, subNode: nil, parameter: parameter, completionHandler: chatRoomAdded)
         dbProxy.subscribe(for: .DELETE, subNode: nil, parameter: parameter, completionHandler: chatRoomRemoved)
     }
