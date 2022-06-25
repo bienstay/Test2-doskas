@@ -194,12 +194,12 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
 
     @IBAction func skipCaptureButtonPressed(_ sender: UIButton) {
         let hotelId = hotels[hotelPicker.selectedRow(inComponent: 0)]
-        if userFlag {
+        if userFlag && !users.isEmpty {
             let userId: String = users[userPicker.selectedRow(inComponent: 0)].name
             found(barcodeString: """
             { "hotelId": "\(hotelId)", "userName": "\(userId)", "password": "\(hotelId.lowercased())" }
         """)
-        } else {
+        } else if !rooms.isEmpty {
             let room = rooms[userPicker.selectedRow(inComponent: 0)]
             found(barcodeString: """
             { "hotelId": "\(hotelId)", "roomNumber": \(room), "startDate": 669364704.669543, "guestName": "" }

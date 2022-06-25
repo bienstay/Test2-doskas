@@ -110,9 +110,9 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
             vc.modalPresentationStyle = .fullScreen
             self?.present(vc, animated: true, completion: nil)
         }
-        menu.addItem(label: "Rate review") { [weak self] in
+        menu.addItem(label: "Test") { [weak self] in
             if let self = self {
-                _ = self.presentModal(storyBoard: "Activities", id: "RateReview")
+                _ = self.pushViewController(storyBoard: "Info", id: "Test")
             }
         }
         menu.addSeparator()

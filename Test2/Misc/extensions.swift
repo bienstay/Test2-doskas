@@ -81,12 +81,12 @@ extension UIColor {
                     case .dark:
                         return .black
                     default:
-                    return .offWhite
+                    return .offWhiteLight
                 }
             }
             return c
         } else {
-            return .offWhite
+            return .offWhiteLight
         }
     }
 
@@ -232,13 +232,21 @@ extension UIViewController {
             tv!.separatorStyle = .none
             tv!.showsVerticalScrollIndicator = false
             tv!.cellLayoutMarginsFollowReadableWidth = true
-            tv!.backgroundColor = .BBbackgroundColor
+            if #available(iOS 13.0, *) {
+                tv!.backgroundColor = .systemGroupedBackground
+            } else {
+                tv!.backgroundColor = .BBbackgroundColor
+            }
         }
 
         var cv = collectionView
         if let collectionViewController = self as? UICollectionViewController { cv = collectionViewController.collectionView }
         if cv != nil {
-            cv!.backgroundColor = .BBbackgroundColor
+            if #available(iOS 13.0, *) {
+                cv!.backgroundColor = .systemGroupedBackground
+            } else {
+                cv!.backgroundColor = .BBbackgroundColor
+            }
         }
 
         navigationItem.backButtonTitle = ""

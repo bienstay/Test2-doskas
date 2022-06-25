@@ -114,6 +114,7 @@
 		06A8C7EF2855475E000406F9 /* ReviewButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06A8C7ED2855475E000406F9 /* ReviewButtonTableViewCell.swift */; };
 		06A8C7F02855475E000406F9 /* ReviewButtonTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06A8C7EE2855475E000406F9 /* ReviewButtonTableViewCell.xib */; };
 		06A8C7F2285BB0B8000406F9 /* HotelsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06A8C7F1285BB0B8000406F9 /* HotelsViewController.swift */; };
+		06A8C7F4285F1F50000406F9 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06A8C7F3285F1F50000406F9 /* TestViewController.swift */; };
 		06AC358B271B58F100D249C6 /* Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AC358A271B58F100D249C6 /* Firebase.swift */; };
 		06AC358D271B7FAE00D249C6 /* Likes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AC358C271B7FAE00D249C6 /* Likes.swift */; };
 		06AF200F27E2ED7600B9A692 /* DBProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AF200E27E2ED7500B9A692 /* DBProxy.swift */; };
@@ -256,6 +257,7 @@
 		06A8C7ED2855475E000406F9 /* ReviewButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewButtonTableViewCell.swift; sourceTree = "<group>"; };
 		06A8C7EE2855475E000406F9 /* ReviewButtonTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReviewButtonTableViewCell.xib; sourceTree = "<group>"; };
 		06A8C7F1285BB0B8000406F9 /* HotelsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotelsViewController.swift; sourceTree = "<group>"; };
+		06A8C7F3285F1F50000406F9 /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		06AC358A271B58F100D249C6 /* Firebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firebase.swift; sourceTree = "<group>"; };
 		06AC358C271B7FAE00D249C6 /* Likes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Likes.swift; sourceTree = "<group>"; };
 		06AF200E27E2ED7500B9A692 /* DBProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBProxy.swift; sourceTree = "<group>"; };
@@ -536,6 +538,7 @@
 				06A47DCD2839775F002D32B5 /* InfoViewController.swift */,
 				06F551DC283D7189007AB4DB /* NewInfoViewController.swift */,
 				06F551DE283D8CC2007AB4DB /* NewInfoImagesTableViewCell.swift */,
+				06A8C7F3285F1F50000406F9 /* TestViewController.swift */,
 			);
 			path = Info;
 			sourceTree = "<group>";
@@ -904,6 +907,7 @@
 				0668750028325EA400DB5604 /* FirebaseFunctions.swift in Sources */,
 				061DC839265469E700C4C794 /* WatersportsViewController.swift in Sources */,
 				061DC82726526E0E00C4C794 /* RestaurantDestinationDiningCell.swift in Sources */,
+				06A8C7F4285F1F50000406F9 /* TestViewController.swift in Sources */,
 				0632D44B266AC3A3001F7036 /* OrdersViewController.swift in Sources */,
 				065F0367263621F200A5CDEF /* Menu.swift in Sources */,
 				06C32AE1282EC2F100228A40 /* AddUserViewController.swift in Sources */,

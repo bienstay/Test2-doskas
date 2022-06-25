@@ -16,6 +16,11 @@ class InfoViewController: UIViewController, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         initView(tableView: tableView)
+        if #available(iOS 13.0, *) {
+            tableView.backgroundColor = .systemGroupedBackground
+        } else {
+            // Fallback on earlier versions
+        }
         tableView.dataSource = self
         tableView.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(onInformationUpdated(_:)), name: .informationUpdated, object: nil)
@@ -44,7 +49,7 @@ class InfoViewController: UIViewController, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "infoCell", for: indexPath) as! InfoCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "InfoCell", for: indexPath) as! InfoCell
         cell.draw(info: hotel.infoItems[indexPath.row])
         return cell
     }
@@ -120,7 +125,7 @@ extension InfoViewController {
 
 
 
-
+/*
 class InfoCell: UITableViewCell {
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var subtitleLabel: UILabel!
@@ -145,4 +150,51 @@ class InfoCell: UITableViewCell {
         }
         else { infoImageView.isHidden = true }
     }
+}
+*/
+
+class InfoCell: UITableViewCell {
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var containerView: UIView!
+    @IBOutlet var imageContainerView: UIView!
+    @IBOutlet var iconImageView: UIImageView!
+    var orgFrame: CGRect? = nil
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        selectionStyle = UITableViewCell.SelectionStyle.none
+
+        layer.cornerRadius = 8
+        layer.masksToBounds = true
+        imageContainerView.layer.cornerRadius = 8
+        imageContainerView.layer.masksToBounds = true
+    }
+
+    func draw(info: InfoItem) {
+        titleLabel.text = info.title
+        //imageContainerView.backgroundColor = [.systemPink, .systemBlue, .systemGreen, .systemOrange].randomElement()
+        /*if #available(iOS 13.0, *) {
+            iconImageView.image = UIImage(systemName: "airplane")
+        } else {
+            // Fallback on earlier versions
+        }*/
+        iconImageView.image = nil
+        iconImageView.isHidden = true
+        if let url = URL(string: info.images[0].url) {
+            iconImageView.kf.setImage(with: url)
+            iconImageView.isHidden = false
+        }
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if orgFrame == nil {
+            orgFrame = layer.frame.inset(by: UIEdgeInsets(top: 1, left: 16, bottom: 1, right: 16));
+        }
+
+        //let newFrame = self.layer.frame.inset(by: UIEdgeInsets(top: 1, left: 16, bottom: 1, right: 16));
+        layer.frame = orgFrame ?? .zero
+        super.layoutSubviews()
+    }
+
 }

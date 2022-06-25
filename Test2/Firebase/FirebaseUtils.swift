@@ -48,19 +48,7 @@ extension FirebaseDatabase {
             }
         }
     }
-/*
-    func getGuests(hotelID: String, index: Int, completionHandler: @ escaping (Int, [(String, GuestInfo)]) -> Void) {
-        let guestsRef = ROOT_DB_REF.child("hotels").child(hotelID).child("users")
-        guestsRef.getData { (error, snapshot) in
-            if let error = error {
-                Log.log("Error getting guest data \(error)")
-            } else {
-                let data: [(String, GuestInfo)] = self.decodeSnapshot(snapshot: snapshot)
-                completionHandler(index, data)
-            }
-        }
-    }
-*/
+
     func updateOrderStatus(orderId: String, newStatus: Order.Status, confirmedBy: String? = nil, deliveredBy: String? = nil, canceledBy: String? = nil) {
         let orderRef = ORDERS_DB_REF.child("/\(orderId)")
         var key = ""
@@ -95,21 +83,12 @@ extension FirebaseDatabase {
             "/perUser/\(userID)/\(group)/\(itemKey)" : (add ? true : false)
         ]
 
-//        guard let key = ref.child("posts").childByAutoId().key else { return }
-//        let post = ["uid": userID,
-//                    "author": username,
-//                    "title": title,
-//                    "body": body]
-//        let childUpdates = ["/posts/\(key)": post,
-//                            "/user-posts/\(userID)/\(key)/": post]
-
         dbRef.updateChildValues(childUpdates) { (error, dbref) in
             if let error = error {
                 Log.log(level: .ERROR, "Error updating likes \(error.localizedDescription)")
             }
         }
     }
-
 }
 
 extension FirebaseDatabase {
@@ -129,25 +108,7 @@ extension FirebaseDatabase {
             }
         }
     }
-/*
-    func updateGuest(hotelId: String, guestId: String, guestData: GuestInDB, completionHandler: @ escaping () -> Void) {
-        if let g = convertObjectToDictionary(t: guestData) {
-            let updates = [
-                "/guests/\(guestId)": g,
-                "/rooms/\(guestData.roomNumber)/currentGuest": guestId
-            ] as [String : Any]
-            Auth.auth().signIn(withEmail: "appuser@appviator.com", password: "Appviator2022!") { (authResult, error) in
-                self.ROOT_DB_REF.child("hotels").child(hotelId).updateChildValues(updates)  { (error, dbref) in
-                    if let error = error {
-                        Log.log(level: .ERROR, "Error updating data \(guestData)\n\(error.localizedDescription)")
-                    } else {
-                        completionHandler()
-                    }
-                }
-            }
-        }
-    }
-*/
+
     func observeInfo() {
         DBINFO_DB_REF.observe(.value, with: { snapshot in
             if let info = snapshot.value as? NSDictionary {
@@ -227,45 +188,13 @@ extension FirebaseDatabase {
             }
         }
     }
-
-/*
-    func addHotel(hotelId: String, hotelName: String, completionHandler: @ escaping (Error?) -> Void) {
-        let updates = [
-            "/v2/config/hotels/\(hotelId)": hotelName,
-            "/v2/hotels/\(hotelId)/config": ["name": hotelName]
-        ] as [String : Any]
-        ROOT_DB_REF.updateChildValues(updates)  { (error, dbref) in
-            if let error = error {
-                Log.log(level: .ERROR, "Error updating hotel\n\(error.localizedDescription)")
-                completionHandler(error)
-            } else {
-                completionHandler(nil)
-            }
-        }
-        authProxy.addUserWithRole(hotelId: hotelId, username: "appuser", password: hotelId, role: nil) { _,_  in }
-        authProxy.addUserWithRole(hotelId: hotelId, username: "admin", password: hotelId, role: .admin) { _,_  in }
-    }
-*/
 }
 
 
 extension FirebaseDatabase {
-    func getConfig(forHotelId hotelId: String, completionHandler: @ escaping ([Int]) -> Void) {
-        var roomList: [Int] = []
-        let dbRef:DatabaseQuery = ROOT_DB_REF.child("v2").child("hotels").child(hotelId).child("config")
-        //dbRef.observeSingleEvent(of: .value) {snapshot in
-        dbRef.getData() { error, snapshot in
-            if let rooms = snapshot.value as? [String:Bool] {
-                roomList = rooms.keys.compactMap({Int($0)}).sorted()
-            }
-            completionHandler(roomList)
-        }
-    }
-
     func getRoomList(hotelId: String, completionHandler: @ escaping ([Int]) -> Void) {
         var roomList: [Int] = []
         let dbRef:DatabaseQuery = ROOT_DB_REF.child("v2").child("hotels").child(hotelId).child("config").child("rooms")
-        //dbRef.observeSingleEvent(of: .value) {snapshot in
         dbRef.getData() { error, snapshot in
             if let rooms = snapshot.value as? [String:Bool] {
                 roomList = rooms.keys.compactMap({Int($0)}).sorted()
@@ -283,13 +212,5 @@ extension FirebaseDatabase {
             }
             completionHandler(hotelList)
         }
-        /*
-        dbRef.observeSingleEvent(of: .value) {snapshot in
-            if let hotels = snapshot.value as? [String:String] {
-                hotelList = hotels
-            }
-            completionHandler(hotelList)
-        }
-         */
     }
 }
