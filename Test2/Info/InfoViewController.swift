@@ -23,20 +23,20 @@ class InfoViewController: UIViewController, UITableViewDataSource {
         }
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.backgroundColor = .BBbackgroundColor
         NotificationCenter.default.addObserver(self, selector: #selector(onInformationUpdated(_:)), name: .informationUpdated, object: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupListNavigationBar()
-        //tabBarController?.tabBar.isHidden = true
-        title = .info
+        navigationItem.title = .info
         newInfoBarButton.isEnabled = phoneUser.isAllowed(to: .editContent)
         newInfoBarButton.title = phoneUser.isAllowed(to: .editContent) ? "New" : ""
     }
 
     override func viewWillDisappear(_ animated: Bool) {
-        title = ""
+        navigationItem.title = ""
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -49,7 +49,7 @@ class InfoViewController: UIViewController, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "InfoCell", for: indexPath) as! InfoCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "InfoCell2", for: indexPath) as! InfoCell
         cell.draw(info: hotel.infoItems[indexPath.row])
         return cell
     }
@@ -164,10 +164,10 @@ class InfoCell: UITableViewCell {
         super.awakeFromNib()
         selectionStyle = UITableViewCell.SelectionStyle.none
 
-        layer.cornerRadius = 8
+        layer.cornerRadius = 32
         layer.masksToBounds = true
-        imageContainerView.layer.cornerRadius = 8
-        imageContainerView.layer.masksToBounds = true
+        //imageContainerView.layer.cornerRadius = 8
+        //imageContainerView.layer.masksToBounds = true
     }
 
     func draw(info: InfoItem) {
@@ -187,13 +187,14 @@ class InfoCell: UITableViewCell {
     }
 
     override func layoutSubviews() {
-        super.layoutSubviews()
         if orgFrame == nil {
-            orgFrame = layer.frame.inset(by: UIEdgeInsets(top: 1, left: 16, bottom: 1, right: 16));
+            orgFrame = layer.frame.inset(by: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16));
         }
-
-        //let newFrame = self.layer.frame.inset(by: UIEdgeInsets(top: 1, left: 16, bottom: 1, right: 16));
         layer.frame = orgFrame ?? .zero
+        layer.borderWidth = 1
+        layer.cornerRadius = 16
+        layer.masksToBounds = true
+
         super.layoutSubviews()
     }
 

@@ -10,6 +10,13 @@ import CoreLocation
 
 private let reuseIdentifier = "Cell"
 
+enum Tabs: Int {
+    case home
+    case news
+    case room
+    case orders
+}
+
 class HomeCollectionViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, CLLocationManagerDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
@@ -68,10 +75,10 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         NotificationCenter.default.addObserver(self, selector: #selector(onChatMessagesUpdated(_:)), name: .chatMessageDeleted, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(onConnectionStatusUpdated(_:)), name: .connectionStatusUpdated, object: nil)
 
-        tabBarController?.viewControllers?[0].tabBarItem.title = .home
-        tabBarController?.viewControllers?[1].tabBarItem.title = .food
-        tabBarController?.viewControllers?[2].tabBarItem.title = .room
-        tabBarController?.viewControllers?[3].tabBarItem.title = .orders
+        tabBarController?.viewControllers?[Tabs.home.rawValue].tabBarItem.title = .home
+        tabBarController?.viewControllers?[Tabs.news.rawValue].tabBarItem.title = .news
+        tabBarController?.viewControllers?[Tabs.room.rawValue].tabBarItem.title = .room
+        tabBarController?.viewControllers?[Tabs.orders.rawValue].tabBarItem.title = .orders
 
         if (CLLocationManager.locationServicesEnabled())
         {

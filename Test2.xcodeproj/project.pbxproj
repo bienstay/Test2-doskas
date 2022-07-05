@@ -115,6 +115,11 @@
 		06A8C7F02855475E000406F9 /* ReviewButtonTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06A8C7EE2855475E000406F9 /* ReviewButtonTableViewCell.xib */; };
 		06A8C7F2285BB0B8000406F9 /* HotelsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06A8C7F1285BB0B8000406F9 /* HotelsViewController.swift */; };
 		06A8C7F4285F1F50000406F9 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06A8C7F3285F1F50000406F9 /* TestViewController.swift */; };
+		06A8C7F62868DDA1000406F9 /* Reviews.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 06A8C7F52868DDA1000406F9 /* Reviews.storyboard */; };
+		06A8C7F82868DE11000406F9 /* ReviewButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06A8C7F72868DE11000406F9 /* ReviewButton.swift */; };
+		06A8C7FA286AE7ED000406F9 /* ReviewCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06A8C7F9286AE7EC000406F9 /* ReviewCollectionViewCell.xib */; };
+		06A8C7FC286AE830000406F9 /* ReviewCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06A8C7FB286AE830000406F9 /* ReviewCollectionViewCell.swift */; };
+		06A8C7FE28737858000406F9 /* ReviewCollectionViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06A8C7FD28737858000406F9 /* ReviewCollectionViewHeader.xib */; };
 		06AC358B271B58F100D249C6 /* Firebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AC358A271B58F100D249C6 /* Firebase.swift */; };
 		06AC358D271B7FAE00D249C6 /* Likes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AC358C271B7FAE00D249C6 /* Likes.swift */; };
 		06AF200F27E2ED7600B9A692 /* DBProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AF200E27E2ED7500B9A692 /* DBProxy.swift */; };
@@ -134,7 +139,7 @@
 		06F5D167270B52A4004931F7 /* Activities.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 06F5D166270B52A4004931F7 /* Activities.storyboard */; };
 		06F5D169270B8E1B004931F7 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F5D168270B8E1B004931F7 /* Activity.swift */; };
 		06F5D16B270BC7D4004931F7 /* ActivityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F5D16A270BC7D4004931F7 /* ActivityCell.swift */; };
-		06F7726A26713DC600E64D54 /* NewsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F7726926713DC600E64D54 /* NewsCell.swift */; };
+		06F7726A26713DC600E64D54 /* NewsCell2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F7726926713DC600E64D54 /* NewsCell2.swift */; };
 		06F7726C2671755800E64D54 /* NewNewsPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F7726B2671755800E64D54 /* NewNewsPostViewController.swift */; };
 		06F7726E2673931300E64D54 /* NewsDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F7726D2673931300E64D54 /* NewsDetailViewController.swift */; };
 		06F7727026760FA100E64D54 /* IBPCollectionViewCompositionalLayoutInteroperability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F7726F26760FA100E64D54 /* IBPCollectionViewCompositionalLayoutInteroperability.swift */; };
@@ -258,6 +263,11 @@
 		06A8C7EE2855475E000406F9 /* ReviewButtonTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReviewButtonTableViewCell.xib; sourceTree = "<group>"; };
 		06A8C7F1285BB0B8000406F9 /* HotelsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotelsViewController.swift; sourceTree = "<group>"; };
 		06A8C7F3285F1F50000406F9 /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
+		06A8C7F52868DDA1000406F9 /* Reviews.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Reviews.storyboard; sourceTree = "<group>"; };
+		06A8C7F72868DE11000406F9 /* ReviewButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewButton.swift; sourceTree = "<group>"; };
+		06A8C7F9286AE7EC000406F9 /* ReviewCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReviewCollectionViewCell.xib; sourceTree = "<group>"; };
+		06A8C7FB286AE830000406F9 /* ReviewCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewCollectionViewCell.swift; sourceTree = "<group>"; };
+		06A8C7FD28737858000406F9 /* ReviewCollectionViewHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReviewCollectionViewHeader.xib; sourceTree = "<group>"; };
 		06AC358A271B58F100D249C6 /* Firebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firebase.swift; sourceTree = "<group>"; };
 		06AC358C271B7FAE00D249C6 /* Likes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Likes.swift; sourceTree = "<group>"; };
 		06AF200E27E2ED7500B9A692 /* DBProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBProxy.swift; sourceTree = "<group>"; };
@@ -278,7 +288,7 @@
 		06F5D168270B8E1B004931F7 /* Activity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
 		06F5D16A270BC7D4004931F7 /* ActivityCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCell.swift; sourceTree = "<group>"; };
 		06F77266266FD8B500E64D54 /* Test2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Test2.entitlements; sourceTree = "<group>"; };
-		06F7726926713DC600E64D54 /* NewsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCell.swift; sourceTree = "<group>"; };
+		06F7726926713DC600E64D54 /* NewsCell2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsCell2.swift; sourceTree = "<group>"; };
 		06F7726B2671755800E64D54 /* NewNewsPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewNewsPostViewController.swift; sourceTree = "<group>"; };
 		06F7726D2673931300E64D54 /* NewsDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsDetailViewController.swift; sourceTree = "<group>"; };
 		06F7726F26760FA100E64D54 /* IBPCollectionViewCompositionalLayoutInteroperability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IBPCollectionViewCompositionalLayoutInteroperability.swift; sourceTree = "<group>"; };
@@ -523,7 +533,7 @@
 			children = (
 				069FD3C5268CB4350076C6FC /* News.storyboard */,
 				06F7727A267E8A6D00E64D54 /* NewsViewController.swift */,
-				06F7726926713DC600E64D54 /* NewsCell.swift */,
+				06F7726926713DC600E64D54 /* NewsCell2.swift */,
 				06F7726D2673931300E64D54 /* NewsDetailViewController.swift */,
 				06F7726B2671755800E64D54 /* NewNewsPostViewController.swift */,
 			);
@@ -569,10 +579,17 @@
 		06A8C7E428548B69000406F9 /* Reviews */ = {
 			isa = PBXGroup;
 			children = (
+				06A8C7F52868DDA1000406F9 /* Reviews.storyboard */,
 				06A8C7E628548BAD000406F9 /* ReviewTableViewCell.xib */,
 				06A8C7EE2855475E000406F9 /* ReviewButtonTableViewCell.xib */,
+				06A8C7E228528841000406F9 /* ReviewsManager.swift */,
+				06A8C7E0284BFD4B000406F9 /* RateReviewViewController.swift */,
 				06A8C7E528548BAD000406F9 /* ReviewTableViewCell.swift */,
 				06A8C7ED2855475E000406F9 /* ReviewButtonTableViewCell.swift */,
+				06A8C7F72868DE11000406F9 /* ReviewButton.swift */,
+				06A8C7F9286AE7EC000406F9 /* ReviewCollectionViewCell.xib */,
+				06A8C7FB286AE830000406F9 /* ReviewCollectionViewCell.swift */,
+				06A8C7FD28737858000406F9 /* ReviewCollectionViewHeader.xib */,
 			);
 			path = Reviews;
 			sourceTree = "<group>";
@@ -617,8 +634,6 @@
 				06F5D16A270BC7D4004931F7 /* ActivityCell.swift */,
 				06F5D162270B5197004931F7 /* NewActivityViewController.swift */,
 				06F551E22842A813007AB4DB /* doskas.swift */,
-				06A8C7E0284BFD4B000406F9 /* RateReviewViewController.swift */,
-				06A8C7E228528841000406F9 /* ReviewsManager.swift */,
 			);
 			path = Activities;
 			sourceTree = "<group>";
@@ -733,15 +748,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				06A8C7FE28737858000406F9 /* ReviewCollectionViewHeader.xib in Resources */,
 				066875022832FC5200DB5604 /* Users.storyboard in Resources */,
 				06882F6D274C5AF900D643A0 /* offers.json in Resources */,
 				061C4E0D2734A8BA00A6D5DA /* Info.storyboard in Resources */,
 				069FD3C6268CB4350076C6FC /* News.storyboard in Resources */,
+				06A8C7F62868DDA1000406F9 /* Reviews.storyboard in Resources */,
 				06882F6B27499BBD00D643A0 /* Offers.storyboard in Resources */,
 				0632D450266ACB22001F7036 /* Orders.storyboard in Resources */,
 				061DC82B2654244700C4C794 /* RestaurantSectionHeaderView.xib in Resources */,
 				06A8C7F02855475E000406F9 /* ReviewButtonTableViewCell.xib in Resources */,
 				061C4E162734AED700A6D5DA /* Home.storyboard in Resources */,
+				06A8C7FA286AE7ED000406F9 /* ReviewCollectionViewCell.xib in Resources */,
 				061DC8322654334D00C4C794 /* DestinationDiningPrivateEvents.jpg in Resources */,
 				06A8C7E828548BAD000406F9 /* ReviewTableViewCell.xib in Resources */,
 				061DC8362654334D00C4C794 /* DestinationDiningBubblesUnderTheStars.jpg in Resources */,
@@ -842,7 +860,7 @@
 				06882F672749128100D643A0 /* OffersCell.swift in Sources */,
 				066874FE2831260600DB5604 /* EditUserViewController.swift in Sources */,
 				065F036A2636221100A5CDEF /* Hotel.swift in Sources */,
-				06F7726A26713DC600E64D54 /* NewsCell.swift in Sources */,
+				06F7726A26713DC600E64D54 /* NewsCell2.swift in Sources */,
 				06882F6F274D867300D643A0 /* OfferViewController.swift in Sources */,
 				06F5D169270B8E1B004931F7 /* Activity.swift in Sources */,
 				0683A1F2265172070000D122 /* MenuMainViewController.swift in Sources */,
@@ -850,6 +868,7 @@
 				067A4D832807F4C70043F50D /* AuthProxy.swift in Sources */,
 				06F551DF283D8CC2007AB4DB /* NewInfoImagesTableViewCell.swift in Sources */,
 				069945AA2729FC75009548AA /* Translations.swift in Sources */,
+				06A8C7F82868DE11000406F9 /* ReviewButton.swift in Sources */,
 				06F5D161270B516D004931F7 /* ActivitiesViewController.swift in Sources */,
 				062038662641A37500B87708 /* MapViewController.swift in Sources */,
 				06F5D16B270BC7D4004931F7 /* ActivityCell.swift in Sources */,
@@ -880,6 +899,7 @@
 				06F7727226762E6A00E64D54 /* InfoDetailViewController.swift in Sources */,
 				069FD3CC268CBB200076C6FC /* OrderSummaryViewController.swift in Sources */,
 				069DB367263B105C00C91468 /* RestaurantTableViewCell.swift in Sources */,
+				06A8C7FC286AE830000406F9 /* ReviewCollectionViewCell.swift in Sources */,
 				06AF200F27E2ED7600B9A692 /* DBProxy.swift in Sources */,
 				064C205227EF604C00DA7A4A /* ScannerViewController.swift in Sources */,
 				061DC83D26547BC300C4C794 /* HotelInit.swift in Sources */,

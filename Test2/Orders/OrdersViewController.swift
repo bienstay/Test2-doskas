@@ -24,14 +24,12 @@ class OrdersViewController: UIViewController, UITableViewDataSource {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setupListNavigationBar()
-        //tabBarController?.tabBar.isHidden = false
-        title = .orders
+        setupListNavigationBar(title:.orders)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         // clean the title to eliminate bad effect of the large title staying after transition
-        title = ""
+        navigationItem.title = ""
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

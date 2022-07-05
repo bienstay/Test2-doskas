@@ -50,7 +50,7 @@
                     </tabBar>
                     <connections>
                         <segue destination="9OX-4B-3md" kind="relationship" relationship="viewControllers" id="hAZ-9J-LRz"/>
-                        <segue destination="gvz-1W-ARB" kind="relationship" relationship="viewControllers" id="kyl-se-5IE"/>
+                        <segue destination="CPz-F4-YlL" kind="relationship" relationship="viewControllers" id="OGI-fy-wdZ"/>
                         <segue destination="E5c-E6-3oN" kind="relationship" relationship="viewControllers" id="YaO-Ii-MNF"/>
                         <segue destination="0XG-oZ-oYM" kind="relationship" relationship="viewControllers" id="jH4-uu-yHr"/>
                     </connections>
@@ -63,41 +63,41 @@
         <scene sceneID="va8-Ro-k0s">
             <objects>
                 <viewControllerPlaceholder storyboardName="Home" id="9OX-4B-3md" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="Hy3-jP-jUB"/>
+                    <tabBarItem key="tabBarItem" title="HomeHome" id="Hy3-jP-jUB"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lGm-zw-fOz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-233" y="512"/>
-        </scene>
-        <!--Restaurants-->
-        <scene sceneID="zb0-bp-xhH">
-            <objects>
-                <viewControllerPlaceholder storyboardName="Restaurants" id="gvz-1W-ARB" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="hcJ-X8-Bt9"/>
-                </viewControllerPlaceholder>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ZiZ-Fn-ylm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-96" y="512"/>
+            <point key="canvasLocation" x="-149" y="512"/>
         </scene>
         <!--Room-->
         <scene sceneID="exR-oG-K7z">
             <objects>
                 <viewControllerPlaceholder storyboardName="Room" id="E5c-E6-3oN" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="xwu-zQ-4xo"/>
+                    <tabBarItem key="tabBarItem" title="RoomRoom" id="xwu-zQ-4xo"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WxX-Fb-Uqm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="41" y="512"/>
+            <point key="canvasLocation" x="64" y="512"/>
+        </scene>
+        <!--News-->
+        <scene sceneID="LAW-Xf-ZUx">
+            <objects>
+                <viewControllerPlaceholder storyboardName="News" id="CPz-F4-YlL" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="NewsNews" id="3Cp-Rp-hfH"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ffp-50-mRL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-42" y="512"/>
         </scene>
         <!--Orders-->
         <scene sceneID="hbF-wX-uv5">
             <objects>
                 <viewControllerPlaceholder storyboardName="Orders" id="0XG-oZ-oYM" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Orders" id="WIT-Sl-KSa"/>
+                    <tabBarItem key="tabBarItem" title="OrdersOrders" id="WIT-Sl-KSa"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="c3I-Ih-Hjs" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="152" y="512"/>
+            <point key="canvasLocation" x="177" y="512"/>
         </scene>
         <!--Scanner View Controller-->
         <scene sceneID="E0y-r2-SUX">

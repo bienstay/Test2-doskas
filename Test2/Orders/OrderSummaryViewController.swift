@@ -123,11 +123,9 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        setupListNavigationBar(largeTitle: false)
-
+        let title = .order +  " " + "\(order.number)"
+        setupListNavigationBar(largeTitle: false, title: title)
         tableView.contentInsetAdjustmentBehavior = .never
-
-        title = .order +  " " + "\(order.number)"
         roomNumberLabel.text = .room + ": \(order.roomNumber)"
         timeCreatedLabel.text = order.created?.formatForDisplay()
         idLabel.text = .order + ": \(order.id!)"

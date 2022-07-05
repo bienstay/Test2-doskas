@@ -9,13 +9,13 @@ import UIKit
 
 class NewsDetailViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var reviewButton: UIButton!
 
     var post = NewsPost()
     var reviewsManager = ReviewsManager()
     enum Sections: Int, CaseIterable {
-        case Details = 0
-        case ReviewButton = 1
-        case Reviews = 2
+        case Details
+        case Reviews
     }
 
     override func viewDidLoad() {
@@ -25,6 +25,8 @@ class NewsDetailViewController: UIViewController {
 
         tableView.delegate = self
         tableView.dataSource = self
+
+        tableView.register(UINib(nibName: "ReviewTableViewCell", bundle: nil), forCellReuseIdentifier: "ReviewCell")
 
         NotificationCenter.default.addObserver(self, selector: #selector(onLikesUpdated(_:)), name: .likesUpdated, object: nil)
 
@@ -39,6 +41,7 @@ class NewsDetailViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupTransparentNavigationBar(tableView: tableView)
+        reviewButton.isHidden = phoneUser.isStaff
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -49,10 +52,19 @@ class NewsDetailViewController: UIViewController {
     @objc func onLikesUpdated(_ notification: Notification) {
         DispatchQueue.main.async { [weak self] in
             self?.tableView.beginUpdates()
-            self?.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
+            self?.tableView.reloadRows(at: [IndexPath(row: 0, section: Sections.Details.rawValue)], with: .none)
             self?.tableView.endUpdates()
         }
-        //DispatchQueue.main.async { self.tableView.reloadData() }
+    }
+
+    @IBAction func reviewButtonPressed(_ sender: UIButton) {
+        if let vc = self.prepareModal(storyBoard: "Activities", id: "RateReview") as? RateReviewViewController {
+            vc.group = "news"
+            vc.id = post.postId
+            vc.reviewTitle = post.title
+            vc.reviewedImage = UIImage(named: "JaNaPlaya")
+            present(vc, animated: true)
+        }
     }
 }
 
@@ -65,7 +77,6 @@ extension NewsDetailViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section : Int) -> Int {
         switch Sections(rawValue: section) {
             case .Details : return 2
-            case .ReviewButton: return phoneUser.isStaff ? 0 : 1
             case .Reviews: return reviewsManager.reviews.count
             default: return 0
         }
@@ -81,21 +92,17 @@ extension NewsDetailViewController: UITableViewDataSource, UITableViewDelegate {
                     guard let self = self else { return }
                     phoneUser.toggleLike(group: "news", key: self.post.postId)
                 }
-                cell.draw(post: post)
+                cell.configure(post: post)
                 return cell
             case 1:
                 let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: NewsDetailTextCell.self), for: indexPath) as! NewsDetailTextCell
-                cell.draw(post: post)
+                cell.configure(post: post)
                 return cell
             default:
                 return UITableViewCell()
             }
-        case .ReviewButton:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ReviewButtonCell", for: indexPath)
-            cell.contentView.backgroundColor = .BBbackgroundColor
-            return cell
         case .Reviews:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "NewsReviewCell", for: indexPath) as! NewsDetailReviewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ReviewCell", for: indexPath) as! ReviewTableViewCell
             let r = reviewsManager.reviews[indexPath.row]
             cell.draw(timestamp: r.timestamp, rating: r.rating, review: r.review, roomNumber: r.roomNumber, translation: reviewsManager.translations[r.id ?? ""])
             return cell
@@ -109,26 +116,15 @@ extension NewsDetailViewController: UITableViewDataSource, UITableViewDelegate {
         return "Reviews"
     }
 
-//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//        if section == 0 { return 0 }
-//        return 50
-//    }
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section == Sections.Details.rawValue { return 40 }
+        else { return 0 }
+    }
 
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         guard let headerView = view as? UITableViewHeaderFooterView, !reviewsManager.reviews.isEmpty else { return }
         headerView.tintColor = .orange
         headerView.textLabel?.textColor = .black
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard indexPath.section == Sections.ReviewButton.rawValue else { return }
-        if let vc = self.prepareModal(storyBoard: "Activities", id: "RateReview") as? RateReviewViewController {
-            vc.group = "news"
-            vc.id = post.postId
-            vc.reviewTitle = post.title
-            vc.reviewedImage = UIImage(named: "JaNaPlaya")
-            present(vc, animated: true)
-        }
     }
 }
 
@@ -136,7 +132,7 @@ extension NewsDetailViewController: ReviewsManagerDelegate {
     func reviewsUpdated(reviewManager: ReviewsManager) {
         DispatchQueue.main.async { [weak self] in
             self?.tableView.beginUpdates()
-            self?.tableView.reloadSections([Sections.Reviews.rawValue], with: .right)
+            self?.tableView.reloadSections([Sections.Reviews.rawValue], with: .fade)
             self?.tableView.endUpdates()
         }
     }
@@ -147,22 +143,6 @@ extension NewsDetailViewController: ReviewsManagerDelegate {
             self?.tableView.reloadSections([Sections.Reviews.rawValue], with: .fade)
             self?.tableView.endUpdates()
         }
-    }
-}
-
-class NewsDetailTextCell: UITableViewCell {
-
-    @IBOutlet var timestampLabel: UILabel!
-    @IBOutlet var postTextLabel: UILabel!
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        backgroundColor = .clear
-    }
-    
-    func draw(post: NewsPost) {
-        timestampLabel.text = post.timestamp.formatForDisplay()
-        postTextLabel.text = post._text
     }
 }
 
@@ -183,7 +163,7 @@ class NewsDetailHeaderCell: UITableViewCell {
         super.awakeFromNib()
     }
 
-    func draw(post: NewsPost) {
+    func configure(post: NewsPost) {
         titleLabel.text = post._title
         subtitleLabel.text = post._subtitle
         if let url = URL(string: post.imageFileURL) {
@@ -200,45 +180,18 @@ class NewsDetailHeaderCell: UITableViewCell {
     }
 }
 
-class NewsDetailReviewCell: UITableViewCell {
+class NewsDetailTextCell: UITableViewCell {
 
     @IBOutlet var timestampLabel: UILabel!
-    @IBOutlet var reviewTextLabel: UILabel!
-    @IBOutlet var stars: [UIImageView]!
-    @IBOutlet var roomNumberLabel: UILabel!
-
-    var emptyStar = UIImage(named: "star")
-    var fullStar = UIImage(named: "star.fill")
+    @IBOutlet var postTextLabel: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()
         backgroundColor = .clear
-        selectionStyle = .none
-        if #available(iOS 13.0, *) {
-            emptyStar = UIImage(systemName: "star")
-            fullStar = UIImage(systemName: "star.fill")
-        }
     }
     
-    func draw(timestamp: Date, rating: Int, review: String, roomNumber: Int?, translation: String?) {
-        timestampLabel.text = timestamp.formatForDisplay()
-        let s = NSMutableAttributedString(string: review)
-        if let translation = translation {
-            let t = NSMutableAttributedString(string: translation, attributes: [.foregroundColor: UIColor.red])
-            s.append(NSAttributedString(string: "\n"))
-            s.append(t)
-        }
-        reviewTextLabel.attributedText = s
-        for i in 0 ... stars.count - 1 {
-            if i <= rating { stars[i].image = fullStar }
-            else { stars[i].image = emptyStar }
-        }
-        if let roomNumber = roomNumber {
-            roomNumberLabel.isHidden = false
-            roomNumberLabel.text = String(roomNumber)
-        } else {
-            roomNumberLabel.isHidden = true
-        }
+    func configure(post: NewsPost) {
+        timestampLabel.text = post.timestamp.formatForDisplay()
+        postTextLabel.text = post._text
     }
 }
-

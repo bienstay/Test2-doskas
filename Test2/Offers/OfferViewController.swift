@@ -11,19 +11,13 @@ class OfferViewController: UIViewController {
     var offer = Offer()
     var reviewsManager = ReviewsManager()
 
-    // reviews protocol variables
-    //var group: String = "offer"
-    //var itemId: String { offer.id ?? "" }
-    //var nonReviewSectionCount: Int = 1
-
     @IBOutlet var tableView: UITableView!
     @IBOutlet var headerView: OfferHeaderView!
-    @IBOutlet var requestBookingButton: UIButton!
+    @IBOutlet weak var reviewButton: UIButton!
 
     enum Sections: Int, CaseIterable {
-        case Details = 0
-        case ReviewButton = 1
-        case Reviews = 2
+        case Details
+        case Reviews
     }
 
     override func viewDidLoad() {
@@ -48,7 +42,6 @@ class OfferViewController: UIViewController {
         tableView.dataSource = self
 
         tableView.register(UINib(nibName: "ReviewTableViewCell", bundle: nil), forCellReuseIdentifier: "ReviewCell")
-        tableView.register(UINib(nibName: "ReviewButtonTableViewCell", bundle: nil), forCellReuseIdentifier: "ReviewButtonCell")
         reviewsManager.delegate = self
         reviewsManager.start(group: "offer", id: offer.id ?? "")
     }
@@ -60,6 +53,7 @@ class OfferViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupTransparentNavigationBar()
+        reviewButton.isHidden = phoneUser.isStaff
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -68,6 +62,16 @@ class OfferViewController: UIViewController {
     }
 
     @IBAction func requestBookingButtonPressed(_ sender: UIButton) {
+    }
+
+    @IBAction func reviewButtonPressed(_ sender: UIButton) {
+        if let vc = self.prepareModal(storyBoard: "Reviews", id: "RateReview") as? RateReviewViewController {
+            vc.group = "offer"
+            vc.id = offer.id ?? ""
+            vc.reviewTitle = offer.title
+            vc.reviewedImage = UIImage(named: "JaNaPlaya")
+            present(vc, animated: true)
+        }
     }
 }
 
@@ -80,7 +84,6 @@ extension OfferViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section : Int) -> Int {
         switch Sections(rawValue: section) {
             case .Details : return 1
-            case .ReviewButton: return phoneUser.isStaff ? 0 : 1
             case .Reviews: return reviewsManager.reviews.count
             default: return 0
         }
@@ -99,9 +102,6 @@ extension OfferViewController: UITableViewDataSource, UITableViewDelegate {
                 //fatalError("Failed to instantiate the table view cell for detail view controller")
                 return UITableViewCell()
             }
-        case .ReviewButton:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ReviewButtonCell", for: indexPath) as! ReviewButtonTableViewCell
-            return cell
         case .Reviews:
             let cell = tableView.dequeueReusableCell(withIdentifier: "ReviewCell", for: indexPath) as! ReviewTableViewCell
             let r = reviewsManager.reviews[indexPath.row]
@@ -109,17 +109,6 @@ extension OfferViewController: UITableViewDataSource, UITableViewDelegate {
             return cell
         default:
             return UITableViewCell()
-        }
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard indexPath.section == Sections.ReviewButton.rawValue else { return }
-        if let vc = self.prepareModal(storyBoard: "Activities", id: "RateReview") as? RateReviewViewController {
-            vc.group = "offer"
-            vc.id = offer.id ?? ""
-            vc.reviewTitle = offer.title
-            vc.reviewedImage = UIImage(named: "JaNaPlaya")
-            present(vc, animated: true)
         }
     }
 }

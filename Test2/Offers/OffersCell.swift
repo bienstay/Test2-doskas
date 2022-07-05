@@ -12,26 +12,27 @@ class OffersCell: UITableViewCell, UICollectionViewDelegate {
 
     @IBOutlet weak var newOfferButton: UIButton!
     @IBOutlet private weak var groupTitleLabel: UILabel!
-    @IBOutlet private weak var groupSubLabel: UILabel!
     @IBOutlet private var collectionView: UICollectionView!
     private var cellSelectedClosure: ((Int) -> ())? = nil
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        backgroundColor = .BBbackgroundColor
-        collectionView.backgroundColor = .BBbackgroundColor
+        if #available(iOS 13.0, *) {
+            collectionView.backgroundColor = .systemGroupedBackground
+        }
         newOfferButton.isEnabled = phoneUser.isAllowed(to: .editContent)
         newOfferButton.isHidden = !phoneUser.isAllowed(to: .editContent)
+        backgroundColor = .yellow
     }
 
-    func configure(group: Int, title: String, subTitle: String, dataSource: UICollectionViewDataSource, selectionClosure: @escaping (Int) -> ()) {
+    func configure(group: Int, title: String, dataSource: UICollectionViewDataSource, selectionClosure: @escaping (Int) -> ()) {
         groupTitleLabel.text = title
-        groupSubLabel.text = subTitle
         collectionView.dataSource = dataSource
         collectionView.delegate = self
         collectionView.tag = group
         collectionView.reloadData()
         cellSelectedClosure = selectionClosure
+        backgroundColor = .none
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -53,6 +54,14 @@ extension OffersCell: UICollectionViewDelegateFlowLayout {
 
         return CGSize(width: cellSize, height: cellSize)
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        16
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        UIEdgeInsets(top: 8, left: 16, bottom: 16, right: 16)
+    }
 }
 
 
@@ -68,7 +77,7 @@ class OfferCollectionViewCell: UICollectionViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        picture.layer.cornerRadius = 10
+        //picture.layer.cornerRadius = 10
         deleteButton.layer.cornerRadius = 5
         deleteButton.isEnabled = phoneUser.isAllowed(to: .editContent)
         deleteButton.isHidden = !phoneUser.isAllowed(to: .editContent)
@@ -102,4 +111,12 @@ class OfferCollectionViewCell: UICollectionViewCell {
             }
         }
     }
+    
+    override func layoutSubviews() {
+        layer.cornerRadius = 16
+        layer.masksToBounds = true
+
+        super.layoutSubviews()
+    }
+
 }

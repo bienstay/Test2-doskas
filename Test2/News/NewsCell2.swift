@@ -8,7 +8,7 @@
 import UIKit
 import Kingfisher
 
-class NewsCell: UITableViewCell {
+class NewsCell2: UITableViewCell {
 
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var subtitleLabel: UILabel!

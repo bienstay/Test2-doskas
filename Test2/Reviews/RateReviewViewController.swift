@@ -55,8 +55,5 @@ class RateReviewViewController: UIViewController {
         _ = dbProxy.addRecord(key: nil, subNode: "\(group)/\(id)", record: review) { [weak self] _,_ in
                self?.dismiss(animated: true)
         }
-//        dbProxy.writeReview(group: "news", id: Date().formatForDB(), rating: rating, review: reviewTextView.text) { [weak self] in
-//            self?.dismiss(animated: true)
-//        }
     }
 }
