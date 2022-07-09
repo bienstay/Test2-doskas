@@ -37,23 +37,21 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
 
     enum Items: String, CaseIterable {
         // raw value is the icon name
-        case news = "News"
+        case info = "Info"
+        case restaurants = "Restaurants"
         case activities = "Activities"
         case offers = "Offers"
         case map = "Map"
-        //case watersports = "Watersports"
-        //case adoptACoral = "AdoptAcoral"
-        //case kidsClub = "KidsClub"
+        case watersports = "Watersports"
 
         static func getString(item: Items) -> String {
             switch item {
-            case .news: return .news
+            case .info: return .info
+            case .restaurants: return .restaurants
             case .activities: return .activities
             case .offers: return .offers
             case .map: return .map
-            //case .watersports: return .waterSports
-            //case .adoptACoral: return .adoptACoral
-            //case .kidsClub: return .kidsClub
+            case .watersports: return .waterSports
             }
         }
     }
@@ -283,13 +281,12 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         case .items:
             let item: Items = Items.allCases[indexPath.row]
             switch item {
-                case .news:         _ = pushViewController(storyBoard: "News", id: "News")
+                case .info:         _ = pushViewController(storyBoard: "Info", id: "Info")
+                case .restaurants:  _ = pushViewController(storyBoard: "Restaurants", id: "Restaurants")
                 case .activities:   _ = pushViewController(storyBoard: "Activities", id: "Activities")
                 case .offers:       _ = pushViewController(storyBoard: "Offers", id: "Offers")
-                //case .map:          _ = pushViewController(storyBoard: "Main", id: "NFCReader")
-                //case .map:            _ = pushViewController(storyBoard: "Map", id: "mapViewController")
-                case .map:            _ = pushViewController(storyBoard: "Info", id: "Info")
-                //case .watersports:  _ = pushViewController(storyBoard: "WaterSports", id: "WaterSports")
+                case .map:            _ = pushViewController(storyBoard: "Map", id: "mapViewController")
+                case .watersports:  _ = pushViewController(storyBoard: "WaterSports", id: "WaterSports")
             }
         default: break
         }
@@ -525,14 +522,13 @@ func calculateLabelHeight(s: String, width: CGFloat) -> CGFloat {
               
 
 extension String {
-    static let news = NSLocalizedString("News", comment: "News")
+    static let info = NSLocalizedString("Info", comment: "Info")
+    static let restaurants = NSLocalizedString("Restaurants", comment: "Restaurants")
     static let activities = NSLocalizedString("Activities", comment: "Activities")
+    static let offers = NSLocalizedString("Offers", comment: "Offers")
     static let waterSports = NSLocalizedString("Water Sports", comment: "Water Sports")
     static let map = NSLocalizedString("Map", comment: "Map")
-    static let adoptACoral = NSLocalizedString("Adopt a Coral", comment: "Adopt a Coral")
-    static let kidsClub = NSLocalizedString("Kids Club", comment: "Kids Club")
-    static let offers = NSLocalizedString("Offers", comment: "Offers")
-    static let info = NSLocalizedString("Info", comment: "Info")
+    static let news = NSLocalizedString("News", comment: "News")
 }
 
 extension String {

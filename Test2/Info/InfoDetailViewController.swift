@@ -11,7 +11,6 @@ class InfoDetailViewController: UIViewController, UICollectionViewDelegate {
 
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var reviewButton: UIButton!
 
     var reviewsManager = ReviewsManager()
@@ -46,9 +45,6 @@ class InfoDetailViewController: UIViewController, UICollectionViewDelegate {
         collectionView.contentInsetAdjustmentBehavior = .never
         collectionView.register(UINib(nibName: "ReviewCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ReviewCell")
         collectionView.register(UINib(nibName: "ReviewCollectionViewHeader", bundle: nil), forSupplementaryViewOfKind: "review-header-kind", withReuseIdentifier: "ReviewHeader")
-
-        pageControl.numberOfPages = infoItem.images.count
-        pageControl.isHidden = infoItem.images.count <= 1
     }
 
     deinit {
@@ -57,9 +53,12 @@ class InfoDetailViewController: UIViewController, UICollectionViewDelegate {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setupTransparentNavigationBar(collectionView: collectionView, tintColor: .black)
+        if #available(iOS 13.0, *) {
+            setupTransparentNavigationBar(collectionView: collectionView, tintColor: .label)
+        }
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationItem.title = infoItem._title
+        reviewButton.isHidden = phoneUser.isStaff
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -68,43 +67,23 @@ class InfoDetailViewController: UIViewController, UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        pageControl.currentPage = indexPath.row
         currentPage = indexPath.row
-        let footer = collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionFooter, at: IndexPath(row: 0, section: 0)) as! InfoPictureFooter?
-        footer?.draw(currentPage: currentPage, nrOfPages: infoItem.images.count)
+        if let footer = collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionFooter, at: IndexPath(row: 0, section: 0)) as? InfoPictureFooter {
+            footer.draw(currentPage: currentPage, nrOfPages: infoItem.images.count)
+        }
     }
 
-/*
     private func createLayout() -> UICollectionViewLayout {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
-        
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),heightDimension: .fractionalHeight(1.0))
-        
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        
-        let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .paging
-        
-        let layout = UICollectionViewCompositionalLayout(section: section)
-        
-        return layout
-    }
-*/
-
-    private func createLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { (section: Int,
+        let layout = UICollectionViewCompositionalLayout { [weak self] (section: Int,
             layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
 
             switch Sections(rawValue: section) {
             case .image:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                item.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
+                item.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 0, trailing: 20)
                 
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),heightDimension: .fractionalHeight(0.5))
-                
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
                 
                 let section = NSCollectionLayoutSection(group: group)
@@ -126,67 +105,25 @@ class InfoDetailViewController: UIViewController, UICollectionViewDelegate {
 */
                 return section
             case .text:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(1.0))
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(10.0))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                item.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
 
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),heightDimension:  .estimated(0.1))
-
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension:  .estimated(10.0))
                 let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
 
                 let section = NSCollectionLayoutSection(group: group)
 
                 return section
             case .review:
-                return ReviewCollectionViewCell.createLayoutSection()
+                return self?.reviewsManager.reviews.isEmpty ?? true ? nil : ReviewCollectionViewCell.createLayoutSection()
             default:
                 return nil
             }
         }
         
-        //let layout = UICollectionViewCompositionalLayout(section: section)
-        
         return layout
     }
 
-/*
-    func createLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { (section: Int,
-            layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
-
-            switch Sections(rawValue: section) {
-            case .image:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                item.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
-                
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),heightDimension: .fractionalHeight(1.0))
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-
-                let section = NSCollectionLayoutSection(group: group)
-                section.orthogonalScrollingBehavior = .paging
-
-                return section
-            case .text:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(0))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                item.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
-
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(0))
-                let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
-
-                let section = NSCollectionLayoutSection(group: group)
-
-                return section
-            case .review:
-                return ReviewCollectionViewCell.createLayoutSection()
-            default:
-                return nil
-            }
-        }
-        return layout
-    }
-*/
     @IBAction func reviewButtonPressed(_ sender: UIButton) {
         if let vc = self.prepareModal(storyBoard: "Reviews", id: "RateReview") as? RateReviewViewController {
             vc.group = "info"
@@ -201,6 +138,7 @@ class InfoDetailViewController: UIViewController, UICollectionViewDelegate {
 extension InfoDetailViewController: UICollectionViewDataSource {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
+        collectionView.layoutIfNeeded()
         return Sections.allCases.count
     }
 
@@ -220,7 +158,7 @@ extension InfoDetailViewController: UICollectionViewDataSource {
             cell.draw(infoItem: infoItem, pictureNumber: indexPath.row)
             return cell
         case .text:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "infoCell", for: indexPath) as! InfoCollectionViewCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "infoCell", for: indexPath) as! InfoTextCell
             cell.draw(infoItem: infoItem)
             return cell
         case .review:
@@ -234,10 +172,10 @@ extension InfoDetailViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        print("kind = \(kind)")
         switch kind {
         case "review-header-kind":
             let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "ReviewHeader", for: indexPath)// as? HeaderSupplementaryView
+            //headerView.isHidden = reviewsManager.reviews.isEmpty
             return headerView
         case UICollectionView.elementKindSectionHeader:
             let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "InfoSectionHeader", for: indexPath)// as? HeaderSupplementaryView
@@ -252,14 +190,22 @@ extension InfoDetailViewController: UICollectionViewDataSource {
         }
         return UICollectionReusableView()
     }
+    
+    
+    // try to avoid a crash on iPhoneX
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        collectionView.collectionViewLayout.invalidateLayout()
+    }
+    
 }
 
 extension InfoDetailViewController: ReviewsManagerDelegate {
     func reviewsUpdated(reviewManager: ReviewsManager) {
         DispatchQueue.main.async {
-            //self.tableView.isHidden = self.reviewsManager.reviews.isEmpty
             //self.collectionView.reloadSections([Sections.review.rawValue])
             self.collectionView.reloadData()
+            self.collectionView.collectionViewLayout.invalidateLayout()
         }
     }
     
@@ -267,29 +213,18 @@ extension InfoDetailViewController: ReviewsManagerDelegate {
         DispatchQueue.main.async {
             //self.collectionView.reloadSections([Sections.review.rawValue])
             self.collectionView.reloadData()
+            self.collectionView.collectionViewLayout.invalidateLayout()
         }
     }
 }
 
-/*
-extension InfoDetailViewController: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        reviewsManager.reviews.count
-    }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ReviewCell", for: indexPath) as! ReviewTableViewCell
-        let r = reviewsManager.reviews[indexPath.row]
-        cell.draw(timestamp: r.timestamp, rating: r.rating, review: r.review, roomNumber: r.roomNumber, translation: reviewsManager.translations[r.id ?? ""])
-        return cell
-    }
-}
-*/
 
 class InfoPictureFooter: UICollectionReusableView {
     @IBOutlet private weak var pageControl: UIPageControl!
 
     override func awakeFromNib() {
         super.awakeFromNib()
+        pageControl.currentPage = 0
     }
     
     func draw(currentPage: Int, nrOfPages: Int) {
@@ -299,32 +234,29 @@ class InfoPictureFooter: UICollectionReusableView {
     }
 }
 
-class InfoPictureCell: UICollectionViewCell {
-    @IBOutlet var imageView: UIImageView!
-    @IBOutlet var imageTextLabel: UILabel!
+class InfoPictureCell: ShadedCollectionViewCell {
+    @IBOutlet weak var mainView: UIView!
+    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var imageTextLabel: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        imageTextLabel.layer.cornerRadius = 10
-        imageTextLabel.layer.masksToBounds = true
-        //backgroundColor = .yellow
+        mainView.layer.cornerRadius = 8
+        mainView.layer.masksToBounds = true
     }
 
     func draw(infoItem: InfoItem, pictureNumber: Int) {
-        layer.cornerRadius = 10.0
         imageView.kf.setImage(with: URL(string: infoItem.images[pictureNumber].url))
         imageTextLabel.text = infoItem._imageText(i: pictureNumber)
     }
 }
 
-class InfoCollectionViewCell: UICollectionViewCell {
+class InfoTextCell: UICollectionViewCell {
     @IBOutlet var subtitleLabel: UILabel!
     @IBOutlet var reviewTextLabel: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        backgroundColor = .clear
-        //backgroundColor = .green
     }
 
     func draw(infoItem: InfoItem) {
@@ -333,22 +265,3 @@ class InfoCollectionViewCell: UICollectionViewCell {
     }
 }
 
-
-
-/*
-class ReviewCell: UICollectionViewCell {
-    @IBOutlet var reviewTextLabel: UILabel!
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        backgroundColor = .clear
-        reviewTextLabel.layer.cornerRadius = 10
-        reviewTextLabel.layer.masksToBounds = true
-    }
-
-    func draw(review: Review) {
-        layer.cornerRadius = 10.0
-        reviewTextLabel.text = review.review
-    }
-}
-*/

@@ -25,12 +25,14 @@ class OrderDetailsCell: UITableViewCell {
     @IBOutlet weak var itemPriceLabel: UILabel!
 
     var order: Order?
+    var orgFrame: CGRect? = nil
+
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        //contentView.backgroundColor = .BBbackgroundColor
-        backgroundColor = .clear
         selectionStyle = .none
+        contentView.backgroundColor = .none
+        backgroundColor = .clear
     }
 
     func draw(order: Order) {
@@ -96,5 +98,16 @@ class OrderDetailsCell: UITableViewCell {
             dbProxy.updateOrderStatus(orderId: order!.id!, newStatus: .DELIVERED, deliveredBy: phoneUser.displayName)
         }
     }
+    /*
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if orgFrame == nil {
+            orgFrame = layer.frame.inset(by: UIEdgeInsets(top: 2, left: 16, bottom: 2, right: 16));
+        }
+        layer.frame = orgFrame ?? .zero
+
+        super.layoutSubviews()
+    }
+*/
 }
 

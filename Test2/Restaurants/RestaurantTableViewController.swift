@@ -45,8 +45,7 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        setupListNavigationBar()
-        title = .food
+        setupListNavigationBar(title: .food)
 
         newRestaurantBarButton.isEnabled = phoneUser.isAllowed(to: .editContent)
         newRestaurantBarButton.title = phoneUser.isAllowed(to: .editContent) ? "New" : ""

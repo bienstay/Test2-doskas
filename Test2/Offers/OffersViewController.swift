@@ -62,7 +62,7 @@ extension OffersViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "OffersCell", for: indexPath) as! OffersCell
         cell.configure(group: indexPath.row, title: hotel.offerGroups[indexPath.row]._title, dataSource: self) { [weak self] offerIndex in
-            if let vc = self?.pushViewController(storyBoard: "Offers", id: "Offer") as? OfferViewController {
+            if let vc = self?.pushViewController(storyBoard: "Offers", id: "Offer") as? OfferDetailViewController {
                 if let offerID = hotel.offerGroups[indexPath.row].offers?[offerIndex] {
                     vc.offer = hotel.offers[offerID] ?? Offer()
                 }

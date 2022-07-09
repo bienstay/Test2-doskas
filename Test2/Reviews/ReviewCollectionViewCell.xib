@@ -18,28 +18,28 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="W3Z-o8-e0n">
-                        <rect key="frame" x="0.0" y="16" width="296" height="45"/>
+                        <rect key="frame" x="20" y="16" width="256" height="45"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="9Ph-0p-MTs">
-                                <rect key="frame" x="0.0" y="0.0" width="296" height="45"/>
+                                <rect key="frame" x="0.0" y="0.0" width="256" height="45"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="5CD-8w-Ubr">
-                                        <rect key="frame" x="0.0" y="0.0" width="296" height="20"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="256" height="20"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O13-pQ-aCC">
-                                                <rect key="frame" x="0.0" y="3" width="137" height="14.5"/>
+                                                <rect key="frame" x="0.0" y="3" width="97" height="14.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="room" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7ue-Ba-JHX">
-                                                <rect key="frame" x="145" y="3.5" width="27" height="13.5"/>
+                                                <rect key="frame" x="105" y="3.5" width="27" height="13.5"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="xGC-4O-yAq">
-                                                <rect key="frame" x="180" y="0.0" width="116" height="20"/>
+                                                <rect key="frame" x="140" y="0.0" width="116" height="20"/>
                                                 <subviews>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" image="star" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="78t-x4-1KH" userLabel="Image View1">
                                                         <rect key="frame" x="0.0" y="-0.5" width="20" height="20"/>
@@ -81,7 +81,7 @@
                                         </subviews>
                                     </stackView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="review" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N36-qX-O00" userLabel="Review Label">
-                                        <rect key="frame" x="0.0" y="28" width="296" height="17"/>
+                                        <rect key="frame" x="0.0" y="28" width="256" height="17"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -100,9 +100,9 @@
                 </subviews>
                 <constraints>
                     <constraint firstItem="W3Z-o8-e0n" firstAttribute="top" secondItem="HSn-L1-JT5" secondAttribute="top" constant="16" id="1k3-WR-89E"/>
-                    <constraint firstAttribute="trailing" secondItem="W3Z-o8-e0n" secondAttribute="trailing" id="Drf-L9-wxr"/>
+                    <constraint firstAttribute="trailing" secondItem="W3Z-o8-e0n" secondAttribute="trailing" constant="20" id="Drf-L9-wxr"/>
                     <constraint firstAttribute="bottom" secondItem="W3Z-o8-e0n" secondAttribute="bottom" constant="16" id="Mgo-me-BzV"/>
-                    <constraint firstItem="W3Z-o8-e0n" firstAttribute="leading" secondItem="HSn-L1-JT5" secondAttribute="leading" id="l2n-0f-IdF"/>
+                    <constraint firstItem="W3Z-o8-e0n" firstAttribute="leading" secondItem="HSn-L1-JT5" secondAttribute="leading" constant="20" id="l2n-0f-IdF"/>
                 </constraints>
             </collectionViewCellContentView>
             <size key="customSize" width="296" height="50"/>

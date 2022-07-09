@@ -81,7 +81,8 @@ extension UIColor {
                     case .dark:
                         return .black
                     default:
-                    return .offWhiteLight
+                    //return .offWhiteLight
+                    return .systemGroupedBackground
                 }
             }
             return c
@@ -207,13 +208,19 @@ extension UIViewController {
         navigationController!.navigationBar.isTranslucent = true
     }
 
-    func setupListNavigationBar(tintColor: UIColor = .BBtextColor, largeTitle: Bool = true, title: String? = nil) {
+    func setupListNavigationBar(tintColor: UIColor? = nil, largeTitle: Bool = true, title: String? = nil) {
         navigationItem.backButtonTitle = ""
         if let t = title { navigationItem.title = t }
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationController?.hidesBarsOnSwipe = false
         navigationController?.navigationBar.prefersLargeTitles = largeTitle
-        navigationController?.navigationBar.tintColor = tintColor
+        if let tintColor = tintColor {
+            navigationController?.navigationBar.tintColor = tintColor
+        } else {
+            if #available(iOS 13.0, *) {
+                navigationController?.navigationBar.tintColor = .label
+            }
+        }
         navigationController?.navigationBar.isTranslucent = true
     }
 
@@ -228,14 +235,14 @@ extension UIViewController {
         var tv = tableView
         if let tableViewController = self as? UITableViewController { tv = tableViewController.tableView }
         if tv != nil {
-            tv!.allowsSelection = allowsSelection
-            tv!.separatorStyle = .none
-            tv!.showsVerticalScrollIndicator = false
-            tv!.cellLayoutMarginsFollowReadableWidth = true
+            tv?.allowsSelection = allowsSelection
+            tv?.separatorStyle = .none
+            tv?.showsVerticalScrollIndicator = false
+            tv?.cellLayoutMarginsFollowReadableWidth = true
             if #available(iOS 13.0, *) {
-                tv!.backgroundColor = .systemGroupedBackground
+                tv?.backgroundColor = .systemGroupedBackground
             } else {
-                tv!.backgroundColor = .BBbackgroundColor
+                tv?.backgroundColor = .BBbackgroundColor
             }
         }
 
@@ -243,10 +250,12 @@ extension UIViewController {
         if let collectionViewController = self as? UICollectionViewController { cv = collectionViewController.collectionView }
         if cv != nil {
             if #available(iOS 13.0, *) {
-                cv!.backgroundColor = .systemGroupedBackground
+                cv?.backgroundColor = .systemGroupedBackground
             } else {
-                cv!.backgroundColor = .BBbackgroundColor
+                cv?.backgroundColor = .BBbackgroundColor
             }
+            cv?.showsVerticalScrollIndicator = false
+            cv?.showsHorizontalScrollIndicator = false
         }
 
         navigationItem.backButtonTitle = ""

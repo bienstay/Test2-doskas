@@ -22,6 +22,7 @@ extension UIView {
         layer.backgroundColor = glossy_bgColor()
         layer.cornerRadius = glossy_radius
         layer.masksToBounds = false
+        //clipsToBounds = true
         layer.frame = layer.bounds
 
         //[CAShapeLayer(), CAShapeLayer()].forEach {
@@ -224,3 +225,159 @@ extension UIView {
         layer.cornerRadius = 15
     }
 }
+
+
+protocol ShadowableRoundableView where Self: UIView {
+    
+    var cornerRadius: CGFloat { get }
+    var shadowColor: UIColor { get  }
+    var shadowOffsetWidth: CGFloat { get  }
+    var shadowOffsetHeight: CGFloat { get  }
+    var shadowOpacity: Float { get  }
+    var shadowRadius: CGFloat { get  }
+    
+    var shadowLayer: CAShapeLayer { get }
+    
+    func setCornerRadiusAndShadow()
+}
+
+extension ShadowableRoundableView {
+    var cornerRadius: CGFloat { 10.0 }
+    var shadowColor: UIColor { .gray }
+    var shadowOffsetWidth: CGFloat { 0.0 }
+    var shadowOffsetHeight: CGFloat { 2.0 }
+    var shadowOpacity: Float { 0.4 }
+    var shadowRadius: CGFloat { 4.0 }
+}
+
+extension ShadowableRoundableView {
+    func setCornerRadiusAndShadow() {
+        layer.cornerRadius = cornerRadius
+        shadowLayer.path = UIBezierPath(roundedRect: bounds, cornerRadius: cornerRadius).cgPath
+        shadowLayer.fillColor = backgroundColor?.cgColor
+        shadowLayer.shadowColor = shadowColor.cgColor
+        shadowLayer.shadowPath = shadowLayer.path
+        shadowLayer.shadowOffset = CGSize(width: shadowOffsetWidth, height: shadowOffsetHeight)
+        shadowLayer.shadowOpacity = shadowOpacity
+        shadowLayer.shadowRadius = shadowRadius
+        layer.masksToBounds = false
+        shadowLayer.masksToBounds = false
+    }
+}
+
+
+class ShadedView: UIView, ShadowableRoundableView {
+    private(set) lazy var shadowLayer: CAShapeLayer = {
+        let layer = CAShapeLayer()
+        self.layer.insertSublayer(layer, at: 0)
+        self.setNeedsLayout()
+        return layer
+    }()
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.setCornerRadiusAndShadow()
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+class ShadedTableViewCell: UITableViewCell {
+    let cornerRadius = 12.0
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        clipsToBounds = false
+
+        // Apply rounded corners to contentView
+        contentView.layer.cornerRadius = cornerRadius
+        contentView.layer.masksToBounds = true
+        
+        // Set masks to bounds to false to avoid the shadow
+        // from being clipped to the corner radius
+        layer.cornerRadius = cornerRadius
+        layer.masksToBounds = false
+        
+        // Apply a shadow
+        layer.shadowRadius = 4.0
+        layer.shadowOpacity = 0.40
+        layer.shadowColor = UIColor.gray.cgColor
+        layer.shadowOffset = CGSize(width: 0, height: 3)
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: cornerRadius).cgPath
+    }
+}
+
+
+class ShadedCollectionViewCell: UICollectionViewCell {
+    let cornerRadius = 12.0
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        clipsToBounds = false
+
+        // Apply rounded corners to contentView
+        contentView.layer.cornerRadius = cornerRadius
+        contentView.layer.masksToBounds = true
+        
+        // Set masks to bounds to false to avoid the shadow
+        // from being clipped to the corner radius
+        layer.cornerRadius = cornerRadius
+        layer.masksToBounds = false
+        
+        // Apply a shadow
+        layer.shadowRadius = 4.0
+        layer.shadowOpacity = 0.40
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowOffset = CGSize(width: 3, height: 3)
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: cornerRadius).cgPath
+    }
+}
+
+
+class ActionButton: UIButton {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        customize()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        customize()
+    }
+/*
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        customize()
+    }
+*/
+    func customize() {
+        //layer.cornerRadius = self.frame.size.height / 2
+        layer.cornerRadius = 16
+        layer.masksToBounds = true
+        if #available(iOS 13.0, *) {
+            backgroundColor = .label
+            tintColor = .systemBackground
+            setTitleColor(.systemBackground, for: .normal)
+        }
+        titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
+    }
+}
+

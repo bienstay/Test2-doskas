@@ -11,12 +11,13 @@ class NewsDetailViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var reviewButton: UIButton!
 
+    enum Sections: Int, CaseIterable {
+        case details
+        case reviews
+    }
+
     var post = NewsPost()
     var reviewsManager = ReviewsManager()
-    enum Sections: Int, CaseIterable {
-        case Details
-        case Reviews
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,11 +28,10 @@ class NewsDetailViewController: UIViewController {
         tableView.dataSource = self
 
         tableView.register(UINib(nibName: "ReviewTableViewCell", bundle: nil), forCellReuseIdentifier: "ReviewCell")
-
-        NotificationCenter.default.addObserver(self, selector: #selector(onLikesUpdated(_:)), name: .likesUpdated, object: nil)
-
         reviewsManager.start(group: "news", id: post.postId)
         reviewsManager.delegate = self
+
+        NotificationCenter.default.addObserver(self, selector: #selector(onLikesUpdated(_:)), name: .likesUpdated, object: nil)
     }
 
     deinit {
@@ -52,7 +52,7 @@ class NewsDetailViewController: UIViewController {
     @objc func onLikesUpdated(_ notification: Notification) {
         DispatchQueue.main.async { [weak self] in
             self?.tableView.beginUpdates()
-            self?.tableView.reloadRows(at: [IndexPath(row: 0, section: Sections.Details.rawValue)], with: .none)
+            self?.tableView.reloadRows(at: [IndexPath(row: 0, section: Sections.details.rawValue)], with: .none)
             self?.tableView.endUpdates()
         }
     }
@@ -76,15 +76,15 @@ extension NewsDetailViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section : Int) -> Int {
         switch Sections(rawValue: section) {
-            case .Details : return 2
-            case .Reviews: return reviewsManager.reviews.count
+            case .details : return 2
+            case .reviews: return reviewsManager.reviews.count
             default: return 0
         }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch Sections(rawValue: indexPath.section) {
-        case .Details:
+        case .details:
             switch indexPath.row {
             case 0:
                 let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: NewsDetailHeaderCell.self), for: indexPath) as! NewsDetailHeaderCell
@@ -101,7 +101,7 @@ extension NewsDetailViewController: UITableViewDataSource, UITableViewDelegate {
             default:
                 return UITableViewCell()
             }
-        case .Reviews:
+        case .reviews:
             let cell = tableView.dequeueReusableCell(withIdentifier: "ReviewCell", for: indexPath) as! ReviewTableViewCell
             let r = reviewsManager.reviews[indexPath.row]
             cell.draw(timestamp: r.timestamp, rating: r.rating, review: r.review, roomNumber: r.roomNumber, translation: reviewsManager.translations[r.id ?? ""])
@@ -110,15 +110,18 @@ extension NewsDetailViewController: UITableViewDataSource, UITableViewDelegate {
             return UITableViewCell()
         }
     }
-    
+
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section != Sections.Reviews.rawValue || reviewsManager.reviews.isEmpty { return nil }
+        if section != Sections.reviews.rawValue || reviewsManager.reviews.isEmpty { return nil }
         return "Reviews"
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if section == Sections.Details.rawValue { return 40 }
-        else { return 0 }
+        switch Sections(rawValue: section) {
+            case .details: return 40
+            case .reviews: return 0
+            default: return 0
+        }
     }
 
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
@@ -132,7 +135,7 @@ extension NewsDetailViewController: ReviewsManagerDelegate {
     func reviewsUpdated(reviewManager: ReviewsManager) {
         DispatchQueue.main.async { [weak self] in
             self?.tableView.beginUpdates()
-            self?.tableView.reloadSections([Sections.Reviews.rawValue], with: .fade)
+            self?.tableView.reloadSections([Sections.reviews.rawValue], with: .fade)
             self?.tableView.endUpdates()
         }
     }
@@ -140,7 +143,7 @@ extension NewsDetailViewController: ReviewsManagerDelegate {
     func reviewsTranslationsUpdated(reviewManager: ReviewsManager) {
         DispatchQueue.main.async { [weak self] in
             self?.tableView.beginUpdates()
-            self?.tableView.reloadSections([Sections.Reviews.rawValue], with: .fade)
+            self?.tableView.reloadSections([Sections.reviews.rawValue], with: .fade)
             self?.tableView.endUpdates()
         }
     }

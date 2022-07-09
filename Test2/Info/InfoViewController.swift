@@ -18,8 +18,6 @@ class InfoViewController: UIViewController, UITableViewDataSource {
         initView(tableView: tableView)
         if #available(iOS 13.0, *) {
             tableView.backgroundColor = .systemGroupedBackground
-        } else {
-            // Fallback on earlier versions
         }
         tableView.dataSource = self
         tableView.delegate = self
@@ -49,7 +47,7 @@ class InfoViewController: UIViewController, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "InfoCell2", for: indexPath) as! InfoCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "InfoCellBig", for: indexPath) as! InfoCell
         cell.draw(info: hotel.infoItems[indexPath.row])
         return cell
     }
@@ -111,73 +109,21 @@ extension InfoViewController {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-class InfoCell: UITableViewCell {
+class InfoCell: ShadedTableViewCell {
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var subtitleLabel: UILabel!
-    @IBOutlet var infoImageView: UIImageView!
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        selectionStyle = UITableViewCell.SelectionStyle.none
-        backgroundColor = .clear
-        infoImageView.layer.cornerRadius = 15
-        infoImageView.layer.masksToBounds = true
-    }
-
-    func draw(info: InfoItem) {
-        titleLabel.text = info._title
-        subtitleLabel.text = info._subtitle
-        infoImageView.image = nil
-        //infoImageView.image = UIImage(named: info.images[0].url) // TODO remove
-        if let url = URL(string: info.images[0].url) {
-            infoImageView.isHidden = false
-            infoImageView.kf.setImage(with: url)
-        }
-        else { infoImageView.isHidden = true }
-    }
-}
-*/
-
-class InfoCell: UITableViewCell {
-    @IBOutlet var titleLabel: UILabel!
     @IBOutlet var containerView: UIView!
-    @IBOutlet var imageContainerView: UIView!
     @IBOutlet var iconImageView: UIImageView!
     var orgFrame: CGRect? = nil
 
     override func awakeFromNib() {
         super.awakeFromNib()
         selectionStyle = UITableViewCell.SelectionStyle.none
-
-        layer.cornerRadius = 32
-        layer.masksToBounds = true
-        //imageContainerView.layer.cornerRadius = 8
-        //imageContainerView.layer.masksToBounds = true
     }
 
     func draw(info: InfoItem) {
-        titleLabel.text = info.title
-        //imageContainerView.backgroundColor = [.systemPink, .systemBlue, .systemGreen, .systemOrange].randomElement()
-        /*if #available(iOS 13.0, *) {
-            iconImageView.image = UIImage(systemName: "airplane")
-        } else {
-            // Fallback on earlier versions
-        }*/
+        titleLabel.text = info._title
+        subtitleLabel.text = info._subtitle
         iconImageView.image = nil
         iconImageView.isHidden = true
         if let url = URL(string: info.images[0].url) {
@@ -188,13 +134,9 @@ class InfoCell: UITableViewCell {
 
     override func layoutSubviews() {
         if orgFrame == nil {
-            orgFrame = layer.frame.inset(by: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16));
+            orgFrame = layer.frame.inset(by: UIEdgeInsets(top: 8, left: 32, bottom: 32, right: 32));
         }
         layer.frame = orgFrame ?? .zero
-        layer.borderWidth = 1
-        layer.cornerRadius = 16
-        layer.masksToBounds = true
-
         super.layoutSubviews()
     }
 

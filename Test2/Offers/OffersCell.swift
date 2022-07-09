@@ -67,13 +67,14 @@ extension OffersCell: UICollectionViewDelegateFlowLayout {
 
 
 
-class OfferCollectionViewCell: UICollectionViewCell {
+class OfferCollectionViewCell: ShadedCollectionViewCell {
     @IBOutlet weak var picture: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var deleteButton: UIButton!
     var cellSelectedForEditClosure: ((Offer) -> ())? = nil
     var cellSelectedForDeleteClosure: ((Offer) -> ())? = nil
     var offer: Offer = Offer()
+    var orgFrame: CGRect? = nil
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -113,8 +114,10 @@ class OfferCollectionViewCell: UICollectionViewCell {
     }
     
     override func layoutSubviews() {
-        layer.cornerRadius = 16
-        layer.masksToBounds = true
+        if orgFrame == nil {
+            orgFrame = layer.frame.inset(by: UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4));
+        }
+        layer.frame = orgFrame ?? .zero
 
         super.layoutSubviews()
     }

@@ -7,18 +7,18 @@
 
 import UIKit
 
-class OfferViewController: UIViewController {
-    var offer = Offer()
-    var reviewsManager = ReviewsManager()
-
+class OfferDetailViewController: UIViewController {
     @IBOutlet var tableView: UITableView!
     @IBOutlet var headerView: OfferHeaderView!
     @IBOutlet weak var reviewButton: UIButton!
 
     enum Sections: Int, CaseIterable {
-        case Details
-        case Reviews
+        case details
+        case reviews
     }
+
+    var offer = Offer()
+    var reviewsManager = ReviewsManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,7 +52,7 @@ class OfferViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setupTransparentNavigationBar()
+        setupTransparentNavigationBar(tableView: tableView)
         reviewButton.isHidden = phoneUser.isStaff
     }
 
@@ -75,7 +75,7 @@ class OfferViewController: UIViewController {
     }
 }
 
-extension OfferViewController: UITableViewDataSource, UITableViewDelegate {
+extension OfferDetailViewController: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
         return Sections.allCases.count
@@ -83,15 +83,15 @@ extension OfferViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section : Int) -> Int {
         switch Sections(rawValue: section) {
-            case .Details : return 1
-            case .Reviews: return reviewsManager.reviews.count
+            case .details : return 1
+            case .reviews: return reviewsManager.reviews.count
             default: return 0
         }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch Sections(rawValue: indexPath.section) {
-        case .Details:
+        case .details:
             switch indexPath.row {
             case 0:
                 let cell = tableView.dequeueReusableCell(withIdentifier: String("DetailsCell"), for: indexPath) as! OfferCell
@@ -102,7 +102,7 @@ extension OfferViewController: UITableViewDataSource, UITableViewDelegate {
                 //fatalError("Failed to instantiate the table view cell for detail view controller")
                 return UITableViewCell()
             }
-        case .Reviews:
+        case .reviews:
             let cell = tableView.dequeueReusableCell(withIdentifier: "ReviewCell", for: indexPath) as! ReviewTableViewCell
             let r = reviewsManager.reviews[indexPath.row]
             cell.draw(timestamp: r.timestamp, rating: r.rating, review: r.review, roomNumber: r.roomNumber, translation: reviewsManager.translations[r.id ?? ""])
@@ -111,13 +111,32 @@ extension OfferViewController: UITableViewDataSource, UITableViewDelegate {
             return UITableViewCell()
         }
     }
+
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section != Sections.reviews.rawValue || reviewsManager.reviews.isEmpty { return nil }
+        return "Reviews"
+    }
+
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        switch Sections(rawValue: section) {
+            case .details: return 40
+            case .reviews: return 0
+            default: return 0
+        }
+    }
+
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        guard let headerView = view as? UITableViewHeaderFooterView, !reviewsManager.reviews.isEmpty else { return }
+        headerView.tintColor = .orange
+        headerView.textLabel?.textColor = .black
+    }
 }
 
-extension OfferViewController: ReviewsManagerDelegate {
+extension OfferDetailViewController: ReviewsManagerDelegate {
     func reviewsUpdated(reviewManager: ReviewsManager) {
         DispatchQueue.main.async {
             self.tableView.beginUpdates()
-            self.tableView.reloadSections([Sections.Reviews.rawValue], with: .right)
+            self.tableView.reloadSections([Sections.reviews.rawValue], with: .right)
             self.tableView.endUpdates()
         }
     }
@@ -125,7 +144,7 @@ extension OfferViewController: ReviewsManagerDelegate {
     func reviewsTranslationsUpdated(reviewManager: ReviewsManager) {
         DispatchQueue.main.async {
             self.tableView.beginUpdates()
-            self.tableView.reloadSections([Sections.Reviews.rawValue], with: .fade)
+            self.tableView.reloadSections([Sections.reviews.rawValue], with: .fade)
             self.tableView.endUpdates()
         }
     }

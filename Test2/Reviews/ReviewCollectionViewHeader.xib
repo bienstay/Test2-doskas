@@ -16,28 +16,40 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y6q-m4-d9L">
-                    <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                    <rect key="frame" x="0.0" y="822" width="414" height="40"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LABELEK" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2KY-mC-YIY">
-                            <rect key="frame" x="8" y="8" width="398" height="802"/>
-                            <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
-                            <nil key="textColor"/>
-                            <nil key="highlightedColor"/>
-                        </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uam-CT-ylr">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="40"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reviews" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2KY-mC-YIY">
+                                    <rect key="frame" x="20" y="0.0" width="374" height="40"/>
+                                    <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                            <constraints>
+                                <constraint firstItem="2KY-mC-YIY" firstAttribute="top" secondItem="uam-CT-ylr" secondAttribute="top" id="2Zc-JS-QlD"/>
+                                <constraint firstItem="2KY-mC-YIY" firstAttribute="leading" secondItem="uam-CT-ylr" secondAttribute="leading" constant="20" id="ATM-eQ-eC2"/>
+                                <constraint firstAttribute="bottom" secondItem="2KY-mC-YIY" secondAttribute="bottom" id="Pok-Ap-sUG"/>
+                                <constraint firstAttribute="trailing" secondItem="2KY-mC-YIY" secondAttribute="trailing" constant="20" id="Xte-YK-Gbm"/>
+                            </constraints>
+                        </view>
                     </subviews>
-                    <color key="backgroundColor" systemColor="systemYellowColor"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="trailing" secondItem="2KY-mC-YIY" secondAttribute="trailing" constant="8" id="924-QK-BDj"/>
-                        <constraint firstItem="2KY-mC-YIY" firstAttribute="top" secondItem="Y6q-m4-d9L" secondAttribute="top" constant="8" id="Fty-S4-mAl"/>
-                        <constraint firstItem="2KY-mC-YIY" firstAttribute="leading" secondItem="Y6q-m4-d9L" secondAttribute="leading" constant="8" id="Ofz-j0-1Ma"/>
-                        <constraint firstAttribute="bottom" secondItem="2KY-mC-YIY" secondAttribute="bottom" constant="8" id="lWs-82-yd0"/>
+                        <constraint firstAttribute="height" constant="40" id="1w9-BX-ocj"/>
+                        <constraint firstAttribute="trailing" secondItem="uam-CT-ylr" secondAttribute="trailing" id="91a-Oi-HRW"/>
+                        <constraint firstAttribute="bottom" secondItem="uam-CT-ylr" secondAttribute="bottom" id="OhH-s0-vdb"/>
+                        <constraint firstItem="uam-CT-ylr" firstAttribute="leading" secondItem="Y6q-m4-d9L" secondAttribute="leading" id="oFM-XA-K3x"/>
+                        <constraint firstItem="uam-CT-ylr" firstAttribute="top" secondItem="Y6q-m4-d9L" secondAttribute="top" id="rQ1-sR-po5"/>
                     </constraints>
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
-            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="Y6q-m4-d9L" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="Dov-vY-mFS"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Y6q-m4-d9L" secondAttribute="trailing" id="Oxa-D5-Acd"/>
                 <constraint firstItem="Y6q-m4-d9L" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="Ysb-Il-rAb"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="Y6q-m4-d9L" secondAttribute="bottom" id="exA-bS-H9a"/>
@@ -46,11 +58,8 @@
         </view>
     </objects>
     <resources>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemYellowColor">
-            <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <systemColor name="systemOrangeColor">
+            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

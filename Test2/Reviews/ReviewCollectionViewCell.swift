@@ -19,7 +19,6 @@ class ReviewCollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         backgroundColor = .clear
-        //backgroundColor = .red
         if #available(iOS 13.0, *) {
             emptyStar = UIImage(systemName: "star")
             fullStar = UIImage(systemName: "star.fill")
@@ -30,7 +29,7 @@ class ReviewCollectionViewCell: UICollectionViewCell {
         timestampLabel.text = timestamp.formatForDisplay()
         let s = NSMutableAttributedString(string: review)
         if let translation = translation {
-            let t = NSMutableAttributedString(string: translation, attributes: [.foregroundColor: UIColor.red])
+            let t = NSMutableAttributedString(string: translation, attributes: [.foregroundColor: UIColor.systemRed])
             s.append(NSAttributedString(string: "\n"))
             s.append(t)
         }
@@ -50,15 +49,15 @@ class ReviewCollectionViewCell: UICollectionViewCell {
     static func createLayoutSection() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(50))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
 
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(50))
         let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+        //group.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
 
         let section = NSCollectionLayoutSection(group: group)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 120, trailing: 0)
 
-        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(50))
-        //let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(100.0))
         let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: "review-header-kind", alignment: .top)
         section.boundarySupplementaryItems = [sectionHeader]
         

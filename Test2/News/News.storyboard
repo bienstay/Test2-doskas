@@ -20,6 +20,11 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="aHH-VW-9at">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="862"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <view key="tableFooterView" contentMode="scaleToFill" id="OIy-o4-Chg" userLabel="Footer View">
+                                    <rect key="frame" x="0.0" y="627.5" width="414" height="100"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="NewsDetailHeaderCell" id="jHF-Oj-XdG" customClass="NewsDetailHeaderCell" customModule="Test2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="44.5" width="414" height="300.5"/>
@@ -106,7 +111,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="112"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oYb-Ub-KBY" customClass="GlossyView" customModule="Test2" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oYb-Ub-KBY" customClass="ShadedView" customModule="Test2" customModuleProvider="target">
                                                     <rect key="frame" x="16" y="16" width="382" height="80"/>
                                                     <subviews>
                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="bXf-yi-7Z4">
@@ -279,7 +284,7 @@
                                 </prototypes>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XXw-Qm-nTI" customClass="ReviewFAB" customModule="Test2" customModuleProvider="target">
-                                <rect key="frame" x="192" y="832" width="30" height="34"/>
+                                <rect key="frame" x="354" y="832" width="30" height="34"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <connections>
                                     <action selector="reviewButtonPressed:" destination="2CK-dS-sky" eventType="touchUpInside" id="XIr-O9-n63"/>
@@ -290,11 +295,11 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="aHH-VW-9at" firstAttribute="leading" secondItem="aFp-JF-IpT" secondAttribute="leading" id="DDI-Ew-Wqc"/>
-                            <constraint firstItem="XXw-Qm-nTI" firstAttribute="centerX" secondItem="Nag-cZ-deX" secondAttribute="centerX" id="E42-QE-3cU"/>
                             <constraint firstItem="aHH-VW-9at" firstAttribute="top" secondItem="Nag-cZ-deX" secondAttribute="top" id="EYR-Hz-Az1"/>
                             <constraint firstItem="aFp-JF-IpT" firstAttribute="bottom" secondItem="aHH-VW-9at" secondAttribute="bottom" id="XkR-4d-XLY"/>
                             <constraint firstItem="aHH-VW-9at" firstAttribute="trailing" secondItem="aFp-JF-IpT" secondAttribute="trailing" id="dYO-8L-KLN"/>
                             <constraint firstAttribute="bottom" secondItem="XXw-Qm-nTI" secondAttribute="bottom" constant="30" id="r56-ae-zYh"/>
+                            <constraint firstItem="aFp-JF-IpT" firstAttribute="trailing" secondItem="XXw-Qm-nTI" secondAttribute="trailing" constant="30" id="xwc-Ya-RwI"/>
                         </constraints>
                     </view>
                     <toolbarItems/>
@@ -319,6 +324,11 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="jID-tm-2xV">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <view key="tableFooterView" contentMode="scaleToFill" id="Grl-sI-yZU" userLabel="Footer View">
+                                    <rect key="frame" x="0.0" y="494" width="414" height="100"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="NewsCell" id="ogK-hu-Jyh" customClass="NewsCell" customModule="Test2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="44.5" width="414" height="116.5"/>
@@ -341,11 +351,6 @@
                                                                         </constraint>
                                                                         <constraint firstAttribute="width" secondItem="cOc-gr-BKj" secondAttribute="height" multiplier="1:1" id="NbK-Dz-iV4"/>
                                                                     </constraints>
-                                                                    <userDefinedRuntimeAttributes>
-                                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                            <integer key="value" value="20"/>
-                                                                        </userDefinedRuntimeAttribute>
-                                                                    </userDefinedRuntimeAttributes>
                                                                 </imageView>
                                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="1ay-Y4-n8r">
                                                                     <rect key="frame" x="116" y="0.0" width="290" height="100.5"/>

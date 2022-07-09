@@ -83,7 +83,7 @@
 		06882F692749644D00D643A0 /* Offer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06882F682749644D00D643A0 /* Offer.swift */; };
 		06882F6B27499BBD00D643A0 /* Offers.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 06882F6A27499BBD00D643A0 /* Offers.storyboard */; };
 		06882F6D274C5AF900D643A0 /* offers.json in Resources */ = {isa = PBXBuildFile; fileRef = 06882F6C274C5AF900D643A0 /* offers.json */; };
-		06882F6F274D867300D643A0 /* OfferViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06882F6E274D867300D643A0 /* OfferViewController.swift */; };
+		06882F6F274D867300D643A0 /* OfferDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06882F6E274D867300D643A0 /* OfferDetailViewController.swift */; };
 		069945AA2729FC75009548AA /* Translations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069945A92729FC75009548AA /* Translations.swift */; };
 		069AA4232714F456002EE497 /* HomeCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069AA4222714F456002EE497 /* HomeCollectionViewController.swift */; };
 		069DB355263AED0E00C91468 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 069DB354263AED0E00C91468 /* Main.storyboard */; };
@@ -129,6 +129,7 @@
 		06C32AE1282EC2F100228A40 /* AddUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C32AE0282EC2F100228A40 /* AddUserViewController.swift */; };
 		06D7473F2838DF400081F32C /* MenuView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06D7473E2838DF400081F32C /* MenuView.xib */; };
 		06DDB8C1265874BE00A5FD84 /* sheratonFacilities.json in Resources */ = {isa = PBXBuildFile; fileRef = 06DDB8C0265874BE00A5FD84 /* sheratonFacilities.json */; };
+		06E046A02874C3DF001FBC30 /* Test2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E0469F2874C3DF001FBC30 /* Test2ViewController.swift */; };
 		06E5FC432739804A0082EFAC /* RoomService.png in Resources */ = {isa = PBXBuildFile; fileRef = 06E5FC422739804A0082EFAC /* RoomService.png */; };
 		06F551DD283D7189007AB4DB /* NewInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F551DC283D7189007AB4DB /* NewInfoViewController.swift */; };
 		06F551DF283D8CC2007AB4DB /* NewInfoImagesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06F551DE283D8CC2007AB4DB /* NewInfoImagesTableViewCell.swift */; };
@@ -231,7 +232,7 @@
 		06882F682749644D00D643A0 /* Offer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Offer.swift; sourceTree = "<group>"; };
 		06882F6A27499BBD00D643A0 /* Offers.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Offers.storyboard; sourceTree = "<group>"; };
 		06882F6C274C5AF900D643A0 /* offers.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = offers.json; sourceTree = "<group>"; };
-		06882F6E274D867300D643A0 /* OfferViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferViewController.swift; sourceTree = "<group>"; };
+		06882F6E274D867300D643A0 /* OfferDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfferDetailViewController.swift; sourceTree = "<group>"; };
 		069945A92729FC75009548AA /* Translations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Translations.swift; sourceTree = "<group>"; };
 		069AA4222714F456002EE497 /* HomeCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCollectionViewController.swift; sourceTree = "<group>"; };
 		069DB354263AED0E00C91468 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
@@ -277,6 +278,7 @@
 		06C32AE0282EC2F100228A40 /* AddUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserViewController.swift; sourceTree = "<group>"; };
 		06D7473E2838DF400081F32C /* MenuView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuView.xib; sourceTree = "<group>"; };
 		06DDB8C0265874BE00A5FD84 /* sheratonFacilities.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sheratonFacilities.json; sourceTree = "<group>"; };
+		06E0469F2874C3DF001FBC30 /* Test2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test2ViewController.swift; sourceTree = "<group>"; };
 		06E5FC422739804A0082EFAC /* RoomService.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RoomService.png; sourceTree = "<group>"; };
 		06F551DC283D7189007AB4DB /* NewInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewInfoViewController.swift; sourceTree = "<group>"; };
 		06F551DE283D8CC2007AB4DB /* NewInfoImagesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewInfoImagesTableViewCell.swift; sourceTree = "<group>"; };
@@ -521,7 +523,7 @@
 				06882F662749128100D643A0 /* OffersCell.swift */,
 				06882F6A27499BBD00D643A0 /* Offers.storyboard */,
 				06882F6C274C5AF900D643A0 /* offers.json */,
-				06882F6E274D867300D643A0 /* OfferViewController.swift */,
+				06882F6E274D867300D643A0 /* OfferDetailViewController.swift */,
 				06090DD827C7AFC200B85393 /* NewOfferViewController.swift */,
 				06F551E42842D2E3007AB4DB /* NewOfferGroupViewController.swift */,
 			);
@@ -549,6 +551,7 @@
 				06F551DC283D7189007AB4DB /* NewInfoViewController.swift */,
 				06F551DE283D8CC2007AB4DB /* NewInfoImagesTableViewCell.swift */,
 				06A8C7F3285F1F50000406F9 /* TestViewController.swift */,
+				06E0469F2874C3DF001FBC30 /* Test2ViewController.swift */,
 			);
 			path = Info;
 			sourceTree = "<group>";
@@ -850,6 +853,7 @@
 				0683A1F026516FF50000D122 /* MenuPageViewController.swift in Sources */,
 				062D1A0926EE247500A14FDE /* ConfigViewController.swift in Sources */,
 				0632D452266ADF66001F7036 /* OrderDetailsCell.swift in Sources */,
+				06E046A02874C3DF001FBC30 /* Test2ViewController.swift in Sources */,
 				066874FA2830367600DB5604 /* UsersViewController.swift in Sources */,
 				066BF3F82637460300EE834C /* Order.swift in Sources */,
 				06293E2F28099BBB00226400 /* MessagingProxy.swift in Sources */,
@@ -861,7 +865,7 @@
 				066874FE2831260600DB5604 /* EditUserViewController.swift in Sources */,
 				065F036A2636221100A5CDEF /* Hotel.swift in Sources */,
 				06F7726A26713DC600E64D54 /* NewsCell2.swift in Sources */,
-				06882F6F274D867300D643A0 /* OfferViewController.swift in Sources */,
+				06882F6F274D867300D643A0 /* OfferDetailViewController.swift in Sources */,
 				06F5D169270B8E1B004931F7 /* Activity.swift in Sources */,
 				0683A1F2265172070000D122 /* MenuMainViewController.swift in Sources */,
 				06F7727026760FA100E64D54 /* IBPCollectionViewCompositionalLayoutInteroperability.swift in Sources */,
