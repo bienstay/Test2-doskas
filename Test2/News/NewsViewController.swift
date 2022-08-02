@@ -103,7 +103,7 @@ extension NewsViewController: UITableViewDelegate {
 
 
 
-class NewsCell: ShadedTableViewCell {
+class NewsCell: UITableViewCell {
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var subtitleLabel: UILabel!
     @IBOutlet var timestampLabel: UILabel!
@@ -113,6 +113,7 @@ class NewsCell: ShadedTableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         selectionStyle = .none
+        backgroundColor = .clear
         newsImageView.layer.cornerRadius = 8
         newsImageView.layer.masksToBounds = true
     }
@@ -128,7 +129,7 @@ class NewsCell: ShadedTableViewCell {
             newsImageView.kf.setImage(with: url)
         }
     }
-
+/*
     override func layoutSubviews() {
         super.layoutSubviews()
         if orgFrame == nil {
@@ -138,6 +139,7 @@ class NewsCell: ShadedTableViewCell {
 
         super.layoutSubviews()
     }
+*/
 }
 
 

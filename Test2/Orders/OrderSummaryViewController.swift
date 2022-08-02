@@ -8,10 +8,10 @@
 import UIKit
 import Kingfisher
 import MapKit
-
+/*
 class OrderSummaryViewController: UIViewController, UITableViewDataSource {
 
-    var order: Order = Order(category: .None)
+    var order: Order6 = Order6(category: .None)
     
     enum Sections: Int, CaseIterable {
         case Items = 0
@@ -50,9 +50,10 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
 
     @IBOutlet weak var statusChangeButton: UIBarButtonItem!
     @IBAction func statusChangeButtonPressed(_ sender: UIBarButtonItem) {
-        if order.status == Order.Status.CREATED {
+        switch order.status {
+        case .CREATED(_,_):
             if phoneUser.isStaff {
-                dbProxy.updateOrderStatus(orderId: order.id!, newStatus: .CONFIRMED, confirmedBy: phoneUser.displayName)
+                dbProxy.updateOrderStatus(orderId: order.id, newStatus: , confirmedBy: phoneUser.displayName)
             } else {
                 askToCancel()
             }
@@ -95,8 +96,6 @@ class OrderSummaryViewController: UIViewController, UITableViewDataSource {
             switch buggyData.locationType {
             case .Room: break
             case .GPS:
-                //if let coordinates = order.buggyData?.locationData.split(separator: ","), coordinates.count == 2 {
-                //let coo = order.buggyData?.locationData.components(separatedBy: [",", " "])
                 if let coordinates = order.buggyData?.locationData.components(separatedBy: [",", " "]), coordinates.count == 2 {
                     let latitude = Double(coordinates[0]) ?? 0.0
                     let longitude = Double(coordinates[1]) ?? 0.0
@@ -246,7 +245,7 @@ extension OrderSummaryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch Sections(rawValue: section) {
         case .GuestComment:
-            if let comment = order.guestComment, !comment.isEmpty { return .comment }
+            if !order.comment.isEmpty { return .comment }
             return nil
             default: return nil
         }
@@ -300,3 +299,4 @@ class OrderSummaryItemCell: UITableViewCell {
         countLabel.text = String(item.quantity)
     }
 }
+*/

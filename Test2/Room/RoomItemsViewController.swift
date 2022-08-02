@@ -36,7 +36,7 @@ class OrderShortSummaryView: UIView {
 
 
 class RoomItemsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-    var order = Order(category: .RoomItems)
+    var order = Order6(category: .RoomItems)
 
     @IBOutlet weak var orderShortSummaryView: OrderShortSummaryView!
     @IBOutlet weak var orderSummaryConstraint: NSLayoutConstraint!
@@ -107,7 +107,7 @@ class RoomItemsViewController: UIViewController, UITableViewDataSource, UITableV
         guard let item = hotel.roomItems[itemType]?[indexPath.row] else { return cell }
 
         var expanded = expandedCells.contains(indexPath)
-        if let quantity = order.getItem(byString: item.name)?.quantity, quantity > 0 { expanded = true }
+        if let quantity = order.roomItems.first(where: { $0.item.name == item.name })?.quantity, quantity > 0 { expanded = true }
 
         cell.display(roomItem: item, order: order, expanded: expanded)
 
@@ -158,11 +158,11 @@ extension RoomItemsViewController {
     func addToOrder(_ indexPath: IndexPath) {
         let itemType = RoomItem.ItemType.allCases[indexPath.section]
         if let item = hotel.roomItems[itemType]?[indexPath.row] {
-            order.addItem(name: item.name, quantity: 1, price: 0)
+            order.addRoomItem(item: item)
         }
-        orderShortSummaryView.configure(quantity: order.totalNrOfItemsInOrder)
+        orderShortSummaryView.configure(quantity: order.totalNrOfRoomItems)
 
-        orderSummaryConstraint.constant = order.totalNrOfItemsInOrder <= 0 ? -80 : 24
+        orderSummaryConstraint.constant = order.totalNrOfRoomItems <= 0 ? -80 : 24
         UIView.animate(withDuration: 1.0, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 10, animations: { [weak self] in
             self?.view.layoutIfNeeded()
         })
@@ -171,18 +171,18 @@ extension RoomItemsViewController {
     func removeFromOrder(_ indexPath: IndexPath) {
         let itemType = RoomItem.ItemType.allCases[indexPath.section]
         if let item = hotel.roomItems[itemType]?[indexPath.row] {
-            _ = order.removeItem(name: item.name, quantity: 1)
+            _ = order.removeRoomItem(item: item)
         }
-        orderShortSummaryView.configure(quantity: order.totalNrOfItemsInOrder)
+        orderShortSummaryView.configure(quantity: order.totalNrOfRoomItems)
 
-        orderSummaryConstraint.constant = self.order.totalNrOfItemsInOrder <= 0 ? -80 : 24
+        orderSummaryConstraint.constant = self.order.totalNrOfRoomItems <= 0 ? -80 : 24
         UIView.animate(withDuration: 0.5, animations: { [weak self] in
             self?.view.layoutIfNeeded()
         })
     }
 
     func clearOrder() {
-        order = Order(category: .RoomItems)
+        order = Order6(category: .RoomItems)
         expandedCells = []
         orderSummaryConstraint.constant = -80
         view.layoutIfNeeded()

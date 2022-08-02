@@ -122,7 +122,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             DispatchQueue.main.async { self?.userPicker.reloadAllComponents() }
         }
     }
-    
+
     func initRoomList() {
         guard !hotels.isEmpty else { return }
         users = []

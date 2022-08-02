@@ -7,46 +7,16 @@
 
 import Foundation
 
-class RoomItem: Hashable, Codable {
-    enum ItemType: String, Codable, Hashable, CaseIterable {
-        case Toiletries = "Toiletries"
-        case BathAmenities = "Bath Amenities"
-        case RoomAmenities = "Room Amenities"
-        case RoomConsumables = "Room Consumables"
-        case None = "None"
-        func toString() -> String {
-            switch self {
-            case .Toiletries: return .toiletries
-            case .BathAmenities: return .bathAmenities
-            case .RoomAmenities: return .roomAmenities
-            case .RoomConsumables: return .roomConsumables
-            case .None: return ""
-            }
-        }
-    }
-    static func == (lhs: RoomItem, rhs: RoomItem) -> Bool {
-        return lhs.name == rhs.name && lhs.type == rhs.type
-    }
-    public func hash(into hasher: inout Hasher) {
-         hasher.combine(ObjectIdentifier(self))
-    }
-    
-    var name: String = ""
-    var type: ItemType = .Toiletries
-    var picture: String = ""
-    var color: String = "000000"
-    var maxQuantity: Int = 5
-}
-
+/*
 class Order: Codable {
     enum Category: String, Codable, Hashable, CaseIterable {
-        case RoomService = "In-room dining"
-        case Maintenance = "Maintenance"
-        case Cleaning = "Cleaning"
-        case LuggageService = "Luggage"
-        case Buggy = "Buggy"
-        case RoomItems = "Room Items"
-        case None = ""
+        case RoomService
+        case Maintenance
+        case Cleaning
+        case LuggageService
+        case Buggy
+        case RoomItems
+        case None
         func toString() -> String {
             switch self {
             case .RoomService: return .roomService
@@ -185,8 +155,8 @@ class Order: Codable {
         return created
     }
 }
-
-
+*/
+/*
 struct OrderInDB: Codable {
     private (set) var description: String   // TODO - change in DB and here to category
     private (set) var number: Int
@@ -243,3 +213,4 @@ extension Order {
         self.guestComment = orderInDb.guestComment
     }
 }
+*/

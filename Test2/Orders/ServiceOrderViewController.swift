@@ -9,7 +9,9 @@ import UIKit
 
 class ServiceOrderViewController: UIViewController {
 
-    var order: Order = Order(category: .None)
+    //var order: Order = Order(category: .None)
+    //var order: Order2 = Order2()
+    var order: Order6 = Order6(category: .None)
 
     @IBOutlet weak var sendButton: GlossyButton!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
@@ -19,7 +21,6 @@ class ServiceOrderViewController: UIViewController {
     @IBOutlet weak var commentTextView: UITextView!
     @IBOutlet weak var backgroundPicture: UIImageView!
 
-    //var category: Order.Category = .Maintenance
     var completionHandler: (() -> Void)?
 
     @IBAction func sendButtonPressed(_ sender: UIButton) {
@@ -27,35 +28,40 @@ class ServiceOrderViewController: UIViewController {
             showInfoDialogBox(title: "Room Number", message: "Room number is missing")
             return
         }
+        order.roomNumber = roomNumber
 
-        var orderNumber = phoneUser.orders.isEmpty ? 1 : phoneUser.orders.first!.number + 1
+        var orderNumber = phoneUser.orders6.isEmpty ? 1 : phoneUser.orders6.first!.number + 1
+        order.number = orderNumber
+        
         if phoneUser.isStaff {
             // filter orders for the specified room number to get the next order number
-            let guestOrders = phoneUser.orders.filter( {$0.roomNumber == roomNumber} )
+            let guestOrders = phoneUser.orders6.filter( {$0.roomNumber == roomNumber} )
             orderNumber = guestOrders.isEmpty ? 1 : guestOrders.first!.number + 1
         }
 
-        order.setCreated(orderNumber: orderNumber, roomNumber: roomNumber)
+        //order.setCreated(orderNumber: orderNumber, roomNumber: roomNumber)
+        order.setStatus(status: .CREATED(at: Date(), by: phoneUser.displayName))
         if let comment = commentTextView.text, !comment.isEmpty {
-            order.guestComment = comment
+            //order.guestComment = comment
+            order.comment = comment
         }
 
-        let orderInDB = OrderInDB(order: order, roomNumber: roomNumber)
+        //let orderInDB = OrderInDB(order: order, roomNumber: roomNumber)
+        //let orderInDB = Order2InDB(order: order)
+        let orderInDB = Order6InDB(order: order)
         let errStr = dbProxy.addRecord(record: orderInDB) { _, record in
             if record == nil {
                 self.showInfoDialogBox(title: "Error", message: "Order update failed")
             } else {
-
-                    DispatchQueue.main.async {
-                        self.completionHandler?()
-                        let notificationId = String(self.order.roomNumber) + "_" + String(self.order.number)
-                        prepareNotification(id: notificationId, title: .order.localizedUppercase, subtitle: String(self.order.number), body: .created.localizedCapitalized, attachmentFile: "RoomService")
-                        if let tabBarController = self.tabBarController {
-                            self.navigationController?.popToRootViewController(animated: false)
-                            tabBarController.selectedIndex = 4
-                        }
+                DispatchQueue.main.async {
+                    self.completionHandler?()
+                    let notificationId = String(self.order.roomNumber) + "_" + String(self.order.number)
+                    prepareNotification(id: notificationId, title: .order.localizedUppercase, subtitle: String(self.order.number), body: .created.localizedCapitalized, attachmentFile: "RoomService")
+                    if let tabBarController = self.tabBarController {
+                        self.navigationController?.popToRootViewController(animated: false)
+                        tabBarController.selectedIndex = 4
                     }
-
+                }
             }
         }
         if errStr != nil { Log.log(errStr!) }
@@ -64,7 +70,6 @@ class ServiceOrderViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         initView()
-        //tabBarController?.tabBar.isHidden = true
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil) //object: self.view.window)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: nil) //object: self.view.window)
@@ -73,12 +78,12 @@ class ServiceOrderViewController: UIViewController {
         view.addGestureRecognizer(t)
         t.cancelsTouchesInView = false
 
-        //if !phoneUser.isStaff { roomNumberTextField.text = String(phoneUser.guest?.roomNumber ?? 0) }
         roomNumberTextField.text = phoneUser.roomNumber?.toString
         roomNumberTextField.isEnabled = phoneUser.isStaff
         roomNumberTextField.keyboardType = .numberPad
 
-        backgroundPicture.image = UIImage(named: order.category.rawValue)
+        //backgroundPicture.image = UIImage(named: order.category.rawValue)
+        backgroundPicture.image = UIImage(named: order.category.toString())
 
         commentTextView.layer.borderColor = UIColor.BBseparatorColor.cgColor
         commentTextView.layer.borderWidth = 1

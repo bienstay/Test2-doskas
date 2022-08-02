@@ -21,8 +21,8 @@ extension FirebaseDatabase {
             if JSONSerialization.isValidJSONObject(snapshot.value!) {
                 let data = try? JSONSerialization.data(withJSONObject: snapshot.value!)
                 do {
-                    let orderFromDB: OrderInDB = try decoder.decode(OrderInDB.self, from: data!)
-                    let order = Order(id: snapshot.key, orderInDb: orderFromDB)
+                    let orderFromDB: Order6InDB = try decoder.decode(Order6InDB.self, from: data!)
+                    let order = Order6(id: snapshot.key, orderInDb: orderFromDB)
                     Log.log(level: .INFO, "Order \(order.number) updated")
                     if !phoneUser.isStaff {
                         prepareNotification(id: String(order.number), title: "ORDER", subtitle: String(order.number), body: order.status.toString(), attachmentFile: "RoomService")
@@ -49,7 +49,7 @@ extension FirebaseDatabase {
         }
     }
 
-    func updateOrderStatus(orderId: String, newStatus: Order.Status, confirmedBy: String? = nil, deliveredBy: String? = nil, canceledBy: String? = nil) {
+    func updateOrderStatus(orderId: String, newStatus: OrderStatus, confirmedBy: String? = nil, deliveredBy: String? = nil, canceledBy: String? = nil) {
         let orderRef = ORDERS_DB_REF.child("/\(orderId)")
         var key = ""
         switch newStatus {
@@ -57,6 +57,7 @@ extension FirebaseDatabase {
         case .CANCELED: key = "canceled"
         case .CONFIRMED: key = "confirmed"
         case .DELIVERED: key = "delivered"
+        case .INIT: key = "init"
         }
         var childUpdates:[String : Any] = [key: Date().timeIntervalSince1970]
         if let name = confirmedBy {
@@ -188,6 +189,19 @@ extension FirebaseDatabase {
             }
         }
     }
+
+    func writeMenuList(restaurantId: String, menuList: [String], completionHandler: @ escaping () -> Void) {
+        let updates = [
+            "menus": menuList,
+        ] as [String : Any]
+        RESTAURANTS_DB_REF.child(restaurantId).updateChildValues(updates)  { (error, dbref) in
+            if let error = error {
+                Log.log(level: .ERROR, "Error writing menu list\n\(error.localizedDescription)")
+            } else {
+                completionHandler()
+            }
+        }
+    }
 }
 
 
@@ -198,8 +212,11 @@ extension FirebaseDatabase {
         dbRef.getData() { error, snapshot in
             if let rooms = snapshot.value as? [String:Bool] {
                 roomList = rooms.keys.compactMap({Int($0)}).sorted()
+                completionHandler(roomList)
+            } else {
+                Log.log(level: .ERROR, error.debugDescription)
+                completionHandler([])
             }
-            completionHandler(roomList)
         }
     }
 

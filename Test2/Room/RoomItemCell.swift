@@ -32,14 +32,17 @@ class RoomItemCell: UITableViewCell {
         plusButton.tintColor = .orange
     }
 
-    func display(roomItem: RoomItem, order: Order, expanded: Bool) {
+    func display(roomItem: RoomItem, order: Order6, expanded: Bool) {
         //if let lang = Locale.current.languageCode, let itemList = String.roomItemsList[lang] {
         if let itemList = String.roomItemsList[phoneUser.lang] {
             itemLabel.text = itemList[roomItem.name]
         } else {
             itemLabel.text = roomItem.name
         }
-        quantityLabel.text = String( order.getItem(byString: roomItem.name)?.quantity ?? 0)
+        quantityLabel.text = "0"
+        if let item = order.roomItems.first(where: { $0.item.name == roomItem.name } ) {
+            quantityLabel.text = String(item.quantity)
+        }
         if let hexColor = Int(roomItem.color, radix: 16) {
             itemImage.backgroundColor = UIColor(hexColor)
         } else {

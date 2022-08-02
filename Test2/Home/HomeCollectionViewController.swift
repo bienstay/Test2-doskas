@@ -23,6 +23,8 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
     @IBOutlet weak var statusView: UIView!
     @IBOutlet weak var emulationLabel: UILabel!
     @IBOutlet weak var connectionLostLabel: UILabel!
+    @IBOutlet weak var chatBarButton: UIBarButtonItem!
+    @IBOutlet weak var menuBarButton: UIBarButtonItem!
     var menu: MenuView!
 
     var squareSize: Double = 0.0
@@ -125,6 +127,46 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
             print("Logging out...")
             self?.logOutAndGoToScannerView()
         }
+
+        if #available(iOS 13.0, *) {
+            let config = UIImage.SymbolConfiguration(pointSize: 44, weight: .semibold, scale: .large)
+
+            let menuImage = UIImage(systemName: "line.3.horizontal", withConfiguration: config)
+            let menuButton = UIButton(type: .custom)
+            menuButton.tintColor = .orange
+            menuButton.setImage(menuImage, for: .normal)
+            menuButton.addTarget(self, action: #selector(menuBarButtonPressed), for: .touchUpInside)
+            menuButton.translatesAutoresizingMaskIntoConstraints = false
+            menuButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+            menuButton.widthAnchor.constraint(equalToConstant: 44).isActive = true
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: menuButton)
+
+            let chatImage = UIImage(systemName: "text.bubble.rtl", withConfiguration: config)
+            let chatButton = UIButton(type: .custom)
+            chatButton.tintColor = .orange
+            chatButton.setImage(chatImage, for: .normal)
+            chatButton.addTarget(self, action: #selector(chatButtonPressed), for: .touchUpInside)
+            chatButton.translatesAutoresizingMaskIntoConstraints = false
+            chatButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+            chatButton.widthAnchor.constraint(equalToConstant: 44).isActive = true
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: chatButton)
+        }
+    }
+
+    func transitionToScanner() {
+        authProxy.login(username: "appuser@appviator.com", password: "Appviator2022!") { [weak self] authData, error in
+            if authData != nil && error == nil {
+                Log.log("Logged in as default user")
+                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                appDelegate.transitionToScanner()
+            } else {
+                Log.log("Cannot login as default user")
+                Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { [weak self] timer in
+                    Log.log("Retrying logging...")
+                    self?.transitionToScanner()
+                }
+            }
+        }
     }
 
     func logOutAndGoToScannerView() {
@@ -132,8 +174,12 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         dbProxy.removeAllObservers()
         hotel = Hotel()
         phoneUser = PhoneUser()
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appDelegate.transitionToScanner()
+
+        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [weak self] timer in
+            self?.transitionToScanner()
+        }
+//        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+//        appDelegate.transitionToScanner()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -297,8 +343,6 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
     }
 
     @IBAction func buggyButtonPressed(_ sender: UIButton) {
-        let vc = pushViewController(storyBoard: "OrderSummary", id: "BuggyOrder") as! BuggyOrderViewController
-        vc.category = Order.Category.Buggy
     }
 
     @IBAction func socialButtonPressed(_ sender: UIButton) {

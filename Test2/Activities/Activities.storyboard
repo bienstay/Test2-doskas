@@ -249,7 +249,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="99.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="poB-Wp-ACp" customClass="GlossyView" customModule="Test2" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="poB-Wp-ACp" customClass="ShadedView" customModule="Test2" customModuleProvider="target">
                                                     <rect key="frame" x="16" y="8" width="382" height="83.5"/>
                                                     <subviews>
                                                         <stackView opaque="NO" contentMode="scaleAspectFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="nWO-zZ-KwN">
@@ -300,7 +300,7 @@
                                                             </subviews>
                                                         </stackView>
                                                     </subviews>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="trailing" secondItem="nWO-zZ-KwN" secondAttribute="trailing" constant="4" id="EKr-C8-weW"/>
                                                         <constraint firstAttribute="bottom" secondItem="nWO-zZ-KwN" secondAttribute="bottom" constant="4" id="kkd-Ju-M7v"/>

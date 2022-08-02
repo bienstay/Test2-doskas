@@ -46,7 +46,7 @@ final class FirebaseDatabase: DBProxy {
     var ACTIVITIES_DB_REF: DatabaseReference    { CONTENT_DB_REF.child("activities") }
     var RESTAURANTS_DB_REF: DatabaseReference   { CONTENT_DB_REF.child("restaurants") }
     var INFO_DB_REF: DatabaseReference          { CONTENT_DB_REF.child("info") }
-    var MENUS_DB_REF: DatabaseReference         { CONTENT_DB_REF.child("menus2") }
+    var MENUS_DB_REF: DatabaseReference         { CONTENT_DB_REF.child("menus") }
     var OFFERGROUPS_DB_REF: DatabaseReference   { CONTENT_DB_REF.child("offerGroups") }
     var OFFERS_DB_REF: DatabaseReference        { CONTENT_DB_REF.child("offers") }
     var TRANSLATIONS_DB_REF: DatabaseReference  { CONTENT_DB_REF.child("translations") }
@@ -84,17 +84,25 @@ final class FirebaseDatabase: DBProxy {
             case is Activity.Type:
                 if let child = subNode { return ACTIVITIES_DB_REF.child(child) }
                 else { return ACTIVITIES_DB_REF }
-            case is OrderInDB.Type:
+//            case is OrderInDB.Type:
+//                return ORDERS_DB_REF
+            case is Order6InDB.Type:
                 return ORDERS_DB_REF
+//            case is Order4InDB<ServiceOrderItem>.Type:
+//                return ORDERS_DB_REF
+//            case is Order4InDB<RoomOrderItem>.Type:
+//                return ORDERS_DB_REF
+//            case is Order4InDB<FoodOrderItem>.Type:
+//                return ORDERS_DB_REF
             case is OfferGroup.Type:
                 return OFFERGROUPS_DB_REF
             case is Offer.Type:
                 return OFFERS_DB_REF
-            case is Restaurant.Type:
+            case is RestaurantInDB.Type:
                 return RESTAURANTS_DB_REF
             case is Facility.Type:
                 return FACILITIES_DB_REF
-            case is Menu2.Type:
+            case is MenuInDB.Type:
                 return MENUS_DB_REF
             case is ChatRoomInDB.Type:
                 return CHATROOMS_DB_REF
@@ -137,7 +145,7 @@ final class FirebaseDatabase: DBProxy {
             case is GuestInDB.Type:
                 guard case .GuestInDb(let guestId) = parameter else { Log.log(errStr); return nil }
                 return dbRef?.queryOrderedByKey().queryEqual(toValue: guestId)
-            case is OrderInDB.Type:
+        case is Order6InDB.Type://, is Order4InDB<ServiceOrderItem>.Type, is Order4<RoomOrderItem>.Type, is Order4<FoodOrderItem>.Type:
                 switch parameter {
                     case .OrderByRoom(let roomNumber):
                         return dbRef?.queryOrdered(byChild: "roomNumber").queryEqual(toValue: roomNumber)

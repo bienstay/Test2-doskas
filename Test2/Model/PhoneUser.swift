@@ -46,8 +46,10 @@ class PhoneUser {
         let localeLang = Locale.current.languageCode
         return (preferredLang ?? localeLang ?? "en")
     }
-    var orders: [Order] { isStaff ? user!.orders : guest!.orders }
-    var activeOrders: [Order] { isStaff ? user?.activeOrders ?? [] : guest?.activeOrders ?? [] }
+    //var orders: [Order] { isStaff ? user!.orders : guest!.orders }
+    var orders6: [Order6] { isStaff ? user!.orders6 : guest!.orders6 }
+    //var activeOrders: [Order] { isStaff ? user?.activeOrders ?? [] : guest?.activeOrders ?? [] }
+    var activeOrders6: [Order6] { isStaff ? user?.activeOrders6 ?? [] : guest?.activeOrders6 ?? [] }
     var chatManager: ChatRoomManager? { return user?.chatManager }
 
     init() {
@@ -127,8 +129,10 @@ class User {
     var password: String
     var role: Role? = nil
 
-    var orders: [Order] = []
-    var activeOrders: [Order] = []
+    //var orders: [Order] = []
+    var orders6: [Order6] = []
+    //var activeOrders: [Order] = []
+    var activeOrders6: [Order6] = []
     var chatManager = ChatRoomManager()
 
     init(name: String, password: String) {
@@ -148,19 +152,26 @@ class User {
             case .housekeeping: parameter = .OrderByCategory(type: .Cleaning)
             default: parameter = nil
         }
-        dbProxy.subscribeForUpdates(parameter: parameter, completionHandler: ordersUpdated)
+        //dbProxy.subscribeForUpdates(parameter: parameter, completionHandler: ordersUpdated)
+        dbProxy.subscribeForUpdates(parameter: parameter, completionHandler: orders6Updated)
         chatManager.startObserving(user: self)
         messagingProxy.subscribeForMessages(topic: hotel.id)
     }
 
-    func ordersUpdated(allOrders: [String:OrderInDB]) {
-        orders = []
-        for o in allOrders {
-            orders.append(Order(id: o.key, orderInDb: o.value))
-        }
-        activeOrders = orders.filter( {$0.delivered == nil && $0.canceled == nil} )
-        orders.sort(by: { $0.id! > $1.id! } )
-        activeOrders.sort(by: { $0.id! > $1.id! } )
+//    func ordersUpdated(allOrders: [String:OrderInDB]) {
+//        orders = []
+//        for o in allOrders {
+//            orders.append(Order(id: o.key, orderInDb: o.value))
+//        }
+//        activeOrders = orders.filter( {$0.delivered == nil && $0.canceled == nil} )
+//        orders.sort(by: { $0.id! > $1.id! } )
+//        activeOrders.sort(by: { $0.id! > $1.id! } )
+//        NotificationCenter.default.post(name: .ordersUpdated, object: nil)
+//    }
+
+    func orders6Updated(allOrders: [String:Order6InDB]) {
+        orders6 = allOrders.map{ Order6(id: $0.key, orderInDb: $0.value) }.sorted(by: { $0.id > $1.id})
+        activeOrders6 = orders6.filter( {$0.isActive } ).sorted(by: { $0.id > $1.id})
         NotificationCenter.default.post(name: .ordersUpdated, object: nil)
     }
 
@@ -189,10 +200,12 @@ class Guest  {
     var id: String { String(roomNumber) + "--" + startDate.formatForDB() }
     var name = ""
     var endDate: Date = Date()
-    var displayName: String { String(roomNumber) + " " + name }
+    var displayName: String { String(roomNumber) }
 
-    var orders: [Order] = []
-    var activeOrders: [Order] = []
+    //var orders: [Order] = []
+    var orders6: [Order6] = []
+    //var activeOrders: [Order] = []
+    var activeOrders6: [Order6] = []
 
     lazy var chatRoom: ChatRoom = ChatRoom(id: id, roomNumber: roomNumber)
 
@@ -206,7 +219,8 @@ class Guest  {
 
     func startObserving() {
         dbProxy.observeOrderChanges()
-        dbProxy.subscribeForUpdates(parameter: .OrderByRoom(roomNumber: roomNumber), completionHandler: ordersUpdated)
+        //dbProxy.subscribeForUpdates(parameter: .OrderByRoom(roomNumber: roomNumber), completionHandler: ordersUpdated)
+        dbProxy.subscribeForUpdates(parameter: .OrderByRoom(roomNumber: roomNumber), completionHandler: orders6Updated)
         dbProxy.subscribeForUpdates(subNode: id, parameter: nil, completionHandler: likesUpdated)
         chatRoom.startObserving()
         messagingProxy.subscribeForMessages(topic: hotel.id + "_" + id)
@@ -216,7 +230,7 @@ class Guest  {
         let isLiked: Bool = likes[group]?.contains(key) ?? false
         dbProxy.updateLike(group: group, userID: self.id, itemKey: key, add: !isLiked)
     }
-
+/*
     func ordersUpdated(allOrders: [String:OrderInDB]) {
         orders = []
         allOrders.forEach({
@@ -227,7 +241,13 @@ class Guest  {
         activeOrders.sort(by: { $0.id! > $1.id! } )
         NotificationCenter.default.post(name: .ordersUpdated, object: nil)
     }
-    
+*/
+    func orders6Updated(allOrders: [String:Order6InDB]) {
+        orders6 = allOrders.map{ Order6(id: $0.key, orderInDb: $0.value) }.sorted(by: { $0.id > $1.id})
+        activeOrders6 = orders6.filter( { $0.isActive } ).sorted(by: { $0.id > $1.id})
+        NotificationCenter.default.post(name: .ordersUpdated, object: nil)
+    }
+
     func likesUpdated(allLikes: [String:LikesPerUserInDB]) {
         likes = [:]
         // for each group create a set that contains only keys with values == True

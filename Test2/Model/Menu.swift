@@ -7,67 +7,92 @@
 
 import Foundation
 
-/*
-struct MenuItem: Hashable, Codable {
-    typealias ItemType = String
-    static let GROUP:ItemType = "GROUP"
-    static let FOODITEM:ItemType = "FOOD"
 
-    var itemType: ItemType = GROUP
-    var title: String = ""
-    var description: String = ""
-
-    // only for a FOODITEM
-    var type: String = ""
-    var price: Double = 0
-    var attributes: [String]? = []
-    var imageName: String = ""
+struct MenuItemInDB: Hashable, Codable {
+    var type: MenuItem.ItemType
+    var title: String
+    var txt: String
+    var price: String?
+    //var attributes: String?
+    //var choices: [String:Double]? = [:]
+    var choices: [[String:Double]]? = []
+    var addons: [String:Double]? = [:]
+    var img: String?
+    init (_ m: MenuItem) {
+        type = m.type
+        title = m.title
+        txt = m.text
+        price = String(m.price)
+        //attributes = m.attributes.joined(separator: " ")
+        choices = m.choices?.map { [$0.title:$0.price] }
+        m.addons?.forEach { addons?[$0.title] = $0.price }
+        img = m.img
+    }
 }
 
-struct MenuSection: Hashable, Codable {
+extension MenuItem {
+    init(_ m: MenuItemInDB) {
+        type = m.type
+        title = m.title
+        text = m.txt
+        price = Double(m.price ?? "0.0") ?? 0.0
+        //attributes = m.attributes?.components(separatedBy: [",", ".", " "]).filter({!$0.isEmpty}) ?? []
+        foodAttributes = []
+        //choices = m.choices?.sorted(by: {$0.key < $1.key}).map { Subchoice(title: $0.key, price: $0.value) }
+        choices = m.choices?.map { Subchoice(title: $0.first?.key ?? "", price: $0.first?.value ?? 0.0) }
+        addons = m.addons?.sorted(by: {$0.key < $1.key}).map { Subchoice(title: $0.key, price: $0.value) }
+        img = m.img
+    }
+}
+
+func == <T1:Equatable, T2:Equatable> (tuple1:(T1,T2),tuple2:(T1,T2)) -> Bool
+{
+   return (tuple1.0 == tuple2.0) && (tuple1.1 == tuple2.1)
+}
+
+struct MenuItem: Hashable, Codable {
+    enum ItemType: String, Codable {
+        case GROUP = "GROUP"
+        case FOODITEM = "FOOD"
+        case SECTION = "SECTION"
+    }
+    struct Subchoice: Hashable, Codable {
+        var title: String
+        var price: Double
+    }
+    var type: ItemType = .GROUP
     var title: String = ""
-    var description: String = ""
-    var items: [MenuItem] = []
+    var text: String = ""
+    var price: Double = 0.0
+    var foodAttributes: [String] = []
+    var choices: [Subchoice]? = []
+    var addons: [Subchoice]? = []
+    var img: String? = ""
+}
+
+
+
+struct MenuInDB: Hashable, Codable {
+    var name: String = ""
+    var txt: String? = ""
+    var items: [MenuItemInDB]? = []
+    init(_ m: Menu) {
+        name = m.name
+        txt = m.text
+        m.items.forEach( { items?.append(MenuItemInDB($0)) } )
+    }
+}
+
+extension Menu {
+    init(_ m: MenuInDB) {
+        name = m.name
+        text = m.txt
+        m.items?.forEach( { items.append(MenuItem($0)) } )
+    }
 }
 
 struct Menu: Hashable, Codable {
-    var restaurant: String = ""
-    var position: Int = 0
-    var title: String = ""
-    var description: String = ""
-    var sections: [MenuSection]? = []
+    var name: String = ""
+    var text: String? = ""
+    var items: [MenuItem] = []
 }
-*/
-
-struct MenuItem2: Hashable, Codable {
-    typealias ItemType = String
-    static let GROUP:ItemType = "GROUP"
-    static let FOODITEM:ItemType = "FOOD"
-    static let SECTION:ItemType = "SECTION"
-
-    var type: ItemType = GROUP
-    var title: String = ""
-    var txt: String = ""
-
-    // only for a FOODITEM
-    var price: Double = 0
-    var attributes: [String]? = []
-    var img: String = ""
-}
-
-struct Menu2: Hashable, Codable {
-    var restaurant: String = ""
-    var position: Int = 0
-    var title: String = ""
-    var txt: String = ""
-    var items: [MenuItem2]? = []
-}
-/*
-img = "";
-itemType = FOOD;
-note = "";
-price = 18;
-rating = 0;
-title = "ALANAASI COLADA";
-txt = "Aged rum, pineapple juice & colada mix";
-*/

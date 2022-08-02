@@ -30,8 +30,8 @@ class GuestOld  {
     var Name = ""
     var password: String?
     var roomNumber = 0
-    var orders: [Order] = []
-    var activeOrders: [Order] = []
+    var orders: [Order6] = []
+    var activeOrders: [Order6] = []
     var chatRooms: [String] = []
     var chatMessages: [String:[ChatMessage]]? = [:]
     var unreadChatCount: Int = 0
@@ -165,14 +165,14 @@ class GuestOld  {
         NotificationCenter.default.post(name: .likesUpdated, object: nil)
     }
 
-    func ordersUpdated(allOrders: [String:OrderInDB]) {
+    func ordersUpdated(allOrders: [String:Order6InDB]) {
         orders = []
         allOrders.forEach({
-            orders.append(Order(id: $0.0, orderInDb: $0.1))
+            orders.append(Order6(id: $0.0, orderInDb: $0.1))
         })
-        activeOrders = orders.filter( {$0.delivered == nil && $0.canceled == nil} )
-        orders.sort(by: { $0.id! > $1.id! } )
-        activeOrders.sort(by: { $0.id! > $1.id! } )
+//        activeOrders = orders6.filter( {$0.delivered == nil && $0.canceled == nil} )
+//        orders.sort(by: { $0.id! > $1.id! } )
+//        activeOrders.sort(by: { $0.id! > $1.id! } )
         NotificationCenter.default.post(name: .ordersUpdated, object: nil)
     }
 

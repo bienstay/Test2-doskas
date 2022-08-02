@@ -9,7 +9,7 @@ import UIKit
 import Kingfisher
 
 
-class RestaurantTableViewController: UITableViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class RestaurantTableViewController: UITableViewController {
 
     @IBOutlet var emptyRestaurantView: UIView!
     @IBOutlet weak var newRestaurantBarButton: UIBarButtonItem!
@@ -17,10 +17,8 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
     override func viewDidLoad() {
         super.viewDidLoad()
         initView(tableView: tableView)
-
         //tableView.cellLayoutMarginsFollowReadableWidth = true
 
-        // setup empty table
         tableView.backgroundView = emptyRestaurantView
         tableView.backgroundView?.isHidden = hotel.restaurants.count == 0 ? false : true
 
@@ -30,27 +28,11 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
         tableView.register(nib, forHeaderFooterViewReuseIdentifier: "HeaderTableView")
     }
 
-    // this is for test only and for future development
-    @objc func didTap(_ sender: AnyObject) {
-/*
-        let group = sender.view!.tag / 100
-        let item = sender.view!.tag % 100
-        let storyboard = UIStoryboard(name: "Restaurants", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "DestinationDining") as! DestinationDiningViewController
-        vc.ddItem = hotel.destinationDining.groups[group].items[item]
-        self.navigationController?.pushViewController(vc, animated: true)
- */
-    }
-
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
         setupListNavigationBar(title: .food)
-
         newRestaurantBarButton.isEnabled = phoneUser.isAllowed(to: .editContent)
         newRestaurantBarButton.title = phoneUser.isAllowed(to: .editContent) ? "New" : ""
-        //newRestaurantBarButton.isEnabled = phoneUser.isStaff
-        //newRestaurantBarButton.title = phoneUser.isStaff ? "New" : ""
     }
 
     @objc func onRestaurantsUpdated(_ notification: Notification) {
@@ -64,75 +46,18 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
         self.pushOrPresent(viewController: vc)
     }
 
-    // section 0 is for restaurants, section 1 is for destination dining
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1    // restaurants and destination dining
-    }
-
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section : Int) -> Int {
-        switch section {
-        case 0: return hotel.restaurants.count
-        //default: return 1   // 1 row with destination dining collection view in section 1
-        //default: return hotel.destinationDining.groups.count
-        default: return 0
-        }
-    }
-
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 0 { return UITableView.automaticDimension }
-        else { return 340 } // TODO figure out how to do auto resizing
+        return hotel.restaurants.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch indexPath.section {
-        case 0:
-            let restaurant = hotel.restaurants[indexPath.row]
-            let cellName = "bigcell"
-            //if UIDevice.current.userInterfaceIdiom == .pad { cellName = "smallcell"}
-            let cell = tableView.dequeueReusableCell(withIdentifier: cellName, for: indexPath) as! RestaurantTableViewCell
-            cell.nameLabel?.text = restaurant.name
-            //cell.thumbnailImageView?.image = UIImage(data: restaurant.image)
-            cell.thumbnailImageView?.kf.setImage(with: URL(string: restaurant.image))
-            cell.locationLabel.text = restaurant._location
-            cell.typeLabel.text = restaurant._cuisines
-            //cell.accessoryType = restaurant.isFavorite ? .checkmark : .none
-            return cell
-        default:
-            return UITableViewCell()
-/*
-        default:
-            // collection view inside the cell
-            let cell = tableView.dequeueReusableCell(withIdentifier: "DestinationDiningCell", for: indexPath) as! RestaurantDestinationDiningCell
-            cell.groupTitleLabel.text = hotel.destinationDining.groups[indexPath.row].title
-            cell.groupSubLabel.text = hotel.destinationDining.groups[indexPath.row].description
-            cell.setCollectionViewDataSourceDelegate(dataSourceDelegate: self, forRow: indexPath.row)
-            return cell
-*/
-        }
-    }
-
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        //return colorsModel[collectionView.tag].count
-        //return hotel.destinationDining.groups[collectionView.tag].items.count
-        return 0
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "RestaurantDestinationDiningCell", for: indexPath) as! RestaurantDestinationDiningCollectionViewCell
-        cell.backgroundColor = .BBbackgroundColor
-/*
-        let dd = hotel.destinationDining.groups[collectionView.tag].items[indexPath.row]
-        cell.titleLabel.text = dd.title
-        //cell.timeLocationLabel.text = dd.timeLocation
-        //cell.descriptionLabel.text = dd.description
-        cell.picture.image = UIImage(named: dd.image)
-
-        // for test only - add tap for the collection view cells and pass the tag number
-        let tapAction = UITapGestureRecognizer(target: self, action: #selector(didTap))
-        cell.tag = indexPath.row + collectionView.tag * 100
-        cell.isUserInteractionEnabled = true
-        cell.addGestureRecognizer(tapAction)
-*/
+        let restaurant = hotel.restaurants[indexPath.row]
+        let cellName = "bigcell"
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellName, for: indexPath) as! RestaurantTableViewCell
+        cell.nameLabel?.text = restaurant.name
+        cell.thumbnailImageView?.kf.setImage(with: URL(string: restaurant.image))
+        cell.locationLabel.text = restaurant._location
+        cell.typeLabel.text = restaurant._cuisines
         return cell
     }
 
@@ -166,7 +91,7 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
     }
 
     func deleteRestaurant(restaurant: Restaurant) {
-        let errStr = dbProxy.removeRecord(key: restaurant.id!, record: restaurant) { [weak self] record in
+        let errStr = dbProxy.removeRecord(key: restaurant.id, record: restaurant) { [weak self] record in
             if record == nil {
                 self?.showInfoDialogBox(title: "Error", message: "Restaurant delete failed")
             } else {
@@ -178,40 +103,17 @@ class RestaurantTableViewController: UITableViewController, UICollectionViewData
 
 }
 
-// MARK: - Section header
-extension RestaurantTableViewController {
+class RestaurantTableViewCell: UITableViewCell {
 
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if section == 0 { return UIView() }
-        let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "HeaderTableView") as! RestaurantSectionHeaderView
-//        view.sectionHeaderLabel.text = hotel.destinationDining.headline.0
-//        view.descriptionLabel.text = hotel.destinationDining.headline.1
-//        view.subLabel.text = hotel.destinationDining.headline.2
-        return view
-    }
-
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 { return 1 }
-        return 240
-    }
-
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 1
-    }
-}
-
-class RestaurantSectionHeaderView: UITableViewHeaderFooterView {
-    @IBOutlet weak var sectionHeaderLabel: UILabel!
-    @IBOutlet weak var descriptionLabel: UILabel!
-    @IBOutlet weak var subLabel: UILabel!
+    @IBOutlet var nameLabel: UILabel!
+    @IBOutlet var locationLabel: UILabel!
+    @IBOutlet var typeLabel: UILabel!
+    @IBOutlet var thumbnailImageView: UIImageView!
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        let bgView = UIView(frame: self.bounds)
-        bgView.backgroundColor = UIColor(white: 0.5, alpha: 0.0)
-        self.backgroundView = bgView
-        sectionHeaderLabel.textColor = .orange
-        descriptionLabel.textColor = .gray
+        backgroundColor = .clear
+        selectionStyle = .none
+        thumbnailImageView.layer.cornerRadius = 12
     }
 }
-

@@ -115,6 +115,11 @@ extension OffersViewController: UICollectionViewDataSource {
         }
         return cell
     }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        tableView.layoutIfNeeded()
+    }
 
 }
 

@@ -21,7 +21,7 @@ struct FirebaseAuthenticationData: AuthenticationData {
 
 final class FirebaseAuthentication: AuthProxy {
     static let shared: AuthProxy = FirebaseAuthentication()
-    var defaultPassword:String  { hotel.id.lowercased().padding(toLength: 6, withPad: "_", startingAt: 0) }
+    var defaultPassword:String  { hotel.id.lowercased() } //.padding(toLength: 6, withPad: "_", startingAt: 0) }
 
     func login(username: String, password: String, completionHandler: @escaping (AuthenticationData?, Error?) -> Void) {
         Auth.auth().signIn(withEmail: username, password: password) { (authResult, error) in

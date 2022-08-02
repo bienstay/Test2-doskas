@@ -7,7 +7,7 @@
 
 import UIKit
 import Kingfisher
-
+/*
 class NewsCell2: UITableViewCell {
 
     @IBOutlet var titleLabel: UILabel!
@@ -49,3 +49,4 @@ class NewsCell2: UITableViewCell {
         likesLabel.isHidden = !phoneUser.isStaff
     }
 }
+*/

@@ -228,31 +228,30 @@ extension UIView {
 
 
 protocol ShadowableRoundableView where Self: UIView {
-    
+
     var cornerRadius: CGFloat { get }
     var shadowColor: UIColor { get  }
     var shadowOffsetWidth: CGFloat { get  }
     var shadowOffsetHeight: CGFloat { get  }
     var shadowOpacity: Float { get  }
     var shadowRadius: CGFloat { get  }
-    
+
     var shadowLayer: CAShapeLayer { get }
-    
+
     func setCornerRadiusAndShadow()
 }
 
 extension ShadowableRoundableView {
-    var cornerRadius: CGFloat { 10.0 }
-    var shadowColor: UIColor { .gray }
-    var shadowOffsetWidth: CGFloat { 0.0 }
-    var shadowOffsetHeight: CGFloat { 2.0 }
+    //var cornerRadius: CGFloat { 12.0 }
+    var shadowColor: UIColor { .black }
+    var shadowOffsetWidth: CGFloat { 3.0 }
+    var shadowOffsetHeight: CGFloat { 3.0 }
     var shadowOpacity: Float { 0.4 }
     var shadowRadius: CGFloat { 4.0 }
 }
 
 extension ShadowableRoundableView {
     func setCornerRadiusAndShadow() {
-        layer.cornerRadius = cornerRadius
         shadowLayer.path = UIBezierPath(roundedRect: bounds, cornerRadius: cornerRadius).cgPath
         shadowLayer.fillColor = backgroundColor?.cgColor
         shadowLayer.shadowColor = shadowColor.cgColor
@@ -260,13 +259,41 @@ extension ShadowableRoundableView {
         shadowLayer.shadowOffset = CGSize(width: shadowOffsetWidth, height: shadowOffsetHeight)
         shadowLayer.shadowOpacity = shadowOpacity
         shadowLayer.shadowRadius = shadowRadius
-        layer.masksToBounds = false
+
+        shadowLayer.cornerRadius = cornerRadius
         shadowLayer.masksToBounds = false
+
+        layer.cornerRadius = cornerRadius
+        layer.masksToBounds = false
     }
 }
 
 
 class ShadedView: UIView, ShadowableRoundableView {
+    var cornerRadius: CGFloat { 12.0 }
+    private(set) lazy var shadowLayer: CAShapeLayer = {
+        let shlayer = CAShapeLayer()
+        self.layer.insertSublayer(shlayer, at: 0)
+        self.setNeedsLayout()
+        return shlayer
+    }()
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.setCornerRadiusAndShadow()
+    }
+}
+
+
+
+
+/*
+class RoundShadedView: ShadedView {
+    override var cornerRadius: CGFloat { frame.width/2 }
+}
+*/
+class RoundShadedView: UIView, ShadowableRoundableView {
+    var cornerRadius: CGFloat { frame.width/2 }
     private(set) lazy var shadowLayer: CAShapeLayer = {
         let layer = CAShapeLayer()
         self.layer.insertSublayer(layer, at: 0)
@@ -279,14 +306,6 @@ class ShadedView: UIView, ShadowableRoundableView {
         self.setCornerRadiusAndShadow()
     }
 }
-
-
-
-
-
-
-
-
 
 
 
@@ -369,15 +388,15 @@ class ActionButton: UIButton {
     }
 */
     func customize() {
-        //layer.cornerRadius = self.frame.size.height / 2
-        layer.cornerRadius = 16
+        layer.cornerRadius = self.frame.size.height / 4
+        //layer.cornerRadius = 16
         layer.masksToBounds = true
         if #available(iOS 13.0, *) {
             backgroundColor = .label
             tintColor = .systemBackground
             setTitleColor(.systemBackground, for: .normal)
         }
-        titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
+        //titleLabel?.font = UIFont.preferredFont(forTextStyle: .largeTitle)
     }
 }
 

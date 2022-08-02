@@ -8,6 +8,7 @@
 import UIKit
 
 class OrderDetailsCell: UITableViewCell {
+    @IBOutlet weak var categoryImage: UIImageView!
     @IBOutlet weak var statusChangeButton: UIButton!
     @IBOutlet weak var idLabel: UILabel!
     @IBOutlet weak var roomLabel: UILabel!
@@ -24,7 +25,7 @@ class OrderDetailsCell: UITableViewCell {
     @IBOutlet weak var itemCountLabel: UILabel!
     @IBOutlet weak var itemPriceLabel: UILabel!
 
-    var order: Order?
+    var order: Order6?
     var orgFrame: CGRect? = nil
 
 
@@ -35,15 +36,15 @@ class OrderDetailsCell: UITableViewCell {
         backgroundColor = .clear
     }
 
-    func draw(order: Order) {
+    func draw(order: Order6) {
         glossyView.setNeedsDisplay()
         self.order = order
         if phoneUser.isAllowed(to: .manageOrders) {
             statusChangeButton.isHidden = false
-            if order.status == Order.Status.CREATED {
+            if case .CREATED = order.status {
                 statusChangeButton.setTitle("Confirm", for: .normal)
-            } else
-            if order.status == Order.Status.CONFIRMED {
+            }
+            else if case .CONFIRMED = order.status {
                 statusChangeButton.setTitle("Close", for: .normal)
             } else {
                 statusChangeButton.isHidden = true
@@ -53,22 +54,22 @@ class OrderDetailsCell: UITableViewCell {
             statusChangeButton.isHidden = true
         }
 
+        categoryImage.image = UIImage(named: order.category.rawValue)
         idLabel.text = String(order.number)
         roomLabel.text = .room
         roomNumberLabel.text = String(order.roomNumber)
-        descriptionLabel.text = order.category.toString()
+        //descriptionLabel.text = order.category.toString()
         statusLabel.text = order.status.toString()
+        timeLabel.text = order.status.done.at.formatForDisplay()
 
         switch order.status {
             case .CREATED: statusLabel.textColor = .red
             case .CONFIRMED: statusLabel.textColor = .darkYellow
             case .DELIVERED: statusLabel.textColor = .darkGreen
             case .CANCELED: statusLabel.textColor = .black
+            default: statusLabel.textColor = .black
         }
-        if let date = order.created {
-            timeLabel.text = date.formatForDisplay()
-        }
-
+/*
         itemNameLabel.text = ""
         itemCountLabel.text = ""
         itemPriceLabel.text = ""
@@ -88,14 +89,15 @@ class OrderDetailsCell: UITableViewCell {
             itemPriceLabel.text?.append("\n")
         }
         separatorView.isHidden = order.items.isEmpty
+ */
     }
 
     @IBAction func statusChangePressed(_ sender: Any) {
-        if order?.status == Order.Status.CREATED {
-            dbProxy.updateOrderStatus(orderId: order!.id!, newStatus: .CONFIRMED, confirmedBy: phoneUser.displayName)
+        if case .CREATED = order?.status {
+//            dbProxy.updateOrderStatus(orderId: order!.id, newStatus: .CONFIRMED(at: Date(), by: phoneUser.displayName))
         } else
-        if order?.status == Order.Status.CONFIRMED {
-            dbProxy.updateOrderStatus(orderId: order!.id!, newStatus: .DELIVERED, deliveredBy: phoneUser.displayName)
+        if case .CONFIRMED = order?.status {
+  //          dbProxy.updateOrderStatus(orderId: order!.id, newStatus: .DELIVERED(at :Date()), by: phoneUser.displayName))
         }
     }
     /*

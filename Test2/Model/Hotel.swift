@@ -149,6 +149,7 @@ class Hotel {
     var image: String = ""
      */
     var restaurants: [Restaurant] = []
+    var menus: [String:Menu] = [:]
     var facilities: [Facility] = []
     var roomService: Restaurant = Restaurant()
     var news: [NewsPost] = []
@@ -303,10 +304,10 @@ class Hotel {
         NotificationCenter.default.post(name: .activitiesUpdated, object: nil)
     }
 
-    func restaurantsUpdated(allRestaurants: [String:Restaurant]) {
+    func restaurantsUpdated(allRestaurants: [String:RestaurantInDB]) {
         restaurants = []
         allRestaurants.forEach( {
-            let r = $0.1
+            let r = Restaurant(r: $0.1)
             r.id = $0.0
             restaurants.append(r)
         } )
@@ -325,9 +326,13 @@ class Hotel {
     }
 
 
-    func menusUpdated(allMenus: [String:Menu2]) {
-        hotel.restaurants.forEach( {$0.menus = []} )
+    func menusUpdated(allMenus: [String:MenuInDB]) {
+        //hotel.restaurants.forEach( {$0.menus = []} )
         hotel.roomService.menus = []
+        if let roomServiceMenu = allMenus.first(where: { $1.name == "In Villa Dining" }) {
+            hotel.roomService.menus.append(roomServiceMenu.key)
+        }
+        /*
         for m in allMenus {
             if let r = hotel.restaurants.first(where: {$0.name == m.1.restaurant} ) {
                 if r.menus.first(where: {$0.title == m.1.title} ) == nil {
@@ -341,6 +346,10 @@ class Hotel {
         for r in hotel.restaurants {
             r.menus.sort(by: {$0.position < $1.position} )
         }
+         */
+        allMenus.forEach( {
+            menus[$0.key] = Menu($0.value)
+        } )
         NotificationCenter.default.post(name: .menusUpdated, object: nil)
     }
 

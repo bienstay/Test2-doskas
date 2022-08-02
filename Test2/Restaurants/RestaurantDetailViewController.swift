@@ -45,7 +45,7 @@ class RestaurantDetailViewController: UIViewController {
         headerView.headerImageView.kf.setImage(with: URL(string: restaurant.image))
         
         tableView.register(UINib(nibName: "ReviewTableViewCell", bundle: nil), forCellReuseIdentifier: "ReviewCell")
-        reviewsManager.start(group: "restaurants", id: restaurant.id ?? "")
+        reviewsManager.start(group: "restaurants", id: restaurant.id)
         reviewsManager.delegate = self
     }
 
@@ -64,7 +64,19 @@ class RestaurantDetailViewController: UIViewController {
         super.viewWillDisappear(animated)
         endTransparentNavigationBar()
     }
-
+/*
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        guard let headerView = tableView.tableHeaderView else { return }
+        //let size = headerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+        let size = headerView.systemLayoutSizeFitting(CGSize(width: tableView.bounds.width, height: 0))
+        if headerView.frame.size.height != size.height {
+            headerView.frame.size.height = size.height
+            tableView.tableHeaderView = headerView
+            tableView.layoutIfNeeded()
+        }
+    }
+*/
     // closing the review scene with smileys
     @IBAction func rateRestaurant(segue: UIStoryboardSegue) {
         //guard let identifier = segue.identifier else { return }
@@ -157,7 +169,7 @@ extension RestaurantDetailViewController: UITableViewDataSource, UITableViewDele
     @IBAction func reviewButtonPressed(_ sender: UIButton) {
         if let vc = self.prepareModal(storyBoard: "Activities", id: "RateReview") as? RateReviewViewController {
             vc.group = "restaurants"
-            vc.id = restaurant.id ?? ""
+            vc.id = restaurant.id
             vc.reviewTitle = restaurant.name
             vc.reviewedImage = UIImage(named: "JaNaPlaya")
             present(vc, animated: true)

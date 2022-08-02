@@ -67,7 +67,7 @@ extension OffersCell: UICollectionViewDelegateFlowLayout {
 
 
 
-class OfferCollectionViewCell: ShadedCollectionViewCell {
+class OfferCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var picture: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var deleteButton: UIButton!
@@ -78,7 +78,10 @@ class OfferCollectionViewCell: ShadedCollectionViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        //picture.layer.cornerRadius = 10
+        layer.cornerRadius = 12
+        picture.layer.cornerRadius = 12
+        picture.layer.masksToBounds = true
+        picture.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner] // Top right corner, Top left corner respectively
         deleteButton.layer.cornerRadius = 5
         deleteButton.isEnabled = phoneUser.isAllowed(to: .editContent)
         deleteButton.isHidden = !phoneUser.isAllowed(to: .editContent)
@@ -112,7 +115,7 @@ class OfferCollectionViewCell: ShadedCollectionViewCell {
             }
         }
     }
-    
+/*
     override func layoutSubviews() {
         if orgFrame == nil {
             orgFrame = layer.frame.inset(by: UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4));
@@ -121,5 +124,5 @@ class OfferCollectionViewCell: ShadedCollectionViewCell {
 
         super.layoutSubviews()
     }
-
+*/
 }

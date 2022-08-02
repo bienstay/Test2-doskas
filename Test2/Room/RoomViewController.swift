@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import DeveloperToolsSupport
 
 class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var orderSummaryConstraint: NSLayoutConstraint!
@@ -40,12 +41,12 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
         return cell
     }
 
-    func maintenancePressed(category: Order.Category) {
+    func maintenancePressed(category: OrderCategory) {
         switch (category) {
         case .Buggy:
             let vc = pushViewController(storyBoard: "OrderSummary", id: "BuggyOrder") as! BuggyOrderViewController
-            vc.category = category
-        case .Cleaning, .Maintenance, .LuggageService:
+            //vc.category = category
+        case .Cleaning, .Maintenance, .Luggage:
             let vc = pushViewController(storyBoard: "OrderSummary", id: "MaintenanceOrder") as! ServiceOrderViewController
             vc.order.category = category
         case .RoomItems:
@@ -53,7 +54,7 @@ class RoomViewController: UIViewController, UITableViewDataSource, UITableViewDe
         case .RoomService:
             let vc = pushViewController(storyBoard: "Menu", id: "MenuViewController") as! MenuViewController
             vc.restaurant = hotel.roomService
-            vc.isRoomService = true
+            vc.order = Order6(category: .RoomService)
         default:
             break;
         }
@@ -69,7 +70,7 @@ class RoomHeaderCell2: UITableViewCell {
     @IBOutlet private weak var headerTitleLabel2: UILabel!
     @IBOutlet private weak var headerLabel2: UILabel!
     @IBOutlet private weak var headerImage2: UIImageView!
-    var tapClosure: ((_ category: Order.Category) -> ())? = nil
+    var tapClosure: ((_ category: OrderCategory) -> ())? = nil
     var row: Int = 0
 
     override func awakeFromNib() {
@@ -90,7 +91,7 @@ class RoomHeaderCell2: UITableViewCell {
         switch row {
         case 0: tapClosure?(.RoomItems)
         case 1: tapClosure?(.Maintenance)
-        case 2: tapClosure?(.LuggageService)
+        case 2: tapClosure?(.Luggage)
         default: break
         }
     }
@@ -115,7 +116,7 @@ class RoomHeaderCell2: UITableViewCell {
             headerTitleLabel1.text = .roomItems
             headerImage1.image = UIImage(named: "Room Items")
             headerTitleLabel2.text = .roomService
-            headerImage2.image = UIImage(named: "In-room dining")
+            headerImage2.image = UIImage(named: OrderCategory.RoomService.rawValue)
         case 1:
             headerTitleLabel1.text = .maintenance
             headerImage1.image = UIImage(named: "Maintenance")

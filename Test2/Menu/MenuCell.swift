@@ -38,11 +38,11 @@ class MenuFoodCell: UITableViewCell {
         icon.layer.cornerRadius = icon.bounds.height/2.0
     }
 
-    func display(menuItem: MenuItem2, order: Order, expanded: Bool, orderEnabled: Bool) {
+    func display(menuItem: MenuItem, order: Order6?, expanded: Bool, orderEnabled: Bool) {
         titleLabel.text = menuItem.title
         priceLabel.text = "$" + String(format: "%g", menuItem.price)
-        descriptionLabel.text = menuItem.txt
-        cuisineLabel.text = menuItem.attributes?.joined(separator: " ")
+        descriptionLabel.text = menuItem.text
+        //cuisineLabel.text = menuItem.attributes?.joined(separator: " ")
 
         if icon.image == nil || expanded { smallIconWidthConstraint.isActive = true }
         else { smallIconWidthConstraint.isActive = false }
@@ -50,7 +50,8 @@ class MenuFoodCell: UITableViewCell {
         if largeIcon.image == nil || !expanded { largeIconConstraint.constant = 0 }
         else { largeIconConstraint.constant = UIScreen.main.bounds.height * 0.5 }
 
-        let count = order.getItem(byString: menuItem.title)?.quantity ?? 0
+        //let count = order.getItem(byString: menuItem.title)?.quantity ?? 0
+        let count = order?.getFoodItem(byItem: menuItem)?.quantity ?? 0
         countLabel.text = String(count)
         let isVisible = orderEnabled && (expanded || count > 0)
         quantityStackView.isHidden = !isVisible
@@ -67,10 +68,10 @@ class MenuGroupCell: UITableViewCell {
         groupHeaderLabel.textColor = .orange
     }
 
-    func display(menuItem: MenuItem2) {
+    func display(menuItem: MenuItem) {
         switch menuItem.type {
-            case MenuItem2.SECTION: groupHeaderLabel.font = UIFont.preferredFont(forTextStyle: .title2)
-            case MenuItem2.GROUP :  groupHeaderLabel.font = UIFont.preferredFont(forTextStyle: .title3)
+            case .SECTION: groupHeaderLabel.font = UIFont.preferredFont(forTextStyle: .title2)
+            case .GROUP :  groupHeaderLabel.font = UIFont.preferredFont(forTextStyle: .title3)
             default: break
         }
         groupHeaderLabel.text = menuItem.title

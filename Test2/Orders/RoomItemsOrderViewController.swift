@@ -9,7 +9,7 @@ import UIKit
 import IBPCollectionViewCompositionalLayout
 
 class RoomItemsOrderViewController: UIViewController, UITableViewDataSource {
-    var order: Order = Order(category: .None)
+    var order: Order6 = Order6(category: .RoomItems)
 
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var tableView: UITableView!
@@ -30,19 +30,22 @@ class RoomItemsOrderViewController: UIViewController, UITableViewDataSource {
             return
         }
 
-        var orderNumber = phoneUser.orders.isEmpty ? 1 : phoneUser.orders.first!.number + 1
+        var orderNumber = phoneUser.orders6.isEmpty ? 1 : phoneUser.orders6.first!.number + 1
         if phoneUser.isStaff {
             // filter orders for the specified room number to get the next order number
-            let guestOrders = phoneUser.orders.filter( {$0.roomNumber == roomNumber} )
+            let guestOrders = phoneUser.orders6.filter( {$0.roomNumber == roomNumber} )
             orderNumber = guestOrders.isEmpty ? 1 : guestOrders.first!.number + 1
         }
 
-        order.setCreated(orderNumber: orderNumber, roomNumber: roomNumber)
+        //order.setCreated(orderNumber: orderNumber, roomNumber: roomNumber)
+        order.setStatus(status: .CREATED(at: Date(), by: phoneUser.displayName))
+        order.number = orderNumber
+        order.roomNumber = roomNumber
         if let comment = commentField.text, !comment.isEmpty {
-            order.guestComment = comment
+            order.comment = comment
         }
 
-        let orderInDB = OrderInDB(order: order, roomNumber: roomNumber)
+        let orderInDB = Order6InDB(order: order)
         let errStr = dbProxy.addRecord(record: orderInDB) { _, record in
             if record == nil {
                 DispatchQueue.main.async {
@@ -134,12 +137,12 @@ class RoomItemsOrderViewController: UIViewController, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return order.items.count
+        return order.roomItems.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as! CreateOrderItemCell
-        cell.draw(item: order.items[indexPath.row], category: order.category)
+        cell.draw(item: order.roomItems[indexPath.row], category: order.category)
         return cell
     }
 }
@@ -155,14 +158,14 @@ class CreateOrderItemCell: UITableViewCell {
         contentView.backgroundColor = .clear
     }
 
-    func draw(item: Order.OrderItem, category: Order.Category) {
+    func draw(item: RoomOrderItem, category: OrderCategory) {
         //if let lang = Locale.current.languageCode, let itemList = String.roomItemsList[lang], category == .RoomItems {
         if let itemList = String.roomItemsList[phoneUser.lang], category == .RoomItems {
-            itemLabel.text = itemList[item.name]
+            itemLabel.text = itemList[item.item.name]
         } else {
-            itemLabel.text = item.name
+            itemLabel.text = item.item.name
         }
-        priceLabel.text = item.price > 0.0 ? String(format: "$%.02f", item.price) : ""
+        priceLabel.text = ""
         countLabel.text = String(item.quantity)
     }
 }

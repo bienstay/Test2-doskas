@@ -16,9 +16,9 @@ class InfoViewController: UIViewController, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         initView(tableView: tableView)
-        if #available(iOS 13.0, *) {
-            tableView.backgroundColor = .systemGroupedBackground
-        }
+//        if #available(iOS 13.0, *) {
+//            tableView.backgroundColor = .systemGroupedBackground
+//        }
         tableView.dataSource = self
         tableView.delegate = self
         tableView.backgroundColor = .BBbackgroundColor
@@ -109,7 +109,7 @@ extension InfoViewController {
 }
 
 
-class InfoCell: ShadedTableViewCell {
+class InfoCell: UITableViewCell {
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var subtitleLabel: UILabel!
     @IBOutlet var containerView: UIView!
@@ -119,6 +119,10 @@ class InfoCell: ShadedTableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         selectionStyle = UITableViewCell.SelectionStyle.none
+        backgroundColor = .clear
+        iconImageView.layer.cornerRadius = 12
+        iconImageView.layer.masksToBounds = true
+        iconImageView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner] // Top right corner, Top left corner respectively
     }
 
     func draw(info: InfoItem) {
@@ -131,7 +135,7 @@ class InfoCell: ShadedTableViewCell {
             iconImageView.isHidden = false
         }
     }
-
+/*
     override func layoutSubviews() {
         if orgFrame == nil {
             orgFrame = layer.frame.inset(by: UIEdgeInsets(top: 8, left: 32, bottom: 32, right: 32));
@@ -139,5 +143,5 @@ class InfoCell: ShadedTableViewCell {
         layer.frame = orgFrame ?? .zero
         super.layoutSubviews()
     }
-
+*/
 }

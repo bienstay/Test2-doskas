@@ -64,11 +64,12 @@ class NewRestaurantController: UITableViewController {
             descriptionTextView.layer.masksToBounds = true
         }
     }
+    @IBOutlet var menus: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        initView()
-        
+        initView(tableView: tableView)
+
         // Dismiss keyboard when users tap any blank area of the view
         let tap = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing))
         tap.cancelsTouchesInView = false
@@ -86,8 +87,19 @@ class NewRestaurantController: UITableViewController {
                 photoImageView.kf.setImage(with: url)
             }
             title = restaurant.name
+            fillMenus()
         } else {
             title = "New Restaurant"
+        }
+    }
+
+    private func fillMenus() {
+        menus.text = ""
+        if let r = restaurantToEdit {
+            for m in r.menus {
+                menus.text?.append(m)
+                menus.text?.append("\n")
+            }
         }
     }
 
@@ -166,8 +178,16 @@ extension NewRestaurantController: UITextFieldDelegate {
 extension NewRestaurantController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row == 0 {
-            showImagePicker(nc: self)
+        switch indexPath.row {
+        case 0: showImagePicker(nc: self)
+        case 3:
+            let vc = pushViewController(storyBoard: "Restaurants", id: "MenuList") as! MenuListViewController
+            vc.restaurant = restaurantToEdit!
+            vc.completionCallback = { [weak self] menuList in
+                self?.restaurantToEdit?.menus = menuList
+                self?.fillMenus()
+            }
+        default: break
         }
     }
 }

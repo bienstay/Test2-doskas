@@ -36,12 +36,13 @@ class MenuMainViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        title = restaurant.name
-
+        setupListNavigationBar(title: restaurant.name)
+/*
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationController?.hidesBarsOnSwipe = true
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationController?.navigationBar.tintColor = .black
+ */
 }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

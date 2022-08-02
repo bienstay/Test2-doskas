@@ -190,8 +190,7 @@ extension InfoDetailViewController: UICollectionViewDataSource {
         }
         return UICollectionReusableView()
     }
-    
-    
+
     // try to avoid a crash on iPhoneX
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()

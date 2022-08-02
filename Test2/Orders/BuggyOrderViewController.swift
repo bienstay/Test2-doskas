@@ -9,7 +9,7 @@ import UIKit
 
 class BuggyOrderViewController: UIViewController {
 
-    var order: Order = Order(category: .Buggy)
+    var order: Order6 = Order6(category: .Buggy)
 
     @IBOutlet weak var sendButton: GlossyButton!
     @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
@@ -20,7 +20,7 @@ class BuggyOrderViewController: UIViewController {
     @IBOutlet weak var backgroundPicture: UIImageView!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
 
-    var category: Order.Category = .Buggy
+    var category: OrderCategory = .Buggy
     var locationPicture = UIImage()
     var completionHandler: (() -> Void)?
 
@@ -29,8 +29,18 @@ class BuggyOrderViewController: UIViewController {
             showInfoDialogBox(title: "Room Number", message: "Room number is missing")
             return
         }
-        let orderNumber = phoneUser.orders.isEmpty ? 1 : phoneUser.orders.first!.number + 1
-        if segmentedControl.selectedSegmentIndex == Order.BuggyData.LocationType.Photo.rawValue &&  backgroundPicture.image?.size.width != 0 {
+        order.roomNumber = roomNumber
+
+        var orderNumber = phoneUser.orders6.isEmpty ? 1 : phoneUser.orders6.first!.number + 1
+        order.number = orderNumber
+        
+        if phoneUser.isStaff {
+            // filter orders for the specified room number to get the next order number
+            let guestOrders = phoneUser.orders6.filter( {$0.roomNumber == roomNumber} )
+            orderNumber = guestOrders.isEmpty ? 1 : guestOrders.first!.number + 1
+        }
+
+        if segmentedControl.selectedSegmentIndex == BuggyOrderItem.LocationType.Photo.rawValue &&  backgroundPicture.image?.size.width != 0 {
             storageProxy.uploadImage(forLocation: .NEWS, image: backgroundPicture.image!, imageName: String(roomNumber) + "_" + String(orderNumber)) { error, photoURL in
                 if let photoURL = photoURL {
                     self.finalizeOrderSend(roomNumber: roomNumber, orderNumber: orderNumber, photoURL: photoURL)
@@ -42,12 +52,13 @@ class BuggyOrderViewController: UIViewController {
     }
 
     func finalizeOrderSend(roomNumber: Int, orderNumber: Int, photoURL: String) {
-        order.setCreated(orderNumber: orderNumber, roomNumber: roomNumber)
+        order.setStatus(status: .CREATED(at: Date(), by: phoneUser.displayName))
+        order.number = orderNumber
         if let comment = commentTextView.text, !comment.isEmpty {
-            order.guestComment = comment
+            order.comment = comment
         }
 
-        let locationType = Order.BuggyData.LocationType(rawValue: segmentedControl.selectedSegmentIndex) ?? .Room
+        let locationType = BuggyOrderItem.LocationType(rawValue: segmentedControl.selectedSegmentIndex) ?? .Room
         var locationData = ""
         switch locationType {
             case .Room: break
@@ -56,9 +67,9 @@ class BuggyOrderViewController: UIViewController {
             case .Photo: locationData = photoURL
         }
 
-        order.buggyData = Order.BuggyData(locationType: locationType, locationData: locationData)
+        order.buggyItem = BuggyOrderItem(locationType: locationType, locationData: locationData)
 
-        let orderInDB = OrderInDB(order: order, roomNumber: roomNumber)
+        let orderInDB = Order6InDB(order: order)
         let errStr = dbProxy.addRecord(record: orderInDB) { _, record in
             if record == nil {
                 self.showInfoDialogBox(title: "Error", message: "Order update failed")
@@ -80,7 +91,7 @@ class BuggyOrderViewController: UIViewController {
     }
     
     @IBAction func segmentedIndexChanged(_ sender: UISegmentedControl) {
-        let locationType = Order.BuggyData.LocationType(rawValue: sender.selectedSegmentIndex)
+        let locationType = BuggyOrderItem.LocationType(rawValue: sender.selectedSegmentIndex)
         switch locationType {
         case .Room:
             backgroundPicture.image = UIImage(named: "Buggy")
@@ -149,7 +160,7 @@ class BuggyOrderViewController: UIViewController {
     }
 
     @objc func photoPressed(sender: UIView) {
-        guard segmentedControl.selectedSegmentIndex == Order.BuggyData.LocationType.Photo.rawValue else { return }
+        guard segmentedControl.selectedSegmentIndex == BuggyOrderItem.LocationType.Photo.rawValue else { return }
         showImagePicker(nc: self)
     }
 }

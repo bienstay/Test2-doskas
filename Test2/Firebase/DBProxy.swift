@@ -10,7 +10,7 @@ import UIKit
 
 enum QueryParameter {
     case OrderByRoom(roomNumber: Int)
-    case OrderByCategory(type: Order.Category)
+    case OrderByCategory(type: OrderCategory)
     case OrderByAssignment(id: String)
     case ChatRoom(id: String)
     case AssignedTo(id: String)
@@ -43,7 +43,7 @@ protocol DBProxy {
     func observeOrderChanges()
     func getHotels(completionHandler: @ escaping ([String:String]) -> Void)
     //func getGuests(hotelID: String, index: Int, completionHandler: @ escaping (Int, [(String, GuestInfo)]) -> Void)
-    func updateOrderStatus(orderId: String, newStatus: Order.Status, confirmedBy: String?, deliveredBy: String?, canceledBy: String?)
+    func updateOrderStatus(orderId: String, newStatus: OrderStatus, confirmedBy: String?, deliveredBy: String?, canceledBy: String?)
     func updateLike(group: String, userID: String, itemKey: String, add: Bool)
 
     func translate(textToTranslate: String, targetLanguage: String, completionHandler: @ escaping (String?) -> Void)
@@ -53,7 +53,7 @@ protocol DBProxy {
     func updatePhoneData(phoneUserId: String, phoneID: String, phoneLang: String)
     func writeReview(group: String, id: String, rating: Int, review: String, completionHandler: @ escaping () -> Void)
     func addHotel(hotelId: String, hotelName: String, completionHandler: @ escaping (Error?) -> Void)
-
+    func writeMenuList(restaurantId: String, menuList: [String], completionHandler: @ escaping () -> Void)
     //func updateGuest(hotelId: String, guestId: String, guestData: GuestInDB, completionHandler: @ escaping () -> Void)
     func log(level: Log.LogLevel, s: String)
 
@@ -97,13 +97,13 @@ extension DBProxy {
 }
 
 extension DBProxy {
-    func updateOrderStatus(orderId: String, newStatus: Order.Status, confirmedBy: String?) {
+    func updateOrderStatus(orderId: String, newStatus: OrderStatus, confirmedBy: String?) {
         updateOrderStatus(orderId: orderId, newStatus: newStatus, confirmedBy: confirmedBy, deliveredBy: nil, canceledBy: nil)
     }
-    func updateOrderStatus(orderId: String, newStatus: Order.Status, deliveredBy: String?) {
+    func updateOrderStatus(orderId: String, newStatus: OrderStatus, deliveredBy: String?) {
         updateOrderStatus(orderId: orderId, newStatus: newStatus, confirmedBy: nil, deliveredBy: deliveredBy, canceledBy: nil)
     }
-    func updateOrderStatus(orderId: String, newStatus: Order.Status, canceledBy: String?) {
+    func updateOrderStatus(orderId: String, newStatus: OrderStatus, canceledBy: String?) {
         updateOrderStatus(orderId: orderId, newStatus: newStatus, confirmedBy: nil, deliveredBy: nil, canceledBy: canceledBy)
     }
 }
