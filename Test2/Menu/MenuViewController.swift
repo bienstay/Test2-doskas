@@ -20,11 +20,13 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBAction func orderSummaryPressed(_ sender: UIButton) {
         guard let order = order else { return }
         let storyboard = UIStoryboard(name: "OrderSummary", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "CreateOrder") as! RoomItemsOrderViewController
+        let vc = storyboard.instantiateViewController(withIdentifier: "OrderConfirmation") as! OrderConfirmationViewController
         vc.order = order
-        vc.completionHandler = { self.clearOrder() }
+        //vc.completionHandler = { order, _ in self.clearOrder() }
+        vc.completionHandler = { [weak self] order, _ in self?.order = order }
         self.pushOrPresent(viewController: vc)
     }
+
     @IBOutlet weak var orderSummaryButton: UIButton!
     @IBOutlet weak var orderSummaryCount: UILabel!
     @IBOutlet weak var orderSummaryImage: UIImageView!
@@ -33,6 +35,7 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet private weak var headerLabel: UILabel!
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var orderShortSummaryView: UIView!
+    @IBOutlet private weak var orderShortSummary2View: UIView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,17 +46,21 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
         tableView.backgroundColor = .offWhiteVeryLight
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        
+
         orderShortSummaryView.layer.cornerRadius = 20
+        orderShortSummary2View.layer.cornerRadius = 20
         orderSummaryConstraint.constant = -80
 
-        orderShortSummaryView.isHidden = (order == nil)
-        
+        orderShortSummaryView.isHidden = true//(order == nil)
+        orderShortSummary2View.isHidden = (order == nil)
+
         for key in restaurant.menus {
             if let menu = hotel.menus[key] {
                 menus.append(menu)
             }
         }
+        
+        if order != nil { clearOrder() }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -68,6 +75,7 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
         UIView.animate(withDuration: 0.5, animations: { self.tableView.alpha = 1 })
 
         orderShortSummaryView.superview?.layoutIfNeeded()
+        orderShortSummary2View.superview?.layoutIfNeeded()
     }
 
     func resetDisplayData() {
@@ -171,6 +179,7 @@ extension MenuViewController {
 
     func clearOrder() {
         order = Order6(category: .RoomService)
+        order?.roomNumber = phoneUser.roomNumber ?? 0
         expandedCells = []
         orderSummaryConstraint.constant = -80
         self.view.layoutIfNeeded()

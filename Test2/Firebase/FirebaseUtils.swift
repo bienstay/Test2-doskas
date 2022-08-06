@@ -77,6 +77,18 @@ extension FirebaseDatabase {
         }
     }
 
+    func updateOrderStatus(order: Order6) {
+        let orderRef = ORDERS_DB_REF.child("/\(order.id)")
+        if let json = try? JSONEncoder().encode(order.statusHistory), let dictionary = try? JSONSerialization.jsonObject(with: json) {
+            let childUpdates:[String : Any] = ["statusHistory": dictionary]
+            orderRef.updateChildValues(childUpdates) { (error, dbref) in
+                if let error = error {
+                    Log.log(level: .ERROR, "Error updating order status \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+
     func updateLike(group: String, userID: String, itemKey: String, add: Bool) {
         let dbRef = LIKES_DB_REF
         let childUpdates:[String : Any] = [

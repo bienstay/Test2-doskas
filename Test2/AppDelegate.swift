@@ -50,7 +50,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // always register for notifications, user can change permission outside the app, in system settings
         UIApplication.shared.registerForRemoteNotifications()
 
-        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "Verdana", size: 14)!], for: .normal)
+        //UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont(name: "Verdana", size: 12)!], for: .normal)
+        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.font: UIFont.systemFont(ofSize: 13.0)], for: .normal)
 
         // Check if launched from notification
         if let notificationOption = launchOptions?[.remoteNotification] {

@@ -81,7 +81,7 @@ class BuggyOrderViewController: UIViewController {
                         prepareNotification(id: notificationId, title: .order.localizedUppercase, subtitle: String(self.order.number), body: .created.localizedCapitalized, attachmentFile: "RoomService")
                         if let tabBarController = self.tabBarController {
                             self.navigationController?.popToRootViewController(animated: false)
-                            tabBarController.selectedIndex = 4
+                            tabBarController.selectedIndex = 3
                         }
                     }
 

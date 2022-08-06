@@ -39,20 +39,21 @@ class OrderDetailsCell: UITableViewCell {
     func draw(order: Order6) {
         glossyView.setNeedsDisplay()
         self.order = order
-        if phoneUser.isAllowed(to: .manageOrders) {
-            statusChangeButton.isHidden = false
-            if case .CREATED = order.status {
-                statusChangeButton.setTitle("Confirm", for: .normal)
-            }
-            else if case .CONFIRMED = order.status {
-                statusChangeButton.setTitle("Close", for: .normal)
-            } else {
-                statusChangeButton.isHidden = true
-            }
-        }
-        else {
-            statusChangeButton.isHidden = true
-        }
+        statusChangeButton.isHidden = true
+//        if phoneUser.isAllowed(to: .manageOrders) {
+//            statusChangeButton.isHidden = false
+//            if case .CREATED = order.status {
+//                statusChangeButton.setTitle("Confirm", for: .normal)
+//            }
+//            else if case .CONFIRMED = order.status {
+//                statusChangeButton.setTitle("Close", for: .normal)
+//            } else {
+//                statusChangeButton.isHidden = true
+//            }
+//        }
+//        else {
+//            statusChangeButton.isHidden = true
+//        }
 
         categoryImage.image = UIImage(named: order.category.rawValue)
         idLabel.text = String(order.number)
@@ -60,7 +61,7 @@ class OrderDetailsCell: UITableViewCell {
         roomNumberLabel.text = String(order.roomNumber)
         //descriptionLabel.text = order.category.toString()
         statusLabel.text = order.status.toString()
-        timeLabel.text = order.status.done.at.formatForDisplay()
+        timeLabel.text = order.status.done.at.formatShort()
 
         switch order.status {
             case .CREATED: statusLabel.textColor = .red

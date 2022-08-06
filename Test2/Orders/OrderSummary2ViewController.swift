@@ -12,6 +12,8 @@ import MapKit
 class OrderSummary2ViewController: UIViewController, UITableViewDataSource {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var idLabel: UILabel!
+    var statusChangeButton: UIBarButtonItem? = nil
+
     var order: Order6 = Order6(category: .None)
 
     private enum Section: Int, CaseIterable {
@@ -25,11 +27,22 @@ class OrderSummary2ViewController: UIViewController, UITableViewDataSource {
         tableView.dataSource = self
         tableView.delegate = self
         idLabel.text = order.id
+
+//        if #available(iOS 15.0, *) {
+//            tableView.sectionHeaderTopPadding = 0
+//        }
+
+        NotificationCenter.default.addObserver(self, selector: #selector(onOrdersUpdated(_:)), name: .ordersUpdated, object: nil)
+
+        let barButton = createBarButtonItem(target: self, action: #selector(statusChangeButtonPressed))
+        statusChangeButton = barButton
+        self.navigationItem.rightBarButtonItem = barButton
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupListNavigationBar(largeTitle: false, title: .order + " " + String(order.number) + " - " + order.category.toString())
+        updateStatusLabelsAndButtons()
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -102,6 +115,79 @@ extension OrderSummary2ViewController: UITableViewDelegate {
         default: return nil
         }
     }
+}
+
+extension OrderSummary2ViewController {
+    @IBAction func statusChangeButtonPressed(_ sender: UIBarButtonItem) {
+        switch order.status {
+        case .CREATED:
+            if phoneUser.isStaff {
+                order.setStatus(status: .CONFIRMED(at: Date(), by: phoneUser.displayName))
+                dbProxy.updateOrderStatus(order: order)
+                //dbProxy.updateOrderStatus(orderId: order.id, newStatus: .CONFIRMED(at: Date(), by: phoneUser.displayName), confirmedBy: phoneUser.displayName)
+            } else {
+                askToCancel()
+            }
+        case .CONFIRMED:
+            if phoneUser.isStaff {
+                order.setStatus(status: .DELIVERED(at: Date(), by: phoneUser.displayName))
+                dbProxy.updateOrderStatus(order: order)
+                //dbProxy.updateOrderStatus(orderId: order.id, newStatus: .DELIVERED(at: Date(), by: phoneUser.displayName), deliveredBy: phoneUser.displayName)
+            }
+        default: break
+        }
+    }
+
+    func askToCancel() {
+        let cancelAlert = UIAlertController(title: .cancel.localizedUppercase, message: .confirm, preferredStyle: UIAlertController.Style.alert)
+        cancelAlert.addAction(UIAlertAction(title: .yes, style: .destructive, handler: { [weak self] (action: UIAlertAction!) in
+            //dbProxy.updateOrderStatus(orderId: self.order.id, newStatus: .CANCELED(at: Date(), by: phoneUser.displayName), canceledBy: phoneUser.displayName)
+            guard let self = self else { return }
+            self.order.setStatus(status: .CANCELED(at: Date(), by: phoneUser.displayName))
+            dbProxy.updateOrderStatus(order: self.order)
+        }))
+        cancelAlert.addAction(UIAlertAction(title: .no, style: .cancel, handler: { (action: UIAlertAction!) in
+        }))
+        present(cancelAlert, animated: true, completion: nil)
+    }
+    
+    func updateStatusLabelsAndButtons() {
+        guard let button = statusChangeButton?.customView as? UIButton else { return }
+        if phoneUser.isAllowed(to: .manageOrders) {
+            button.isHidden = false
+            switch order.status {
+            case .CREATED:   button.setTitle(.confirm, for: .normal)
+            case .CONFIRMED: button.setTitle(.finish, for: .normal)
+            default:
+                button.isHidden = true
+                button.setTitle("", for: .normal)
+            }
+        }
+        else if !phoneUser.isStaff {
+            switch order.status {
+            case .CREATED:
+                button.setTitle(.cancel, for: .normal)
+                button.isHidden = false
+            default:
+                button.setTitle("", for: .normal)
+                button.isHidden = true
+            }
+        }
+        else {
+            button.isHidden = true
+        }
+    }
+
+    @objc func onOrdersUpdated(_ notification: Notification) {
+        if let or = phoneUser.orders6.first(where: { $0.id == order.id }) {
+            order = or
+        }
+        DispatchQueue.main.async {
+            self.updateStatusLabelsAndButtons()
+            self.tableView.reloadData()
+        }
+    }
+
 }
 
 class OrderSummaryHeaderCell: UITableViewCell {
@@ -221,12 +307,14 @@ class OrderSummaryFoodItemCell: UITableViewCell {
         addonsLabel.text = ""
         addonsLabel.isHidden = item.addonCount == nil
         if let addonCount = item.addonCount {
+            var printNewline = false
             for i in 0...addonCount.count - 1 {
                 let count = addonCount[i]
                 let title = item.item.addons?[i].title ?? ""
                 if count > 0 {
-                    if i > 0 { addonsLabel.text?.append("\n") }
+                    if printNewline { addonsLabel.text?.append("\n") }
                     addonsLabel.text?.append("\(count)  \(title)")
+                    printNewline = true
                 }
             }
         }

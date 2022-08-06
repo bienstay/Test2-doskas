@@ -43,6 +43,11 @@ class MenuItem2ViewController: UIViewController, UICollectionViewDataSource, UIC
         setupTransparentNavigationBar(collectionView: collectionView)
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        endTransparentNavigationBar()
+    }
+
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return Sections.allCases.count
     }
@@ -319,8 +324,10 @@ class AddonsCell: UICollectionViewCell {
 }
 
 class TotalCell: UICollectionViewCell {
-    @IBOutlet var priceLabel: UILabel!
+    @IBOutlet weak var priceLabel: UILabel!
+    @IBOutlet weak var addButton: UIButton!
     func configure(food: FoodOrderItem?) {
+        addButton.isEnabled = food?.quantity ?? 0 > 0
         priceLabel.text = String(food?.totalPrice ?? 0)
     }
 }

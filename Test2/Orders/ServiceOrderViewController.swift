@@ -59,7 +59,7 @@ class ServiceOrderViewController: UIViewController {
                     prepareNotification(id: notificationId, title: .order.localizedUppercase, subtitle: String(self.order.number), body: .created.localizedCapitalized, attachmentFile: "RoomService")
                     if let tabBarController = self.tabBarController {
                         self.navigationController?.popToRootViewController(animated: false)
-                        tabBarController.selectedIndex = 4
+                        tabBarController.selectedIndex = 3
                     }
                 }
             }
@@ -82,8 +82,8 @@ class ServiceOrderViewController: UIViewController {
         roomNumberTextField.isEnabled = phoneUser.isStaff
         roomNumberTextField.keyboardType = .numberPad
 
-        //backgroundPicture.image = UIImage(named: order.category.rawValue)
-        backgroundPicture.image = UIImage(named: order.category.toString())
+        backgroundPicture.image = UIImage(named: order.category.rawValue)
+        //backgroundPicture.image = UIImage(named: order.category.toString())
 
         commentTextView.layer.borderColor = UIColor.BBseparatorColor.cgColor
         commentTextView.layer.borderWidth = 1

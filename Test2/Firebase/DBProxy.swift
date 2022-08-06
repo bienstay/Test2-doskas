@@ -43,7 +43,8 @@ protocol DBProxy {
     func observeOrderChanges()
     func getHotels(completionHandler: @ escaping ([String:String]) -> Void)
     //func getGuests(hotelID: String, index: Int, completionHandler: @ escaping (Int, [(String, GuestInfo)]) -> Void)
-    func updateOrderStatus(orderId: String, newStatus: OrderStatus, confirmedBy: String?, deliveredBy: String?, canceledBy: String?)
+    func updateOrderStatus(order: Order6)
+    //func updateOrderStatus(orderId: String, newStatus: OrderStatus, confirmedBy: String?, deliveredBy: String?, canceledBy: String?)
     func updateLike(group: String, userID: String, itemKey: String, add: Bool)
 
     func translate(textToTranslate: String, targetLanguage: String, completionHandler: @ escaping (String?) -> Void)
@@ -95,7 +96,7 @@ extension DBProxy {
         unsubscribe(t: t, subNode: nil, parameter: nil)
     }
 }
-
+/*
 extension DBProxy {
     func updateOrderStatus(orderId: String, newStatus: OrderStatus, confirmedBy: String?) {
         updateOrderStatus(orderId: orderId, newStatus: newStatus, confirmedBy: confirmedBy, deliveredBy: nil, canceledBy: nil)
@@ -107,7 +108,7 @@ extension DBProxy {
         updateOrderStatus(orderId: orderId, newStatus: newStatus, confirmedBy: nil, deliveredBy: nil, canceledBy: canceledBy)
     }
 }
-
+*/
 /*
 extension DBProxy {
     func uploadImage(image: UIImage, forLocation: PhotoLocation, completionHandler: @escaping (String) -> Void) {

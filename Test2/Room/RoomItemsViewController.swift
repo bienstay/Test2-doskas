@@ -62,9 +62,10 @@ class RoomItemsViewController: UIViewController, UITableViewDataSource, UITableV
         orderSummaryConstraint.constant = -80
         orderShortSummaryView.setup { [weak self] in
             guard let self = self else { return }
-            let vc = self.pushViewController(storyBoard: "OrderSummary", id: "CreateOrder") as! RoomItemsOrderViewController
-            vc.order = self.order
-            vc.completionHandler = { [weak self] in self?.clearOrder() }
+            if let vc = self.pushViewController(storyBoard: "OrderSummary", id: "OrderConfirmation") as? OrderConfirmationViewController {
+                vc.order = self.order
+                vc.completionHandler = { [weak self] order, _ in self?.clearOrder() }
+            }
         }
 
         clearOrder()
@@ -183,6 +184,7 @@ extension RoomItemsViewController {
 
     func clearOrder() {
         order = Order6(category: .RoomItems)
+        order.roomNumber = phoneUser.roomNumber ?? 0
         expandedCells = []
         orderSummaryConstraint.constant = -80
         view.layoutIfNeeded()

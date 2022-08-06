@@ -122,6 +122,7 @@
 		06B76A22288D273F00BDC879 /* Order3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06B76A21288D273F00BDC879 /* Order3.swift */; };
 		06B76A24288D666D00BDC879 /* Order4.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06B76A23288D666D00BDC879 /* Order4.swift */; };
 		06B76A262891392E00BDC879 /* OrderSummary2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06B76A252891392D00BDC879 /* OrderSummary2ViewController.swift */; };
+		06B76A28289B2B5200BDC879 /* OrderConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06B76A27289B2B5200BDC879 /* OrderConfirmationViewController.swift */; };
 		06B9776527F5809800E2ACA1 /* BarcodeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06B9776427F5809800E2ACA1 /* BarcodeData.swift */; };
 		06C32ADD28245FF100228A40 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C32ADC28245FF100228A40 /* MenuView.swift */; };
 		06C32ADF28287ACA00228A40 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06C32ADE28287ACA00228A40 /* LoginViewController.swift */; };
@@ -272,6 +273,7 @@
 		06B76A21288D273F00BDC879 /* Order3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Order3.swift; sourceTree = "<group>"; };
 		06B76A23288D666D00BDC879 /* Order4.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Order4.swift; sourceTree = "<group>"; };
 		06B76A252891392D00BDC879 /* OrderSummary2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSummary2ViewController.swift; sourceTree = "<group>"; };
+		06B76A27289B2B5200BDC879 /* OrderConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderConfirmationViewController.swift; sourceTree = "<group>"; };
 		06B9776427F5809800E2ACA1 /* BarcodeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeData.swift; sourceTree = "<group>"; };
 		06C32ADC28245FF100228A40 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		06C32ADE28287ACA00228A40 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -498,6 +500,7 @@
 				06606DF2270760330023412C /* ServiceOrderViewController.swift */,
 				06137FC927CB388700377F1B /* BuggyOrderViewController.swift */,
 				06B76A252891392D00BDC879 /* OrderSummary2ViewController.swift */,
+				06B76A27289B2B5200BDC879 /* OrderConfirmationViewController.swift */,
 			);
 			path = Orders;
 			sourceTree = "<group>";
@@ -843,6 +846,7 @@
 				06C32ADF28287ACA00228A40 /* LoginViewController.swift in Sources */,
 				067A4D852807F64B0043F50D /* FirebaseAuth.swift in Sources */,
 				069DB35A263B0FB800C91468 /* ReviewViewController.swift in Sources */,
+				06B76A28289B2B5200BDC879 /* OrderConfirmationViewController.swift in Sources */,
 				0683A1F026516FF50000D122 /* MenuPageViewController.swift in Sources */,
 				062D1A0926EE247500A14FDE /* ConfigViewController.swift in Sources */,
 				0632D452266ADF66001F7036 /* OrderDetailsCell.swift in Sources */,

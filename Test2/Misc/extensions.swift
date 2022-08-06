@@ -378,7 +378,7 @@ extension Date {
     }
     func formatShort() -> String {
         let formatter3 = DateFormatter()
-        formatter3.dateFormat = "MMM dd, HH:mm:ss"
+        formatter3.dateFormat = "MMM dd, HH:mm"
         return formatter3.string(from: self)
     }
     func formatForDB() -> String {
@@ -585,9 +585,10 @@ extension UIColor {
 }
 
 func createBarButtonItem(target: Any?, action: Selector) -> UIBarButtonItem {
-    let profileButton = UIButton()
+    //let profileButton = UIButton()
+    let profileButton = ActionButton()
     profileButton.frame = CGRect(x:0, y:0, width:80, height:40)
-    profileButton.backgroundColor = UIColor.gray
+    //profileButton.backgroundColor = UIColor.gray
     profileButton.layer.cornerRadius = 10.0
     profileButton.addTarget(target, action: action, for: .touchUpInside)
 
