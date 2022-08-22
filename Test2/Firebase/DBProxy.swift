@@ -46,6 +46,7 @@ protocol DBProxy {
     func updateOrderStatus(order: Order6)
     //func updateOrderStatus(orderId: String, newStatus: OrderStatus, confirmedBy: String?, deliveredBy: String?, canceledBy: String?)
     func updateLike(group: String, userID: String, itemKey: String, add: Bool)
+    func updateReview(group: String, id: String, review: Review)
 
     func translate(textToTranslate: String, targetLanguage: String, completionHandler: @ escaping (String?) -> Void)
     func translateChat(chatRoom: String, chatID: String, textToTranslate: String, targetLanguage: String, completionHandler: @ escaping (String?) -> Void)

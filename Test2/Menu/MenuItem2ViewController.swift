@@ -9,6 +9,8 @@ import UIKit
 
 class MenuItem2ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var reviewButton: UIButton!
+
     enum Sections:Int, CaseIterable {
         case header
         case attributes
@@ -17,12 +19,14 @@ class MenuItem2ViewController: UIViewController, UICollectionViewDataSource, UIC
         case choices
         case addons
         case total
+        case reviews
         case empty
     }
     var foodOrder: FoodOrderItem? = nil
     var choiceIndex: Int = 0
     var menuItem: MenuItem = MenuItem()
     var completionHandler: ((FoodOrderItem) -> Void)? = nil
+    var reviewsManager = ReviewsManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,11 +40,21 @@ class MenuItem2ViewController: UIViewController, UICollectionViewDataSource, UIC
         if let foodOrder = foodOrder {
             menuItem = foodOrder.item
         }
+        
+        reviewsManager.delegate = self
+        reviewsManager.start(group: "menuItem", id: menuItem.id)
+        collectionView.register(UINib(nibName: "ReviewCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ReviewCell")
+        collectionView.register(UINib(nibName: "ReviewCollectionViewHeader", bundle: nil), forSupplementaryViewOfKind: "review-header-kind", withReuseIdentifier: "ReviewHeader")
+    }
+
+    deinit {
+        reviewsManager.stop()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupTransparentNavigationBar(collectionView: collectionView)
+        reviewButton.isHidden = phoneUser.isStaff
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -61,6 +75,7 @@ class MenuItem2ViewController: UIViewController, UICollectionViewDataSource, UIC
         case .choices: return menuItem.choices?.isEmpty ?? true ? 0 : 1
         case .addons: return menuItem.addons?.count ?? 0
         case .total: return foodOrder != nil ? 1 : 0
+        case .reviews: return reviewsManager.reviews.count
         default: return 0
         }
     }
@@ -131,6 +146,11 @@ class MenuItem2ViewController: UIViewController, UICollectionViewDataSource, UIC
                 cell.configure(food: foodOrder)
                 return cell
             }
+        case .reviews:
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ReviewCell", for: indexPath) as! ReviewCollectionViewCell
+            let r = reviewsManager.reviews[indexPath.row]
+            cell.draw(timestamp: r.timestamp, rating: r.rating, review: r.review, roomNumber: r.roomNumber, translation: reviewsManager.translations[r.id ?? ""])
+            return cell
         default:
             return UICollectionViewCell()
         }
@@ -202,6 +222,9 @@ class MenuItem2ViewController: UIViewController, UICollectionViewDataSource, UIC
             case .total:
                 return self?.createRowSection(bottomMargin: 48)
 
+            case .reviews:
+                return self?.reviewsManager.reviews.isEmpty ?? true ? nil : ReviewCollectionViewCell.createLayoutSection()
+
             case .empty:
                 return self?.createRowSection(showFooter: true)
 
@@ -217,6 +240,10 @@ class MenuItem2ViewController: UIViewController, UICollectionViewDataSource, UIC
 
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         switch kind {
+        case "review-header-kind":
+            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "ReviewHeader", for: indexPath)// as? HeaderSupplementaryView
+            //headerView.isHidden = reviewsManager.reviews.isEmpty
+            return headerView
         case UICollectionView.elementKindSectionFooter:
             let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "RowSectionFooter", for: indexPath)// as? HeaderSupplementaryView
             return footerView
@@ -233,7 +260,36 @@ class MenuItem2ViewController: UIViewController, UICollectionViewDataSource, UIC
         }
         return UICollectionReusableView()
     }
+    
+    @IBAction func reviewButtonPressed(_ sender: UIButton) {
+        if let vc = self.prepareModal(storyBoard: "Reviews", id: "RateReview") as? RateReviewViewController {
+            vc.group = "menuItem"
+            vc.id = menuItem.id
+            vc.reviewTitle = menuItem.title
+            vc.reviewedImage = UIImage(named: "JaNaPlaya")
+            present(vc, animated: true)
+        }
+    }
 }
+
+extension MenuItem2ViewController: ReviewsManagerDelegate {
+    func reviewsUpdated(reviewManager: ReviewsManager) {
+        DispatchQueue.main.async {
+            //self.collectionView.reloadSections([Sections.review.rawValue])
+            self.collectionView.reloadData()
+            self.collectionView.collectionViewLayout.invalidateLayout()
+        }
+    }
+    
+    func reviewsTranslationsUpdated(reviewManager: ReviewsManager) {
+        DispatchQueue.main.async {
+            //self.collectionView.reloadSections([Sections.review.rawValue])
+            self.collectionView.reloadData()
+            self.collectionView.collectionViewLayout.invalidateLayout()
+        }
+    }
+}
+
 
 class HeaderCell: UICollectionViewCell {
     @IBOutlet weak var picture: UIImageView!

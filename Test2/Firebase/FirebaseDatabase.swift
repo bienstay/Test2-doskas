@@ -104,6 +104,9 @@ final class FirebaseDatabase: DBProxy {
                 return FACILITIES_DB_REF
             case is MenuInDB.Type:
                 return MENUS_DB_REF
+            case is MenuItemInDB.Type:
+                if let child = subNode { return MENUS_DB_REF.child(child).child("items") }
+                else { return nil }
             case is ChatRoomInDB.Type:
                 return CHATROOMS_DB_REF
             case is ChatMessage.Type:
@@ -198,7 +201,7 @@ final class FirebaseDatabase: DBProxy {
                     }
                 }
             } else {
-                errString = "dbRef nil for type \(T.self) and key \(String(describing: key))"
+                errString = "Error: dbRef nil for type \(T.self) and key \(String(describing: key))"
             }
         }
         else {
@@ -312,7 +315,7 @@ final class FirebaseDatabase: DBProxy {
             var objects: [String:Any] = [:]
             Log.log(level: .DEBUG, "Adding \(snapshot.children.allObjects.count) new objects")
             for child in snapshot.children {
-                guard let item = child as? DataSnapshot, let value = item.value, JSONSerialization.isValidJSONObject(value) else {
+                guard let item = child as? DataSnapshot, let value = item.value/*, JSONSerialization.isValidJSONObject(value)*/ else {
                     Log.log(level:.ERROR, "Invalid JSON: \(child) in query: \(dbRef)")
                     return
                 }

@@ -40,6 +40,11 @@ class RateReviewViewController: UIViewController {
         if let reviewTitle = reviewTitle {
             rateLabel.text = reviewTitle
         }
+        
+        // Dismiss keyboard when users tap any blank area of the view
+        let tap = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
     }
 
     @IBAction func rateButtonPressed(_ sender: UIButton) {
@@ -52,8 +57,27 @@ class RateReviewViewController: UIViewController {
     @IBAction func sendButtonPressed(_ sender: UIButton) {
         guard let group = group, let id = id else { return }
         let review = Review(id: nil, timestamp: Date(), rating: rating, review: reviewTextView.text, roomNumber: phoneUser.roomNumber, userId: phoneUser.id)
+        dbProxy.updateReview(group: group, id: id, review: review)
+        dismiss(animated: true)
+
+/*
         _ = dbProxy.addRecord(key: nil, subNode: "\(group)/\(id)", record: review) { [weak self] _,_ in
                self?.dismiss(animated: true)
+
+        var totalsPath: String { "feedback/reviews/totals/\(group)" }
+
+        let dbRef = REVIEWS_DB_REF
+        let childUpdates:[String : Any] = [
+            "/global/\(group)/\(itemKey)/count" : ServerValue.increment(add ? 1 : -1),
+            "/perUser/\(userID)/\(group)/\(itemKey)" : (add ? true : false)
+        ]
+
+        dbRef.updateChildValues(childUpdates) { (error, dbref) in
+            if let error = error {
+                Log.log(level: .ERROR, "Error updating likes \(error.localizedDescription)")
+            }
         }
+*/
+            
     }
 }

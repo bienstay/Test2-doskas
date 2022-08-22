@@ -112,7 +112,7 @@ extension FoodOrderItem {
         choiceIndex = f.choiceIndex
         addonCount = f.addonCount
         quantity = f.quantity
-        item = MenuItem(f.item)
+        item = MenuItem(key: f.item.id ?? "", dbItem: f.item)
     }
 }
 

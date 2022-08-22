@@ -259,8 +259,8 @@ class InfoTextCell: UICollectionViewCell {
     }
 
     func draw(infoItem: InfoItem) {
-        subtitleLabel.text = infoItem.subtitle
-        reviewTextLabel.text = infoItem.text
+        subtitleLabel.text = infoItem._subtitle
+        reviewTextLabel.text = infoItem._text
     }
 }
 

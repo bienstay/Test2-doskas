@@ -307,7 +307,7 @@ class Hotel {
     func restaurantsUpdated(allRestaurants: [String:RestaurantInDB]) {
         restaurants = []
         allRestaurants.forEach( {
-            let r = Restaurant(r: $0.1)
+            var r = Restaurant(r: $0.1)
             r.id = $0.0
             restaurants.append(r)
         } )

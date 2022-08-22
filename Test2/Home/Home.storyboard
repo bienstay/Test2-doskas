@@ -177,8 +177,59 @@
                                             <outlet property="titleLabel" destination="v5X-2p-iFS" id="ybg-oY-Zr4"/>
                                         </connections>
                                     </collectionViewCell>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="HomeTitleCell" id="TW5-T1-ayD" customClass="HomeTitleCell" customModule="Test2" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="HomeItemsCell2" id="F77-6n-J19" customClass="HomeItemsCell2" customModule="Test2" customModuleProvider="target">
                                         <rect key="frame" x="5" y="205" width="200" height="200"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" insetsLayoutMarginsFromSafeArea="NO" id="f4g-kO-QkZ">
+                                            <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="fKt-3b-267">
+                                                    <rect key="frame" x="4" y="4" width="192" height="192"/>
+                                                    <subviews>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DzU-Nr-9wj" customClass="RoundShadedView" customModule="Test2" customModuleProvider="target">
+                                                            <rect key="frame" x="25.5" y="0.0" width="141" height="141"/>
+                                                            <subviews>
+                                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Offers" translatesAutoresizingMaskIntoConstraints="NO" id="ru4-rK-BQY">
+                                                                    <rect key="frame" x="24" y="24" width="93" height="93"/>
+                                                                </imageView>
+                                                            </subviews>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" secondItem="DzU-Nr-9wj" secondAttribute="height" multiplier="1:1" id="5OO-dp-lrj"/>
+                                                                <constraint firstAttribute="trailing" secondItem="ru4-rK-BQY" secondAttribute="trailing" constant="24" id="D1s-hE-jjb"/>
+                                                                <constraint firstItem="ru4-rK-BQY" firstAttribute="top" secondItem="DzU-Nr-9wj" secondAttribute="top" constant="24" id="Pzk-Yc-dg9"/>
+                                                                <constraint firstAttribute="bottom" secondItem="ru4-rK-BQY" secondAttribute="bottom" constant="24" id="dTq-c8-XjT"/>
+                                                                <constraint firstItem="ru4-rK-BQY" firstAttribute="leading" secondItem="DzU-Nr-9wj" secondAttribute="leading" constant="24" id="iY3-Tu-Leg"/>
+                                                            </constraints>
+                                                        </view>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wg3-BA-NFc">
+                                                            <rect key="frame" x="73" y="145" width="46" height="47"/>
+                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstItem="DzU-Nr-9wj" firstAttribute="height" secondItem="wg3-BA-NFc" secondAttribute="height" multiplier="3" id="WIA-hS-Ffg"/>
+                                                    </constraints>
+                                                </stackView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="fKt-3b-267" firstAttribute="leading" secondItem="f4g-kO-QkZ" secondAttribute="leading" constant="4" id="Hex-qc-QHh"/>
+                                                <constraint firstItem="fKt-3b-267" firstAttribute="top" secondItem="f4g-kO-QkZ" secondAttribute="top" constant="4" id="JSa-Sl-20f"/>
+                                                <constraint firstAttribute="trailing" secondItem="fKt-3b-267" secondAttribute="trailing" constant="4" id="Om7-RK-8cA"/>
+                                                <constraint firstAttribute="bottom" secondItem="fKt-3b-267" secondAttribute="bottom" constant="4" id="qaU-JK-KiK"/>
+                                            </constraints>
+                                        </collectionViewCellContentView>
+                                        <connections>
+                                            <outlet property="outerView" destination="DzU-Nr-9wj" id="80E-Ka-aqf"/>
+                                            <outlet property="picture" destination="ru4-rK-BQY" id="B1r-oG-wBp"/>
+                                            <outlet property="titleLabel" destination="wg3-BA-NFc" id="ypb-yY-vwM"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="HomeTitleCell" id="TW5-T1-ayD" customClass="HomeTitleCell" customModule="Test2" customModuleProvider="target">
+                                        <rect key="frame" x="209" y="205" width="200" height="200"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="4mt-RQ-rzy">
                                             <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
@@ -677,6 +728,7 @@
     <resources>
         <image name="Home" width="27.5" height="25"/>
         <image name="JaNaPlaya" width="871.469970703125" height="999.8499755859375"/>
+        <image name="Offers" width="361.04998779296875" height="284.98001098632812"/>
         <image name="bonvoy" width="31.420000076293945" height="31.420000076293945"/>
         <image name="bubb" width="128" height="128"/>
         <image name="facebook" width="48" height="48"/>

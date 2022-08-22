@@ -33,7 +33,9 @@ struct RestaurantInDB: Codable {
     }
 }
 
-class Restaurant: POI, Codable {
+struct Restaurant: POI, Codable {
+    init() {}
+    
     var id: String = ""
     var name: String = ""
     var type: POIType { return .Restaurant }
@@ -82,9 +84,10 @@ class Restaurant: POI, Codable {
     //lazy var menus: [Menu] = []
     var menus: [String] = []
 
-    required init() {}
+    //required init() {}
 
-    convenience init(r: RestaurantInDB) {
+    //convenience init(r: RestaurantInDB) {
+    init(r: RestaurantInDB) {
         self.init()
         id = r.id ?? ""
         name = r.name

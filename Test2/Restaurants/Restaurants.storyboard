@@ -113,17 +113,17 @@
                                             <rect key="frame" x="0.0" y="0.0" width="361.5" height="120"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="fwT-fT-OyF">
+                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="fwT-fT-OyF">
                                                     <rect key="frame" x="20" y="0.0" width="309.5" height="120"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="MENU LIST" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jua-VZ-JSt">
-                                                            <rect key="frame" x="0.0" y="0.0" width="309.5" height="64.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="309.5" height="102.5"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="K1h-9A-0sw">
-                                                            <rect key="frame" x="0.0" y="68.5" width="309.5" height="51.5"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="K1h-9A-0sw">
+                                                            <rect key="frame" x="0.0" y="106.5" width="309.5" height="13.5"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -308,7 +308,7 @@
                         <outlet property="latitudeTextField" destination="3Af-HF-Yj7" id="Wpb-FW-1lN"/>
                         <outlet property="locationTextField" destination="TaT-3c-skZ" id="s2m-t2-Xw6"/>
                         <outlet property="longitudeTextField" destination="I2n-QJ-0IP" id="kEP-gL-Jr5"/>
-                        <outlet property="menus" destination="K1h-9A-0sw" id="AMY-Ey-hik"/>
+                        <outlet property="menusLabel" destination="K1h-9A-0sw" id="AMY-Ey-hik"/>
                         <outlet property="nameTextField" destination="QF4-3j-f32" id="MHE-7m-Hf3"/>
                         <outlet property="phoneTextField" destination="UId-aK-5YY" id="C2G-e1-y8w"/>
                         <outlet property="photoImageView" destination="vwd-3q-nfp" id="mFd-Zi-dD3"/>

@@ -64,11 +64,15 @@ class NewRestaurantController: UITableViewController {
             descriptionTextView.layer.masksToBounds = true
         }
     }
-    @IBOutlet var menus: UILabel!
+    @IBOutlet var menusLabel: UILabel! {
+        didSet {
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         initView(tableView: tableView)
+        menusLabel.text = "lsjclkashdclajkdc"
 
         // Dismiss keyboard when users tap any blank area of the view
         let tap = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing))
@@ -94,12 +98,13 @@ class NewRestaurantController: UITableViewController {
     }
 
     private func fillMenus() {
-        menus.text = ""
         if let r = restaurantToEdit {
+            var s = "\n"
             for m in r.menus {
-                menus.text?.append(m)
-                menus.text?.append("\n")
+                s.append(m)
+                s.append("\n")
             }
+            menusLabel.text = s
         }
     }
 
@@ -116,7 +121,7 @@ class NewRestaurantController: UITableViewController {
             return
         }
 
-        let restaurant = Restaurant()
+        var restaurant = Restaurant()
         restaurant.name = nameTextField.text ?? ""
         restaurant.cuisines = cuisinesTextField.text ?? ""
         restaurant.description = descriptionTextView.text ?? ""
@@ -125,34 +130,34 @@ class NewRestaurantController: UITableViewController {
         restaurant.location = locationTextField.text ?? ""
         restaurant.geoLatitude = Double(latitudeTextField.text!) ?? 0.0
         restaurant.geoLongitude = Double(longitudeTextField.text!) ?? 0.0
-        
+
+        restaurant.menus = restaurantToEdit?.menus ?? []
+
         if let orgRestaurant = restaurantToEdit {
             restaurant.id = orgRestaurant.id
         }
-        
+
         if photoUpdated {
             storageProxy.uploadImage(forLocation: .RESTAURANTS, image: photoImageView.image!, imageName: restaurant.name) { error, photoURL in
                 if let photoURL = photoURL {
                     restaurant.image = photoURL
-                    let errStr = dbProxy.addRecord(key: restaurant.id, record: restaurant) { _, restaurant in self.closeMe(restaurant) }
+                    let errStr = dbProxy.addRecord(key: restaurant.id, record: RestaurantInDB(r: restaurant)) { _, restaurant in self.closeMe(restaurant) }
                     if let s = errStr { Log.log(s) }
                 }
             }
         } else {
             restaurant.image = restaurantToEdit?.image ?? ""
-            let errStr = dbProxy.addRecord(key: restaurant.id, record: restaurant) { _, restaurant in self.closeMe(restaurant) }   // update only
+            let errStr = dbProxy.addRecord(key: restaurant.id, record: RestaurantInDB(r: restaurant)) { _, restaurant in self.closeMe(restaurant) }   // update only
             if let s = errStr { Log.log(s) }
         }
     }
-    
-    func closeMe(_ restaurant:Restaurant?) {
+
+    func closeMe(_ restaurant:RestaurantInDB?) {
         guard restaurant != nil else {
             showInfoDialogBox(title: "Error", message: "Restaurant update failed")
             return
         }
-        if let nc = navigationController {
-            nc.popViewController(animated: true)
-        }
+        navigationController?.popViewController(animated: true)
     }
 
     @IBAction func cancelPressed(_ sender: UIBarButtonItem) {
@@ -168,15 +173,9 @@ extension NewRestaurantController: UITextFieldDelegate {
         }
         return true
     }
-/*
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        textField.text = ""
-    }
-*/
 }
 
 extension NewRestaurantController {
-
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.row {
         case 0: showImagePicker(nc: self)
@@ -203,4 +202,3 @@ extension NewRestaurantController: UIImagePickerControllerDelegate, UINavigation
         dismiss(animated: true, completion: nil)
     }
 }
-

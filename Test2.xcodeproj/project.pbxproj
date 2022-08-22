@@ -70,6 +70,7 @@
 		067A4D832807F4C70043F50D /* AuthProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067A4D822807F4C60043F50D /* AuthProxy.swift */; };
 		067A4D852807F64B0043F50D /* FirebaseAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067A4D842807F64B0043F50D /* FirebaseAuth.swift */; };
 		067A4D872807FBFE0043F50D /* StorageProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067A4D862807FBFE0043F50D /* StorageProxy.swift */; };
+		0682708A28A1AEBF00FDD012 /* NewMenuItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0682708928A1AEBF00FDD012 /* NewMenuItemViewController.swift */; };
 		0683A1E1264EDB540000D122 /* RoomItemsOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0683A1E0264EDB540000D122 /* RoomItemsOrderViewController.swift */; };
 		0683A1EE265154250000D122 /* MenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0683A1ED265154250000D122 /* MenuCell.swift */; };
 		0683A1F026516FF50000D122 /* MenuPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0683A1EF26516FF50000D122 /* MenuPageViewController.swift */; };
@@ -221,6 +222,7 @@
 		067A4D822807F4C60043F50D /* AuthProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthProxy.swift; sourceTree = "<group>"; };
 		067A4D842807F64B0043F50D /* FirebaseAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAuth.swift; sourceTree = "<group>"; };
 		067A4D862807FBFE0043F50D /* StorageProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageProxy.swift; sourceTree = "<group>"; };
+		0682708928A1AEBF00FDD012 /* NewMenuItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMenuItemViewController.swift; sourceTree = "<group>"; };
 		0683A1E0264EDB540000D122 /* RoomItemsOrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomItemsOrderViewController.swift; sourceTree = "<group>"; };
 		0683A1ED265154250000D122 /* MenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCell.swift; sourceTree = "<group>"; };
 		0683A1EF26516FF50000D122 /* MenuPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuPageViewController.swift; sourceTree = "<group>"; };
@@ -484,6 +486,7 @@
 				0683A1F1265172070000D122 /* MenuMainViewController.swift */,
 				06E046A32881AA41001FBC30 /* MenuItemViewController.swift */,
 				065927122882178E00961095 /* MenuItem2ViewController.swift */,
+				0682708928A1AEBF00FDD012 /* NewMenuItemViewController.swift */,
 			);
 			path = Menu;
 			sourceTree = "<group>";
@@ -873,6 +876,7 @@
 				06F5D161270B516D004931F7 /* ActivitiesViewController.swift in Sources */,
 				062038662641A37500B87708 /* MapViewController.swift in Sources */,
 				06F5D16B270BC7D4004931F7 /* ActivityCell.swift in Sources */,
+				0682708A28A1AEBF00FDD012 /* NewMenuItemViewController.swift in Sources */,
 				06090DD927C7AFC200B85393 /* NewOfferViewController.swift in Sources */,
 				069DB35C263B0FB800C91468 /* RestaurantTableViewController.swift in Sources */,
 				06606DF3270760330023412C /* ServiceOrderViewController.swift in Sources */,

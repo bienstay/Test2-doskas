@@ -142,6 +142,20 @@ class MenuViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
 }
 
+extension MenuViewController {
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        if !phoneUser.isAllowed(to: .editContent) { return nil }
+        let action1 = UIContextualAction(style: .normal, title: "Edit") { action, view, completionHandler in
+            let vc = self.createViewController(storyBoard: "Menu", id: "NewMenuItem") as! NewMenuItemViewController
+            vc.menuItemToEdit = self.menus[self.menuIndex].items[indexPath.row]
+            vc.menuName = self.menus[self.menuIndex].name
+            self.navigationController?.pushViewController(vc, animated: true)
+            completionHandler(true)
+        }
+        action1.backgroundColor = .orange
+        return UISwipeActionsConfiguration(actions: [action1])
+    }
+}
 
 extension MenuViewController {
 

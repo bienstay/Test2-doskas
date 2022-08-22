@@ -102,6 +102,16 @@ extension FirebaseDatabase {
             }
         }
     }
+
+    func updateReview(group: String, id: String, review: Review) {
+        var updatedReview = review
+        updatedReview.rating += 1  // 0-based in the app, 1-based in the DB
+        _ = dbProxy.addRecord(key: nil, subNode: "\(group)/\(id)", record: updatedReview) { _,_ in }
+
+        let dbRef = REVIEWS_DB_REF.child("totals/\(group)/\(id)/\(String(format:"%02d", review.rating))")
+        dbRef.setValue(ServerValue.increment(1))
+        //dbRef.setValue(ServerValue.increment(1), andPriority: updatedReview.rating)
+    }
 }
 
 extension FirebaseDatabase {

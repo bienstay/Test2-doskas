@@ -26,6 +26,7 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
     @IBOutlet weak var chatBarButton: UIBarButtonItem!
     @IBOutlet weak var menuBarButton: UIBarButtonItem!
     var menu: MenuView!
+    let gradientLayer = CAGradientLayer()
 
     var squareSize: Double = 0.0
     var locationManager:CLLocationManager!
@@ -65,6 +66,10 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
     override func viewDidLoad() {
         super.viewDidLoad()
         initView(collectionView: collectionView)
+        
+        collectionView.backgroundColor = .clear
+        self.view.layer.insertSublayer(gradientLayer, at: 0)
+        setBackgroundGradient()
 
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -137,8 +142,8 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
             menuButton.setImage(menuImage, for: .normal)
             menuButton.addTarget(self, action: #selector(menuBarButtonPressed), for: .touchUpInside)
             menuButton.translatesAutoresizingMaskIntoConstraints = false
-            menuButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
-            menuButton.widthAnchor.constraint(equalToConstant: 44).isActive = true
+            menuButton.heightAnchor.constraint(equalToConstant: 33).isActive = true
+            menuButton.widthAnchor.constraint(equalToConstant: 33).isActive = true
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: menuButton)
 
             let chatImage = UIImage(systemName: "text.bubble.rtl", withConfiguration: config)
@@ -147,10 +152,25 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
             chatButton.setImage(chatImage, for: .normal)
             chatButton.addTarget(self, action: #selector(chatButtonPressed), for: .touchUpInside)
             chatButton.translatesAutoresizingMaskIntoConstraints = false
-            chatButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
-            chatButton.widthAnchor.constraint(equalToConstant: 44).isActive = true
+            chatButton.heightAnchor.constraint(equalToConstant: 33).isActive = true
+            chatButton.widthAnchor.constraint(equalToConstant: 33).isActive = true
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: chatButton)
         }
+    }
+
+    private func setBackgroundGradient() {
+        gradientLayer.frame = self.view.bounds
+        gradientLayer.colors = traitCollection.userInterfaceStyle == .light ? [UIColor.white.cgColor, UIColor.white.cgColor, UIColor.lightGray.cgColor, UIColor.lightGray.cgColor, UIColor.white.cgColor] : [UIColor.black.cgColor, UIColor.lightGray.cgColor, UIColor.black.cgColor]
+    }
+
+    override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        setBackgroundGradient()
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        setBackgroundGradient()
     }
 
     func transitionToScanner() {
@@ -311,7 +331,7 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
             cell.draw(title: hotel.config.name)
             return cell
         case .items:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeItemsCell", for: indexPath) as! HomeItemsCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeItemsCell2", for: indexPath) as! HomeItemsCell2
             cell.tag = indexPath.row
             //cell.draw(title: Items.allCases[indexPath.row].rawValue, pictureName: tempIconNames[indexPath.row], color: tempIconColors[indexPath.row])
             cell.draw(item: Items.allCases[indexPath.row], index: indexPath.row)
@@ -382,7 +402,7 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
 
 extension HomeCollectionViewController: UICollectionViewDelegateFlowLayout {
     
-    private static let sectionInsets = UIEdgeInsets(top: 8.0, left: 8.0, bottom: 8.0, right: 8.0)
+    private static let sectionInsets = UIEdgeInsets(top: 32.0, left: 12.0, bottom: 8.0, right: 12.0)
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         switch Section(rawValue: indexPath.section) {
@@ -393,11 +413,11 @@ extension HomeCollectionViewController: UICollectionViewDelegateFlowLayout {
             return CGSize(width: collectionView.bounds.width, height: 40)
         case .items:
             let width = collectionView.bounds.width
-            let numberOfItemsPerRow: CGFloat = 2
-            let spacing: CGFloat = HomeCollectionViewController.sectionInsets.left
+            let numberOfItemsPerRow: CGFloat = 3
+            let spacing: CGFloat = 12//HomeCollectionViewController.sectionInsets.left
             let availableWidth = width - spacing * (numberOfItemsPerRow + 1)
             let itemDimension = floor(availableWidth / numberOfItemsPerRow)
-            return CGSize(width: itemDimension, height: itemDimension)
+            return CGSize(width: itemDimension, height: itemDimension*4/3)
         case .none:
             Log.log(level: .ERROR, "Invalid section in sizeFotItemAt")
             return CGSize.zero
@@ -413,7 +433,7 @@ extension HomeCollectionViewController: UICollectionViewDelegateFlowLayout {
 
         switch Section(rawValue: section) {
         case .header: return UIEdgeInsets.zero
-        case .title: return UIEdgeInsets(top: 12.0, left: 0.0, bottom: 4.0, right: 0.0)
+        case .title: return UIEdgeInsets(top: 24.0, left: 0.0, bottom: 4.0, right: 0.0)
         case .items: return HomeCollectionViewController.sectionInsets
         case .none:
             Log.log(level: .ERROR, "Invalid section in insetForSectionAt")
@@ -426,7 +446,7 @@ extension HomeCollectionViewController: UICollectionViewDelegateFlowLayout {
         switch Section(rawValue: section) {
         case .header: return 0
         case .title: return 0
-        case .items: return HomeCollectionViewController.sectionInsets.left
+        case .items: return 24//HomeCollectionViewController.sectionInsets.left
         case .none:
             Log.log(level: .ERROR, "Invalid section in minimumLineSpacing")
             return 0
@@ -553,6 +573,27 @@ class HomeItemsCell: UICollectionViewCell {
     }
 }
 
+class HomeItemsCell2: UICollectionViewCell {
+    @IBOutlet weak var picture: UIImageView!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var outerView: UIView!
+    let iconColors: [UIColor] = [.color1, .color2, .color3, .lightGray, .color2, .color1, .color3]
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        outerView.layer.borderWidth = 1
+        outerView.layer.borderColor = UIColor.lightGray.cgColor
+        outerView.layer.masksToBounds = true
+    }
+
+    func draw(item:HomeCollectionViewController.Items, index: Int) {
+        titleLabel.text = HomeCollectionViewController.Items.getString(item: item)
+        picture.image = UIImage(named: item.rawValue)
+        outerView.backgroundColor = iconColors[index]
+    }
+}
+
+/*
 func calculateLabelHeight(s: String, width: CGFloat) -> CGFloat {
     let label:UILabel = UILabel(frame: CGRect(x: 0, y: 0, width: width, height: CGFloat.greatestFiniteMagnitude))
     label.numberOfLines = 0
@@ -563,7 +604,7 @@ func calculateLabelHeight(s: String, width: CGFloat) -> CGFloat {
 
     return label.frame.height
 }
-              
+  */
 
 extension String {
     static let info = NSLocalizedString("Info", comment: "Info")

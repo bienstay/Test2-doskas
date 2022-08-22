@@ -63,14 +63,14 @@ class MenuListViewController: UIViewController {
     }
 
     @IBAction func saveButtonPressed(_ sender: UIButton) {
-        dbProxy.writeMenuList(restaurantId: restaurant.id, menuList: selectedMenus) { [weak self] in
-            print("menu list written")
-            guard let self = self else { return }
-            self.showInfoDialogBox(title: self.restaurant.name, message: "Menu list have been updated") { _ in
-                self.completionCallback?(self.selectedMenus)
-                self.navigationController?.popViewController(animated: true)
-            }
-        }
+//        dbProxy.writeMenuList(restaurantId: restaurant.id, menuList: selectedMenus) { [weak self] in
+//            print("menu list written")
+//            guard let self = self else { return }
+//            self.completionCallback?(self.selectedMenus)
+//            self.navigationController?.popViewController(animated: true)
+//        }
+        self.completionCallback?(self.selectedMenus)
+        self.navigationController?.popViewController(animated: true)
     }
 }
 
@@ -78,6 +78,7 @@ extension MenuListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         selectedMenus.count
     }
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "MenuCell", for: indexPath) as? MenuCell {
             cell.draw(name: selectedMenus[indexPath.row])

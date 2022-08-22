@@ -42,7 +42,7 @@ class MenuFoodCell: UITableViewCell {
         titleLabel.text = menuItem.title
         priceLabel.text = "$" + String(format: "%g", menuItem.price)
         descriptionLabel.text = menuItem.text
-        //cuisineLabel.text = menuItem.attributes?.joined(separator: " ")
+        cuisineLabel.text = menuItem.foodAttributes.joined(separator: " ")
 
         if icon.image == nil || expanded { smallIconWidthConstraint.isActive = true }
         else { smallIconWidthConstraint.isActive = false }

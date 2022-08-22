@@ -76,7 +76,7 @@ extension NewsDetailViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section : Int) -> Int {
         switch Sections(rawValue: section) {
-            case .details : return 2
+            case .details : return 1
             case .reviews: return reviewsManager.reviews.count
             default: return 0
         }
@@ -92,7 +92,7 @@ extension NewsDetailViewController: UITableViewDataSource, UITableViewDelegate {
                     guard let self = self else { return }
                     phoneUser.toggleLike(group: "news", key: self.post.postId)
                 }
-                cell.configure(post: post)
+                cell.configure(post: post, reviewScore: reviewsManager.scoring, reviewCount: reviewsManager.count)
                 return cell
             case 1:
                 let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: NewsDetailTextCell.self), for: indexPath) as! NewsDetailTextCell
@@ -137,6 +137,9 @@ extension NewsDetailViewController: ReviewsManagerDelegate {
             self?.tableView.beginUpdates()
             self?.tableView.reloadSections([Sections.reviews.rawValue], with: .fade)
             self?.tableView.endUpdates()
+            if let cell = self?.tableView.cellForRow(at: IndexPath(row: 0, section: Sections.details.rawValue)) as? NewsDetailHeaderCell {
+                cell.updateReviewTotals(reviewScore: self?.reviewsManager.scoring ?? 0, reviewCount: self?.reviewsManager.count ?? 0)
+            }
         }
     }
     
@@ -151,11 +154,16 @@ extension NewsDetailViewController: ReviewsManagerDelegate {
 
 class NewsDetailHeaderCell: UITableViewCell {
 
-    @IBOutlet var headerImageView: UIImageView!
-    @IBOutlet var headerDimmedView: UIView!
-    @IBOutlet var heartButton: UIButton!
-    @IBOutlet var titleLabel: UILabel!
-    @IBOutlet var subtitleLabel: UILabel!
+    @IBOutlet weak var headerImageView: UIImageView!
+    @IBOutlet weak var headerDimmedView: UIView!
+    @IBOutlet weak var heartButton: UIButton!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var subtitleLabel: UILabel!
+    @IBOutlet weak var timestampLabel: UILabel!
+    @IBOutlet weak var postTextLabel: UILabel!
+    @IBOutlet weak var reviewScoreLabel: UILabel!
+    @IBOutlet weak var reviewCountLabel: UILabel!
+
     var heartPressedClosure : (() -> ())? = nil
     
     @IBAction func heartPressed(_ sender: UIButton) {
@@ -164,22 +172,33 @@ class NewsDetailHeaderCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
+        backgroundColor = .clear
+        selectionStyle = .none
+    }
+    
+    func updateReviewTotals(reviewScore: Double, reviewCount: Int) {
+        reviewScoreLabel.text = String(format: "%.1f", reviewScore)
+        reviewCountLabel.text = String("(\(reviewCount))")
     }
 
-    func configure(post: NewsPost) {
+    func configure(post: NewsPost, reviewScore: Double, reviewCount: Int) {
         titleLabel.text = post._title
         subtitleLabel.text = post._subtitle
         if let url = URL(string: post.imageFileURL) {
             headerImageView.isHidden = false
-            headerDimmedView.isHidden = false
+            //headerDimmedView.isHidden = false
             headerImageView.contentMode = .scaleAspectFill
             headerImageView.kf.setImage(with: url)
         } else {
             headerImageView.contentMode = .scaleAspectFit
             headerImageView.image = UIImage(named: "JaNaPlaya")
         }
+        timestampLabel.text = post.timestamp.formatForDisplay()
+        postTextLabel.text = post._text
         let numLikes = phoneUser.numLikes(group: "news", itemKey: post.postId)
         heartButton.setImage(UIImage(named: numLikes > 0 ? "heartFull" : "heartEmpty"), for: .normal)
+        reviewScoreLabel.text = String(format: "%.1f", reviewScore)
+        reviewCountLabel.text = String("(\(reviewCount))")
     }
 }
 
