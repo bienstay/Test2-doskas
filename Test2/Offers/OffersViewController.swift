@@ -106,7 +106,6 @@ extension OffersViewController: UICollectionViewDataSource {
             }
             cell.cellSelectedForDeleteClosure = { offer in
                 guard let id = offer.id else { return }
-                print("delete offer \(offer)")
                 _ = dbProxy.removeRecord(key: id, record: offer) { _ in }
 
                 hotel.offerGroups[group].offers = hotel.offerGroups[group].offers?.filter { $0 != id }

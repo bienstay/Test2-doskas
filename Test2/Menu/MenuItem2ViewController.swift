@@ -111,7 +111,7 @@ class MenuItem2ViewController: UIViewController, UICollectionViewDataSource, UIC
         switch Sections(rawValue: indexPath.section) {
         case .header:
             if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HeaderCell", for: indexPath) as? HeaderCell {
-                cell.configure(menuItem: menuItem)
+                cell.configure(menuItem: menuItem, reviewScore: reviewsManager.scoring, reviewCount: reviewsManager.count)
                 return cell
             }
         case .attributes:
@@ -228,8 +228,6 @@ class MenuItem2ViewController: UIViewController, UICollectionViewDataSource, UIC
             case .empty:
                 return self?.createRowSection(showFooter: true)
 
-//            case .review:
-//                return self?.reviewsManager.reviews.isEmpty ?? true ? nil : ReviewCollectionViewCell.createLayoutSection()
             default:
                 return nil
             }
@@ -242,7 +240,6 @@ class MenuItem2ViewController: UIViewController, UICollectionViewDataSource, UIC
         switch kind {
         case "review-header-kind":
             let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "ReviewHeader", for: indexPath)// as? HeaderSupplementaryView
-            //headerView.isHidden = reviewsManager.reviews.isEmpty
             return headerView
         case UICollectionView.elementKindSectionFooter:
             let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "RowSectionFooter", for: indexPath)// as? HeaderSupplementaryView
@@ -293,12 +290,21 @@ extension MenuItem2ViewController: ReviewsManagerDelegate {
 
 class HeaderCell: UICollectionViewCell {
     @IBOutlet weak var picture: UIImageView!
-    func configure(menuItem: MenuItem) {
+    @IBOutlet weak var reviewScoreLabel: UILabel!
+    @IBOutlet weak var reviewCountLabel: UILabel!
+
+    func configure(menuItem: MenuItem, reviewScore: Double, reviewCount: Int) {
         if let img = menuItem.img, let url = URL(string: img) {
             picture.kf.setImage(with: url)
         } else {
             picture.image = UIImage(named: "foodPlaceholder")
         }
+        updateReviewTotals(reviewScore: reviewScore, reviewCount: reviewCount)
+    }
+
+    func updateReviewTotals(reviewScore: Double, reviewCount: Int) {
+        reviewScoreLabel.text = String(format: "%.1f", reviewScore)
+        reviewCountLabel.text = String("(\(reviewCount))")
     }
 }
 
@@ -324,18 +330,7 @@ class PriceCell: UICollectionViewCell {
     @IBOutlet weak var quantityLabel: UILabel!
     @IBOutlet weak var minusButton: UIButton!
     @IBOutlet weak var plusButton: UIButton!
-//    @IBAction func minusButtonPressed(sender: UIButton) {
-//        buttonAction?(false)
-//    }
-//    @IBAction func plusButtonPressed(sender: UIButton) {
-//        buttonAction?(true)
-//    }
-//    var buttonAction: ((Bool) -> ())? = nil
-//    func configure(menuItem: MenuItem, choice: Int, quantity: Int, buttonAction: @escaping (Bool) -> ()) {
-//        let price = menuItem.choices?[choice].price ?? menuItem.price
-//        priceLabel.text = String(price)
-//        quantityLabel.text = String(quantity)
-//    }
+
     func configure(menuItem: MenuItem, foodOrder: FoodOrderItem?, choiceIndex: Int) {   // use foodOrder.choiceIndex when order or choiceIndex when not
         quantityLabelLabel.isHidden = (foodOrder == nil)
         quantityLabel.isHidden = (foodOrder == nil)

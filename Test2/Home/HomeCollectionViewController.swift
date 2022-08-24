@@ -129,7 +129,6 @@ class HomeCollectionViewController: UIViewController, UICollectionViewDataSource
         }
         menu.addSeparator()
         menu.addItem(label: "Log out") { [weak self] in
-            print("Logging out...")
             self?.logOutAndGoToScannerView()
         }
 
@@ -505,9 +504,9 @@ class HomeHeaderCell: UICollectionViewCell {
             picture.kf.setImage(with: URL(string: imageURL)) { result in
                 switch result {
                 case .success:
-                    break //print("Task done for: \(value.source.url?.absoluteString ?? "")")
+                    break
                 case .failure(let error):
-                    print("Job failed: \(error.localizedDescription)")
+                    Log.log(level: .ERROR, "Job failed: \(error.localizedDescription)")
                 }
             }
         }

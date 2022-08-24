@@ -21,7 +21,7 @@ class InfoDetailViewController: UIViewController, UICollectionViewDelegate {
     enum Sections: Int, CaseIterable {
         case image
         case text
-        case review
+        case reviews
     }
 
     override func viewDidLoad() {
@@ -67,9 +67,9 @@ class InfoDetailViewController: UIViewController, UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        currentPage = indexPath.row
+        if indexPath.section == Sections.image.rawValue { currentPage = indexPath.row }
         if let footer = collectionView.supplementaryView(forElementKind: UICollectionView.elementKindSectionFooter, at: IndexPath(row: 0, section: 0)) as? InfoPictureFooter {
-            footer.draw(currentPage: currentPage, nrOfPages: infoItem.images.count)
+            footer.draw(currentPage: currentPage, nrOfPages: infoItem.images.count, reviewScore: reviewsManager.scoring, reviewCount: reviewsManager.count)
         }
     }
 
@@ -92,17 +92,6 @@ class InfoDetailViewController: UIViewController, UICollectionViewDelegate {
                 let footerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(50))
                 let sectionFooter = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: footerSize, elementKind: UICollectionView.elementKindSectionFooter, alignment: .bottom)
                 section.boundarySupplementaryItems = [sectionFooter]
-/*
-                section.visibleItemsInvalidationHandler = { [weak self] (items, offset, env) -> Void in
-                    guard let self = self else { return }
-
-                    let page = round(offset.x / self.view.bounds.width)
-                    print("--------------- \(page)")
-                    self.currentPage = Int(page)
-
-                    //self.pagingInfoSubject.send(PagingInfo(sectionIndex: sectionIndex, currentPage: Int(page)))
-                }
-*/
                 return section
             case .text:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(10.0))
@@ -114,7 +103,7 @@ class InfoDetailViewController: UIViewController, UICollectionViewDelegate {
                 let section = NSCollectionLayoutSection(group: group)
 
                 return section
-            case .review:
+            case .reviews:
                 return self?.reviewsManager.reviews.isEmpty ?? true ? nil : ReviewCollectionViewCell.createLayoutSection()
             default:
                 return nil
@@ -146,7 +135,7 @@ extension InfoDetailViewController: UICollectionViewDataSource {
         switch Sections(rawValue: section) {
         case .image: return infoItem.images.count
         case .text: return 1
-        case .review: return reviewsManager.reviews.count
+        case .reviews: return reviewsManager.reviews.count
         default: return 0
         }
     }
@@ -161,7 +150,7 @@ extension InfoDetailViewController: UICollectionViewDataSource {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "infoCell", for: indexPath) as! InfoTextCell
             cell.draw(infoItem: infoItem)
             return cell
-        case .review:
+        case .reviews:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ReviewCell", for: indexPath) as! ReviewCollectionViewCell
             let r = reviewsManager.reviews[indexPath.row]
             cell.draw(timestamp: r.timestamp, rating: r.rating, review: r.review, roomNumber: r.roomNumber, translation: reviewsManager.translations[r.id ?? ""])
@@ -182,7 +171,7 @@ extension InfoDetailViewController: UICollectionViewDataSource {
             return headerView
         case UICollectionView.elementKindSectionFooter:
             if let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "InfoSectionFooter", for: indexPath) as? InfoPictureFooter {
-                footerView.draw(currentPage: currentPage, nrOfPages: infoItem.images.count)
+                footerView.draw(currentPage: currentPage, nrOfPages: infoItem.images.count, reviewScore: reviewsManager.scoring, reviewCount: reviewsManager.count)
                 return footerView
             }
         default:
@@ -220,16 +209,24 @@ extension InfoDetailViewController: ReviewsManagerDelegate {
 
 class InfoPictureFooter: UICollectionReusableView {
     @IBOutlet private weak var pageControl: UIPageControl!
+    @IBOutlet weak var reviewScoreLabel: UILabel!
+    @IBOutlet weak var reviewCountLabel: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()
         pageControl.currentPage = 0
     }
     
-    func draw(currentPage: Int, nrOfPages: Int) {
+    func draw(currentPage: Int, nrOfPages: Int, reviewScore: Double, reviewCount: Int) {
         pageControl.numberOfPages = nrOfPages
         pageControl.isHidden = nrOfPages <= 1
         pageControl.currentPage = currentPage
+        updateReviewTotals(reviewScore: reviewScore, reviewCount: reviewCount)
+    }
+    
+    func updateReviewTotals(reviewScore: Double, reviewCount: Int) {
+        reviewScoreLabel.text = String(format: "%.1f", reviewScore)
+        reviewCountLabel.text = String("(\(reviewCount))")
     }
 }
 
@@ -252,7 +249,7 @@ class InfoPictureCell: ShadedCollectionViewCell {
 
 class InfoTextCell: UICollectionViewCell {
     @IBOutlet var subtitleLabel: UILabel!
-    @IBOutlet var reviewTextLabel: UILabel!
+    @IBOutlet var infoTextLabel: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -260,7 +257,7 @@ class InfoTextCell: UICollectionViewCell {
 
     func draw(infoItem: InfoItem) {
         subtitleLabel.text = infoItem._subtitle
-        reviewTextLabel.text = infoItem._text
+        infoTextLabel.text = infoItem._text
     }
 }
 

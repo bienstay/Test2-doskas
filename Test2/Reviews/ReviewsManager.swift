@@ -24,9 +24,7 @@ class ReviewsManager {
         var total: Double = 0.0
         for i in 0...totals.count - 1 { total += Double(i+1)*Double(totals[i]) }
         if count > 0 { total = total / Double(count) }
-        print(total)
         let total2 = totals.enumerated().reduce(0.0) { sum, value in sum + Double(value.offset + 1) * Double(value.element) }
-        print(total2 / Double(count))
         return total
     }
     var translations: [String:String] = [:]
@@ -73,7 +71,6 @@ class ReviewsManager {
         totals = [Int].init(repeating: 0, count: 5)
         newTotals.forEach { if let index:Int = Int($0.key), index < totals.count { totals[index] = $0.value } }
         delegate?.reviewsUpdated(reviewManager: self)
-        print(totals)
     }
 
 //    func reviewsTotalsUpdated(newTotals: [String:Any]) {

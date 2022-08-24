@@ -664,7 +664,7 @@
                                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </view>
                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="bottom" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="PRn-zN-Zj5">
-                                            <rect key="frame" x="16" y="324" width="358" height="60"/>
+                                            <rect key="frame" x="16" y="300" width="358" height="60"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="wjf-Kk-iGs">
                                                     <rect key="frame" x="0.0" y="3" width="206" height="57"/>
@@ -699,6 +699,51 @@
                                                 </button>
                                             </subviews>
                                         </stackView>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3kH-Uc-KfH" userLabel=" RatingView">
+                                            <rect key="frame" x="50" y="370" width="120" height="60"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="xcw-LW-yUo">
+                                                    <rect key="frame" x="16" y="4" width="88" height="52"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4.5" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kmP-ko-zlQ">
+                                                            <rect key="frame" x="0.0" y="17.5" width="20.5" height="17"/>
+                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="star.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="zRY-tN-Qys">
+                                                            <rect key="frame" x="24.5" y="15.5" width="20" height="20"/>
+                                                            <color key="tintColor" systemColor="systemOrangeColor"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="20" id="Bc5-Wg-QEz"/>
+                                                                <constraint firstAttribute="height" constant="20" id="wUX-y6-p3Y"/>
+                                                            </constraints>
+                                                        </imageView>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="(15)" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yFS-NS-04s">
+                                                            <rect key="frame" x="48.5" y="17.5" width="39.5" height="17"/>
+                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                </stackView>
+                                            </subviews>
+                                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="xcw-LW-yUo" secondAttribute="bottom" constant="4" id="5Ae-bV-a0r"/>
+                                                <constraint firstAttribute="width" constant="120" id="LDj-wg-QtM"/>
+                                                <constraint firstItem="xcw-LW-yUo" firstAttribute="leading" secondItem="3kH-Uc-KfH" secondAttribute="leading" constant="16" id="LLb-qT-7uQ"/>
+                                                <constraint firstAttribute="trailing" secondItem="xcw-LW-yUo" secondAttribute="trailing" constant="16" id="XlJ-Rl-eS7"/>
+                                                <constraint firstItem="xcw-LW-yUo" firstAttribute="top" secondItem="3kH-Uc-KfH" secondAttribute="top" constant="4" id="eLa-tL-sKW"/>
+                                                <constraint firstAttribute="height" constant="60" id="j7A-nr-fTe"/>
+                                            </constraints>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                    <integer key="value" value="30"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                            </userDefinedRuntimeAttributes>
+                                        </view>
                                     </subviews>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
@@ -708,33 +753,37 @@
                                         <constraint firstAttribute="height" secondItem="gNr-GI-F36" secondAttribute="height" id="HWf-OG-if6"/>
                                         <constraint firstItem="Wh8-1f-XJm" firstAttribute="top" secondItem="UlN-1U-10n" secondAttribute="top" id="JId-jR-g34"/>
                                         <constraint firstAttribute="trailing" secondItem="gNr-GI-F36" secondAttribute="trailing" id="StJ-7c-q3n"/>
+                                        <constraint firstItem="3kH-Uc-KfH" firstAttribute="leading" secondItem="UlN-1U-10n" secondAttribute="leading" constant="50" id="c8g-V5-0Lp"/>
                                         <constraint firstItem="PRn-zN-Zj5" firstAttribute="leading" secondItem="UlN-1U-10n" secondAttribute="leading" constant="16" id="gw5-CG-WAJ"/>
-                                        <constraint firstAttribute="bottom" secondItem="PRn-zN-Zj5" secondAttribute="bottom" constant="16" id="jkI-6o-FvE"/>
+                                        <constraint firstAttribute="bottom" secondItem="PRn-zN-Zj5" secondAttribute="bottom" constant="40" id="jkI-6o-FvE"/>
                                         <constraint firstAttribute="bottom" secondItem="Wh8-1f-XJm" secondAttribute="bottom" id="jkb-Di-pJg"/>
                                         <constraint firstItem="gNr-GI-F36" firstAttribute="leading" secondItem="UlN-1U-10n" secondAttribute="leading" id="pEq-WO-zzP"/>
                                         <constraint firstAttribute="trailing" secondItem="Wh8-1f-XJm" secondAttribute="trailing" id="rMy-hp-yz6"/>
+                                        <constraint firstItem="3kH-Uc-KfH" firstAttribute="top" secondItem="gNr-GI-F36" secondAttribute="bottom" constant="-30" id="zYr-RM-xbm"/>
                                     </constraints>
                                     <connections>
                                         <outlet property="headerImageView" destination="gNr-GI-F36" id="iME-Mx-I2z"/>
                                         <outlet property="nameLabel" destination="9h6-rw-Dsn" id="xKD-Vw-r6c"/>
+                                        <outlet property="reviewCountLabel" destination="yFS-NS-04s" id="7VR-Xh-Wpz"/>
+                                        <outlet property="reviewScoreLabel" destination="kmP-ko-zlQ" id="WkI-6O-VGh"/>
                                         <outlet property="typeLabel" destination="0cM-uO-b2a" id="Dvz-Nz-6Kc"/>
                                     </connections>
                                 </view>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="QND-Ti-QgA" userLabel="Footer View">
-                                    <rect key="frame" x="0.0" y="805.5" width="390" height="100"/>
+                                    <rect key="frame" x="0.0" y="829.5" width="390" height="100"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="RestaurantDetailTextCell" id="t3P-8h-QNi" customClass="RestaurantDetailTextCell" customModule="Test2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="444.5" width="390" height="65.5"/>
+                                        <rect key="frame" x="0.0" y="444.5" width="390" height="89.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="t3P-8h-QNi" id="VYp-km-6c8">
-                                            <rect key="frame" x="0.0" y="0.0" width="390" height="65.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="390" height="89.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XS7-To-XJF" customClass="ShadedView" customModule="Test2" customModuleProvider="target">
-                                                    <rect key="frame" x="8" y="16" width="374" height="33.5"/>
+                                                    <rect key="frame" x="8" y="40" width="374" height="33.5"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ze3-Fx-k15">
                                                             <rect key="frame" x="8" y="8" width="358" height="17.5"/>
@@ -753,7 +802,7 @@
                                                 </view>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="XS7-To-XJF" firstAttribute="top" secondItem="VYp-km-6c8" secondAttribute="top" constant="16" id="1OQ-1A-Gki"/>
+                                                <constraint firstItem="XS7-To-XJF" firstAttribute="top" secondItem="VYp-km-6c8" secondAttribute="top" constant="40" id="1OQ-1A-Gki"/>
                                                 <constraint firstAttribute="trailing" secondItem="XS7-To-XJF" secondAttribute="trailing" constant="8" id="5fJ-53-lZO"/>
                                                 <constraint firstAttribute="bottom" secondItem="XS7-To-XJF" secondAttribute="bottom" constant="16" id="P0S-ny-Eed"/>
                                                 <constraint firstItem="XS7-To-XJF" firstAttribute="leading" secondItem="VYp-km-6c8" secondAttribute="leading" constant="8" id="u3p-DO-hMA"/>
@@ -764,7 +813,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MenuCell" id="z4j-97-hkz" customClass="RestaurantDetailMenuCell" customModule="Test2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="510" width="390" height="50.5"/>
+                                        <rect key="frame" x="0.0" y="534" width="390" height="50.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="z4j-97-hkz" id="Ol6-ni-rOS">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="50.5"/>
@@ -801,7 +850,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="RestaurantDetailMapCell" id="eQn-N6-9Ry" customClass="RestaurantDetailMapCell" customModule="Test2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="560.5" width="390" height="222.5"/>
+                                        <rect key="frame" x="0.0" y="584.5" width="390" height="222.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="eQn-N6-9Ry" id="f8d-0E-qUa">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="222.5"/>
@@ -1168,6 +1217,7 @@
         <image name="love" width="78" height="82"/>
         <image name="newphoto" width="1840" height="1380"/>
         <image name="sad" width="78" height="87"/>
+        <image name="star.fill" catalog="system" width="128" height="116"/>
         <namedColor name="NavigationBarTitle">
             <color red="0.85490196078431369" green="0.37647058823529411" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -1182,6 +1232,9 @@
         </systemColor>
         <systemColor name="systemGrayColor">
             <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemOrangeColor">
+            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

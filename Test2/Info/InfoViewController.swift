@@ -16,12 +16,8 @@ class InfoViewController: UIViewController, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         initView(tableView: tableView)
-//        if #available(iOS 13.0, *) {
-//            tableView.backgroundColor = .systemGroupedBackground
-//        }
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.backgroundColor = .BBbackgroundColor
         NotificationCenter.default.addObserver(self, selector: #selector(onInformationUpdated(_:)), name: .informationUpdated, object: nil)
     }
 

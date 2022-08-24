@@ -175,7 +175,7 @@ class NewsDetailHeaderCell: UITableViewCell {
         backgroundColor = .clear
         selectionStyle = .none
     }
-    
+
     func updateReviewTotals(reviewScore: Double, reviewCount: Int) {
         reviewScoreLabel.text = String(format: "%.1f", reviewScore)
         reviewCountLabel.text = String("(\(reviewCount))")

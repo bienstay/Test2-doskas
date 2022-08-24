@@ -138,6 +138,7 @@ extension OfferDetailViewController: ReviewsManagerDelegate {
             self.tableView.beginUpdates()
             self.tableView.reloadSections([Sections.reviews.rawValue], with: .right)
             self.tableView.endUpdates()
+            self.headerView.updateReviewTotals(reviewScore: self.reviewsManager.scoring, reviewCount: self.reviewsManager.count)
         }
     }
     
@@ -169,6 +170,13 @@ class OfferHeaderView: UIView {
             }
         }
     }
+    @IBOutlet weak var reviewScoreLabel: UILabel!
+    @IBOutlet weak var reviewCountLabel: UILabel!
+    
+    func updateReviewTotals(reviewScore: Double, reviewCount: Int) {
+        reviewScoreLabel.text = String(format: "%.1f", reviewScore)
+        reviewCountLabel.text = String("(\(reviewCount))")
+    }
 }
 
 
@@ -180,5 +188,6 @@ class OfferCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         selectionStyle = .none
+        backgroundColor = .clear
     }
 }

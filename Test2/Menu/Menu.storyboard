@@ -384,14 +384,14 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="HeaderCell" id="3m6-68-xX1">
-                                        <rect key="frame" x="0.0" y="44.5" width="414" height="705"/>
+                                        <rect key="frame" x="0.0" y="44.5" width="414" height="708"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3m6-68-xX1" id="wv9-VD-s6C">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="705"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="708"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Bjg-Uc-aeu">
-                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="705"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="708"/>
                                                     <subviews>
                                                         <view contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="O45-Wp-jgF" userLabel="TopView">
                                                             <rect key="frame" x="0.0" y="0.0" width="414" height="345"/>
@@ -528,10 +528,10 @@
                                                             </constraints>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G0m-TM-fxh" userLabel="BottomView">
-                                                            <rect key="frame" x="0.0" y="529" width="414" height="176"/>
+                                                            <rect key="frame" x="0.0" y="529" width="414" height="179"/>
                                                             <subviews>
                                                                 <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="y8q-UF-ELn">
-                                                                    <rect key="frame" x="16" y="24" width="382" height="152"/>
+                                                                    <rect key="frame" x="16" y="24" width="382" height="155"/>
                                                                     <subviews>
                                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="XuK-Nt-MYM">
                                                                             <rect key="frame" x="0.0" y="0.0" width="70.5" height="71"/>
@@ -628,7 +628,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="AddonsCell" id="6LQ-Rr-PTb" userLabel="AddonsCell">
-                                        <rect key="frame" x="0.0" y="749.5" width="414" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="752.5" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="6LQ-Rr-PTb" id="Pii-Pf-2tS">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -938,6 +938,8 @@
                                         </collectionViewCellContentView>
                                         <connections>
                                             <outlet property="picture" destination="npD-4T-IGK" id="2WD-Ip-xgJ"/>
+                                            <outlet property="reviewCountLabel" destination="tID-wX-cEb" id="OTl-xX-pid"/>
+                                            <outlet property="reviewScoreLabel" destination="sLc-Xp-I4r" id="FfK-kq-tzG"/>
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="AttributesCell" id="pxa-3J-KVD" customClass="AttributesCell" customModule="Test2" customModuleProvider="target">

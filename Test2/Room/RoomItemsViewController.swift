@@ -64,7 +64,7 @@ class RoomItemsViewController: UIViewController, UITableViewDataSource, UITableV
             guard let self = self else { return }
             if let vc = self.pushViewController(storyBoard: "OrderSummary", id: "OrderConfirmation") as? OrderConfirmationViewController {
                 vc.order = self.order
-                vc.completionHandler = { [weak self] order, _ in self?.clearOrder() }
+                //vc.completionHandler = { [weak self] order, _ in self?.clearOrder() }
             }
         }
 

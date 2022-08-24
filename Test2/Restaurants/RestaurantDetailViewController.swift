@@ -184,6 +184,7 @@ extension RestaurantDetailViewController: ReviewsManagerDelegate {
             self?.tableView.beginUpdates()
             self?.tableView.reloadSections([Sections.reviews.rawValue], with: .fade)
             self?.tableView.endUpdates()
+            self?.headerView.updateReviewTotals(reviewScore: reviewManager.scoring, reviewCount: reviewManager.count)
         }
     }
     
@@ -216,7 +217,14 @@ class RestaurantDetailHeaderView: UIView {
             }
         }
     }
-    @IBOutlet var ratingImageView: UIImageView!
+    //@IBOutlet var ratingImageView: UIImageView!
+    @IBOutlet weak var reviewScoreLabel: UILabel!
+    @IBOutlet weak var reviewCountLabel: UILabel!
+
+    func updateReviewTotals(reviewScore: Double, reviewCount: Int) {
+        reviewScoreLabel.text = String(format: "%.1f", reviewScore)
+        reviewCountLabel.text = String("(\(reviewCount))")
+    }
 }
 
 
